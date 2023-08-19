@@ -163,11 +163,37 @@ print(len(purged_players))
 needed_purge = purged_players[:50]
 
 
-
-
 best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
 
 
+print()
+my_players_names = [
+    "Vinícius Jr",
+    "Erik Lamela",
+    "Barrenetxea",
+    "Moncayola",
+    "Marc Roca",
+    "Darder",
+    "Camavinga",
+    "David López",
+    "Fran García",
+    "Domingos Duarte",
+    "André Ferreira",
+    "Juanmi Latasa",
+    "Carlos Fernández",
+]
+
+my_players_list = []
+# for player in worthy_players:
+for player in purged_players:
+    if player.name in my_players_names:
+        if player.name == "Erik Lamela":
+            player.position = "ATT"
+        my_players_list.append(player)
+
+print()
+
+best_full_teams(my_players_list, possible_formations, -1, super_verbose=False)
 
 
 

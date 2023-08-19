@@ -333,7 +333,7 @@ def set_players_sofascore_rating(
                 if has_previous_file:
                     closest_player_ratings_name = biwenger_sofascore_names[player.name]
                 else:
-                    closest_player_ratings_name = find_similar_string(player.name, players_ratings_names_list, similarity_threshold=0)
+                    closest_player_ratings_name = find_similar_string(player.name, players_ratings_names_list, similarity_threshold=-1)
                 similar_names_dict[player.name] = closest_player_ratings_name  # Add key-value pair to the dictionary
                 if closest_player_ratings_name == player.name:
                     players_ratings_names_list.remove(closest_player_ratings_name)
