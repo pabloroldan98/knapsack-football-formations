@@ -266,12 +266,18 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
 def calc_penalty_boost(penalty_indexes):
     penalty_coef = 0
     for penalty_index in penalty_indexes:
-        if penalty_index == 0:
-            penalty_coef = penalty_coef + 0.2
-        elif (penalty_index == 1) or (penalty_index == 2):
+        if (penalty_index == 0) or (penalty_index == 1):
             penalty_coef = penalty_coef + 0.15
+        # elif (penalty_index == 2) or (penalty_index == 3) or (penalty_index == 4):
+        #     penalty_coef = penalty_coef + 0.1
         else:
             penalty_coef = penalty_coef + 0.1
+        # if penalty_index == 0:
+        #     penalty_coef = penalty_coef + 0.2
+        # elif (penalty_index == 1) or (penalty_index == 2):
+        #     penalty_coef = penalty_coef + 0.15
+        # else:
+        #     penalty_coef = penalty_coef + 0.1
     return penalty_coef
 
 
@@ -317,6 +323,7 @@ def set_players_sofascore_rating(
     if os.path.isfile('./' + file_name + '.csv'):
         biwenger_sofascore_names = read_dict_from_csv(file_name)
         has_previous_file = True
+        write_file = False
     result_players = copy.deepcopy(players_list)
 
     players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
