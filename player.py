@@ -106,23 +106,33 @@ class Player:
         else:
             return False
 
-    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
         form_coef = ((self.price_trend/math.log(self.standard_price))/200000) + 1
-        fixture_coef = (self.next_match_elo_dif * 0.0002 + 1) + (0.005 if self.is_playing_home else 0)
-        if no_home_boost:
-            fixture_coef = self.next_match_elo_dif * 0.0002 + 1  # * 0.1/500 + 1
         if no_form:
             form_coef = 1
+
+        if alt_fixture_method:
+            capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
+            base_coef = capped_elo_dif * 0.015 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
+        else:
+            capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            base_coef = capped_elo_dif * 0.00015 + 1
         if no_fixtures:
             fixture_coef = 1
+        else:
+            fixture_coef = base_coef
+
+        home_bonus = 0.005 if self.is_playing_home else 0
+        fixture_coef += home_bonus if not no_home_boost else 0
+
         self.form = form_coef
         self.fixture = fixture_coef
 
         predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(fixture_coef)
         return predicted_value
 
-    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False):
-        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost)
+    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method)
         self.value = predicted_value
 
 
@@ -359,14 +369,14 @@ def set_players_sofascore_rating(
     return result_players
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
     result_players = copy.deepcopy(players_list)
     players_coefs = []
     for player in result_players:
         form_coef = ((player.price_trend / math.log(
             player.standard_price)) / 200000) + 1
         players_coefs.append((player.name, form_coef))
-        player.set_value(no_form, no_fixtures, no_home_boost)
+        player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method)
     sorted_coefs = sorted(players_coefs, key=lambda tup: tup[1], reverse=True)
     # for p_c in sorted_coefs: print(p_c)
     # print()
