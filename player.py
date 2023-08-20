@@ -280,7 +280,9 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
 def calc_penalty_boost(penalty_indexes):
     penalty_coef = 0
     for penalty_index in penalty_indexes:
-        penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)
+        if penalty_index < 5: # Take only last 5 pens into account
+            penalty_coef = penalty_coef + 0.2 - (penalty_index * 0.025)
+        # penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)
         # if (penalty_index == 0) or (penalty_index == 1):
         #     penalty_coef = penalty_coef + 0.15
         # elif (penalty_index == 2) or (penalty_index == 3):
@@ -411,15 +413,8 @@ def set_players_sofascore_rating(
 
 def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
     result_players = copy.deepcopy(players_list)
-    players_coefs = []
     for player in result_players:
-        form_coef = ((player.price_trend / math.log(
-            player.standard_price)) / 200000) + 1
-        players_coefs.append((player.name, form_coef))
         player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method)
-    sorted_coefs = sorted(players_coefs, key=lambda tup: tup[1], reverse=True)
-    # for p_c in sorted_coefs: print(p_c)
-    # print()
     return result_players
 
 
