@@ -26,7 +26,7 @@ class Team:
 
 
 def get_old_teams_data(forced_matches=[]):
-    with open('teams_before_jornada_03.csv', newline='') as f:
+    with open('OLD_teams_before_jornada_03.csv', newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
     old_teams_data = []

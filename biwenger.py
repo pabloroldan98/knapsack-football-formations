@@ -11,9 +11,9 @@ from eloratings import get_teams_elos
 from team import Team
 
 
-def get_worldcup_data(forced_matches=[], verbose=True):
+def get_championship_data(forced_matches=[], verbose=True):
 
-    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/world-cup/data?lang=en&score=1&callback=jsonp_xxx'
+    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
 
     response = requests.get(all_data_url)
     data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
@@ -152,6 +152,14 @@ def create_players_list(worldcup_teams, worldcup_players):
         players_list.append(new_player)
     return players_list
 
+
+# all_teams, all_players = get_championship_data()
+#
+# for t in all_teams:
+#     print(t)
+#
+# for p in all_players:
+#     print(p)
 
 
 # user_data_url = 'https://biwenger.as.com/api/v2/user/16728?fields=*,account(id),players(id,owner),lineups(round,points,count,position),league(id,name,competition,mode,scoreID),market,seasons,offers,lastPositions'

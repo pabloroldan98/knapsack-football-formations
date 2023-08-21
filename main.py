@@ -10,7 +10,7 @@ import csv
 
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
-from biwenger import get_worldcup_data
+from biwenger import get_championship_data
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, set_players_value_to_last_fitness, set_manual_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
@@ -262,11 +262,11 @@ my_team = [
 jornada_01 = [("Qatar", "Ecuador"), ("England", "Iran"), ("Senegal", "Netherlands"), ("US", "Wales"), ("Argentina", "Saudi Arabia"), ("Denmark", "Tunisia"), ("Mexico", "Poland"), ("France", "Australia"), ("Morocco", "Croatia"), ("Germany", "Japan"), ("Spain", "Costa Rica"), ("Belgium", "Canada"), ("Switzerland", "Cameroon"), ("Uruguay", "South Korea"), ("Portugal", "Ghana"), ("Brazil", "Serbia"), ]
 jornada_02 = [("Qatar", "Senegal"), ("England", "US"), ("Ecuador", "Netherlands"), ("Iran", "Wales"), ("Poland", "Saudi Arabia"), ("Australia", "Tunisia"), ("Mexico", "Argentina"), ("France", "Denmark"), ("Canada", "Croatia"), ("Germany", "Spain"), ("Japan", "Costa Rica"), ("Belgium", "Morocco"), ("Serbia", "Cameroon"), ("Ghana", "South Korea"), ("Portugal", "Uruguay"), ("Brazil", "Switzerland"), ]
 jornada_03 = [("Qatar", "Netherlands"), ("England", "Wales"), ("Ecuador", "Senegal"), ("Iran", "US"), ("Mexico", "Saudi Arabia"), ("France", "Tunisia"), ("Poland", "Argentina"), ("Australia", "Denmark"), ("Canada", "Morocco"), ("Japan", "Spain"), ("Germany", "Costa Rica"), ("Belgium", "Croatia"), ("Brazil", "Cameroon"), ("Portugal", "South Korea"), ("Ghana", "Uruguay"), ("Serbia", "Switzerland"), ]
-jornada_03_players = "players_before_jornada_03.csv"
+jornada_03_players = "OLD_players_before_jornada_03.csv"
 
 
 def get_current_players(no_form=False, no_fixtures=False, no_boosts=False, forced_matches=[], use_old_players_data=False, use_old_teams_data=False, from_file="sofascore_players_ratings"):
-    all_teams, all_players = get_worldcup_data(forced_matches=forced_matches)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches)
 
     if use_old_teams_data:
         all_teams = get_old_teams_data(forced_matches)
@@ -287,7 +287,7 @@ def get_current_players(no_form=False, no_fixtures=False, no_boosts=False, force
 
 
 def get_last_jornada_players():
-    all_teams, all_players = get_worldcup_data()
+    all_teams, all_players = get_championship_data()
     return set_players_value_to_last_fitness(all_players)
 
 # Begin:
@@ -326,7 +326,7 @@ def get_last_jornada_players():
 # current_players = get_current_players()
 
 
-current_players = get_current_players(no_boosts=True, no_form=False, no_fixtures=False, use_old_players_data=False, use_old_teams_data=False, from_file="sofascore_semi_players_ratings")
+current_players = get_current_players(no_boosts=True, no_form=False, no_fixtures=True, use_old_players_data=False, use_old_teams_data=False, from_file="sofascore_la_liga_players_ratings")
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
 worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
@@ -367,13 +367,13 @@ best_full_teams(purged_players, possible_formations, 300, super_verbose=False)
 # Testing:
 # --------------------------------------------------------------------
 
-# all_teams, all_players = get_worldcup_data()
+# all_teams, all_players = get_championship_data()
 # for players in last_jornada_players:
 #     print(players)
 
 # best_transfers(my_team, playersDB_example, 4, n_results=50)
 
-# all_teams, all_players = get_worldcup_data()
+# all_teams, all_players = get_championship_data()
 #
 # print(len(gc.get_objects()))
 # gc.collect()
