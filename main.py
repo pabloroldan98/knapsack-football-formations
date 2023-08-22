@@ -14,7 +14,7 @@ from biwenger import get_championship_data
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, set_players_value_to_last_fitness, set_manual_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
-    purge_everything, purge_worse_value_players, purge_no_country_players, \
+    purge_everything, purge_worse_value_players, purge_no_team_players, \
     purge_negative_values, fill_with_team_players, get_old_players_data
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
@@ -299,7 +299,7 @@ def get_last_jornada_players():
 
 # first_jornada_players = get_current_players(forced_matches=jornada_01, no_form=True)
 # # print(len(first_jornada_players))
-# first_jornada_players = purge_no_country_players(first_jornada_players)
+# first_jornada_players = purge_no_team_players(first_jornada_players)
 # first_jornada_players = purge_negative_values(first_jornada_players)
 # # first_jornada_players = sorted(first_jornada_players, key=lambda x: x.value, reverse=True)
 # # for player in first_jornada_players:
@@ -326,7 +326,14 @@ def get_last_jornada_players():
 # current_players = get_current_players()
 
 
-current_players = get_current_players(no_boosts=True, no_form=False, no_fixtures=True, use_old_players_data=False, use_old_teams_data=False, from_file="sofascore_la_liga_players_ratings")
+current_players = get_current_players(
+    no_boosts=True,
+    no_form=False,
+    no_fixtures=True,
+    use_old_players_data=False,
+    use_old_teams_data=False,
+    from_file="sofascore_la_liga_players_ratings"
+)
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
 worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
@@ -350,7 +357,13 @@ print(len(purged_players))
 
 # needed_purge = purged_players[:180]
 
-best_full_teams(purged_players, possible_formations, 300, super_verbose=False)
+
+
+
+# best_full_teams(purged_players, possible_formations, 300, super_verbose=False)
+
+
+
 
 
 # mega_purge = purged_players[:60]
@@ -383,9 +396,9 @@ best_full_teams(purged_players, possible_formations, 300, super_verbose=False)
 # count=dict()
 # for player in all_players:
 #     for team in all_teams:
-#         if player.country == team.name:
-#             count[player.country] = 0
-#             print(player.country)
+#         if player.team == team.name:
+#             count[player.team] = 0
+#             print(player.team)
 # print(len(count))
 
 # max_elo = all_teams[0].elo
