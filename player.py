@@ -2,6 +2,7 @@ import ast
 import copy
 import csv
 import math
+import difflib
 
 import numpy as np
 from unidecode import unidecode
@@ -14,7 +15,7 @@ class Player:
             position: str = "GK",
             price: int = 100000,
             value: float = 0,
-            country: str = "Spain",
+            team: str = "Spain",
             status: str = "ok",
             standard_price: float = 0,
             price_trend: float = 0,
@@ -28,7 +29,7 @@ class Player:
         self.position = position
         self.price = price
         self.value = value
-        self.country = country
+        self.team = team
         self.status = status
         self.standard_price = standard_price
         self.price_trend = price_trend
@@ -41,8 +42,8 @@ class Player:
     def __str__(self):
         form_coef = ((self.price_trend/math.log(self.standard_price))/200000) + 1
         elo_coef = self.next_match_elo_dif * 0.0002 + 1
-        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.country}) - (form: {form_coef}, fixtures: {elo_coef})"
-        # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.country})"
+        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team}) - (form: {form_coef}, fixtures: {elo_coef})"
+        # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
     @property
     def position(self):
@@ -113,7 +114,7 @@ def get_position(group):
 
 
 def purge_everything(players_list, nations_to_purge=[], mega_purge=False):
-    purged_players = purge_no_country_players(players_list)
+    purged_players = purge_no_team_players(players_list)
     purged_players = purge_negative_values(purged_players)
     purged_players = purge_injured_players(purged_players)
     purged_players = purge_non_starting_players(purged_players)
@@ -129,9 +130,9 @@ def purge_injured_players(players_list):
     return result_players
 
 
-def purge_no_country_players(players_list):
+def purge_no_team_players(players_list):
     result_players = [player for player in players_list if
-                      player.country != "None"]
+                      player.team != "None"]
     return result_players
 
 
@@ -139,7 +140,7 @@ def purge_eliminated_players(players_list, qualified_teams):
     result_players = []
     for player in players_list:
         for team in qualified_teams:
-            if player.country == team.name:
+            if player.team == team.name:
                 result_players.append(player)
     return result_players
 
@@ -158,7 +159,7 @@ def purge_negative_values(players_list):
 
 def purge_national_teams(players_list, nations_to_purge):
     result_players = [player for player in players_list if
-                      player.country not in nations_to_purge]
+                      player.team not in nations_to_purge]
     return result_players
 
 
@@ -203,7 +204,7 @@ def set_manual_boosts(players_list, manual_boosts):
 
 def set_players_elo_dif(players_list, teams_list):
     result_players = copy.deepcopy(players_list)
-    clean_players = purge_no_country_players(result_players)
+    clean_players = purge_no_team_players(result_players)
     # clean_players = purge_eliminated_players(clean_players, teams_list)
     checked_teams = check_teams(clean_players, teams_list)
     if len(checked_teams) != len(teams_list):
@@ -216,7 +217,7 @@ def set_players_elo_dif(players_list, teams_list):
     teams_dict = {team.name: team for team in teams_list}
 
     for player in clean_players:
-        player_team = teams_dict[player.country]
+        player_team = teams_dict[player.team]
         opponent_team = teams_dict[player_team.next_opponent]
         elo_dif = player_team.elo - opponent_team.elo
         player.next_match_elo_dif = elo_dif
@@ -227,24 +228,56 @@ def check_teams(players_list, teams_list):
     count = dict()
     for player in players_list:
         for team in teams_list:
-            if player.country == team.name:
-                count[player.country] = player.country
+            if player.team == team.name:
+                count[player.team] = player.team
     return count
 
 
 def set_players_sofascore_rating(players_list, players_ratings_list):
     result_players = copy.deepcopy(players_list)
+    for player in result_players:
+        max_similarity = 0
+        most_similar_rated_player = None
+        for rated_player in players_ratings_list:
+            similarity = name_similarity(rated_player.name, player.name)
+            if similarity > max_similarity:
+                max_similarity = similarity
+                most_similar_rated_player = rated_player
+        if max_similarity > 0.8 and most_similar_rated_player is not None:
+            player.sofascore_rating = most_similar_rated_player.sofascore_rating
+
     for rated_player in players_ratings_list:
         for player in result_players:
             if rated_player == player:
                 player.sofascore_rating = rated_player.sofascore_rating
                 break
+
     for rated_player in players_ratings_list:
         for player in result_players:
             if rated_player.stricter_equal(player):
                 player.sofascore_rating = rated_player.sofascore_rating
                 break
+    # i=0
+    # for rated_player in players_ratings_list:
+    #     for j, player in enumerate(result_players):
+    #         if rated_player.stricter_equal(player):
+    #             player.sofascore_rating = rated_player.sofascore_rating
+    #             break
+    #         if j == len(result_players) - 1:
+    #             i=i+1
+    #             print(rated_player.name)
+    # print(i)
     return result_players
+
+
+def name_similarity(name1, name2):
+    clean_name1 = clean_string(name1)
+    clean_name2 = clean_string(name2)
+    return difflib.SequenceMatcher(None, clean_name1, clean_name2).ratio()
+
+
+def clean_string(s):
+    return unidecode(s).lower().replace(" ", "").replace("-", "")
 
 
 def set_players_value(players_list, no_form=False, no_fixtures=False):

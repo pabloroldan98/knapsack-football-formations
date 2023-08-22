@@ -21,37 +21,37 @@ def get_championship_data(forced_matches=[], verbose=True):
     if verbose:
         print("Loading teams data...")
         print()
-    worldcup_teams = get_teams_worldcup_data(data, forced_matches=forced_matches)
+    championship_teams = get_teams_championship_data(data, forced_matches=forced_matches)
     if verbose:
         print("Loading players data...")
         print()
-    worldcup_players = get_players_worldcup_data(data)
+    championship_players = get_players_championship_data(data)
 
-    sorted_worldcup_teams = sorted(worldcup_teams, key=lambda x: x.elo, reverse=True)
-    sorted_worldcup_players = sorted(worldcup_players, key=lambda x: x.price, reverse=True)
+    sorted_championship_teams = sorted(championship_teams, key=lambda x: x.elo, reverse=True)
+    sorted_championship_players = sorted(championship_players, key=lambda x: x.price, reverse=True)
 
-    return sorted_worldcup_teams, sorted_worldcup_players
+    return sorted_championship_teams, sorted_championship_players
 
 
-def get_teams_worldcup_data(data, forced_matches=[]):
-    worldcup_teams = data['data']['teams']
+def get_teams_championship_data(data, forced_matches=[]):
+    championship_teams = data['data']['teams']
     teams_elos_dict, short_teams_elos_dict = get_teams_elos()
-    worldcup_teams_db = create_teams_list(worldcup_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=forced_matches)
+    championship_teams_db = create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=forced_matches)
 
-    return worldcup_teams_db
+    return championship_teams_db
 
 
-def create_teams_list(worldcup_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=[]):
+def create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=[]):
     teams_list = []
     if not forced_matches:
-        for worldcup_team_id in worldcup_teams:
-            worldcup_team = worldcup_teams[str(worldcup_team_id)]
+        for worldcup_team_id in championship_teams:
+            worldcup_team = championship_teams[str(worldcup_team_id)]
 
             team_name = worldcup_team["name"]
             team_name_next_opponent = None
             if worldcup_team["nextGames"]:
                 team_next_opponent = get_next_opponent(int(worldcup_team_id),
-                                                       worldcup_teams)
+                                                       championship_teams)
                 team_name_next_opponent = team_next_opponent["name"]
 
             team_elo = get_team_elo(team_name, teams_elos_dict, short_teams_elos_dict)
@@ -111,17 +111,17 @@ def get_next_opponent(team_id, teams):
     return next_team
 
 
-def get_players_worldcup_data(data):
-    worldcup_teams = data['data']['teams']
-    worldcup_players = data['data']['players']
-    worldcup_players_db = create_players_list(worldcup_teams, worldcup_players)
-    return worldcup_players_db
+def get_players_championship_data(data):
+    championship_teams = data['data']['teams']
+    championship_players = data['data']['players']
+    championship_players_db = create_players_list(championship_teams, championship_players)
+    return championship_players_db
 
 
-def create_players_list(worldcup_teams, worldcup_players):
+def create_players_list(championship_teams, championship_players):
     players_list = []
-    for worldcup_player_id in worldcup_players:
-        worldcup_player = worldcup_players[str(worldcup_player_id)]
+    for worldcup_player_id in championship_players:
+        worldcup_player = championship_players[str(worldcup_player_id)]
 
         # pprint(worldcup_player)
         player_name = worldcup_player["name"]
@@ -136,7 +136,7 @@ def create_players_list(worldcup_teams, worldcup_players):
         if player_team_id == "None":
             player_team = "None"
         else:
-            player_team = worldcup_teams[player_team_id]["name"]
+            player_team = championship_teams[player_team_id]["name"]
 
         new_player = Player(
             player_name,

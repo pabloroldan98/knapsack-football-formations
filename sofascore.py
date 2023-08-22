@@ -39,12 +39,16 @@ def get_team_links_from_league(league_url, driver):
 
 def get_players_average_ratings(write_file=True, file_name="sofascore_players_ratings", team_links=None):
     if os.path.isfile('./' + file_name + '.csv'):
-        return read_dict_from_csv("sofascore_players_ratings")
+        return read_dict_from_csv(file_name)
 
     driver = webdriver.Chrome(keep_alive=False)
     if not team_links:
-        team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
-                                                driver)
+        extra_driver = webdriver.Chrome(keep_alive=True)
+        team_links = get_team_links_from_league(
+            "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+            extra_driver
+        )
+        extra_driver.quit()
     player_paths = []
     for key, value in team_links.items():
         print('Extracting %s player links...' % value[0])
@@ -91,7 +95,7 @@ def write_dict_to_csv(dict_data, file_name):
 
 
 def read_dict_from_csv(file_name):
-    with open(file_name + ".csv") as csv_file:
+    with open(file_name + ".csv", encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         mydict = dict(reader)
         return mydict
