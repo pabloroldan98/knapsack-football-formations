@@ -69,7 +69,7 @@ def get_players_average_ratings(write_file=True, file_name="sofascore_players_ra
             pass
         try:
             player_name = driver.find_element(By.XPATH, "//h2[@class='sc-jEACwC cFQcxI']").get_attribute("textContent")
-            print('Extracting data form %s ...' % player_name)
+            print('Extracting data from %s ...' % player_name)
             players_with_ratings[player_name] = average_rating
         except NoSuchElementException:  # Spelling error making this code not work as expected
             pass

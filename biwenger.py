@@ -8,7 +8,7 @@ from unidecode import unidecode
 import difflib
 
 from player import Player, get_position
-from eloratings import get_teams_elos
+from elo_ratings import get_teams_elos
 from team import Team
 
 
