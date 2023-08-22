@@ -7,6 +7,8 @@ import difflib
 import numpy as np
 from unidecode import unidecode
 
+# from biwenger import find_similar_string
+
 
 class Player:
     def __init__(
@@ -235,6 +237,15 @@ def check_teams(players_list, teams_list):
 
 def set_players_sofascore_rating(players_list, players_ratings_list):
     result_players = copy.deepcopy(players_list)
+    # players_dict = {listed_player.name: listed_player for listed_player in players_list}
+    # players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
+    # new_players_list = list(players_dict.keys())
+    # new_players_ratings_list = list(players_ratings_dict.keys())
+    # for rated_player_name in new_players_ratings_list:
+    #     closest_player_name = find_similar_string(rated_player_name, new_players_list)
+    #     for player in result_players:
+    #         if player.name == closest_player_name:
+    #             player.sofascore_rating = rated_player_name.sofascore_rating
     for player in result_players:
         max_similarity = 0
         most_similar_rated_player = None

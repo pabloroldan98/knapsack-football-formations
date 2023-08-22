@@ -5,6 +5,7 @@ import json
 import requests
 from pprint import pprint
 from unidecode import unidecode
+import difflib
 
 from player import Player, get_position
 from eloratings import get_teams_elos
@@ -35,26 +36,30 @@ def get_championship_data(forced_matches=[], verbose=True):
 
 def get_teams_championship_data(data, forced_matches=[]):
     championship_teams = data['data']['teams']
-    teams_elos_dict, short_teams_elos_dict = get_teams_elos()
-    championship_teams_db = create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=forced_matches)
+    teams_elos_dict = get_teams_elos()
+    championship_teams_db = create_teams_list(
+        championship_teams,
+        teams_elos_dict,
+        forced_matches=forced_matches
+    )
 
     return championship_teams_db
 
 
-def create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict, forced_matches=[]):
+def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
     teams_list = []
     if not forced_matches:
-        for worldcup_team_id in championship_teams:
-            worldcup_team = championship_teams[str(worldcup_team_id)]
+        for championship_team_id in championship_teams:
+            championship_team = championship_teams[str(championship_team_id)]
 
-            team_name = worldcup_team["name"]
+            team_name = championship_team["name"]
             team_name_next_opponent = None
-            if worldcup_team["nextGames"]:
-                team_next_opponent = get_next_opponent(int(worldcup_team_id),
+            if championship_team["nextGames"]:
+                team_next_opponent = get_next_opponent(int(championship_team_id),
                                                        championship_teams)
                 team_name_next_opponent = team_next_opponent["name"]
 
-            team_elo = get_team_elo(team_name, teams_elos_dict, short_teams_elos_dict)
+            team_elo = get_team_elo(team_name, teams_elos_dict)
 
             new_team = Team(
                 team_name,
@@ -68,7 +73,7 @@ def create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict
             home_team = new_match[0]
             away_team = new_match[1]
 
-            team_elo = get_team_elo(home_team, teams_elos_dict, short_teams_elos_dict)
+            team_elo = get_team_elo(home_team, teams_elos_dict)
             new_team = Team(
                 home_team,
                 away_team,
@@ -76,7 +81,7 @@ def create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict
             )
             teams_list.append(new_team)
 
-            team_elo = get_team_elo(away_team, teams_elos_dict, short_teams_elos_dict)
+            team_elo = get_team_elo(away_team, teams_elos_dict)
             new_team = Team(
                 away_team,
                 home_team,
@@ -87,11 +92,47 @@ def create_teams_list(championship_teams, teams_elos_dict, short_teams_elos_dict
     return teams_list
 
 
-def get_team_elo(team_name, teams_elos_dict, short_teams_elos_dict):
-    if team_name in teams_elos_dict:
-        team_elo = teams_elos_dict[team_name]
-    elif team_name in short_teams_elos_dict:
-        team_elo = short_teams_elos_dict[team_name]
+def cleaned_string(s):
+    return unidecode(str(s)).lower().replace(" ", "").replace("-", "")
+
+
+def find_similar_string(my_string, string_list, similarity_threshold=0.8):
+    # First, check for '==' in the list
+    if my_string in string_list:
+        return my_string
+    my_string_clean = cleaned_string(my_string)
+    # Second, check for exact equality after cleaning
+    for list_string in string_list:
+        list_string_clean = cleaned_string(list_string)
+        if my_string_clean == list_string_clean:
+            return list_string
+    # Third, check for partial match after cleaning
+    for list_string in string_list:
+        list_string_clean = cleaned_string(list_string)
+        if my_string_clean in list_string_clean or list_string_clean in my_string_clean:
+            return list_string
+    # Lastly, check for the most similar string
+    max_similarity = 0
+    most_similar_string = None
+    for list_string in string_list:
+        s = difflib.SequenceMatcher(None, my_string_clean, cleaned_string(list_string))
+        similarity = s.ratio()
+        if similarity > max_similarity:
+            max_similarity = similarity
+            most_similar_string = list_string
+    if max_similarity >= similarity_threshold:
+        return most_similar_string
+    return None
+
+
+def get_team_elo(team_name, teams_elos_dict):
+    teams_list = list(teams_elos_dict.keys())
+    if team_name == "Athletic":
+        closest_team_name = "Bilbao"
+    else:
+        closest_team_name = find_similar_string(team_name, teams_list)
+    if closest_team_name in teams_elos_dict:
+        team_elo = teams_elos_dict[closest_team_name]
     else:
         team_elo = 0
     return team_elo
@@ -120,19 +161,19 @@ def get_players_championship_data(data):
 
 def create_players_list(championship_teams, championship_players):
     players_list = []
-    for worldcup_player_id in championship_players:
-        worldcup_player = championship_players[str(worldcup_player_id)]
+    for championship_player_id in championship_players:
+        championship_player = championship_players[str(championship_player_id)]
 
-        # pprint(worldcup_player)
-        player_name = worldcup_player["name"]
-        player_group = worldcup_player["position"]
-        player_price = int(worldcup_player["fantasyPrice"] / 1000000)
-        player_status = worldcup_player["status"]
-        player_standard_price = float(worldcup_player["price"])
-        player_price_trend = float(worldcup_player["priceIncrement"])
-        player_fitness = worldcup_player["fitness"]
+        # pprint(championship_player)
+        player_name = championship_player["name"]
+        player_group = championship_player["position"]
+        player_price = int(championship_player["fantasyPrice"] / 1000000)
+        player_status = championship_player["status"]
+        player_standard_price = float(championship_player["price"])
+        player_price_trend = float(championship_player["priceIncrement"])
+        player_fitness = championship_player["fitness"]
 
-        player_team_id = str(worldcup_player["teamID"])
+        player_team_id = str(championship_player["teamID"])
         if player_team_id == "None":
             player_team = "None"
         else:

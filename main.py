@@ -329,7 +329,7 @@ def get_last_jornada_players():
 current_players = get_current_players(
     no_boosts=True,
     no_form=False,
-    no_fixtures=True,
+    no_fixtures=False,
     use_old_players_data=False,
     use_old_teams_data=False,
     from_file="sofascore_la_liga_players_ratings"
