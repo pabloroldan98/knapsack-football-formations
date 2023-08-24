@@ -7,7 +7,7 @@ import difflib
 import numpy as np
 from unidecode import unidecode
 
-# from biwenger import find_similar_string
+from useful_functions import find_similar_string, find_string_positions
 
 
 class Player:
@@ -22,13 +22,17 @@ class Player:
             standard_price: float = 0,
             price_trend: float = 0,
             fitness: list = [None, None, None, None, None],
+            penalties: list = [False, False, False, False, False, False],
             penalty_boost: float = 0,
             strategy_boost: float = 0,
             sofascore_rating: float = 0,
-            next_match_elo_dif: float = 0
+            next_match_elo_dif: float = 0,
+            is_playing_home: bool = False,
+            form:  float = 0,
+            fixture:  float = 0
     ):
         self.name = name
-        self.position = position
+        self._position = position
         self.price = price
         self.value = value
         self.team = team
@@ -36,15 +40,17 @@ class Player:
         self.standard_price = standard_price
         self.price_trend = price_trend
         self.fitness = fitness
+        self._penalties = penalties
         self.penalty_boost = penalty_boost
         self.strategy_boost = strategy_boost
         self.sofascore_rating = sofascore_rating
         self.next_match_elo_dif = next_match_elo_dif
+        self.is_playing_home = is_playing_home
+        self.form = form
+        self.fixture = fixture
 
     def __str__(self):
-        form_coef = ((self.price_trend/math.log(self.standard_price))/200000) + 1
-        elo_coef = self.next_match_elo_dif * 0.0002 + 1
-        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team}) - (form: {form_coef}, fixtures: {elo_coef})"
+        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team}) - (form: {self.form}, fixture: {self.fixture})"
         # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
     @property
@@ -52,10 +58,22 @@ class Player:
         return self._position
 
     @position.setter
-    def position(self, pos):
+    def position(self, pos="GK"):
         if pos not in ["GK", "DEF", "MID", "ATT"]:
             raise ValueError("Sorry, that's not a valid position")
         self._position = pos
+
+    @property
+    def penalties(self):
+        return self._penalties
+
+    @penalties.setter
+    def penalties(self, indexes=[]):
+        result = [False] * len(self.penalties)  # Initialize a new list of False values
+        for idx in indexes:
+            if 0 <= idx < len(result):
+                result[idx] = True
+        self._penalties = result
 
     def get_group(self):
         if self.position == "GK":
@@ -87,19 +105,23 @@ class Player:
         else:
             return False
 
-    def calc_value(self, no_form=False, no_fixtures=False):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False):
         form_coef = ((self.price_trend/math.log(self.standard_price))/200000) + 1
-        elo_coef = self.next_match_elo_dif * 0.0002 + 1  # * 0.1/500 + 1
+        fixture_coef = (self.next_match_elo_dif * 0.0002 + 1) + (0.005 if self.is_playing_home else 0)
+        if no_home_boost:
+            fixture_coef = self.next_match_elo_dif * 0.0002 + 1  # * 0.1/500 + 1
         if no_form:
             form_coef = 1
         if no_fixtures:
-            elo_coef = 1
+            fixture_coef = 1
+        self.form = form_coef
+        self.fixture = fixture_coef
 
-        predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(elo_coef)
+        predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(fixture_coef)
         return predicted_value
 
-    def set_value(self, no_form=False, no_fixtures=False):
-        predicted_value = self.calc_value(no_form, no_fixtures)
+    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost)
         self.value = predicted_value
 
 
@@ -115,12 +137,12 @@ def get_position(group):
     return position
 
 
-def purge_everything(players_list, nations_to_purge=[], mega_purge=False):
+def purge_everything(players_list, teams_to_purge=[], mega_purge=False):
     purged_players = purge_no_team_players(players_list)
     purged_players = purge_negative_values(purged_players)
     purged_players = purge_injured_players(purged_players)
     purged_players = purge_non_starting_players(purged_players)
-    purged_players = purge_national_teams(purged_players, nations_to_purge)
+    purged_players = purge_national_teams(purged_players, teams_to_purge)
     if mega_purge:
         purged_players = purge_worse_value_players(purged_players)
     return purged_players
@@ -155,13 +177,13 @@ def purge_non_starting_players(players_list):
 
 def purge_negative_values(players_list):
     result_players = [player for player in players_list if
-                      player.value > 0]
+                      player.value > 1]
     return result_players
 
 
-def purge_national_teams(players_list, nations_to_purge):
+def purge_national_teams(players_list, teams_to_purge):
     result_players = [player for player in players_list if
-                      player.team not in nations_to_purge]
+                      player.team not in teams_to_purge]
     return result_players
 
 
@@ -204,6 +226,35 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
+def set_penalty_boosts(players_list, penalty_takers_dict):
+    result_players = copy.deepcopy(players_list)
+
+    team_names_list = list(set(player.team for player in result_players))
+
+    for team_name, penalty_takers_names_list in penalty_takers_dict.items():
+        closest_team_name = find_similar_string(team_name, team_names_list)
+        for player in result_players:
+            if player.team == closest_team_name:
+                closest_penalty_taker_name = find_similar_string(player.name, penalty_takers_names_list)
+                if closest_penalty_taker_name is not None:
+                    players_penalties = find_string_positions(penalty_takers_names_list, closest_penalty_taker_name)
+                    player.penalties = players_penalties
+                    player.penalty_boost = calc_penalty_boost(players_penalties)
+    return result_players
+
+
+def calc_penalty_boost(penalty_indexes):
+    penalty_coef = 0
+    for penalty_index in penalty_indexes:
+        if penalty_index == 0:
+            penalty_coef = penalty_coef + 0.2
+        elif (penalty_index == 1) or (penalty_index == 2):
+            penalty_coef = penalty_coef + 0.15
+        else:
+            penalty_coef = penalty_coef + 0.1
+    return penalty_coef
+
+
 def set_players_elo_dif(players_list, teams_list):
     result_players = copy.deepcopy(players_list)
     clean_players = purge_no_team_players(result_players)
@@ -223,6 +274,7 @@ def set_players_elo_dif(players_list, teams_list):
         opponent_team = teams_dict[player_team.next_opponent]
         elo_dif = player_team.elo - opponent_team.elo
         player.next_match_elo_dif = elo_dif
+        player.is_playing_home = player_team.is_home
     return clean_players
 
 
@@ -237,47 +289,43 @@ def check_teams(players_list, teams_list):
 
 def set_players_sofascore_rating(players_list, players_ratings_list):
     result_players = copy.deepcopy(players_list)
-    # players_dict = {listed_player.name: listed_player for listed_player in players_list}
-    # players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
-    # new_players_list = list(players_dict.keys())
-    # new_players_ratings_list = list(players_ratings_dict.keys())
-    # for rated_player_name in new_players_ratings_list:
-    #     closest_player_name = find_similar_string(rated_player_name, new_players_list)
-    #     for player in result_players:
-    #         if player.name == closest_player_name:
-    #             player.sofascore_rating = rated_player_name.sofascore_rating
-    for player in result_players:
-        max_similarity = 0
-        most_similar_rated_player = None
-        for rated_player in players_ratings_list:
-            similarity = name_similarity(rated_player.name, player.name)
-            if similarity > max_similarity:
-                max_similarity = similarity
-                most_similar_rated_player = rated_player
-        if max_similarity > 0.8 and most_similar_rated_player is not None:
-            player.sofascore_rating = most_similar_rated_player.sofascore_rating
 
-    for rated_player in players_ratings_list:
-        for player in result_players:
-            if rated_player == player:
-                player.sofascore_rating = rated_player.sofascore_rating
-                break
+    players_dict = {listed_player.name: listed_player for listed_player in players_list}
+    players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
 
-    for rated_player in players_ratings_list:
+    players_names_list = list(players_dict.keys())
+    players_ratings_names_list = list(players_ratings_dict.keys())
+
+    for rated_player_name in players_ratings_names_list:
+        closest_player_name = find_similar_string(rated_player_name, players_names_list)  # , verbose=True)
+        if closest_player_name == rated_player_name:
+            players_names_list.remove(closest_player_name)
         for player in result_players:
-            if rated_player.stricter_equal(player):
-                player.sofascore_rating = rated_player.sofascore_rating
-                break
-    # i=0
+            if player.name == closest_player_name:
+                player.sofascore_rating = players_ratings_dict[rated_player_name].sofascore_rating
+
+    # for player in result_players:
+    #     max_similarity = 0
+    #     most_similar_rated_player = None
+    #     for rated_player in players_ratings_list:
+    #         similarity = name_similarity(rated_player.name, player.name)
+    #         if similarity > max_similarity:
+    #             max_similarity = similarity
+    #             most_similar_rated_player = rated_player
+    #     if max_similarity > 0.8 and most_similar_rated_player is not None:
+    #         player.sofascore_rating = most_similar_rated_player.sofascore_rating
+    #
     # for rated_player in players_ratings_list:
-    #     for j, player in enumerate(result_players):
+    #     for player in result_players:
+    #         if rated_player == player:
+    #             player.sofascore_rating = rated_player.sofascore_rating
+    #             break
+    #
+    # for rated_player in players_ratings_list:
+    #     for player in result_players:
     #         if rated_player.stricter_equal(player):
     #             player.sofascore_rating = rated_player.sofascore_rating
     #             break
-    #         if j == len(result_players) - 1:
-    #             i=i+1
-    #             print(rated_player.name)
-    # print(i)
     return result_players
 
 
@@ -291,14 +339,14 @@ def clean_string(s):
     return unidecode(s).lower().replace(" ", "").replace("-", "")
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False):
     result_players = copy.deepcopy(players_list)
     players_coefs = []
     for player in result_players:
         form_coef = ((player.price_trend / math.log(
             player.standard_price)) / 200000) + 1
         players_coefs.append((player.name, form_coef))
-        player.set_value(no_form, no_fixtures)
+        player.set_value(no_form, no_fixtures, no_home_boost)
     sorted_coefs = sorted(players_coefs, key=lambda tup: tup[1], reverse=True)
     # for p_c in sorted_coefs: print(p_c)
     # print()

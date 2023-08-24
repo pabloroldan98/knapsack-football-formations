@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import os
+import ast
+
+from sofascore import write_dict_to_csv, read_dict_from_csv
+
 
 class TransfermarktScraper:
     def __init__(self):
@@ -42,16 +47,20 @@ class TransfermarktScraper:
                     name_elem = tr.select_one("td.hauptlink a")
                     minute_elem = tr.select_one("td:nth-of-type(8)")
                     date_elem = tr.select_one("td.zentriert")
+                    is_goal_elem = tr.select_one("td:nth-of-type(7)")
 
-                    if name_elem and minute_elem and date_elem:
+                    if name_elem and minute_elem and date_elem and is_goal_elem:
                         minute_text = minute_elem.text.replace("'", "").strip()
+                        is_goal_text = is_goal_elem.text.strip()
+                        is_goal = True if is_goal_text == "in" else False
                         if minute_text.isdigit():
                             date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
                             takers.append({
                                 'name': name_elem['title'],
                                 'minute': int(minute_text)
                                 # 'date': date_obj,
-                                # 'position': len(takers) + 1
+                                # 'position': len(takers) + 1,
+                                # 'is_goal': is_goal
                             })
         return takers
 
@@ -60,12 +69,17 @@ class TransfermarktScraper:
         league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
         team_links = self.get_team_links(league_url)
         for team_name, team_suffix in team_links.items():
-            print('Extracting data from %s ...' % team_name)
+            print('Extracting penalty takers data from %s ...' % team_name)
             result[team_name] = self.get_penalty_takers(team_suffix)
         return result
 
 
-if __name__ == "__main__":
+def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_penalty_takers"):
+    if os.path.isfile('./' + file_name + '.csv'):
+        data = read_dict_from_csv(file_name)
+        result = {key: ast.literal_eval(value) for key, value in data.items()}
+        return result
+
     scraper = TransfermarktScraper()
     penalties_data = scraper.scrape()
 
@@ -74,6 +88,14 @@ if __name__ == "__main__":
         filtered_penalties = [penalty_taker["name"] for penalty_taker in penalty_takers if penalty_taker["minute"] != 120][:6]
         filtered_penalties_data[team] = filtered_penalties
 
-    print(filtered_penalties_data)
-    # for team, penalties in data.items():
-    #     print(team, penalties)
+    if write_file:
+        write_dict_to_csv(filtered_penalties_data, file_name)
+
+    return filtered_penalties_data
+
+
+# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_la_liga_penalty_takers")
+#
+# print(penalty_takers)
+# for team, penalties in data.items():
+#     print(team, penalties)

@@ -4,13 +4,12 @@ import re
 import json
 import requests
 from pprint import pprint
-from unidecode import unidecode
-import difflib
 
 from player import Player, get_position
 from elo_ratings import get_teams_elos
 from team import Team
 
+from useful_functions import find_similar_string
 
 def get_championship_data(forced_matches=[], verbose=True):
 
@@ -55,8 +54,10 @@ def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
             team_name = championship_team["name"]
             team_name_next_opponent = None
             if championship_team["nextGames"]:
-                team_next_opponent = get_next_opponent(int(championship_team_id),
-                                                       championship_teams)
+                team_next_opponent, is_team_home = get_next_opponent(
+                    int(championship_team_id),
+                    championship_teams
+                )
                 team_name_next_opponent = team_next_opponent["name"]
 
             team_elo = get_team_elo(team_name, teams_elos_dict)
@@ -64,7 +65,8 @@ def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
             new_team = Team(
                 team_name,
                 team_name_next_opponent,
-                team_elo
+                team_elo,
+                is_team_home
             )
             teams_list.append(new_team)
 
@@ -74,55 +76,26 @@ def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
             away_team = new_match[1]
 
             team_elo = get_team_elo(home_team, teams_elos_dict)
+            is_team_home = True
             new_team = Team(
                 home_team,
                 away_team,
-                team_elo
+                team_elo,
+                is_team_home
             )
             teams_list.append(new_team)
 
             team_elo = get_team_elo(away_team, teams_elos_dict)
+            is_team_home = False
             new_team = Team(
                 away_team,
                 home_team,
-                team_elo
+                team_elo,
+                is_team_home
             )
             teams_list.append(new_team)
 
     return teams_list
-
-
-def cleaned_string(s):
-    return unidecode(str(s)).lower().replace(" ", "").replace("-", "")
-
-
-def find_similar_string(my_string, string_list, similarity_threshold=0.8):
-    # First, check for '==' in the list
-    if my_string in string_list:
-        return my_string
-    my_string_clean = cleaned_string(my_string)
-    # Second, check for exact equality after cleaning
-    for list_string in string_list:
-        list_string_clean = cleaned_string(list_string)
-        if my_string_clean == list_string_clean:
-            return list_string
-    # Third, check for partial match after cleaning
-    for list_string in string_list:
-        list_string_clean = cleaned_string(list_string)
-        if my_string_clean in list_string_clean or list_string_clean in my_string_clean:
-            return list_string
-    # Lastly, check for the most similar string
-    max_similarity = 0
-    most_similar_string = None
-    for list_string in string_list:
-        s = difflib.SequenceMatcher(None, my_string_clean, cleaned_string(list_string))
-        similarity = s.ratio()
-        if similarity > max_similarity:
-            max_similarity = similarity
-            most_similar_string = list_string
-    if max_similarity >= similarity_threshold:
-        return most_similar_string
-    return None
 
 
 def get_team_elo(team_name, teams_elos_dict):
@@ -146,10 +119,12 @@ def get_next_opponent(team_id, teams):
 
     if int(team_id) != next_team_home_id:
         next_team = teams[str(next_team_home_id)]
+        is_my_team_home = False
     else:
         next_team = teams[str(next_team_away_id)]
+        is_my_team_home = True
 
-    return next_team
+    return next_team, is_my_team_home
 
 
 def get_players_championship_data(data):

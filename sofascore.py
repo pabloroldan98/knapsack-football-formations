@@ -69,7 +69,7 @@ def get_players_average_ratings(write_file=True, file_name="sofascore_players_ra
             pass
         try:
             player_name = driver.find_element(By.XPATH, "//h2[@class='sc-jEACwC cFQcxI']").get_attribute("textContent")
-            print('Extracting data from %s ...' % player_name)
+            print('Extracting team data from %s ...' % player_name)
             players_with_ratings[player_name] = average_rating
         except NoSuchElementException:  # Spelling error making this code not work as expected
             pass
@@ -88,7 +88,7 @@ def get_players_average_ratings(write_file=True, file_name="sofascore_players_ra
 
 
 def write_dict_to_csv(dict_data, file_name):
-    with open(file_name + ".csv", 'w', encoding='utf-8') as csv_file:  # Specify utf-8 encoding
+    with open(file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
         writer = csv.writer(csv_file)
         for key, value in dict_data.items():
             writer.writerow([key, value])

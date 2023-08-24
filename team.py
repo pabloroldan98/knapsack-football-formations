@@ -8,11 +8,13 @@ class Team:
             self,
             name: str,
             next_opponent: str,
-            elo: float
+            elo: float,
+            is_home: bool
     ):
         self.name = name
         self.next_opponent = next_opponent
         self.elo = elo
+        self.is_home = is_home
 
     def __str__(self):
         return f"({self.name}, {self.elo})"
@@ -34,7 +36,8 @@ def get_old_teams_data(forced_matches=[]):
         new_team = Team(
             d[0],
             d[1],
-            float(d[2])
+            float(d[2]),
+            bool(d[3])
         )
         old_teams_data.append(new_team)
     if forced_matches:
@@ -46,8 +49,11 @@ def get_old_teams_data(forced_matches=[]):
                 away_team = new_match[1]
                 if unidecode(team_name).lower() == unidecode(home_team).lower():
                     team_name_next_opponent = away_team
+                    is_playing_home = True
                 if unidecode(team_name).lower() == unidecode(away_team).lower():
                     team_name_next_opponent = home_team
+                    is_playing_home = False
             old_team.next_opponent = team_name_next_opponent
+            old_team.is_home = is_playing_home
 
     return old_teams_data
