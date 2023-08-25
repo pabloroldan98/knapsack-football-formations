@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import ast
 
-from sofascore import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_to_csv, read_dict_from_csv
 
 
 class TransfermarktScraper:

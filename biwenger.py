@@ -154,18 +154,19 @@ def create_players_list(championship_teams, championship_players):
         else:
             player_team = championship_teams[player_team_id]["name"]
 
-        new_player = Player(
-            player_name,
-            get_position(player_group),
-            player_price,
-            0,
-            player_team,
-            player_status,
-            player_standard_price,
-            player_price_trend,
-            player_fitness
-        )
-        players_list.append(new_player)
+        if player_group != 5:
+            new_player = Player(
+                player_name,
+                get_position(player_group),
+                player_price,
+                0,
+                player_team,
+                player_status,
+                player_standard_price,
+                player_price_trend,
+                player_fitness
+            )
+            players_list.append(new_player)
     return players_list
 
 

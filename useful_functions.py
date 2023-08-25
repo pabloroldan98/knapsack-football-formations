@@ -2,6 +2,7 @@
 from unidecode import unidecode
 import difflib
 from fuzzywuzzy import fuzz
+import csv
 
 
 def cleaned_string(s):
@@ -53,3 +54,17 @@ def find_string_positions(string_list, target_string):
         if target_string in string:
             positions.append(idx)
     return positions
+
+
+def write_dict_to_csv(dict_data, file_name):
+    with open(file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
+        writer = csv.writer(csv_file)
+        for key, value in dict_data.items():
+            writer.writerow([key, value])
+
+
+def read_dict_from_csv(file_name):
+    with open(file_name + ".csv", encoding='utf-8') as csv_file:
+        reader = csv.reader(csv_file)
+        mydict = dict(reader)
+        return mydict

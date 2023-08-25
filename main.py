@@ -7,6 +7,7 @@ from statistics import mean
 import matplotlib.pyplot as plt
 import math
 import csv
+import numpy as np
 
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
@@ -135,7 +136,7 @@ current_players = get_current_players(
     no_home_boost=False,
     use_old_players_data=False,
     use_old_teams_data=False,
-    ratings_file_name="sofascore_la_liga_players_ratings"
+    ratings_file_name="sofascore_la_liga_players_data"
 )
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
@@ -177,6 +178,54 @@ print(len(purged_players))
 
 
 
+
+
+# --------------------------------------------------------------------
+# PLOTTING STATS:
+# --------------------------------------------------------------------
+
+
+# # Extract data for plotting
+# standard_prices = [player.standard_price for player in purged_players]
+# price_trends = [player.price_trend for player in purged_players]
+#
+# # Take the logarithms of the data
+# log_standard_prices = np.log(standard_prices)
+# # log_price_trends = np.log(price_trends)
+#
+#
+# # Create the first plot: standard_price vs price_trend
+# plt.figure(figsize=(10, 6))
+# plt.scatter(standard_prices, price_trends, color='blue', label='Standard Price vs Price Trend')
+# plt.xlabel('Standard Price')
+# plt.ylabel('Price Trend')
+# plt.title('Standard Price vs Price Trend')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(purged_players):
+#     plt.annotate(player.name, (standard_prices[i], price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+#
+# # Create the second plot: log(standard_price) vs log(price_trend)
+# plt.figure(figsize=(10, 6))
+# plt.scatter(log_standard_prices, price_trends, color='orange', label='Log(Standard Price) vs Log(Price Trend)')
+# plt.xlabel('Log(Standard Price)')
+# plt.ylabel('Price Trend')
+# plt.title('Log(Standard Price) vs Price Trend')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(purged_players):
+#     plt.annotate(player.name, (log_standard_prices[i], price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+#
+# # Show the plots
+# plt.show()
 
 
 # --------------------------------------------------------------------
