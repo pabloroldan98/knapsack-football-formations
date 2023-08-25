@@ -20,6 +20,10 @@ possible_formations = [
 
 def best_full_teams(players_list, formations=possible_formations, budget=300, verbose=True, super_verbose=False):
     # players_by_group = sorted(players_list, key=lambda x: x.get_group())
+    if budget <= 0 or budget >= 10000:
+        budget = 1
+        for player in players_list:
+            player.price = 0
 
     formation_score_players = []
 

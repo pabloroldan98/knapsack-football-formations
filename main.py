@@ -130,10 +130,11 @@ def get_last_jornada_players():
 
 
 current_players = get_current_players(
-    no_manual_boost=True,
     no_form=False,
     no_fixtures=False,
     no_home_boost=False,
+    no_penalty_boost=False,
+    no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
     ratings_file_name="sofascore_la_liga_players_data"
@@ -159,12 +160,12 @@ print(len(purged_players))
 
 # best_transfers(my_team, mega_purged_players, 5, verbose=True)
 
-# needed_purge = purged_players[:180]
+needed_purge = purged_players[:50]
 
 
 
 
-# best_full_teams(purged_players, possible_formations, 300, super_verbose=False)
+best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
 
 
 

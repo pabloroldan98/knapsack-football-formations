@@ -234,13 +234,22 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
 
     for team_name, penalty_takers_names_list in penalty_takers_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
-        for player in result_players:
-            if player.team == closest_team_name:
-                closest_penalty_taker_name = find_similar_string(player.name, penalty_takers_names_list)
-                if closest_penalty_taker_name is not None:
-                    players_penalties = find_string_positions(penalty_takers_names_list, closest_penalty_taker_name)
+        players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        for penalty_taker_name in penalty_takers_names_list:
+            closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
+            for player in result_players:
+                if player.name == closest_player_name:
+                    players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
                     player.penalties = players_penalties
                     player.penalty_boost = calc_penalty_boost(players_penalties)
+
+        # for player in result_players:
+        #     if player.team == closest_team_name:
+        #         closest_penalty_taker_name = find_similar_string(player.name, penalty_takers_names_list, verbose=True)
+        #         if closest_penalty_taker_name is not None:
+        #             players_penalties = find_string_positions(penalty_takers_names_list, closest_penalty_taker_name)
+        #             player.penalties = players_penalties
+        #             player.penalty_boost = calc_penalty_boost(players_penalties)
     return result_players
 
 
