@@ -215,29 +215,29 @@ best_full_teams(my_players_list, possible_formations, -1, super_verbose=False)
 # --------------------------------------------------------------------
 
 
-fixtures = []
-next_match_elo_difs = []
-team_names = []
-# Populate the lists
-for player in purged_players:
-    fixtures.append(player.fixture)
-    next_match_elo_difs.append(player.next_match_elo_dif)
-    team_names.append(player.team)
-
-# Create the scatter plot
-plt.scatter(fixtures, next_match_elo_difs)
-
-# Annotate each point with the player's name
-for i, team_name in enumerate(team_names):
-    plt.annotate(team_name, (fixtures[i], next_match_elo_difs[i]))
-
-# Add axis labels and title
-plt.xlabel("Fixture")
-plt.ylabel("Next Match Elo Difference")
-plt.title("Fixture vs Next Match Elo Difference")
-
-# Show the plot
-plt.show()
+# fixtures = []
+# next_match_elo_difs = []
+# team_names = []
+# # Populate the lists
+# for player in purged_players:
+#     fixtures.append(player.fixture)
+#     next_match_elo_difs.append(player.next_match_elo_dif)
+#     team_names.append(player.team)
+#
+# # Create the scatter plot
+# plt.scatter(fixtures, next_match_elo_difs)
+# 
+# # Annotate each point with the player's name
+# for i, team_name in enumerate(team_names):
+#     plt.annotate(team_name, (fixtures[i], next_match_elo_difs[i]))
+#
+# # Add axis labels and title
+# plt.xlabel("Fixture")
+# plt.ylabel("Next Match Elo Difference")
+# plt.title("Fixture vs Next Match Elo Difference")
+#
+# # Show the plot
+# plt.show()
 
 
 # # Extract data for plotting
