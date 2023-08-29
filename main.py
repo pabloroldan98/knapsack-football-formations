@@ -15,13 +15,14 @@ from biwenger import get_championship_data
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, \
     set_players_value_to_last_fitness, set_manual_boosts, set_penalty_boosts, \
-    set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
+    set_players_elo_dif, set_players_sofascore_rating, set_players_value, set_positions, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
     purge_negative_values, fill_with_team_players, get_old_players_data
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
 from transfermarket import get_penalty_takers_dict
+from futmondo import get_players_positions_dict
 
 
 possible_formations = [
@@ -62,10 +63,12 @@ def get_current_players(
         no_manual_boost=True,
         players_manual_boosts=[],
         forced_matches=[],
+        alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
         ratings_file_name="sofascore_players_ratings",
-        penalties_file_name="transfermarket_la_liga_penalty_takers"
+        penalties_file_name="transfermarket_la_liga_penalty_takers",
+        alt_positions_file_name="futmondo_la_liga_players_positions"
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches)
 
@@ -83,6 +86,9 @@ def get_current_players(
     if not no_penalty_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalties_file_name)
         partial_players_data = set_penalty_boosts(all_players, penalty_takers)
+    if alt_positions:
+        players_positions = get_players_positions_dict(file_name=alt_positions_file_name)
+        partial_players_data = set_positions(partial_players_data, players_positions)
     partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
@@ -135,6 +141,7 @@ current_players = get_current_players(
     no_fixtures=False,
     no_home_boost=False,
     alt_fixture_method=True,
+    alt_positions=True,
     no_penalty_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
@@ -190,8 +197,6 @@ my_players_list = []
 # for player in worthy_players:
 for player in purged_players:
     if player.name in my_players_names:
-        if player.name == "Erik Lamela":
-            player.position = "ATT"
         my_players_list.append(player)
 
 print()
@@ -226,7 +231,7 @@ best_full_teams(my_players_list, possible_formations, -1, super_verbose=False)
 #
 # # Create the scatter plot
 # plt.scatter(fixtures, next_match_elo_difs)
-# 
+#
 # # Annotate each point with the player's name
 # for i, team_name in enumerate(team_names):
 #     plt.annotate(team_name, (fixtures[i], next_match_elo_difs[i]))

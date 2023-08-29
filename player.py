@@ -107,7 +107,7 @@ class Player:
             return False
 
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
-        form_coef = ((self.price_trend/math.log(self.standard_price))/200000) + 1
+        form_coef = ((self.price_trend/math.log(self.standard_price))/200000)*0.9 + 1
         if no_form:
             form_coef = 1
 
@@ -237,6 +237,20 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
+def set_positions(players_list, players_positions_dict):
+    result_players = copy.deepcopy(players_list)
+    team_position_names_list = list(players_positions_dict.keys())
+
+    for player in result_players:
+        closest_player_position_team = find_similar_string(player.team, team_position_names_list, similarity_threshold=0)
+        player_position_names_list = list(players_positions_dict[closest_player_position_team].keys())
+        closest_player_position_name = find_similar_string(player.name, player_position_names_list)
+        if closest_player_position_name:
+            player.position = players_positions_dict[closest_player_position_team][closest_player_position_name]
+
+    return result_players
+
+
 def set_penalty_boosts(players_list, penalty_takers_dict):
     result_players = copy.deepcopy(players_list)
 
@@ -319,45 +333,63 @@ def set_players_sofascore_rating(
         write_file=True,
         file_name="player_names_biwenger_sofascore"
 ):
-    has_previous_file = False
-    if os.path.isfile('./' + file_name + '.csv'):
-        biwenger_sofascore_names = read_dict_from_csv(file_name)
-        has_previous_file = True
-        write_file = False
     result_players = copy.deepcopy(players_list)
 
-    players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
+    team_player_rating_dict = {}
+    for player_rating in players_ratings_list:
+        if player_rating.team not in team_player_rating_dict:
+            team_player_rating_dict[player_rating.team] = {}
+        team_player_rating_dict[player_rating.team][player_rating.name] = player_rating.sofascore_rating
 
-    similar_names_dict = {}  # Initialize an empty dictionary
-
-    # Create a dictionary with teams as keys and lists of players as values
-    team_players_ratings_dict = {}
-    for player in players_ratings_list:
-        if player.team not in team_players_ratings_dict:
-            team_players_ratings_dict[player.team] = []
-        team_players_ratings_dict[player.team].append(player)
-
-    team_names_list = list(set(player.team for player in result_players))
-
-    for team_ratings_name, players_with_ratings_list in team_players_ratings_dict.items():
-        if team_ratings_name == "Atl. Madrid":
-            closest_team_name = "Atlético"
+    team_rating_names_list = list(team_player_rating_dict.keys())
+    for player in result_players:
+        if player.team == "Atlético":
+            closest_player_rating_team = "Atl. Madrid"
         else:
-            closest_team_name = find_similar_string(team_ratings_name, team_names_list)
-        players_ratings_names_list = list(set(player.name for player in players_with_ratings_list))
-        for player in result_players:
-            if player.team == closest_team_name:
-                if has_previous_file:
-                    closest_player_ratings_name = biwenger_sofascore_names[player.name]
-                else:
-                    closest_player_ratings_name = find_similar_string(player.name, players_ratings_names_list, similarity_threshold=-1)
-                similar_names_dict[player.name] = closest_player_ratings_name  # Add key-value pair to the dictionary
-                if closest_player_ratings_name == player.name:
-                    players_ratings_names_list.remove(closest_player_ratings_name)
-                if closest_player_ratings_name is not None:
-                    player.sofascore_rating = players_ratings_dict[closest_player_ratings_name].sofascore_rating
-    if write_file:
-        write_dict_to_csv(similar_names_dict, file_name)
+            closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
+        player_rating_names_list = list(team_player_rating_dict[closest_player_rating_team].keys())
+        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6)
+        if closest_player_rating_name:
+            player.sofascore_rating = team_player_rating_dict[closest_player_rating_team][closest_player_rating_name]
+
+    # has_previous_file = False
+    # if os.path.isfile('./' + file_name + '.csv'):
+    #     biwenger_sofascore_names = read_dict_from_csv(file_name)
+    #     has_previous_file = True
+    #     write_file = False
+    # players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
+    #
+    # similar_names_dict = {}  # Initialize an empty dictionary
+    #
+    # # Create a dictionary with teams as keys and lists of players as values
+    # team_players_ratings_dict = {}
+    # for player in players_ratings_list:
+    #     if player.team not in team_players_ratings_dict:
+    #         team_players_ratings_dict[player.team] = []
+    #     team_players_ratings_dict[player.team].append(player)
+    #
+    # team_names_list = list(set(player.team for player in result_players))
+    #
+    # for team_ratings_name, players_with_ratings_list in team_players_ratings_dict.items():
+    #     if team_ratings_name == "Atl. Madrid":
+    #         closest_team_name = "Atlético"
+    #     else:
+    #         closest_team_name = find_similar_string(team_ratings_name, team_names_list)
+    #     players_ratings_names_list = list(set(player.name for player in players_with_ratings_list))
+    #     for player in result_players:
+    #         if player.team == closest_team_name:
+    #             if has_previous_file:
+    #                 closest_player_ratings_name = biwenger_sofascore_names[player.name]
+    #             else:
+    #                 closest_player_ratings_name = find_similar_string(player.name, players_ratings_names_list, similarity_threshold=-1)
+    #             similar_names_dict[player.name] = closest_player_ratings_name  # Add key-value pair to the dictionary
+    #             if closest_player_ratings_name == player.name:
+    #                 players_ratings_names_list.remove(closest_player_ratings_name)
+    #             if closest_player_ratings_name is not None:
+    #                 player.sofascore_rating = players_ratings_dict[closest_player_ratings_name].sofascore_rating
+    # if write_file:
+    #     write_dict_to_csv(similar_names_dict, file_name)
+
 
     # for rated_player_name in players_ratings_names_list:
     #     if has_previous_file:
