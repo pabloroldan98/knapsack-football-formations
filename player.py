@@ -282,10 +282,10 @@ def calc_penalty_boost(penalty_indexes):
     for penalty_index in penalty_indexes:
         if (penalty_index == 0) or (penalty_index == 1):
             penalty_coef = penalty_coef + 0.15
-        # elif (penalty_index == 2) or (penalty_index == 3) or (penalty_index == 4):
-        #     penalty_coef = penalty_coef + 0.1
-        else:
+        elif (penalty_index == 2) or (penalty_index == 3):
             penalty_coef = penalty_coef + 0.1
+        else:
+            penalty_coef = penalty_coef + 0.05
         # if penalty_index == 0:
         #     penalty_coef = penalty_coef + 0.2
         # elif (penalty_index == 1) or (penalty_index == 2):
