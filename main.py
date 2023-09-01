@@ -190,7 +190,8 @@ my_players_names = [
     "Sivera",
     "Randy Nteka",
     "Juanmi Latasa",
-    "Sørloth",
+    # "Sørloth",
+    "Sergio Arribas",
 ]
 
 my_players_list = []
