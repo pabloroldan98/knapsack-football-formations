@@ -177,20 +177,20 @@ best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
 
 print()
 my_players_names = [
-    "Vinícius Jr",
-    "Erik Lamela",
-    "Barrenetxea",
+    "Kike García",
+    "Stuani",
     "Moncayola",
     "Marc Roca",
     "Darder",
     "Camavinga",
     "David López",
     "Fran García",
-    "Domingos Duarte",
-    "André Ferreira",
+    "Rüdiger",
+    "Mingueza",
+    "Sivera",
+    "Randy Nteka",
     "Juanmi Latasa",
-    "Carlos Fernández",
-    "Rafa Mir",
+    "Sørloth",
 ]
 
 my_players_list = []
