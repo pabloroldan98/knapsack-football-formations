@@ -183,6 +183,7 @@ my_players_names = [
     "Marc Roca",
     "Darder",
     "Camavinga",
+    "Barrenetxea",
     "David López",
     "Fran García",
     "Rüdiger",
