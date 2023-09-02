@@ -69,11 +69,11 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             driver.get(p)
             average_rating = float(6.0)
             try:
-                average_rating = float(driver.find_element(By.XPATH, "//span[@class='sc-jEACwC gWYCya']").get_attribute("textContent"))
+                average_rating = float(driver.find_element(By.XPATH, "//span[@class='sc-jEACwC cmGEOd']").get_attribute("textContent"))
             except: # NoSuchElementException:  # Spelling error making this code not work as expected
                 pass
             try:
-                player_name = driver.find_element(By.XPATH, "//h2[@class='sc-jEACwC cFQcxI']").get_attribute("textContent")
+                player_name = driver.find_element(By.XPATH, "//h2[@class='sc-jEACwC iLVhST']").get_attribute("textContent")
                 print('Extracting player data from %s ...' % player_name)
                 player_data = {
                     "rating": average_rating,
