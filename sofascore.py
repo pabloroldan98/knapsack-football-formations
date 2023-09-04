@@ -51,6 +51,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             extra_driver
         )
         extra_driver.quit()
+    print()
     team_players_paths = dict()
     for key, value in team_links.items():
         player_paths_list = []
