@@ -51,7 +51,7 @@ class Player:
         self.fixture = fixture
 
     def __str__(self):
-        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team}) - (form: {self.form}, fixture: {self.fixture})"
+        return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team}, {self.status}) - (form: {self.form}, fixture: {self.fixture})"
         # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
     @property

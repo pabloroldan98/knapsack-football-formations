@@ -146,7 +146,7 @@ current_players = get_current_players(
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
-    ratings_file_name="sofascore_la_liga_players_data"
+    ratings_file_name="sofascore_la_liga_players_ratings"
 )
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
@@ -154,7 +154,8 @@ worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
 
 purged_players = purge_everything(worthy_players)
 
-for player in purged_players:
+# for player in purged_players:
+for player in worthy_players:
     print(player)
 print()
 

@@ -5,6 +5,9 @@ import os
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import json
+import copy
 from pprint import pprint
 import ast
 
@@ -13,12 +16,16 @@ from useful_functions import write_dict_to_csv, read_dict_from_csv
 
 
 def get_players_ratings_list(write_file=True, file_name="sofascore_players_ratings", team_links=None):
-    players_data = get_players_data(write_file, file_name, team_links)
-    players_data_dict = {key: ast.literal_eval(value) for key, value in players_data.items()}
+    teams_data_dict = get_players_data(write_file, file_name, team_links)
     players_ratings_list = []
-    for player_name, player_data in players_data_dict.items():
-        new_player = Player(player_name, sofascore_rating=player_data["rating"], team=player_data["team"])
-        players_ratings_list.append(new_player)
+    for team_name, players_ratings in teams_data_dict.items():
+        if isinstance(players_ratings, str):
+            players_ratings_dict = eval(players_ratings)
+        else:
+            players_ratings_dict = copy.deepcopy(players_ratings)
+        for player_name, rating in players_ratings_dict.items():
+            new_player = Player(player_name, sofascore_rating=rating, team=team_name)
+            players_ratings_list.append(new_player)
     return players_ratings_list
 
 
@@ -45,7 +52,12 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 
     driver = webdriver.Chrome(keep_alive=False)
     if not team_links:
-        extra_driver = webdriver.Chrome(keep_alive=True)
+        # chrome_options = webdriver.ChromeOptions()
+        # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
+        # chrome_options.add_argument('--disable-extensions')
+        # chrome_options.add_argument('--no-sandbox')
+        # chrome_options.add_argument('--disable-images')
+        extra_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             extra_driver
@@ -57,50 +69,58 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         player_paths_list = []
         print('Extracting %s player links...' % value[0])
         driver.get(value[1])
-        players = driver.find_elements(By.XPATH, "//*[contains(@class, 'sc-fqkvVR gwUJxr')]/a")
+        players = driver.find_elements(By.XPATH, "//a[starts-with(@href, '/player/')]")
         for p in players:
             player_paths_list.append(p.get_attribute('href'))
+        player_paths_list = sorted(list(set(player_paths_list)))
         team_players_paths[value[0]] = player_paths_list
+        # break
 
-    players_with_ratings = dict()
-    save_counter = -1
+    teams_with_players_ratings = dict()
     j = 0
     for team_name, player_paths in team_players_paths.items():
+        players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             driver.get(p)
             average_rating = float(6.0)
             try:
-                average_rating = float(driver.find_element(By.XPATH, "//span[@class='sc-jEACwC cmGEOd']").get_attribute("textContent"))
-            except: # NoSuchElementException:  # Spelling error making this code not work as expected
+                average_rating = float(driver.find_element(By.XPATH, "//span[@color='surface.s1'][@font-size='21']").get_attribute("textContent"))
+            except:  # NoSuchElementException:  # Spelling error making this code not work as expected
                 pass
             try:
-                player_name = driver.find_element(By.XPATH, "//h2[@class='sc-jEACwC iLVhST']").get_attribute("textContent")
+                player_name = driver.find_element(By.XPATH, "(//h2)[1]").get_attribute("textContent")
                 print('Extracting player data from %s ...' % player_name)
-                player_data = {
-                    "rating": average_rating,
-                    "team": team_name
-                }
-                players_with_ratings[player_name] = player_data
+                # player_data = {
+                #     "rating": average_rating,
+                #     "team": team_name,
+                # }
+                # players_ratings[player_name] = player_data
+                players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
                 pass
-            save_counter = save_counter + 1
-            if save_counter == 26:
-                write_dict_to_csv(players_with_ratings, file_name + "_" + str(j))
-                save_counter = 0
-                j = j + 1
+            # break
+        teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
+        write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
+        j += 1
 
     driver.quit()
 
     if write_file:
-        write_dict_to_csv(players_with_ratings, file_name)
+        write_dict_to_csv(teams_with_players_ratings, file_name)
 
-    return players_with_ratings
+    return teams_with_players_ratings
 
 
-# driver = webdriver.Chrome(keep_alive=True)
+# chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
+# chrome_options.add_argument('--disable-extensions')
+# chrome_options.add_argument('--no-sandbox')
+# chrome_options.add_argument('--disable-images')
+# my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", driver)
-# driver.quit()
+# my_driver.quit()
 # pprint(team_links)
-# result = get_players_ratings_list(file_name="sofascore_la_liga_players_data")#, team_links=team_links)
+# result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
+# # result = get_players_ratings_list(file_name="test", team_links=team_links)
 # for p in result:
 #     print(p)

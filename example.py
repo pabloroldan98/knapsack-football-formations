@@ -15,7 +15,7 @@ from group_knapsack import best_full_teams, best_transfers
 from player import Player, set_players_value_to_last_fitness, set_manual_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
-    purge_negative_values, fill_with_team_players, get_old_players_data
+    purge_negative_values, fill_with_team_players, get_old_players_data, set_penalty_boosts
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
