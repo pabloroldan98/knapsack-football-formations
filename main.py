@@ -178,29 +178,27 @@ best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
 
 print()
 my_players_names = [
-    "Kike García",
-    "Stuani",
-    "Moncayola",
-    "Marc Roca",
-    "Darder",
-    "Camavinga",
-    "Barrenetxea",
-    "David López",
-    "Fran García",
+    "Rodrygo",
+    "Iago Aspas",
+    "Williams",
+    "Pepelu",
+    "Kubo",
+    "Sávio",
+    "Alberto Moleiro",
     "Rüdiger",
-    "Mingueza",
-    "Sivera",
-    "Randy Nteka",
-    "Juanmi Latasa",
-    # "Sørloth",
-    "Sergio Arribas",
+    "Sergi Cardona",
+    "Cancelo",
+    "Sergio Herrera",
+    "Artem Dovbyk",
+    "David López",
 ]
 
 my_players_list = []
-# for player in worthy_players:
-for player in purged_players:
+for player in worthy_players:
+# for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)
+        print(player)
 
 print()
 
