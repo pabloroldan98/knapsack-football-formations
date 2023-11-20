@@ -156,6 +156,7 @@ purged_players = purge_everything(worthy_players)
 
 # for player in purged_players:
 for player in worthy_players:
+    # if (player.position=="MID") & (player.price<=20):
     print(player)
 print()
 
@@ -191,11 +192,12 @@ my_players_names = [
     "Sergio Herrera",
     "Artem Dovbyk",
     "David López",
+    "Arda Güler",
 ]
 
 my_players_list = []
-for player in worthy_players:
-# for player in purged_players:
+# for player in worthy_players:
+for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)
         print(player)

@@ -161,7 +161,7 @@ def purge_everything(players_list, teams_to_purge=[], mega_purge=False):
 
 def purge_injured_players(players_list):
     result_players = [player for player in players_list if
-                      player.status == "ok"]
+                      (player.status == "ok") or (player.status == "warned")]
     return result_players
 
 
