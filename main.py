@@ -193,6 +193,25 @@ my_players_names = [
     "Artem Dovbyk",
     "David López",
     "Arda Güler",
+    "Mayoral",
+    "Sivera",
+]
+my_players_names = [
+    "Ledesma",
+    "Guaita",
+    "Mendy",
+    "Cristhian Mosquera",
+    "Juan Miranda",
+    "Diego Rico",
+    "Kroos",
+    "Isco",
+    "Barrenetxea",
+    "Frenkie De Jong",
+    "Ander Herrera",
+    "Mason Greenwood",
+    "Budimir",
+    "João Félix",
+    "Cyle Larin",
 ]
 
 my_players_list = []
