@@ -123,6 +123,7 @@ class Player:
             fixture_coef = base_coef
 
         home_bonus = 0.005 if self.is_playing_home else 0
+        fixture_coef = 1+(1-fixture_coef) if self.position == "GK" else fixture_coef
         fixture_coef += home_bonus if not no_home_boost else 0
 
         self.form = form_coef
