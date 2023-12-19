@@ -34,7 +34,8 @@ def get_team_links_from_league(league_url, driver):
     # Base XPath for team links
     teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div[2]/div/div[1]/div/div[2]/div/a"
     # Specific XPath for team names based on the base XPath
-    team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
+    team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
+    # team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
     team_links = driver.find_elements(By.XPATH, teams_base_xpath)
     team_names = driver.find_elements(By.XPATH, team_name_xpath)
     # Create a dictionary to hold the team names and their links
@@ -117,10 +118,10 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 # chrome_options.add_argument('--no-sandbox')
 # chrome_options.add_argument('--disable-images')
 # my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
-# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", driver)
+# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
 # my_driver.quit()
 # pprint(team_links)
-# result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
-# # result = get_players_ratings_list(file_name="test", team_links=team_links)
-# for p in result:
-#     print(p)
+result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test", team_links=team_links)
+for p in result:
+    print(p)
