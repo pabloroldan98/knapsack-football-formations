@@ -33,6 +33,11 @@ possible_formations = [
     [4, 5, 1],
     [5, 3, 2],
     [5, 4, 1],
+    # [3, 3, 4],
+    # [3, 6, 1],
+    # [4, 2, 4],
+    # [4, 6, 0],
+    # [5, 2, 3],
 ]
 
 
@@ -66,11 +71,12 @@ def get_current_players(
         alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
+        use_comunio_price=False,
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         alt_positions_file_name="futmondo_la_liga_players_positions"
 ):
-    all_teams, all_players = get_championship_data(forced_matches=forced_matches)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches, use_comunio_price=use_comunio_price)
 
     if use_old_teams_data:
         all_teams = get_old_teams_data(forced_matches)
@@ -154,9 +160,10 @@ worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
 
 purged_players = purge_everything(worthy_players)
 
-# for player in purged_players:
-for player in worthy_players:
-    # if (player.position=="MID") & (player.price<=20):
+for player in purged_players:
+# for player in worthy_players:
+#     if (player.position=="ATT") & (player.price<=3) & (player.value>=7) & (player.form>=1):
+#         print(player.name)
     print(player)
 print()
 
@@ -212,6 +219,22 @@ my_players_names = [
     "Budimir",
     "João Félix",
     "Cyle Larin",
+]
+my_players_names = [
+    "Filip Jörgensen",
+    "Mingueza",
+    "Sergio Ramos",
+    "Cancelo",
+    "Aleix García",
+    "Rakitic",
+    "Kroos",
+    "Rodrygo",
+    "Sávio",
+    "Williams",
+    "Raphinha",
+    "João Félix",
+    "Foulquier",
+    "Luis Milla",
 ]
 
 my_players_list = []

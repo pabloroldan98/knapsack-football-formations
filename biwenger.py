@@ -11,7 +11,7 @@ from team import Team
 
 from useful_functions import find_similar_string
 
-def get_championship_data(forced_matches=[], verbose=True):
+def get_championship_data(forced_matches=[], use_comunio_price=False, verbose=True):
 
     all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
 
@@ -25,7 +25,7 @@ def get_championship_data(forced_matches=[], verbose=True):
     if verbose:
         print("Loading players data...")
         print()
-    championship_players = get_players_championship_data(data)
+    championship_players = get_players_championship_data(data, use_comunio_price=use_comunio_price)
 
     sorted_championship_teams = sorted(championship_teams, key=lambda x: x.elo, reverse=True)
     sorted_championship_players = sorted(championship_players, key=lambda x: x.price, reverse=True)
@@ -127,14 +127,14 @@ def get_next_opponent(team_id, teams):
     return next_team, is_my_team_home
 
 
-def get_players_championship_data(data):
+def get_players_championship_data(data, use_comunio_price=False):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    championship_players_db = create_players_list(championship_teams, championship_players)
+    championship_players_db = create_players_list(championship_teams, championship_players, use_comunio_price=use_comunio_price)
     return championship_players_db
 
 
-def create_players_list(championship_teams, championship_players):
+def create_players_list(championship_teams, championship_players, use_comunio_price=False):
     players_list = []
     for championship_player_id in championship_players:
         championship_player = championship_players[str(championship_player_id)]
@@ -142,7 +142,10 @@ def create_players_list(championship_teams, championship_players):
         # pprint(championship_player)
         player_name = championship_player["name"]
         player_group = championship_player["position"]
-        player_price = int(championship_player["fantasyPrice"] / 1000000)
+        if use_comunio_price:
+            player_price = float(championship_player["price"] / 1000000)
+        else:
+            player_price = int(championship_player["fantasyPrice"] / 1000000)
         player_status = championship_player["status"]
         player_standard_price = float(championship_player["price"])
         player_price_trend = float(championship_player["priceIncrement"])
