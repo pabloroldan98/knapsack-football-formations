@@ -121,7 +121,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
 # my_driver.quit()
 # pprint(team_links)
-result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
-# result = get_players_ratings_list(file_name="test", team_links=team_links)
-for p in result:
-    print(p)
+# result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+# for p in result:
+#     print(p)

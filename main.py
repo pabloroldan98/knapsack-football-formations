@@ -162,9 +162,10 @@ purged_players = purge_everything(worthy_players)
 
 for player in purged_players:
 # for player in worthy_players:
-#     if (player.standard_price<=4000000) & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1) & (player.fixture>=0.9):
-#         print(player)
-    print(player)
+    if (player.standard_price<=4000000) & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
+        print(player)
+#     if player.sofascore_rating == 6:
+#     print(player)
 print()
 
 print(len(purged_players))
