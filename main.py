@@ -33,11 +33,11 @@ possible_formations = [
     [4, 5, 1],
     [5, 3, 2],
     [5, 4, 1],
-    # [3, 3, 4],
-    # [3, 6, 1],
-    # [4, 2, 4],
-    # [4, 6, 0],
-    # [5, 2, 3],
+    [3, 3, 4],
+    [3, 6, 1],
+    [4, 2, 4],
+    [4, 6, 0],
+    [5, 2, 3],
 ]
 
 
@@ -162,8 +162,8 @@ purged_players = purge_everything(worthy_players)
 
 for player in purged_players:
 # for player in worthy_players:
-#     if (player.position=="ATT") & (player.price<=3) & (player.value>=7) & (player.form>=1):
-#         print(player.name)
+#     if (player.standard_price<=4000000) & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1) & (player.fixture>=0.9):
+#         print(player)
     print(player)
 print()
 
@@ -181,6 +181,7 @@ print(len(purged_players))
 needed_purge = purged_players[:50]
 
 
+# best_full_teams(needed_purge, possible_formations, 30000, super_verbose=False)
 best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
 
 
