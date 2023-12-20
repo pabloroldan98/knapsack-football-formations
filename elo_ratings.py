@@ -31,3 +31,7 @@ def get_teams_elos(is_worldcup=False, country="ESP"):
 
     return full_teams_elos  # , teams_elos_dict
 
+
+# result = get_teams_elos()
+# for team, elo in result.items():
+#     print(f"{team}: {elo}")
