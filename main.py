@@ -71,7 +71,7 @@ def get_current_players(
         alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
-        use_comunio_price=False,
+        use_comunio_price=True,
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         alt_positions_file_name="futmondo_la_liga_players_positions"
@@ -160,11 +160,12 @@ worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
 
 purged_players = purge_everything(worthy_players)
 
-for player in purged_players:
+for player in worthy_players:
 # for player in worthy_players:
 #     if (player.standard_price<=4000000) & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
 #     if player.sofascore_rating == 6:
+#     if (player.position == "GK"):
     print(player)
 print()
 
@@ -227,16 +228,20 @@ my_players_names = [
     "Mingueza",
     "Sergio Ramos",
     "Cancelo",
+    "Abdel Abqar",
+    "Kike Salas",
     "Aleix García",
     "Rakitic",
+    "Foulquier",
+    "Nico Paz",
     "Kroos",
     "Rodrygo",
+    "Artem Dovbyk",
     "Sávio",
     "Williams",
     "Raphinha",
     "João Félix",
-    "Foulquier",
-    "Luis Milla",
+    # "Luis Milla",
 ]
 
 my_players_list = []
