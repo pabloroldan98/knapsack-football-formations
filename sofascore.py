@@ -84,21 +84,28 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         for p in player_paths:
             driver.get(p)
             average_rating = float(6.0)
-            try:
-                average_rating = float(driver.find_element(By.XPATH, "//span[@color='surface.s1'][@font-size='21']").get_attribute("textContent"))
-            except:  # NoSuchElementException:  # Spelling error making this code not work as expected
-                pass
-            try:
-                player_name = driver.find_element(By.XPATH, "(//h2)[1]").get_attribute("textContent")
-                print('Extracting player data from %s ...' % player_name)
-                # player_data = {
-                #     "rating": average_rating,
-                #     "team": team_name,
-                # }
-                # players_ratings[player_name] = player_data
-                players_ratings[player_name] = average_rating
-            except NoSuchElementException:  # Spelling error making this code not work as expected
-                pass
+            retries = 3  # Maximum number of retries
+            for _ in range(retries):
+                try:
+                    average_rating = float(driver.find_element(By.XPATH, "//span[@color='surface.s1'][@font-size='21']").get_attribute("textContent"))
+                    break  # Break out of the loop if successful
+                except: # NoSuchElementException: # Spelling error making this code not work
+                    # if _ == retries - 1:  # Last attempt
+                    #     print("Failed to fetch rating after several attempts.")
+                    pass
+            for _ in range(retries):
+                try:
+                    player_name = driver.find_element(By.XPATH, "(//h2)[1]").get_attribute("textContent")
+                    print('Extracting player data from %s ...' % player_name)
+                    # player_data = {
+                    #     "rating": average_rating,
+                    #     "team": team_name,
+                    # }
+                    # players_ratings[player_name] = player_data
+                    players_ratings[player_name] = average_rating
+                    break  # Break out of the loop if successful
+                except NoSuchElementException:  # Spelling error making this code not work as expected
+                    pass
             # break
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
@@ -117,11 +124,14 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 # chrome_options.add_argument('--disable-extensions')
 # chrome_options.add_argument('--no-sandbox')
 # chrome_options.add_argument('--disable-images')
+
 # my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
 # my_driver.quit()
 # pprint(team_links)
+
 # result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
-# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+# # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+#
 # for p in result:
 #     print(p)
