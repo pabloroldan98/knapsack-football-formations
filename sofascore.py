@@ -102,7 +102,8 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
                     #     "team": team_name,
                     # }
                     # players_ratings[player_name] = player_data
-                    players_ratings[player_name] = average_rating
+                    if player_name != "":
+                        players_ratings[player_name] = average_rating
                     break  # Break out of the loop if successful
                 except NoSuchElementException:  # Spelling error making this code not work as expected
                     pass

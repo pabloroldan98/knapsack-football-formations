@@ -71,7 +71,7 @@ def get_current_players(
         alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
-        use_comunio_price=True,
+        use_comunio_price=False,
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         alt_positions_file_name="futmondo_la_liga_players_positions"
