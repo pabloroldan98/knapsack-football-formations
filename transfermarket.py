@@ -43,7 +43,7 @@ class TransfermarktScraper:
             penalty_url = f"{self.base_url}/{team_suffix.split('/')[1]}/elfmeterschuetzen/verein/{team_suffix.split('/')[4]}/plus/0?saison_id={year}"
             soup = self.fetch_page(penalty_url)
             if soup:
-                for tr in soup.select("#yw1 table tbody tr"):
+                for tr in reversed(soup.select("#yw1 table tbody tr")):
                     name_elem = tr.select_one("td.hauptlink a")
                     minute_elem = tr.select_one("td:nth-of-type(8)")
                     date_elem = tr.select_one("td.zentriert")

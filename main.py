@@ -71,7 +71,7 @@ def get_current_players(
         alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
-        use_comunio_price=True,
+        use_comunio_price=False,
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         alt_positions_file_name="futmondo_la_liga_players_positions"
@@ -147,11 +147,12 @@ current_players = get_current_players(
     no_fixtures=False,
     no_home_boost=False,
     alt_fixture_method=True,
-    alt_positions=True,
+    alt_positions=False,
     no_penalty_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
+    use_comunio_price=True,
     ratings_file_name="sofascore_la_liga_players_ratings"
 )
 
@@ -224,32 +225,34 @@ my_players_names = [
     "Cyle Larin",
 ]
 my_players_names = [
-    "Filip Jörgensen",
-    "Mingueza",
+    "Sergio Herrera",
+    "Daley Blind",
+    "Alex Suárez",
     "Sergio Ramos",
-    "Cancelo",
-    "Abdel Abqar",
+    "Manu Sánchez",
     "Kike Salas",
     "Aleix García",
-    "Rakitic",
-    "Foulquier",
-    "Nico Paz",
     "Kroos",
-    "Rodrygo",
+    "Modric",
+    "Camavinga",
+    "Tchouameni",
     "Artem Dovbyk",
     "Sávio",
-    "Williams",
-    "Raphinha",
-    "João Félix",
-    # "Luis Milla",
+    "Rodrygo",
+    "Morata",
+    "Roman Yaremchuk",
+    "Vitor Roque",
 ]
 
 my_players_list = []
-# for player in worthy_players:
+for player in worthy_players:
+    if player.name in my_players_names:
+        print(player)
+
 for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)
-        print(player)
+        # print(player)
 
 print()
 
