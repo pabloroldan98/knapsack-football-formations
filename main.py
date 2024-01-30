@@ -33,29 +33,11 @@ possible_formations = [
     [4, 5, 1],
     [5, 3, 2],
     [5, 4, 1],
-    [3, 3, 4],
-    [3, 6, 1],
-    [4, 2, 4],
-    [4, 6, 0],
-    [5, 2, 3],
-]
-
-
-my_team = [
-    Player("Matt Turner"),
-
-    Player("Blind"),
-    Player("Shaw"),
-    Player("Otamendi"),
-    Player("Alphonso Davies"),
-
-    Player("Kamada"),
-    Player("De Bruyne"),
-    Player("Zielinski"),
-
-    Player("Messi"),
-    Player("Griezmann"),
-    Player("Bale"),
+    # [3, 3, 4],
+    # [3, 6, 1],
+    # [4, 2, 4],
+    # [4, 6, 0],
+    # [5, 2, 3],
 ]
 
 
