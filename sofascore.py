@@ -44,6 +44,7 @@ def get_team_links_from_league(league_url, driver):
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
         team_data[str(i+1)] = [name, link]
+        # break
     return team_data
 
 
@@ -73,6 +74,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         players = driver.find_elements(By.XPATH, "//a[starts-with(@href, '/player/')]")
         for p in players:
             player_paths_list.append(p.get_attribute('href'))
+            # break
         player_paths_list = sorted(list(set(player_paths_list)))
         team_players_paths[value[0]] = player_paths_list
         # break
@@ -87,6 +89,8 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             retries = 3  # Maximum number of retries
             for _ in range(retries):
                 try:
+                    # test = driver.find_element(By.XPATH, "//span[@color='surface.s1']").get_attribute("textContent")
+                    # print(test)
                     average_rating = float(driver.find_element(By.XPATH, "//span[@color='surface.s1'][@font-size='21']").get_attribute("textContent"))
                     break  # Break out of the loop if successful
                 except: # NoSuchElementException: # Spelling error making this code not work

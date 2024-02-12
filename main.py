@@ -134,7 +134,7 @@ current_players = get_current_players(
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
-    use_comunio_price=True,
+    use_comunio_price=False,
     ratings_file_name="sofascore_la_liga_players_ratings"
 )
 
@@ -145,7 +145,7 @@ purged_players = purge_everything(worthy_players)
 
 for player in worthy_players:
 # for player in worthy_players:
-#     if (player.standard_price<=4000000) & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
+#     if ((player.position=="ATT") | (player.position=="MID")): # & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
@@ -224,6 +224,26 @@ my_players_names = [
     "Morata",
     "Roman Yaremchuk",
     "Vitor Roque",
+]
+my_players_names = [
+    "Guaita",
+    "Acuña",
+    "Foulquier",
+    "Rubén Peña",
+    "Diego Rico",
+    "Saúl Coco",
+    "Yellu Santiago",
+    "Jordi Martín",
+    "Fekir",
+    "Tchouameni",
+    "Mikel Merino",
+    "Guevara",
+    "Juanmi",
+    "Gündogan",
+    "Raul García de Haro",
+    "Mason Greenwood",
+    "Rodrygo",
+    "Williams",
 ]
 
 my_players_list = []
