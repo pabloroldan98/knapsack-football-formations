@@ -19,6 +19,9 @@ class Player:
             price: int = 100000,
             value: float = 0,
             team: str = "Spain",
+            team_elo: float = 0,
+            opponent: str = "France",
+            opponent_elo: float = 0,
             status: str = "ok",
             standard_price: float = 0,
             price_trend: float = 0,
@@ -26,6 +29,8 @@ class Player:
             penalties: list = [False, False, False, False, False, False],
             penalty_boost: float = 0,
             strategy_boost: float = 0,
+            team_history: list = [],
+            team_history_boost: float = 0,
             sofascore_rating: float = 0,
             next_match_elo_dif: float = 0,
             is_playing_home: bool = False,
@@ -37,6 +42,9 @@ class Player:
         self.price = price
         self.value = value
         self.team = team
+        self.team_elo = team_elo
+        self.opponent = opponent
+        self.opponent_elo = opponent_elo
         self.status = status
         self.standard_price = standard_price
         self.price_trend = price_trend
@@ -44,6 +52,8 @@ class Player:
         self._penalties = penalties
         self.penalty_boost = penalty_boost
         self.strategy_boost = strategy_boost
+        self.team_history = team_history
+        self.team_history_boost = team_history_boost
         self.sofascore_rating = sofascore_rating
         self.next_match_elo_dif = next_match_elo_dif
         self.is_playing_home = is_playing_home
@@ -123,8 +133,10 @@ class Player:
             fixture_coef = base_coef
 
         home_bonus = 0.005 if self.is_playing_home else 0
-        fixture_coef = 1+(1-fixture_coef) if self.position == "GK" else fixture_coef
+        # fixture_coef = 1+(1-fixture_coef) if self.position == "GK" else fixture_coef
+        fixture_coef = 1 if self.position == "GK" else fixture_coef
         fixture_coef += home_bonus if not no_home_boost else 0
+        fixture_coef += self.team_history_boost
 
         self.form = form_coef
         self.fixture = fixture_coef
@@ -302,6 +314,32 @@ def calc_penalty_boost(penalty_indexes):
     return penalty_coef
 
 
+def set_team_history_boosts(players_list, players_team_history_dict):
+    result_players = copy.deepcopy(players_list)
+
+    team_names_list = list(set(player.team for player in result_players))
+    biwinger_transfermarket_teams_dict = read_dict_from_csv("biwinger_transfermarket_la_liga_teams")
+
+    for team_name, team_players_history in players_team_history_dict.items():
+        closest_team_name = find_similar_string(team_name, team_names_list)
+        players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        for player_name, player_team_history in team_players_history.items():
+            closest_player_name = find_similar_string(player_name, players_names_list)
+            for player in result_players:
+                if player.name == closest_player_name:
+                    player.team_history = player_team_history
+                    transfermarket_opponent_name = biwinger_transfermarket_teams_dict[player.opponent]
+                    player.team_history_boost = calc_team_history_boost(player_team_history, transfermarket_opponent_name)
+
+    return result_players
+
+
+def calc_team_history_boost(team_history, opponent):
+    # closest_opponent_name = find_similar_string(opponent, team_history)
+    # return 0.005 if closest_opponent_name else 0
+    return 0.005 if opponent in team_history else 0
+
+
 def set_players_elo_dif(players_list, teams_list):
     result_players = copy.deepcopy(players_list)
     clean_players = purge_no_team_players(result_players)
@@ -322,6 +360,10 @@ def set_players_elo_dif(players_list, teams_list):
         elo_dif = player_team.elo - opponent_team.elo
         player.next_match_elo_dif = elo_dif
         player.is_playing_home = player_team.is_home
+
+        player.team_elo = player_team.elo
+        player.opponent_elo = opponent_team.elo
+        player.opponent = opponent_team.name
     return clean_players
 
 

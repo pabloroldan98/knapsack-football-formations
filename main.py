@@ -15,7 +15,8 @@ from biwenger import get_championship_data
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, \
     set_players_value_to_last_fitness, set_manual_boosts, set_penalty_boosts, \
-    set_players_elo_dif, set_players_sofascore_rating, set_players_value, set_positions, \
+    set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
+    set_positions, set_team_history_boosts, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
     purge_negative_values, fill_with_team_players, get_old_players_data
 from OLD_group_knapsack import best_squads, best_teams
@@ -48,6 +49,7 @@ def get_current_players(
         no_home_boost=False,
         alt_fixture_method=False,
         no_penalty_boost=False,
+        no_team_history_boost=False,
         no_manual_boost=True,
         players_manual_boosts=[],
         forced_matches=[],
@@ -57,6 +59,7 @@ def get_current_players(
         use_comunio_price=False,
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
+        team_history_file_name="transfermarket_la_liga_team_history",
         alt_positions_file_name="futmondo_la_liga_players_positions"
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches, use_comunio_price=use_comunio_price)
@@ -71,14 +74,17 @@ def get_current_players(
 
     partial_players_data = all_players
     if not no_manual_boost:
-        partial_players_data = set_manual_boosts(all_players, players_manual_boosts)
+        partial_players_data = set_manual_boosts(partial_players_data, players_manual_boosts)
     if not no_penalty_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalties_file_name)
-        partial_players_data = set_penalty_boosts(all_players, penalty_takers)
+        partial_players_data = set_penalty_boosts(partial_players_data, penalty_takers)
     if alt_positions:
         players_positions = get_players_positions_dict(file_name=alt_positions_file_name)
         partial_players_data = set_positions(partial_players_data, players_positions)
     partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if not no_team_history_boost:
+        players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
+        partial_players_data = set_team_history_boosts(partial_players_data, players_team_history)
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
 
@@ -150,6 +156,7 @@ for player in worthy_players:
 #         print(player)
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
+#     if (player.team_history_boost > 0):
     print(player)
 print()
 

@@ -125,5 +125,8 @@ def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_
 # players_team_history = get_players_team_history_dict(file_name="transfermarket_la_liga_team_history")
 #
 # print(players_team_history)
-# for team, penalties in penalty_takers.items():
-#     print(team, penalties)
+# for team, players in players_team_history.items():
+#     print()
+#     print(team)
+#     for player, team_history in players.items():
+#         print(player, team_history)

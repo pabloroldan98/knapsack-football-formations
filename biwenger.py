@@ -159,15 +159,15 @@ def create_players_list(championship_teams, championship_players, use_comunio_pr
 
         if player_group != 5:
             new_player = Player(
-                player_name,
-                get_position(player_group),
-                player_price,
-                0,
-                player_team,
-                player_status,
-                player_standard_price,
-                player_price_trend,
-                player_fitness
+                name=player_name,
+                position=get_position(player_group),
+                price=player_price,
+                value=0,
+                team=player_team,
+                status=player_status,
+                standard_price=player_standard_price,
+                price_trend=player_price_trend,
+                fitness=player_fitness
             )
             players_list.append(new_player)
     return players_list
