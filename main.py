@@ -21,7 +21,8 @@ from player import Player, \
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
-from transfermarket import get_penalty_takers_dict
+from transfermarket_penalties import get_penalty_takers_dict
+from transfermarket_team_history import get_players_team_history_dict
 from futmondo import get_players_positions_dict
 
 

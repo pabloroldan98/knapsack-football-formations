@@ -19,7 +19,7 @@ from player import Player, set_players_value_to_last_fitness, set_manual_boosts,
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
-from transfermarket import get_penalty_takers_dict
+from transfermarket_penalties import get_penalty_takers_dict
 
 playersDB_example = [
     Player("Mendy", "GK", 20, 6.8, "SEN"),
