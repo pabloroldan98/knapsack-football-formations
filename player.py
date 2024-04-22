@@ -1,0 +1,513 @@
+import ast
+import copy
+import csv
+import math
+import difflib
+
+import numpy as np
+from unidecode import unidecode
+import os
+
+from useful_functions import find_similar_string, find_string_positions, write_dict_to_csv, read_dict_from_csv
+
+
+class Player:
+    def __init__(
+            self,
+            name: str,
+            position: str = "GK",
+            price: int = 100000,
+            value: float = 0,
+            team: str = "Spain",
+            team_elo: float = 0,
+            opponent: str = "France",
+            opponent_elo: float = 0,
+            status: str = "ok",
+            standard_price: float = 0,
+            price_trend: float = 0,
+            fitness: list = [None, None, None, None, None],
+            penalties: list = [False, False, False, False, False, False],
+            penalty_boost: float = 0,
+            strategy_boost: float = 0,
+            team_history: list = [],
+            team_history_boost: float = 0,
+            sofascore_rating: float = 0,
+            next_match_elo_dif: float = 0,
+            is_playing_home: bool = False,
+            form:  float = 0,
+            fixture:  float = 0
+    ):
+        self.name = name
+        self._position = position
+        self.price = price
+        self.value = value
+        self.team = team
+        self.team_elo = team_elo
+        self.opponent = opponent
+        self.opponent_elo = opponent_elo
+        self.status = status
+        self.standard_price = standard_price
+        self.price_trend = price_trend
+        self.fitness = fitness
+        self._penalties = penalties
+        self.penalty_boost = penalty_boost
+        self.strategy_boost = strategy_boost
+        self.team_history = team_history
+        self.team_history_boost = team_history_boost
+        self.sofascore_rating = sofascore_rating
+        self.next_match_elo_dif = next_match_elo_dif
+        self.is_playing_home = is_playing_home
+        self.form = form
+        self.fixture = fixture
+
+    def __str__(self):
+        return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f})"
+        # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, pos="GK"):
+        if pos not in ["GK", "DEF", "MID", "ATT"]:
+            raise ValueError("Sorry, that's not a valid position")
+        self._position = pos
+
+    @property
+    def penalties(self):
+        return self._penalties
+
+    @penalties.setter
+    def penalties(self, indexes=[]):
+        result = [False] * len(self.penalties)  # Initialize a new list of False values
+        for idx in indexes:
+            if 0 <= idx < len(result):
+                result[idx] = True
+        self._penalties = result
+
+    def get_group(self):
+        if self.position == "GK":
+            group = 1
+        elif self.position == "DEF":
+            group = 2
+        elif self.position == "MID":
+            group = 3
+        else:
+            group = 4
+        return group
+
+    def has_played_last_match(self):
+        if self.fitness[0] is not None:
+            return True
+        else:
+            return False
+
+    def __eq__(self, other_player):
+        if unidecode(str(self.name)).lower().replace(" ", "").replace("-", "") in unidecode(str(other_player.name)).lower().replace(" ", "").replace("-", "") \
+                or unidecode(str(other_player.name)).lower().replace(" ", "").replace("-", "") in unidecode(str(self.name)).lower().replace(" ", "").replace("-", ""):
+            return True
+        else:
+            return False
+
+    def stricter_equal(self, other_player):
+        if unidecode(str(self.name)).lower().replace(" ", "").replace("-", "") == unidecode(str(other_player.name)).lower().replace(" ", "").replace("-", ""):
+            return True
+        else:
+            return False
+
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+        form_coef = ((self.price_trend/math.log(self.standard_price))/200000)*0.9 + 1
+        if no_form:
+            form_coef = 1
+
+        if alt_fixture_method:
+            capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
+            base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
+        else:
+            capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            base_coef = capped_elo_dif * 0.00015 + 1
+        if no_fixtures:
+            fixture_coef = 1
+        else:
+            fixture_coef = base_coef
+
+        home_bonus = 0.005 if self.is_playing_home else 0
+        # fixture_coef = 1+(1-fixture_coef) if self.position == "GK" else fixture_coef
+        fixture_coef = 1 if self.position == "GK" else fixture_coef
+        fixture_coef += home_bonus if not no_home_boost else 0
+        fixture_coef += self.team_history_boost
+
+        self.form = form_coef
+        self.fixture = fixture_coef
+
+        predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(fixture_coef)
+        return predicted_value
+
+    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method)
+        self.value = predicted_value
+
+
+def get_position(group):
+    if group == 1:
+        position = "GK"
+    elif group == 2:
+        position = "DEF"
+    elif group == 3:
+        position = "MID"
+    else:
+        position = "ATT"
+    return position
+
+
+def purge_everything(players_list, teams_to_purge=[], mega_purge=False):
+    purged_players = purge_no_team_players(players_list)
+    purged_players = purge_negative_values(purged_players)
+    purged_players = purge_injured_players(purged_players)
+    purged_players = purge_non_starting_players(purged_players)
+    purged_players = purge_national_teams(purged_players, teams_to_purge)
+    if mega_purge:
+        purged_players = purge_worse_value_players(purged_players)
+    return purged_players
+
+
+def purge_injured_players(players_list):
+    result_players = [player for player in players_list if
+                      (player.status == "ok") or (player.status == "warned")]
+    return result_players
+
+
+def purge_no_team_players(players_list):
+    result_players = [player for player in players_list if
+                      player.team != "None"]
+    return result_players
+
+
+def purge_eliminated_players(players_list, qualified_teams):
+    result_players = []
+    for player in players_list:
+        for team in qualified_teams:
+            if player.team == team.name:
+                result_players.append(player)
+    return result_players
+
+
+def purge_non_starting_players(players_list):
+    result_players = [
+        player for player in players_list
+        if len(player.fitness) >= 2 and
+           (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int))
+    ]
+    return result_players
+
+
+def purge_negative_values(players_list):
+    result_players = [player for player in players_list if
+                      player.value > 1]
+    return result_players
+
+
+def purge_national_teams(players_list, teams_to_purge):
+    result_players = [player for player in players_list if
+                      player.team not in teams_to_purge]
+    return result_players
+
+
+def purge_worse_value_players(players_list):
+    result_players = copy.deepcopy(players_list)
+    for player in result_players:
+        for player_to_check in result_players:
+            if player_to_check.price >= player.price \
+                    and player_to_check.value < player.value \
+                    and player_to_check.position == player.position:
+                result_players.remove(player_to_check)
+    return result_players
+
+
+def fill_with_team_players(my_team, players_list):
+    result_players = copy.deepcopy(players_list)
+    past_players = []
+    for p in my_team:
+        for c in players_list:
+            if p == c:
+                past_players.append(c)
+                break
+    for p in result_players:
+        for c in past_players:
+            if p == c:
+                past_players.remove(c)
+                break
+    result_players = result_players + past_players
+    return result_players
+
+
+def set_manual_boosts(players_list, manual_boosts):
+    result_players = copy.deepcopy(players_list)
+    for boosted_player in manual_boosts:
+        for player in result_players:
+            if boosted_player == player:
+                player.penalty_boost = boosted_player.penalty_boost
+                player.strategy_boost = boosted_player.strategy_boost
+                break
+    return result_players
+
+
+def set_positions(players_list, players_positions_dict):
+    result_players = copy.deepcopy(players_list)
+    team_position_names_list = list(players_positions_dict.keys())
+
+    for player in result_players:
+        closest_player_position_team = find_similar_string(player.team, team_position_names_list, similarity_threshold=0)
+        player_position_names_list = list(players_positions_dict[closest_player_position_team].keys())
+        closest_player_position_name = find_similar_string(player.name, player_position_names_list)
+        if closest_player_position_name:
+            player.position = players_positions_dict[closest_player_position_team][closest_player_position_name]
+
+    return result_players
+
+
+def set_penalty_boosts(players_list, penalty_takers_dict):
+    result_players = copy.deepcopy(players_list)
+
+    team_names_list = list(set(player.team for player in result_players))
+
+    for team_name, penalty_takers_names_list in penalty_takers_dict.items():
+        closest_team_name = find_similar_string(team_name, team_names_list)
+        players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        for penalty_taker_name in penalty_takers_names_list:
+            closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
+            for player in result_players:
+                if player.name == closest_player_name:
+                    players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
+                    player.penalties = players_penalties
+                    player.penalty_boost = calc_penalty_boost(players_penalties)
+
+        # for player in result_players:
+        #     if player.team == closest_team_name:
+        #         closest_penalty_taker_name = find_similar_string(player.name, penalty_takers_names_list, verbose=True)
+        #         if closest_penalty_taker_name is not None:
+        #             players_penalties = find_string_positions(penalty_takers_names_list, closest_penalty_taker_name)
+        #             player.penalties = players_penalties
+        #             player.penalty_boost = calc_penalty_boost(players_penalties)
+    return result_players
+
+
+def calc_penalty_boost(penalty_indexes):
+    penalty_coef = 0
+    for penalty_index in penalty_indexes:
+        if penalty_index < 5: # Take only last 5 pens into account
+            penalty_coef = penalty_coef + 0.2 - (penalty_index * 0.025)
+        # penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)
+        # if (penalty_index == 0) or (penalty_index == 1):
+        #     penalty_coef = penalty_coef + 0.15
+        # elif (penalty_index == 2) or (penalty_index == 3):
+        #     penalty_coef = penalty_coef + 0.1
+        # else:
+        #     penalty_coef = penalty_coef + 0.075
+        # if penalty_index == 0:
+        #     penalty_coef = penalty_coef + 0.2
+        # elif (penalty_index == 1) or (penalty_index == 2):
+        #     penalty_coef = penalty_coef + 0.15
+        # else:
+        #     penalty_coef = penalty_coef + 0.1
+    return penalty_coef
+
+
+def set_team_history_boosts(players_list, players_team_history_dict):
+    result_players = copy.deepcopy(players_list)
+
+    team_names_list = list(set(player.team for player in result_players))
+    biwinger_transfermarket_teams_dict = read_dict_from_csv("biwinger_transfermarket_la_liga_teams")
+
+    for team_name, team_players_history in players_team_history_dict.items():
+        closest_team_name = find_similar_string(team_name, team_names_list)
+        players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        for player_name, player_team_history in team_players_history.items():
+            closest_player_name = find_similar_string(player_name, players_names_list)
+            for player in result_players:
+                if player.name == closest_player_name:
+                    player.team_history = player_team_history
+                    transfermarket_opponent_name = biwinger_transfermarket_teams_dict[player.opponent]
+                    player.team_history_boost = calc_team_history_boost(player_team_history, transfermarket_opponent_name)
+
+    return result_players
+
+
+def calc_team_history_boost(team_history, opponent):
+    # closest_opponent_name = find_similar_string(opponent, team_history)
+    # return 0.005 if closest_opponent_name else 0
+    return 0.005 if opponent in team_history else 0
+
+
+def set_players_elo_dif(players_list, teams_list):
+    result_players = copy.deepcopy(players_list)
+    clean_players = purge_no_team_players(result_players)
+    # clean_players = purge_eliminated_players(clean_players, teams_list)
+    checked_teams = check_teams(clean_players, teams_list)
+    if len(checked_teams) != len(teams_list):
+        print("The following teams do NOT match your Databases:")
+        for team in teams_list:
+            if team.name not in checked_teams:
+                print(team.name)
+        print()
+
+    teams_dict = {team.name: team for team in teams_list}
+
+    for player in clean_players:
+        player_team = teams_dict[player.team]
+        opponent_team = teams_dict[player_team.next_opponent]
+        elo_dif = player_team.elo - opponent_team.elo
+        player.next_match_elo_dif = elo_dif
+        player.is_playing_home = player_team.is_home
+
+        player.team_elo = player_team.elo
+        player.opponent_elo = opponent_team.elo
+        player.opponent = opponent_team.name
+    return clean_players
+
+
+def check_teams(players_list, teams_list):
+    count = dict()
+    for player in players_list:
+        for team in teams_list:
+            if player.team == team.name:
+                count[player.team] = player.team
+    return count
+
+
+def set_players_sofascore_rating(
+        players_list,
+        players_ratings_list,
+        write_file=True,
+        file_name="player_names_biwenger_sofascore"
+):
+    result_players = copy.deepcopy(players_list)
+
+    team_player_rating_dict = {}
+    for player_rating in players_ratings_list:
+        if player_rating.team not in team_player_rating_dict:
+            team_player_rating_dict[player_rating.team] = {}
+        team_player_rating_dict[player_rating.team][player_rating.name] = player_rating.sofascore_rating
+
+    team_rating_names_list = list(team_player_rating_dict.keys())
+    for player in result_players:
+        if player.team == "Atlético":
+            closest_player_rating_team = "Atl. Madrid"
+        else:
+            closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
+        player_rating_names_list = list(team_player_rating_dict[closest_player_rating_team].keys())
+        # closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6, verbose=True)
+        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6, verbose=False)
+        if closest_player_rating_name:
+            player.sofascore_rating = team_player_rating_dict[closest_player_rating_team][closest_player_rating_name]
+
+    # has_previous_file = False
+    # if os.path.isfile('./' + file_name + '.csv'):
+    #     biwenger_sofascore_names = read_dict_from_csv(file_name)
+    #     has_previous_file = True
+    #     write_file = False
+    # players_ratings_dict = {listed_rated_player.name: listed_rated_player for listed_rated_player in players_ratings_list}
+    #
+    # similar_names_dict = {}  # Initialize an empty dictionary
+    #
+    # # Create a dictionary with teams as keys and lists of players as values
+    # team_players_ratings_dict = {}
+    # for player in players_ratings_list:
+    #     if player.team not in team_players_ratings_dict:
+    #         team_players_ratings_dict[player.team] = []
+    #     team_players_ratings_dict[player.team].append(player)
+    #
+    # team_names_list = list(set(player.team for player in result_players))
+    #
+    # for team_ratings_name, players_with_ratings_list in team_players_ratings_dict.items():
+    #     if team_ratings_name == "Atl. Madrid":
+    #         closest_team_name = "Atlético"
+    #     else:
+    #         closest_team_name = find_similar_string(team_ratings_name, team_names_list)
+    #     players_ratings_names_list = list(set(player.name for player in players_with_ratings_list))
+    #     for player in result_players:
+    #         if player.team == closest_team_name:
+    #             if has_previous_file:
+    #                 closest_player_ratings_name = biwenger_sofascore_names[player.name]
+    #             else:
+    #                 closest_player_ratings_name = find_similar_string(player.name, players_ratings_names_list, similarity_threshold=-1)
+    #             similar_names_dict[player.name] = closest_player_ratings_name  # Add key-value pair to the dictionary
+    #             if closest_player_ratings_name == player.name:
+    #                 players_ratings_names_list.remove(closest_player_ratings_name)
+    #             if closest_player_ratings_name is not None:
+    #                 player.sofascore_rating = players_ratings_dict[closest_player_ratings_name].sofascore_rating
+    # if write_file:
+    #     write_dict_to_csv(similar_names_dict, file_name)
+
+
+    # for rated_player_name in players_ratings_names_list:
+    #     if has_previous_file:
+    #         closest_player_name = sofascore_biwenger_names[rated_player_name]
+    #     else:
+    #         closest_player_name = find_similar_string(rated_player_name, players_names_list)  # , verbose=True)
+    #     similar_names_dict[rated_player_name] = closest_player_name  # Add key-value pair to the dictionary
+    #     if closest_player_name == rated_player_name:
+    #         players_names_list.remove(closest_player_name)
+    #     for player in result_players:
+    #         if player.name == closest_player_name:
+    #             player.sofascore_rating = players_ratings_dict[rated_player_name].sofascore_rating
+    # if write_file:
+    #     write_dict_to_csv(similar_names_dict, file_name)
+
+    return result_players
+
+
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+    result_players = copy.deepcopy(players_list)
+    for player in result_players:
+        player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method)
+    return result_players
+
+
+def set_players_value_to_last_fitness(players_list):
+    purged_list = purge_non_starting_players(players_list)
+    for player in purged_list:
+        if player.fitnesss[0] is None:
+            player.value = float(player.fitness[1])
+        else:
+            player.value = float(player.fitness[0])
+    repurged_list = purge_negative_values(purged_list)
+    return repurged_list
+
+
+def set_players_value_to_last_fitness(players_list):
+    purged_list = purge_non_starting_players(players_list)
+    for player in purged_list:
+        if player.fitnesss[0] is None:
+            player.value = float(player.fitness[1])
+        else:
+            player.value = float(player.fitness[0])
+    repurged_list = purge_negative_values(purged_list)
+    return repurged_list
+
+
+def get_old_players_data():
+    with open('OLD_players_before_jornada_03.csv', newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+    old_players_data = []
+    for d in data:
+        new_player = Player(
+            d[0],
+            d[1],
+            int(d[2]),
+            float(0),
+            d[4],
+            d[5],
+            float(d[6]),
+            float(d[7]),
+            ast.literal_eval(d[8]),
+            float(0),
+            float(0),
+            float(0),
+            float(d[12])
+        )
+        old_players_data.append(new_player)
+    return old_players_data
+
