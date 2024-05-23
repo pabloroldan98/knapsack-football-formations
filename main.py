@@ -157,6 +157,7 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
+#     if (player.value >= 7.033):# & (player.form > 1) & (player.fixture > 1):
     print(player)
 print()
 
@@ -216,47 +217,52 @@ my_players_names = [
 ]
 my_players_names = [
     "Sergio Herrera",
-    "Daley Blind",
-    "Alex Suárez",
-    "Sergio Ramos",
-    "Manu Sánchez",
-    "Kike Salas",
-    "Aleix García",
-    "Kroos",
-    "Modric",
+    "Sivera",
+    "Sabaly",
+    "Militão",
+    "Nacho",
+    "Cancelo",
+    "Mingueza",
+    "Eric García",
+    "De Marcos",
+    "Bellingham",
+    "Isco",
+    "Arda Güller",
     "Camavinga",
-    "Tchouameni",
-    "Artem Dovbyk",
-    "Sávio",
-    "Rodrygo",
+    "Kroos",
+    "Fornals",
+    "Kirian",
+    "Maksimovic",
+    "Juanmi",
+    "Oyarzabal",
+    "Muriqi",
     "Morata",
-    "Roman Yaremchuk",
-    "Vitor Roque",
 ]
-my_players_names = [
-    "Guaita",
-    "Augusto Batalla",
-    "Acuña",
-    "Foulquier",
-    "Christensen",
-    "Koundé",
-    "Rüdiger",
-    "Saúl Coco",
-    "Jordi Martín",
-    "Fekir",
-    "Ilaix Moriba",
-    "Tchouameni",
-    "Robert Navarro",
-    "Barrenetxea",
-    "Llorente",
-    "Sancet",
-    "Isi Palazón",
-    "Omorodion",
-    "Sheraldo Becker",
-    "Bertrand Traoré",
-    "Rodrygo",
-    "Williams",
-]
+# my_players_names = [
+#     "Guaita",
+#     "Batalla",
+#     "Acuña",
+#     "Foulquier",
+#     "Christensen",
+#     "Koundé",
+#     "Rüdiger",
+#     "Saúl Coco",
+#     "Jordi Martín",
+#     "Fekir",
+#     "Ilaix Moriba",
+#     "Tchouameni",
+#     "Robert Navarro",
+#     "Barrenetxea",
+#     "Llorente",
+#     "Sancet",
+#     "Isi Palazón",
+#     "Omorodion",
+#     "Sheraldo Becker",
+#     "Bertrand Traoré",
+#     "Rodrygo",
+#     "Williams",
+#     # "Ayoze",
+# ]
 
 my_players_list = []
 for player in worthy_players:
