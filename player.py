@@ -281,10 +281,7 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for penalty_taker_name in penalty_takers_names_list:
-            if penalty_taker_name=="Krzysztof Piatek":
-                closest_player_name = "K. Piatek"
-            else:
-                closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
+            closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
             for player in result_players:
                 if player.name == closest_player_name:
                     players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
@@ -300,10 +297,12 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
         #             player.penalty_boost = calc_penalty_boost(players_penalties)
     return result_players
 
-
-def calc_penalty_boost(penalty_indexes):
+def calc_penalty_boost(players_penalties):
+    penalty_indexes = [index for index, value in enumerate(players_penalties) if value]
     penalty_coef = 0
     for penalty_index in penalty_indexes:
+        # if penalty_index < 6: # Take only last 6 pens into account
+        #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
         if penalty_index < 5: # Take only last 5 pens into account
             penalty_coef = penalty_coef + 0.2 - (penalty_index * 0.025)
         # penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)

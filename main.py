@@ -28,6 +28,8 @@ from futmondo import get_players_positions_dict
 
 
 possible_formations = [
+    # [2, 1, 1],
+
     [3, 4, 3],
     [3, 5, 2],
     [4, 3, 3],
@@ -35,6 +37,7 @@ possible_formations = [
     [4, 5, 1],
     [5, 3, 2],
     [5, 4, 1],
+
     # [3, 3, 4],
     # [3, 6, 1],
     # [4, 2, 4],
@@ -209,12 +212,60 @@ print(len(purged_players))
 # best_transfers(my_team, mega_purged_players, 5, verbose=True)
 
 # needed_purge = purged_players[:50]
-needed_purge = worthy_players[:100]
+# needed_purge = worthy_players[:150]
+needed_purge = [player for player in worthy_players if player.price > 7]
+needed_purge = needed_purge[:150]
+
+needed_purge = [player for player in needed_purge if player.name != "Baumann"]
+needed_purge = [player for player in needed_purge if player.name != "Matt O'Riley"]
+needed_purge = [player for player in needed_purge if player.name != "Zubkov"]
+needed_purge = [player for player in needed_purge if player.name != "Patrick Pentz"]
+needed_purge = [player for player in needed_purge if player.name != "Olij"]
+needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
+needed_purge = [player for player in needed_purge if player.name != "Yarmolenko"]
+needed_purge = [player for player in needed_purge if player.name != "Areola"]
+needed_purge = [player for player in needed_purge if player.name != "Zsolt Nagy"]
+needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
+needed_purge = [player for player in needed_purge if player.name != "Raum"]
+needed_purge = [player for player in needed_purge if player.name != "Clauss"]
+# needed_purge = [player for player in needed_purge if player.name != "Rodri"]
+needed_purge = [player for player in needed_purge if player.name != "Skov Olsen"]
+needed_purge = [player for player in needed_purge if player.name != "Otávio"]
+needed_purge = [player for player in needed_purge if player.name != "Rúben Neves"]
+needed_purge = [player for player in needed_purge if player.name != "Shaparenko"]
+needed_purge = [player for player in needed_purge if player.name != "Undav"]
+needed_purge = [player for player in needed_purge if player.name != "Bakayoko"]
+needed_purge = [player for player in needed_purge if player.name != "D. von Ballmoos"]
+needed_purge = [player for player in needed_purge if player.name != "Anders Dreyer"]
+needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
+# needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
 
 
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
 best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+
+
+
+
+# a = [player for player in worthy_players if player.position == "GK"][4]
+# b = [player for player in worthy_players if player.position == "MID"][0]
+# c = [player for player in worthy_players if player.position == "ATT"][0]
+# needed_purge = [player for player in worthy_players if player.position == "DEF"] + [a] + [b] + [c]
+#
+# needed_purge = [player for player in needed_purge if player.name != "Grimaldo"]
+# needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
+# needed_purge = [player for player in needed_purge if player.name != "Clauss"]
+# needed_purge = [player for player in needed_purge if player.name != "Raum"]
+# needed_purge = [player for player in needed_purge if player.name != "Danilo"]
+# needed_purge = [player for player in needed_purge if player.name != "Carvajal"]
+# needed_purge = [player for player in needed_purge if player.name != "Henrichs"]
+# needed_purge = [player for player in needed_purge if player.name != "Geertruida"]
+#
+# needed_purge = [player for player in needed_purge if player.price > 7]
+#
+#
+# best_full_teams(needed_purge, possible_formations, 14+61+75+30, verbose=2)
 
 
 ################################################### CHECK YOUR TEAM ###################################################
