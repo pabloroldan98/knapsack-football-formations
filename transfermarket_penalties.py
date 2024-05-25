@@ -36,7 +36,7 @@ class TransfermarktScraper:
     def get_penalty_takers(self, team_suffix):
         # Dynamically determine the current year and then the two previous years
         current_year = datetime.now().year
-        years = [str(current_year), str(current_year - 1), str(current_year - 2)]
+        years = [str(current_year - i) for i in range(10)]
 
         takers = []
         for year in years:
@@ -67,7 +67,8 @@ class TransfermarktScraper:
 
     def scrape(self):
         result = {}
-        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
         team_links = self.get_team_links(league_url)
         for team_name, team_suffix in team_links.items():
             print('Extracting penalty takers data from %s ...' % team_name)
@@ -87,6 +88,7 @@ def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_p
     filtered_penalties_data = {}
     for team, penalty_takers in penalties_data.items():
         filtered_penalties = [penalty_taker["name"] for penalty_taker in penalty_takers if penalty_taker["minute"] != 120][:6]
+        filtered_penalties += ["UNKNOWN"] * (6 - len(filtered_penalties))
         filtered_penalties_data[team] = filtered_penalties
 
     if write_file:
@@ -95,7 +97,7 @@ def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_p
     return filtered_penalties_data
 
 
-# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_la_liga_penalty_takers")
+# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_eurocopa_penalty_takers")
 #
 # print(penalty_takers)
 # for team, penalties in penalty_takers.items():

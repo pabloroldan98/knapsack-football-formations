@@ -38,6 +38,8 @@ class TransfermarktScraper:
         player_links = {}
         if soup:
             players = soup.select("#yw1 table tbody tr td.posrela a")
+            if not players:
+                players = soup.select("div.responsive-table div.grid-view table.items tbody tr td table.inline-table tr td.hauptlink a")
             for player in players:
                 name = player.text.strip()
                 url = player.get('href')
@@ -57,7 +59,17 @@ class TransfermarktScraper:
 
         return team_player_links
 
-    def get_player_team_history(self, url):
+    def get_team_country(self, url):
+        soup = self.fetch_page(url)
+        if soup:
+            meta_tag = soup.find('meta', attrs={'name': 'keywords'})
+            if meta_tag:
+                content = meta_tag.get('content', '')
+                country = content.split(',')[-1].strip()
+                return country
+        return None
+
+    def get_player_team_history(self, url, use_country_as_team=False):
         transfers_url = url.replace("/profil/", "/leistungsdatenverein/")
         soup = self.fetch_page(transfers_url)
         team_history = []
@@ -68,6 +80,9 @@ class TransfermarktScraper:
                 if team_data:
                     team_name = team_data[1].text.strip()
                     team_url = f"{self.base_url}{team_data[1].find('a')['href']}"
+                    if use_country_as_team:
+                        team_country = self.get_team_country(team_url)
+                        team_name = team_country
                     appearances = team_data[2].text.replace("-", "0").strip()
                     goals = team_data[4].text.replace("-", "0").strip()
                     minutes = team_data[-1].text.replace("-", "0").replace("'", "").replace(".", "").strip()
@@ -76,6 +91,7 @@ class TransfermarktScraper:
                         team_info = {
                             "name": team_name,
                             "url": team_url,
+                            # "country": team_country,
                             "appearances": int(appearances),
                             "goals": int(goals),
                             "minutes": int(minutes),
@@ -83,9 +99,10 @@ class TransfermarktScraper:
                         team_history.append(team_info)
         return team_history
 
-    def scrape(self):
+    def scrape(self, use_country_as_team=False):
         result = {}
-        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
         team_links = self.get_team_links(league_url)
         team_player_links = self.get_team_player_links(team_links)
         print()
@@ -93,20 +110,20 @@ class TransfermarktScraper:
             team_result = {}
             for player_name, player_link in player_links.items():
                 print('Extracting player team history from %s ...' % player_name)
-                team_result[player_name] = self.get_player_team_history(player_link)
+                team_result[player_name] = self.get_player_team_history(player_link, use_country_as_team)
                 # break
             result[team_name] = team_result
         return result
 
 
-def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_liga_team_history"):
+def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_liga_team_history",  use_country_as_team=False):
     if os.path.isfile('./' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result
 
     scraper = TransfermarktScraper()
-    team_history_data = scraper.scrape()
+    team_history_data = scraper.scrape(use_country_as_team)
 
     filtered_team_history_data = {}
     for team, player_data in team_history_data.items():
@@ -122,7 +139,7 @@ def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_
     return filtered_team_history_data
 
 
-players_team_history = get_players_team_history_dict(file_name="transfermarket_la_liga_team_history")
+players_team_history = get_players_team_history_dict(file_name="transfermarket_eurocopa_country_history", use_country_as_team=True)
 #
 # print(players_team_history)
 # for team, players in players_team_history.items():

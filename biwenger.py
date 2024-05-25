@@ -11,9 +11,10 @@ from team import Team
 
 from useful_functions import find_similar_string
 
-def get_championship_data(forced_matches=[], use_comunio_price=False, verbose=True):
+def get_championship_data(forced_matches=[], is_country=False, host_team=None, use_comunio_price=False, verbose=True):
 
-    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+    # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
 
     response = requests.get(all_data_url)
     data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
@@ -21,7 +22,7 @@ def get_championship_data(forced_matches=[], use_comunio_price=False, verbose=Tr
     if verbose:
         print("Loading teams data...")
         print()
-    championship_teams = get_teams_championship_data(data, forced_matches=forced_matches)
+    championship_teams = get_teams_championship_data(data, is_country=is_country, host_team=host_team, forced_matches=forced_matches)
     if verbose:
         print("Loading players data...")
         print()
@@ -33,19 +34,20 @@ def get_championship_data(forced_matches=[], use_comunio_price=False, verbose=Tr
     return sorted_championship_teams, sorted_championship_players
 
 
-def get_teams_championship_data(data, forced_matches=[]):
+def get_teams_championship_data(data, is_country=False, host_team=None, forced_matches=[]):
     championship_teams = data['data']['teams']
-    teams_elos_dict = get_teams_elos()
+    teams_elos_dict = get_teams_elos(is_country=is_country)
     championship_teams_db = create_teams_list(
         championship_teams,
         teams_elos_dict,
+        host_team=host_team,
         forced_matches=forced_matches
     )
 
     return championship_teams_db
 
 
-def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
+def create_teams_list(championship_teams, teams_elos_dict, host_team=None, forced_matches=[]):
     teams_list = []
     if not forced_matches:
         for championship_team_id in championship_teams:
@@ -61,6 +63,9 @@ def create_teams_list(championship_teams, teams_elos_dict, forced_matches=[]):
                 team_name_next_opponent = team_next_opponent["name"]
 
             team_elo = get_team_elo(team_name, teams_elos_dict)
+
+            if host_team:
+                is_team_home = True if host_team == team_name else False
 
             new_team = Team(
                 team_name,
@@ -102,8 +107,12 @@ def get_team_elo(team_name, teams_elos_dict):
     teams_list = list(teams_elos_dict.keys())
     if team_name == "Athletic":
         closest_team_name = "Bilbao"
+    elif team_name == "Czech Republic":
+        closest_team_name = "Czechia"
+    elif team_name == "Türkiye":
+        closest_team_name = "Turkey"
     else:
-        closest_team_name = find_similar_string(team_name, teams_list)
+        closest_team_name = find_similar_string(team_name, teams_list) #, 0.7)
     if closest_team_name in teams_elos_dict:
         team_elo = teams_elos_dict[closest_team_name]
     else:
@@ -173,7 +182,7 @@ def create_players_list(championship_teams, championship_players, use_comunio_pr
     return players_list
 
 
-# all_teams, all_players = get_championship_data()
+# all_teams, all_players = get_championship_data(is_country=True)
 #
 # for t in all_teams:
 #     print(t)

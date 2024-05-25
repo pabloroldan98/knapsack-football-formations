@@ -32,11 +32,21 @@ def get_players_ratings_list(write_file=True, file_name="sofascore_players_ratin
     return players_ratings_list
 
 
+def fix_team_data(team_data):
+    for key, value in team_data.items():
+        name, url = value
+        if not name:
+            # Extract the second to last part of the URL path, replace "-" with " ", and capitalize each word
+            name = url.split("/")[-2].replace("-", " ").title().strip()
+            team_data[key] = [name, url]
+    return team_data
+
+
 def get_team_links_from_league(league_url, driver):
     driver.get(league_url)
-    wait = WebDriverWait(driver, 15)  # 10 seconds timeout
-    # Base XPath for team links
-    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div[2]/div/div[1]/div/div[2]/div/a"
+    wait = WebDriverWait(driver, 15)  # 15 seconds timeout
+    # Base XPath for general team links
+    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
     # Specific XPath for team names based on the base XPath
     team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
     # team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
@@ -52,6 +62,7 @@ def get_team_links_from_league(league_url, driver):
         name = team_name_element.text
         team_data[str(i+1)] = [name, link]
         # break
+    team_data = fix_team_data(team_data)
     return team_data
 
 
@@ -70,7 +81,8 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         extra_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
         # time.sleep(15)
         team_links = get_team_links_from_league(
-            "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+            # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+            "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             extra_driver
         )
         extra_driver.quit()
@@ -110,6 +122,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         #     player_paths_list.append(p.get_attribute('href'))
         #     # break
         player_paths_list = sorted(list(set(player_paths_list)))
+        # player_paths_list = ['https://www.sofascore.com/player/antonio-rudiger/142622', 'https://www.sofascore.com/player/thibaut-courtois/70988', ]
         print(player_paths_list)
         team_players_paths[value[0]] = player_paths_list
         # break
@@ -121,16 +134,16 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         for p in player_paths:
             driver.get(p)
             average_rating = float(6.0)
-            try:
-                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "(//span[@role='meter']/div[@format='sideBox'])[3]"))).get_attribute("textContent"))
+            try: # Average 12 months
+                # Find the div containing "Average Sofascore rating"
+                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Average Sofascore rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
             except:  # NoSuchElementException: # Spelling error making this code not work
-                try:
-                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "(//span[@role='meter']/div[@format='sideBox'])[1]"))).get_attribute("textContent"))
+                try: # Average last competition
+                    # Find the span containing "Average Sofascore rating"
+                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                    average_rating = average_rating*0.95
                 except:
-                    try:
-                        average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "(//span[@role='meter']/div[@format='sideBox'])[last()]"))).get_attribute("textContent"))
-                    except:
-                        pass
+                    pass
             try:
                 player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
                 print('Extracting player data from %s ...' % player_name)
@@ -186,12 +199,20 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 # chrome_options.add_argument('--disable-images')
 
 # my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
-# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
+# # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
+# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953", my_driver)
 # my_driver.quit()
 # pprint(team_links)
 
-# result = get_players_ratings_list(file_name="sofascore_la_liga_players_ratings")#, team_links=team_links)
+# start_time = time.time()
+#
+# result = get_players_ratings_list(file_name="sofascore_eurocopa_players_ratings")#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+#
+# end_time = time.time()
+# elapsed_time = end_time - start_time
+#
+# print(f"Execution time: {elapsed_time} seconds")
 #
 # for p in result:
 #     print(p)

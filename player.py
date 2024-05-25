@@ -7,6 +7,7 @@ import difflib
 import numpy as np
 from unidecode import unidecode
 import os
+from pprint import pprint
 
 from useful_functions import find_similar_string, find_string_positions, write_dict_to_csv, read_dict_from_csv
 
@@ -253,7 +254,7 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
-def set_positions(players_list, players_positions_dict):
+def set_positions(players_list, players_positions_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
     team_position_names_list = list(players_positions_dict.keys())
 
@@ -262,7 +263,11 @@ def set_positions(players_list, players_positions_dict):
         player_position_names_list = list(players_positions_dict[closest_player_position_team].keys())
         closest_player_position_name = find_similar_string(player.name, player_position_names_list)
         if closest_player_position_name:
-            player.position = players_positions_dict[closest_player_position_team][closest_player_position_name]
+            new_position = players_positions_dict[closest_player_position_team][closest_player_position_name]
+            if verbose:
+                if player.position != new_position:
+                    print(f"{player.name}: {player.position} --> {new_position}")
+            player.position = new_position
 
     return result_players
 
@@ -276,7 +281,10 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for penalty_taker_name in penalty_takers_names_list:
-            closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
+            if penalty_taker_name=="Krzysztof Piatek":
+                closest_player_name = "K. Piatek"
+            else:
+                closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
             for player in result_players:
                 if player.name == closest_player_name:
                     players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
@@ -314,11 +322,24 @@ def calc_penalty_boost(penalty_indexes):
     return penalty_coef
 
 
+def get_biwinger_transfermarket_teams_dict(biwenger_team_names_list, transfermarket_team_names_list, file_name="biwinger_transfermarket_teams"):
+    if os.path.isfile('./' + file_name + '.csv'):
+        return read_dict_from_csv(file_name)
+    result_biwinger_transfermarket_teams_dict = dict()
+
+    for biwenger_team_name in biwenger_team_names_list:
+        closest_transfermarket_team_name = find_similar_string(biwenger_team_name, transfermarket_team_names_list)
+        result_biwinger_transfermarket_teams_dict[biwenger_team_name] = closest_transfermarket_team_name
+
+    return result_biwinger_transfermarket_teams_dict
+
+
 def set_team_history_boosts(players_list, players_team_history_dict):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
-    biwinger_transfermarket_teams_dict = read_dict_from_csv("biwinger_transfermarket_la_liga_teams")
+    penalty_team_names_list = list(players_team_history_dict.keys())
+    biwinger_transfermarket_teams_dict = get_biwinger_transfermarket_teams_dict(team_names_list, penalty_team_names_list) #, file_name="biwinger_transfermarket_la_liga_teams")
 
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
@@ -397,8 +418,7 @@ def set_players_sofascore_rating(
         else:
             closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
         player_rating_names_list = list(team_player_rating_dict[closest_player_rating_team].keys())
-        # closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6, verbose=True)
-        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6, verbose=False)
+        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.8)#, verbose=True
         if closest_player_rating_name:
             player.sofascore_rating = team_player_rating_dict[closest_player_rating_team][closest_player_rating_name]
 

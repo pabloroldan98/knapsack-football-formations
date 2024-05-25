@@ -9,8 +9,14 @@ def cleaned_string(s):
     res = s
     return unidecode(str(res)).lower().replace(" ", "").replace("-", "")
 
+def format_string(s):
+    words = s.split()
+    if len(words) > 1:
+        return words[0][0] + '. ' + ' '.join(words[1:])
+    return s
 
-def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False):
+
+def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False):
     # First, check for '==' in the list
     if my_string in string_list:
         # if verbose:
@@ -31,6 +37,18 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
             # if verbose:
             #     print(f"Most similar string for \"{my_string}\": {list_string_clean} (~100 %)")
             return list_string
+    # Fourth, the initial checks, apply the special formatting (point rule) and check again, but only once
+    if not is_formatted and ' ' in my_string:  # Check if my_string contains more than one word and hasn't been formatted
+        formatted_string = format_string(my_string)
+        result = find_similar_string(formatted_string, string_list, similarity_threshold=1, verbose=False, is_formatted=True)
+        if result:
+            return result
+        # Do the point rule with the string from the other side
+        formatted_dict = {format_string(item): item for item in string_list}
+        formatted_string_list = list(formatted_dict.keys())
+        result = find_similar_string(my_string, formatted_string_list, similarity_threshold=1, verbose=False, is_formatted=True)
+        if result:
+            return formatted_dict[result]
     # Lastly, check for the most similar string
     max_similarity = 0
     most_similar_string = None

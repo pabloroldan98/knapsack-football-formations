@@ -53,6 +53,8 @@ def get_current_players(
         no_manual_boost=True,
         players_manual_boosts=[],
         forced_matches=[],
+        is_country=False,
+        host_team=None,
         alt_positions=False,
         use_old_players_data=False,
         use_old_teams_data=False,
@@ -60,33 +62,54 @@ def get_current_players(
         ratings_file_name="sofascore_players_ratings",
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         team_history_file_name="transfermarket_la_liga_team_history",
-        alt_positions_file_name="futmondo_la_liga_players_positions"
+        alt_positions_file_name="futmondo_la_liga_players_positions",
+        debug=False
 ):
-    all_teams, all_players = get_championship_data(forced_matches=forced_matches, use_comunio_price=use_comunio_price)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price)
+    if debug:
+        print("000000")
 
     if use_old_teams_data:
         all_teams = get_old_teams_data(forced_matches)
+    if debug:
+        print("111111")
 
     if use_old_players_data:
         all_players = get_old_players_data()
+    if debug:
+        print("222222")
 
     players_ratings_list = get_players_ratings_list(file_name=ratings_file_name)
 
     partial_players_data = all_players
     if not no_manual_boost:
         partial_players_data = set_manual_boosts(partial_players_data, players_manual_boosts)
+    if debug:
+        print("333333")
     if not no_penalty_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalties_file_name)
         partial_players_data = set_penalty_boosts(partial_players_data, penalty_takers)
+    if debug:
+        print("444444")
     if alt_positions:
         players_positions = get_players_positions_dict(file_name=alt_positions_file_name)
-        partial_players_data = set_positions(partial_players_data, players_positions)
+        partial_players_data = set_positions(partial_players_data, players_positions, verbose=False)
+    if debug:
+        print("555555")
     partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if debug:
+        print("666666")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
         partial_players_data = set_team_history_boosts(partial_players_data, players_team_history)
+    if debug:
+        print("777777")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
+    if debug:
+        print("888888")
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
+    if debug:
+        print("999999")
 
     return full_players_data
 
@@ -122,7 +145,7 @@ def get_last_jornada_players():
 
 
 # last_jornada_players = get_last_jornada_players()
-# best_full_teams(last_jornada_players, possible_formations, 300, super_verbose=True)
+# best_full_teams(last_jornada_players, possible_formations, 300, verbose=2)
 
 
 # --------------------------------------------------------------------
@@ -132,21 +155,34 @@ def get_last_jornada_players():
 
 
 current_players = get_current_players(
-    no_form=False,
+    no_form=True,
     no_fixtures=False,
     no_home_boost=False,
+    no_team_history_boost=False,
     alt_fixture_method=True,
-    alt_positions=True,
+    alt_positions=False,
     no_penalty_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
     use_comunio_price=False,
-    ratings_file_name="sofascore_la_liga_players_ratings"
+    # ratings_file_name="sofascore_la_liga_players_ratings"
+    ratings_file_name = "sofascore_eurocopa_players_ratings",
+    penalties_file_name="transfermarket_eurocopa_penalty_takers",
+    team_history_file_name="transfermarket_eurocopa_country_history",
+    # alt_positions_file_name="futmondo_la_liga_players_positions",
+    is_country=True,
+    host_team="Germany",
+    debug=False,
 )
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
-worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
+# worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
+worthy_players = sorted(
+    current_players,
+    key=lambda x: (-x.value, -x.form, -x.fixture, x.team),
+    reverse=False
+)
 
 purged_players = purge_everything(worthy_players)
 
@@ -172,111 +208,119 @@ print(len(purged_players))
 
 # best_transfers(my_team, mega_purged_players, 5, verbose=True)
 
-needed_purge = purged_players[:50]
+# needed_purge = purged_players[:50]
+needed_purge = worthy_players[:100]
 
 
-# best_full_teams(needed_purge, possible_formations, 30000, super_verbose=False)
-best_full_teams(needed_purge, possible_formations, -1, super_verbose=False)
+# best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
+# best_full_teams(needed_purge, possible_formations, -1, verbose=1)
+best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 
 
-print()
-my_players_names = [
-    "Rodrygo",
-    "Iago Aspas",
-    "Williams",
-    "Pepelu",
-    "Kubo",
-    "Sávio",
-    "Alberto Moleiro",
-    "Rüdiger",
-    "Sergi Cardona",
-    "Cancelo",
-    "Sergio Herrera",
-    "Artem Dovbyk",
-    "David López",
-    "Arda Güler",
-    "Mayoral",
-    "Sivera",
-]
-my_players_names = [
-    "Ledesma",
-    "Guaita",
-    "Mendy",
-    "Cristhian Mosquera",
-    "Juan Miranda",
-    "Diego Rico",
-    "Kroos",
-    "Isco",
-    "Barrenetxea",
-    "Frenkie De Jong",
-    "Ander Herrera",
-    "Mason Greenwood",
-    "Budimir",
-    "João Félix",
-    "Cyle Larin",
-]
-my_players_names = [
-    "Sergio Herrera",
-    "Sivera",
-    "Sabaly",
-    "Militão",
-    "Nacho",
-    "Cancelo",
-    "Mingueza",
-    "Eric García",
-    "De Marcos",
-    "Bellingham",
-    "Isco",
-    "Arda Güller",
-    "Camavinga",
-    "Kroos",
-    "Fornals",
-    "Kirian",
-    "Maksimovic",
-    "Juanmi",
-    "Oyarzabal",
-    "Muriqi",
-    "Morata",
-]
+################################################### CHECK YOUR TEAM ###################################################
+#
+# print()
 # my_players_names = [
-#     "Guaita",
-#     "Batalla",
-#     "Acuña",
-#     "Foulquier",
-#     "Christensen",
-#     "Koundé",
-#     "Rüdiger",
-#     "Saúl Coco",
-#     "Jordi Martín",
-#     "Fekir",
-#     "Ilaix Moriba",
-#     "Tchouameni",
-#     "Robert Navarro",
-#     "Barrenetxea",
-#     "Llorente",
-#     "Sancet",
-#     "Isi Palazón",
-#     "Omorodion",
-#     "Sheraldo Becker",
-#     "Bertrand Traoré",
 #     "Rodrygo",
+#     "Iago Aspas",
 #     "Williams",
-#     # "Ayoze",
+#     "Pepelu",
+#     "Kubo",
+#     "Sávio",
+#     "Alberto Moleiro",
+#     "Rüdiger",
+#     "Sergi Cardona",
+#     "Cancelo",
+#     "Sergio Herrera",
+#     "Artem Dovbyk",
+#     "David López",
+#     "Arda Güler",
+#     "Mayoral",
+#     "Sivera",
 # ]
+# my_players_names = [
+#     "Ledesma",
+#     "Guaita",
+#     "Mendy",
+#     "Cristhian Mosquera",
+#     "Juan Miranda",
+#     "Diego Rico",
+#     "Kroos",
+#     "Isco",
+#     "Barrenetxea",
+#     "Frenkie De Jong",
+#     "Ander Herrera",
+#     "Mason Greenwood",
+#     "Budimir",
+#     "João Félix",
+#     "Cyle Larin",
+# ]
+# my_players_names = [
+#     "Sergio Herrera",
+#     "Sivera",
+#     "Sabaly",
+#     "Militão",
+#     "Nacho",
+#     "Cancelo",
+#     "Mingueza",
+#     "Eric García",
+#     "De Marcos",
+#     "Bellingham",
+#     "Isco",
+#     "Arda Güller",
+#     "Camavinga",
+#     "Kroos",
+#     "Fornals",
+#     "Kirian",
+#     "Maksimovic",
+#     "Juanmi",
+#     "Oyarzabal",
+#     "Muriqi",
+#     "Morata",
+# ]
+# # my_players_names = [
+# #     "Guaita",
+# #     "Batalla",
+# #     "Acuña",
+# #     "Foulquier",
+# #     "Christensen",
+# #     "Koundé",
+# #     "Rüdiger",
+# #     "Saúl Coco",
+# #     "Jordi Martín",
+# #     "Fekir",
+# #     "Ilaix Moriba",
+# #     "Tchouameni",
+# #     "Robert Navarro",
+# #     "Barrenetxea",
+# #     "Llorente",
+# #     "Sancet",
+# #     "Isi Palazón",
+# #     "Omorodion",
+# #     "Sheraldo Becker",
+# #     "Bertrand Traoré",
+# #     "Rodrygo",
+# #     "Williams",
+# #     # "Ayoze",
+# # ]
+#
+# my_players_list = []
+# for player in worthy_players:
+#     if player.name in my_players_names:
+#         print(player)
+#
+# for player in purged_players:
+#     if player.name in my_players_names:
+#         my_players_list.append(player)
+#         # print(player)
+#
+# print()
+#
+# best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 
-my_players_list = []
-for player in worthy_players:
-    if player.name in my_players_names:
-        print(player)
 
-for player in purged_players:
-    if player.name in my_players_names:
-        my_players_list.append(player)
-        # print(player)
+################################################### CHECK YOUR TEAM ###################################################
 
-print()
-
-best_full_teams(my_players_list, possible_formations, -1, super_verbose=False)
 
 
 

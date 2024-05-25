@@ -76,8 +76,7 @@ def get_players_positions_dict(write_file=True, file_name="futmondo_la_liga_play
     return team_players_positions_dict
 
 
-# if __name__ == "__main__":
-#     players_positions_dict = get_players_positions_dict()
+# players_positions_dict = get_players_positions_dict("futmondo_la_liga_players_positions)
 #
-#     # Print the result in a readable way
-#     pprint(players_positions_dict)
+# # Print the result in a readable way
+# pprint(players_positions_dict)

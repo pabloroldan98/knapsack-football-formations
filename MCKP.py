@@ -1,5 +1,6 @@
 # Source: https://gist.github.com/USM-F/1287f512de4ffb2fb852e98be1ac271d
 import copy
+from tqdm import tqdm
 from itertools import chain
 
 
@@ -172,7 +173,11 @@ def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False):
                 last_path[weights[0][i]] = [(0, i)]
             # last_array[weight[0][i]] = max(last_array[weight[0][i]], value[0][i])
 
-    threshold = 0
+    # Calculate the total number of operations based on each item j in each category i
+    total_operations = sum(len(weights[i]) for i in range(1, len(weights)))
+    # Progress bar setup
+    pbar = tqdm(total=total_operations, disable=not verbose, desc='Knapsack Progress')
+
     for i in range(1, len(weights)):
         current_array = [-1 for _ in range(max_weight + 1)]
         current_path = [[] for _ in range(max_weight + 1)]
@@ -184,15 +189,9 @@ def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False):
                         current_path[k] = copy.deepcopy(last_path[k - weights[i][j]])
                         current_path[k].append((i, j))
                     # current_array[k] = max(current_array[k], last_array[k - weight[i][j]] + value[i][j])
-            if verbose:
-                percent = (i*len(weights[i])+j)/(len(weights)*len(weights[i]))*100
-                if percent >= threshold:
-                    print(str(percent) + " %")
-                    threshold = threshold + 1
+            pbar.update(1) # Update progress after processing each weight
         last_array = current_array
         last_path = current_path
-    if verbose:
-        print("100 %")
     solution, index_path = get_onepick_solution(last_array, last_path)
 
     return solution, index_path

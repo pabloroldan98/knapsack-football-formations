@@ -2,8 +2,8 @@ import pandas as pd
 import datetime
 
 
-def get_teams_elos(is_worldcup=False, country="ESP"):
-    if is_worldcup:
+def get_teams_elos(is_country=False, country="ESP"):
+    if is_country:
         teams_elos_url = "https://www.eloratings.net/World.tsv"
         teams_elos_df = pd.read_table(teams_elos_url, sep="\t", header=None, na_filter=False)[[2, 3]]
         teams_elos_dict = dict(teams_elos_df.values)
