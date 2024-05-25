@@ -39,9 +39,9 @@ possible_formations = [
     [5, 4, 1],
 
     # [3, 3, 4],
-    # [3, 6, 1],
+    # # [3, 6, 1],
     # [4, 2, 4],
-    # [4, 6, 0],
+    # # [4, 6, 0],
     # [5, 2, 3],
 ]
 
@@ -198,6 +198,7 @@ for player in worthy_players:
 #     if (player.team_history_boost > 0):
 #     if (player.value >= 7.033):# & (player.form > 1) & (player.fixture > 1):
     print(player)
+    # print((player.standard_price/player.price)/300000)
 print()
 
 print(len(purged_players))
@@ -243,7 +244,7 @@ needed_purge = [player for player in needed_purge if player.name != "Eberechi Ez
 
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
-best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 
 
 
@@ -272,88 +273,30 @@ best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 #
 # print()
 # my_players_names = [
-#     "Rodrygo",
-#     "Iago Aspas",
-#     "Williams",
-#     "Pepelu",
-#     "Kubo",
-#     "Sávio",
-#     "Alberto Moleiro",
-#     "Rüdiger",
-#     "Sergi Cardona",
-#     "Cancelo",
-#     "Sergio Herrera",
-#     "Artem Dovbyk",
-#     "David López",
-#     "Arda Güler",
-#     "Mayoral",
-#     "Sivera",
-# ]
-# my_players_names = [
-#     "Ledesma",
 #     "Guaita",
-#     "Mendy",
-#     "Cristhian Mosquera",
-#     "Juan Miranda",
-#     "Diego Rico",
-#     "Kroos",
-#     "Isco",
+#     "Batalla",
+#     "Acuña",
+#     "Foulquier",
+#     "Christensen",
+#     "Koundé",
+#     "Rüdiger",
+#     "Saúl Coco",
+#     "Jordi Martín",
+#     "Fekir",
+#     "Ilaix Moriba",
+#     "Tchouameni",
+#     "Robert Navarro",
 #     "Barrenetxea",
-#     "Frenkie De Jong",
-#     "Ander Herrera",
-#     "Mason Greenwood",
-#     "Budimir",
-#     "João Félix",
-#     "Cyle Larin",
+#     "Llorente",
+#     "Sancet",
+#     "Isi Palazón",
+#     "Omorodion",
+#     "Sheraldo Becker",
+#     "Bertrand Traoré",
+#     "Rodrygo",
+#     "Williams",
+#     # "Ayoze",
 # ]
-# my_players_names = [
-#     "Sergio Herrera",
-#     "Sivera",
-#     "Sabaly",
-#     "Militão",
-#     "Nacho",
-#     "Cancelo",
-#     "Mingueza",
-#     "Eric García",
-#     "De Marcos",
-#     "Bellingham",
-#     "Isco",
-#     "Arda Güller",
-#     "Camavinga",
-#     "Kroos",
-#     "Fornals",
-#     "Kirian",
-#     "Maksimovic",
-#     "Juanmi",
-#     "Oyarzabal",
-#     "Muriqi",
-#     "Morata",
-# ]
-# # my_players_names = [
-# #     "Guaita",
-# #     "Batalla",
-# #     "Acuña",
-# #     "Foulquier",
-# #     "Christensen",
-# #     "Koundé",
-# #     "Rüdiger",
-# #     "Saúl Coco",
-# #     "Jordi Martín",
-# #     "Fekir",
-# #     "Ilaix Moriba",
-# #     "Tchouameni",
-# #     "Robert Navarro",
-# #     "Barrenetxea",
-# #     "Llorente",
-# #     "Sancet",
-# #     "Isi Palazón",
-# #     "Omorodion",
-# #     "Sheraldo Becker",
-# #     "Bertrand Traoré",
-# #     "Rodrygo",
-# #     "Williams",
-# #     # "Ayoze",
-# # ]
 #
 # my_players_list = []
 # for player in worthy_players:
@@ -415,13 +358,15 @@ best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 # plt.show()
 
 
-# # Extract data for plotting
-# standard_prices = [player.standard_price for player in purged_players]
-# price_trends = [player.price_trend for player in purged_players]
+# Extract data for plotting
+standard_prices = [player.standard_price for player in worthy_players]
+price_trends = [player.price_trend for player in worthy_players]
+prices = [player.price for player in worthy_players]
 #
 # # Take the logarithms of the data
 # log_standard_prices = np.log(standard_prices)
-# # log_price_trends = np.log(price_trends)
+# log_price_trends = np.log(price_trends)
+# log_prices = np.log(prices)
 #
 #
 # # Create the first plot: standard_price vs price_trend
@@ -434,14 +379,14 @@ best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 # plt.grid()
 #
 # # Add player names as annotations
-# for i, player in enumerate(purged_players):
+# for i, player in enumerate(worthy_players):
 #     plt.annotate(player.name, (standard_prices[i], price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
 #
 # plt.tight_layout()  # To ensure the annotations fit nicely
 #
 # # Create the second plot: log(standard_price) vs log(price_trend)
 # plt.figure(figsize=(10, 6))
-# plt.scatter(log_standard_prices, price_trends, color='orange', label='Log(Standard Price) vs Log(Price Trend)')
+# plt.scatter(log_standard_prices, price_trends, color='orange', label='Log(Standard Price) vs Price Trend')
 # plt.xlabel('Log(Standard Price)')
 # plt.ylabel('Price Trend')
 # plt.title('Log(Standard Price) vs Price Trend')
@@ -449,11 +394,32 @@ best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 # plt.grid()
 #
 # # Add player names as annotations
-# for i, player in enumerate(purged_players):
+# for i, player in enumerate(worthy_players):
 #     plt.annotate(player.name, (log_standard_prices[i], price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
 #
 # plt.tight_layout()  # To ensure the annotations fit nicely
 #
+#
+# # Create the second plot: log(standard_price) vs log(price_trend)
+# plt.figure(figsize=(10, 6))
+# plt.scatter(prices, standard_prices, color='orange', label='Price vs Standard Price')
+# plt.xlabel('Price')
+# plt.ylabel('Standard Price')
+# plt.title('Price vs Standard Price')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(worthy_players):
+#     plt.annotate(player.name, (prices[i], standard_prices[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+#
+#
+
+
+
+
 # # Show the plots
 # plt.show()
 
