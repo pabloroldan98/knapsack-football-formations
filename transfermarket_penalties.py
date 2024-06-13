@@ -36,7 +36,7 @@ class TransfermarktScraper:
     def get_penalty_takers(self, team_suffix):
         # Dynamically determine the current year and then the two previous years
         current_year = datetime.now().year
-        years = [str(current_year - i) for i in range(10)]
+        years = [str(current_year - i) for i in range(15)]
 
         takers = []
         for year in years:

@@ -286,7 +286,8 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
                 if player.name == closest_player_name:
                     players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
                     player.penalties = players_penalties
-                    player.penalty_boost = calc_penalty_boost(players_penalties)
+                    players_penalties_bool_list = [i in players_penalties for i in range(max(players_penalties) + 1)]
+                    player.penalty_boost = calc_penalty_boost(players_penalties_bool_list)
 
         # for player in result_players:
         #     if player.team == closest_team_name:
@@ -303,8 +304,10 @@ def calc_penalty_boost(players_penalties):
     for penalty_index in penalty_indexes:
         # if penalty_index < 6: # Take only last 6 pens into account
         #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
-        if penalty_index < 5: # Take only last 5 pens into account
-            penalty_coef = penalty_coef + 0.2 - (penalty_index * 0.025)
+        if penalty_index < 6: # Take only last 6 pens into account
+            penalty_coef = penalty_coef + 0.275 - (penalty_index * 0.05)
+        # if penalty_index < 6: # Take only last 6 pens into account
+        #     penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.025)
         # penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)
         # if (penalty_index == 0) or (penalty_index == 1):
         #     penalty_coef = penalty_coef + 0.15

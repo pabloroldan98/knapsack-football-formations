@@ -31,12 +31,12 @@ possible_formations = [
     # [2, 1, 1],
 
     [3, 4, 3],
-    [3, 5, 2],
+    # [3, 5, 2],
     [4, 3, 3],
     [4, 4, 2],
-    [4, 5, 1],
-    [5, 3, 2],
-    [5, 4, 1],
+    # [4, 5, 1],
+    # [5, 3, 2],
+    # [5, 4, 1],
 
     # [3, 3, 4],
     # # [3, 6, 1],
@@ -217,29 +217,23 @@ print(len(purged_players))
 needed_purge = [player for player in worthy_players if player.price > 7]
 needed_purge = needed_purge[:150]
 
-needed_purge = [player for player in needed_purge if player.name != "Baumann"]
-needed_purge = [player for player in needed_purge if player.name != "Matt O'Riley"]
-needed_purge = [player for player in needed_purge if player.name != "Zubkov"]
-needed_purge = [player for player in needed_purge if player.name != "Patrick Pentz"]
-needed_purge = [player for player in needed_purge if player.name != "Olij"]
-needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
 needed_purge = [player for player in needed_purge if player.name != "Yarmolenko"]
 needed_purge = [player for player in needed_purge if player.name != "Areola"]
-needed_purge = [player for player in needed_purge if player.name != "Zsolt Nagy"]
+needed_purge = [player for player in needed_purge if player.name != "Undav"]
 needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
 needed_purge = [player for player in needed_purge if player.name != "Raum"]
-needed_purge = [player for player in needed_purge if player.name != "Clauss"]
-# needed_purge = [player for player in needed_purge if player.name != "Rodri"]
-needed_purge = [player for player in needed_purge if player.name != "Skov Olsen"]
-needed_purge = [player for player in needed_purge if player.name != "Otávio"]
-needed_purge = [player for player in needed_purge if player.name != "Rúben Neves"]
-needed_purge = [player for player in needed_purge if player.name != "Shaparenko"]
-needed_purge = [player for player in needed_purge if player.name != "Undav"]
-needed_purge = [player for player in needed_purge if player.name != "Bakayoko"]
-needed_purge = [player for player in needed_purge if player.name != "D. von Ballmoos"]
-needed_purge = [player for player in needed_purge if player.name != "Anders Dreyer"]
-needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
-# needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
+needed_purge = [player for player in needed_purge if player.name != "Palmer"]
+# needed_purge = [player for player in needed_purge if player.name != "Clauss"]
+# # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
+# needed_purge = [player for player in needed_purge if player.name != "Skov Olsen"]
+# needed_purge = [player for player in needed_purge if player.name != "Rúben Neves"]
+# needed_purge = [player for player in needed_purge if player.name != "Shaparenko"]
+# needed_purge = [player for player in needed_purge if player.name != "Undav"]
+# needed_purge = [player for player in needed_purge if player.name != "Bakayoko"]
+# needed_purge = [player for player in needed_purge if player.name != "D. von Ballmoos"]
+# needed_purge = [player for player in needed_purge if player.name != "Anders Dreyer"]
+# needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
+# # needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
 
 
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)

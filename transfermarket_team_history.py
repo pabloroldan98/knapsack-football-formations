@@ -139,7 +139,7 @@ def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_
     return filtered_team_history_data
 
 
-players_team_history = get_players_team_history_dict(file_name="transfermarket_eurocopa_country_history", use_country_as_team=True)
+# players_team_history = get_players_team_history_dict(file_name="transfermarket_eurocopa_country_history", use_country_as_team=True)
 #
 # print(players_team_history)
 # for team, players in players_team_history.items():
