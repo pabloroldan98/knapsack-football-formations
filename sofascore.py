@@ -45,10 +45,10 @@ def fix_team_data(team_data):
 def get_team_links_from_league(league_url, driver):
     driver.get(league_url)
     wait = WebDriverWait(driver, 15)  # 15 seconds timeout
-    # Base XPath for general team links
-    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
-    # Specific XPath for team names based on the base XPath
-    team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
+    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
+    team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
+    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
+    # team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
     # team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
     # time.sleep(15)
     team_links = wait.until(EC.presence_of_all_elements_located((By.XPATH, teams_base_xpath)))
@@ -60,6 +60,7 @@ def get_team_links_from_league(league_url, driver):
     for i, (team_link_element, team_name_element) in enumerate(zip(team_links, team_names)):
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
+        # if name=="Portugal" or name=="Czechia":
         team_data[str(i+1)] = [name, link]
         # break
     team_data = fix_team_data(team_data)

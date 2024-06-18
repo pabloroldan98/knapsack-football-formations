@@ -118,7 +118,7 @@ class Player:
             return False
 
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
-        form_coef = ((self.price_trend/math.log(self.standard_price))/200000)*0.9 + 1
+        form_coef = ((self.price_trend/math.log(self.standard_price))/300000)*0.9 + 1
         if no_form:
             form_coef = 1
 

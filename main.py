@@ -158,7 +158,7 @@ def get_last_jornada_players():
 
 
 current_players = get_current_players(
-    no_form=True,
+    no_form=False,
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
@@ -189,7 +189,7 @@ worthy_players = sorted(
 
 purged_players = purge_everything(worthy_players)
 
-for player in worthy_players:
+for player in purged_players:
 # for player in worthy_players:
 #     if ((player.position=="ATT") | (player.position=="MID")): # & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
@@ -214,15 +214,21 @@ print(len(purged_players))
 
 # needed_purge = purged_players[:50]
 # needed_purge = worthy_players[:150]
-needed_purge = [player for player in worthy_players if player.price > 7]
-needed_purge = needed_purge[:150]
+# needed_purge = [player for player in worthy_players if player.price > 7]
+# needed_purge = [player for player in purged_players if (player.form >=1 and player.fixture >=1)]
+needed_purge = purged_players[:150]
 
-needed_purge = [player for player in needed_purge if player.name != "Yarmolenko"]
-needed_purge = [player for player in needed_purge if player.name != "Areola"]
-needed_purge = [player for player in needed_purge if player.name != "Undav"]
-needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
-needed_purge = [player for player in needed_purge if player.name != "Raum"]
-needed_purge = [player for player in needed_purge if player.name != "Palmer"]
+# needed_purge = [player for player in needed_purge if player.name != "Petkovic"]
+# needed_purge = [player for player in needed_purge if player.name != "Wirtz"]
+# # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
+# needed_purge = [player for player in needed_purge if player.name != "Bruno Fernandes"]
+# needed_purge = [player for player in needed_purge if player.name != "De Bruyne"]
+# needed_purge = [player for player in needed_purge if player.name != "Pentz"]
+# # needed_purge = [player for player in needed_purge if player.name != "Areola"]
+# # needed_purge = [player for player in needed_purge if player.name != "Undav"]
+# needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
+# needed_purge = [player for player in needed_purge if player.name != "Raum"]
+# needed_purge = [player for player in needed_purge if player.name != "Palmer"]
 # needed_purge = [player for player in needed_purge if player.name != "Clauss"]
 # # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
 # needed_purge = [player for player in needed_purge if player.name != "Skov Olsen"]
@@ -239,6 +245,7 @@ needed_purge = [player for player in needed_purge if player.name != "Palmer"]
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
 best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(purged_players, possible_formations, 300, verbose=2)
 
 
 
