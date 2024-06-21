@@ -69,6 +69,7 @@ class TransfermarktScraper:
         result = {}
         # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
         league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
+        # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
         team_links = self.get_team_links(league_url)
         for team_name, team_suffix in team_links.items():
             print('Extracting penalty takers data from %s ...' % team_name)

@@ -45,8 +45,16 @@ def fix_team_data(team_data):
 def get_team_links_from_league(league_url, driver):
     driver.get(league_url)
     wait = WebDriverWait(driver, 15)  # 15 seconds timeout
+    # # Copa America
+    # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[5]/button"
+    # button = wait.until(EC.element_to_be_clickable((By.XPATH, button_xpath)))
+    # button.click()
+    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a"
+    # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a/div/div[1]/span"
+    # Eurocopa
     teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
     team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
+    # # La Liga
     # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
     # team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
     # team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
@@ -58,6 +66,7 @@ def get_team_links_from_league(league_url, driver):
     # Create a dictionary to hold the team names and their links
     team_data = {}
     for i, (team_link_element, team_name_element) in enumerate(zip(team_links, team_names)):
+        # if i>=9:
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
         # if name=="Portugal" or name=="Czechia":
@@ -84,6 +93,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         team_links = get_team_links_from_league(
             # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
+            # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
             extra_driver
         )
         extra_driver.quit()
