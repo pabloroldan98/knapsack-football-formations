@@ -28,7 +28,7 @@ from futmondo import get_players_positions_dict
 
 
 possible_formations = [
-    # [2, 1, 1],
+    # [2, 2, 2],
 
     [3, 4, 3],
     # [3, 5, 2],
@@ -227,6 +227,8 @@ print(len(worthy_players))
 # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
 needed_purge = worthy_players[:150]
 
+needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
+
 # needed_purge = [player for player in needed_purge if player.name != "Palacios"]
 # needed_purge = [player for player in needed_purge if player.name != "Almada"]
 # needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
@@ -253,8 +255,10 @@ needed_purge = worthy_players[:150]
 # needed_purge = [player for player in needed_purge if player.name != "Pentz"]
 # # needed_purge = [player for player in needed_purge if player.name != "Areola"]
 # # needed_purge = [player for player in needed_purge if player.name != "Undav"]
-# needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
-# needed_purge = [player for player in needed_purge if player.name != "Raum"]
+needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
+needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
+needed_purge = [player for player in needed_purge if player.name != "Kroos"]
+needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
 # needed_purge = [player for player in needed_purge if player.name != "Palmer"]
 # needed_purge = [player for player in needed_purge if player.name != "Clauss"]
 # # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
@@ -272,6 +276,7 @@ needed_purge = worthy_players[:150]
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
 best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 170, verbose=2)
 
 
 
