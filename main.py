@@ -227,7 +227,7 @@ print(len(worthy_players))
 # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
 needed_purge = worthy_players[:150]
 
-needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
+# needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
 
 # needed_purge = [player for player in needed_purge if player.name != "Palacios"]
 # needed_purge = [player for player in needed_purge if player.name != "Almada"]
@@ -255,10 +255,10 @@ needed_purge = [player for player in needed_purge if (player.team != "Spain" and
 # needed_purge = [player for player in needed_purge if player.name != "Pentz"]
 # # needed_purge = [player for player in needed_purge if player.name != "Areola"]
 # # needed_purge = [player for player in needed_purge if player.name != "Undav"]
-needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
-needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
-needed_purge = [player for player in needed_purge if player.name != "Kroos"]
-needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
+# needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
+# needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
+# needed_purge = [player for player in needed_purge if player.name != "Kroos"]
+# needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
 # needed_purge = [player for player in needed_purge if player.name != "Palmer"]
 # needed_purge = [player for player in needed_purge if player.name != "Clauss"]
 # # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
