@@ -229,7 +229,8 @@ needed_purge = worthy_players[:150]
 
 # needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
 
-# needed_purge = [player for player in needed_purge if player.name != "Bravo"]
+# needed_purge = [player for player in needed_purge if player.name != "Undav"]
+# needed_purge = [player for player in needed_purge if player.name != "Füllkrug"]
 # needed_purge = [player for player in needed_purge if player.name != "Alisson"]
 # needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
 # needed_purge = [player for player in needed_purge if player.name != "Arana"]

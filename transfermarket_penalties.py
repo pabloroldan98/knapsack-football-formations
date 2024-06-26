@@ -98,7 +98,7 @@ def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_p
     return filtered_penalties_data
 
 
-# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_eurocopa_penalty_takers")
+penalty_takers = get_penalty_takers_dict(file_name="transfermarket_eurocopa_penalty_takers")
 #
 # print(penalty_takers)
 # for team, penalties in penalty_takers.items():

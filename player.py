@@ -185,6 +185,12 @@ def purge_no_team_players(players_list):
     return result_players
 
 
+def purge_no_opponent_players(players_list, teams_dict):
+    result_players = [player for player in players_list if
+                      teams_dict[player.team].next_opponent is not None]
+    return result_players
+
+
 def purge_eliminated_players(players_list, qualified_teams):
     result_players = []
     for player in players_list:
@@ -198,7 +204,7 @@ def purge_non_starting_players(players_list):
     result_players = [
         player for player in players_list
         if (len(player.fitness) == 1 and isinstance(player.fitness[0], int)) or
-            (len(player.fitness) == 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
+            (len(player.fitness) >= 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
     ]
     return result_players
 
@@ -364,18 +370,19 @@ def calc_team_history_boost(team_history, opponent):
 
 
 def set_players_elo_dif(players_list, teams_list):
+    teams_dict = {team.name: team for team in teams_list}
+
     result_players = copy.deepcopy(players_list)
     clean_players = purge_no_team_players(result_players)
+    clean_players = purge_no_opponent_players(clean_players, teams_dict)
     # clean_players = purge_eliminated_players(clean_players, teams_list)
     checked_teams = check_teams(clean_players, teams_list)
-    if len(checked_teams) != len(teams_list):
-        print("The following teams do NOT match your Databases:")
-        for team in teams_list:
-            if team.name not in checked_teams:
-                print(team.name)
-        print()
-
-    teams_dict = {team.name: team for team in teams_list}
+    # if len(checked_teams) != len(teams_list):
+    #     print("The following teams do NOT match your Databases:")
+    #     for team in teams_list:
+    #         if team.name not in checked_teams:
+    #             print(team.name)
+    #     print()
 
     for player in clean_players:
         player_team = teams_dict[player.team]
