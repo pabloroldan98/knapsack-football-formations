@@ -31,12 +31,12 @@ possible_formations = [
     # [2, 2, 2],
 
     [3, 4, 3],
-    # [3, 5, 2],
-    # [4, 3, 3],
-    # [4, 4, 2],
-    # [4, 5, 1],
-    # [5, 3, 2],
-    # [5, 4, 1],
+    [3, 5, 2],
+    [4, 3, 3],
+    [4, 4, 2],
+    [4, 5, 1],
+    [5, 3, 2],
+    [5, 4, 1],
 
     # [3, 3, 4],
     # # [3, 6, 1],
@@ -162,7 +162,7 @@ current_players = get_current_players(
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
-    alt_fixture_method=True,
+    alt_fixture_method=False,
     alt_positions=False,
     no_penalty_boost=False,
     no_manual_boost=True,
@@ -170,22 +170,22 @@ current_players = get_current_players(
     use_old_teams_data=False,
     use_comunio_price=False,
     # ratings_file_name="sofascore_la_liga_players_ratings",
-    # ratings_file_name = "sofascore_eurocopa_players_ratings",
-    # penalties_file_name="transfermarket_eurocopa_penalty_takers",
-    # team_history_file_name="transfermarket_eurocopa_country_history",
-    # # alt_positions_file_name="futmondo_la_liga_players_positions",
-    # is_country=True,
-    # host_team="Germany",
-    # debug=False,
-# )
-    ratings_file_name = "sofascore_copa_america_players_ratings",
-    penalties_file_name="transfermarket_copa_america_penalty_takers",
-    team_history_file_name="transfermarket_copa_america_country_history",
+    ratings_file_name = "sofascore_eurocopa_players_ratings",
+    penalties_file_name="transfermarket_eurocopa_penalty_takers",
+    team_history_file_name="transfermarket_eurocopa_country_history",
     # alt_positions_file_name="futmondo_la_liga_players_positions",
     is_country=True,
-    host_team="US",
+    host_team="Germany",
     debug=False,
 )
+    # ratings_file_name = "sofascore_copa_america_players_ratings",
+    # penalties_file_name="transfermarket_copa_america_penalty_takers",
+    # team_history_file_name="transfermarket_copa_america_country_history",
+    # # alt_positions_file_name="futmondo_la_liga_players_positions",
+    # is_country=True,
+    # host_team="US",
+    # debug=False,
+# )
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
 # worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
@@ -229,10 +229,20 @@ needed_purge = worthy_players[:150]
 
 # needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
 
-needed_purge = [player for player in needed_purge if player.name != "Palacios"]
-needed_purge = [player for player in needed_purge if player.name != "Paredes"]
-needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
-# needed_purge = [player for player in needed_purge if player.name != "Undav"]
+# needed_purge = [player for player in needed_purge if player.name != "Palacios"]
+# needed_purge = [player for player in needed_purge if player.name != "Paredes"]
+# needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
+needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
+needed_purge = [player for player in needed_purge if player.name != "Blind"]
+needed_purge = [player for player in needed_purge if player.name != "Gallagher"]
+needed_purge = [player for player in needed_purge if player.name != "Fofana"]
+needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
+needed_purge = [player for player in needed_purge if player.name != "Veerman"]
+needed_purge = [player for player in needed_purge if player.name != "Undav"]
+needed_purge = [player for player in needed_purge if player.name != "Grimaldo"]
+needed_purge = [player for player in needed_purge if player.name != "Palmer"]
+needed_purge = [player for player in needed_purge if player.name != "Weghorst"]
+needed_purge = [player for player in needed_purge if player.name != "Bergwijn"]
 # needed_purge = [player for player in needed_purge if player.name != "Füllkrug"]
 # needed_purge = [player for player in needed_purge if player.name != "Alisson"]
 # needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
