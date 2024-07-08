@@ -46,7 +46,7 @@ def get_team_links_from_league(league_url, driver):
     driver.get(league_url)
     wait = WebDriverWait(driver, 15)  # 15 seconds timeout
     # # Copa America
-    # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[5]/button"
+    # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[7]/div[2]/div[2]/button"
     # button = wait.until(EC.element_to_be_clickable((By.XPATH, button_xpath)))
     # button.click()
     # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a"
@@ -69,7 +69,8 @@ def get_team_links_from_league(league_url, driver):
         # if i>=9:
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
-        # if name=="Portugal" or name=="Czechia":
+        # if (name=="Spain" or name=="France" or name=="England" or name=="Netherlands"
+        #         or name=="Argentina" or name=="Canada" or name=="Colombia" or name=="Uruguay"):
         team_data[str(i+1)] = [name, link]
         # break
     team_data = fix_team_data(team_data)
@@ -146,12 +147,12 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             driver.get(p)
             average_rating = float(6.0)
             try: # Average 12 months
-                # Find the div containing "Average Sofascore rating"
-                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Average Sofascore rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                # Find the div containing "Average Sofascore Rating"
+                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Average Sofascore Rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
             except:  # NoSuchElementException: # Spelling error making this code not work
                 try: # Average last competition
-                    # Find the span containing "Average Sofascore rating"
-                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                    # Find the span containing "Average Sofascore Rating"
+                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
                     average_rating = average_rating*0.95
                 except:
                     pass
