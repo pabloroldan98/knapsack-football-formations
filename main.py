@@ -169,23 +169,23 @@ current_players = get_current_players(
     use_old_players_data=False,
     use_old_teams_data=False,
     use_comunio_price=False,
-    # ratings_file_name="sofascore_la_liga_players_ratings",
-    ratings_file_name = "sofascore_eurocopa_players_ratings",
-    penalties_file_name="transfermarket_eurocopa_penalty_takers",
-    team_history_file_name="transfermarket_eurocopa_country_history",
-    # alt_positions_file_name="futmondo_la_liga_players_positions",
-    is_country=True,
-    host_team="Germany",
-    debug=False,
-)
-    # ratings_file_name = "sofascore_copa_america_players_ratings",
-    # penalties_file_name="transfermarket_copa_america_penalty_takers",
-    # team_history_file_name="transfermarket_copa_america_country_history",
+    # # ratings_file_name="sofascore_la_liga_players_ratings",
+    # ratings_file_name = "sofascore_eurocopa_players_ratings",
+    # penalties_file_name="transfermarket_eurocopa_penalty_takers",
+    # team_history_file_name="transfermarket_eurocopa_country_history",
     # # alt_positions_file_name="futmondo_la_liga_players_positions",
     # is_country=True,
-    # host_team="US",
+    # host_team="Germany",
     # debug=False,
 # )
+    ratings_file_name = "sofascore_copa_america_players_ratings",
+    penalties_file_name="transfermarket_copa_america_penalty_takers",
+    team_history_file_name="transfermarket_copa_america_country_history",
+    # alt_positions_file_name="futmondo_la_liga_players_positions",
+    is_country=True,
+    host_team="US",
+    debug=False,
+)
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
 # worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
@@ -229,9 +229,13 @@ needed_purge = worthy_players[:150]
 
 # needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
 
-# needed_purge = [player for player in needed_purge if player.name != "Palacios"]
-# needed_purge = [player for player in needed_purge if player.name != "Paredes"]
-# needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
+needed_purge = [player for player in needed_purge if player.name != "Palacios"]
+needed_purge = [player for player in needed_purge if player.name != "Paredes"]
+needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
+needed_purge = [player for player in needed_purge if player.name != "Arias"]
+needed_purge = [player for player in needed_purge if player.name != "Quarta"]
+# needed_purge = [player for player in needed_purge if player.name != "Di María"]
+
 needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
 needed_purge = [player for player in needed_purge if player.name != "Blind"]
 needed_purge = [player for player in needed_purge if player.name != "Gallagher"]

@@ -14,8 +14,8 @@ from useful_functions import find_similar_string
 def get_championship_data(forced_matches=[], is_country=False, host_team=None, use_comunio_price=False, verbose=True):
 
     # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
-    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
-    # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
+    # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
+    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
     response = requests.get(all_data_url)
     data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
