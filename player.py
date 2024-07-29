@@ -36,7 +36,8 @@ class Player:
             next_match_elo_dif: float = 0,
             is_playing_home: bool = False,
             form:  float = 0,
-            fixture:  float = 0
+            fixture:  float = 0,
+            start_probability:  float = 0
     ):
         self.name = name
         self._position = position
@@ -60,9 +61,11 @@ class Player:
         self.is_playing_home = is_playing_home
         self.form = form
         self.fixture = fixture
+        self.start_probability = start_probability
 
     def __str__(self):
-        return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f})"
+        return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
+        # return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f})"
         # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
     @property
@@ -203,8 +206,9 @@ def purge_eliminated_players(players_list, qualified_teams):
 def purge_non_starting_players(players_list):
     result_players = [
         player for player in players_list
-        if (len(player.fitness) == 1 and isinstance(player.fitness[0], int)) or
-            (len(player.fitness) >= 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
+        if (len(player.fitness) <= 0) or
+            (len(player.fitness) == 1 and isinstance(player.fitness[0], int)) or
+             (len(player.fitness) >= 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
     ]
     return result_players
 
@@ -274,6 +278,48 @@ def set_positions(players_list, players_positions_dict, verbose=False):
                 if player.position != new_position:
                     print(f"{player.name}: {player.position} --> {new_position}")
             player.position = new_position
+
+    return result_players
+
+
+def set_prices(players_list, players_prices_dict, verbose=False):
+    result_players = copy.deepcopy(players_list)
+    team_price_names_list = list(players_prices_dict.keys())
+
+    for player in result_players:
+        closest_player_price_team = find_similar_string(player.team, team_price_names_list, similarity_threshold=0)
+        player_price_names_list = list(players_prices_dict[closest_player_price_team].keys())
+        closest_player_price_name = find_similar_string(player.name, player_price_names_list)
+        if closest_player_price_name:
+            new_price = players_prices_dict[closest_player_price_team][closest_player_price_name]
+            new_price = round(float(new_price) / 1000)
+        else:
+            # print(player.name)
+            new_price = round(float(player.price) * 5)
+        new_price = round(float(new_price) / 1000)
+        if verbose:
+            if player.price != new_price:
+                print(f"{player.name}: {player.price} --> {new_price}")
+        player.price = new_price
+
+    return result_players
+
+
+def set_forms(players_list, players_forms_dict, verbose=False):
+    result_players = copy.deepcopy(players_list)
+    team_form_names_list = list(players_forms_dict.keys())
+
+    for player in result_players:
+        closest_player_form_team = find_similar_string(player.team, team_form_names_list, similarity_threshold=0)
+        player_form_names_list = list(players_forms_dict[closest_player_form_team].keys())
+        closest_player_form_name = find_similar_string(player.name, player_form_names_list)
+        if closest_player_form_name:
+            new_form = players_forms_dict[closest_player_form_team][closest_player_form_name]
+            new_form = 1 + float(new_form)/100
+            if verbose:
+                if player.form != new_form:
+                    print(f"{player.name}: {player.form} --> {new_form}")
+            player.form = new_form
 
     return result_players
 

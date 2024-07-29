@@ -51,14 +51,13 @@ def get_team_links_from_league(league_url, driver):
     # button.click()
     # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a"
     # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a/div/div[1]/span"
-    # Eurocopa
-    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
-    team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
-    # # La Liga
-    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
-    # team_name_xpath = teams_base_xpath + "/div/div[3]/div/div"
-    # team_name_xpath = teams_base_xpath + "/div/div[3]/div/span"
-    # time.sleep(15)
+    # # Eurocopa
+    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
+    # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
+    # La Liga
+    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
+    team_name_xpath = teams_base_xpath + "/div/div[2]/div/div"
+    # time.sleep(15)//*[@id="__next"]
     team_links = wait.until(EC.presence_of_all_elements_located((By.XPATH, teams_base_xpath)))
     team_names = wait.until(EC.presence_of_all_elements_located((By.XPATH, team_name_xpath)))
     # team_links = driver.find_elements(By.XPATH, teams_base_xpath)
@@ -92,8 +91,8 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         extra_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
         # time.sleep(15)
         team_links = get_team_links_from_league(
-            # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
-            "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
+            "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+            # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
             extra_driver
         )
@@ -218,7 +217,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 
 # start_time = time.time()
 #
-# result = get_players_ratings_list(file_name="sofascore_eurocopa_players_ratings")#, team_links=team_links)
+# result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings")#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 #
 # end_time = time.time()

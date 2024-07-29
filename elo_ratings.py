@@ -24,7 +24,7 @@ def get_teams_elos(is_country=False, country="ESP"):
 
         filtered_teams_elos_df = teams_elos_df[
             (teams_elos_df['Country'] == country) &
-            (teams_elos_df['Level'] == 1)
+            ((teams_elos_df['Level'] == 1) | (teams_elos_df['Level'] == 2))
         ]
         full_teams_elos = dict(zip(filtered_teams_elos_df['Club'], filtered_teams_elos_df['Elo']))
         teams_elos_dict = full_teams_elos.copy()

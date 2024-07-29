@@ -12,13 +12,14 @@ import numpy as np
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
 from biwenger import get_championship_data
+from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_dict
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, \
     set_players_value_to_last_fitness, set_manual_boosts, set_penalty_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     set_positions, set_team_history_boosts, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
-    purge_negative_values, fill_with_team_players, get_old_players_data
+    purge_negative_values, fill_with_team_players, get_old_players_data, set_prices, set_forms
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
@@ -31,12 +32,12 @@ possible_formations = [
     # [2, 2, 2],
 
     [3, 4, 3],
-    [3, 5, 2],
-    [4, 3, 3],
-    [4, 4, 2],
-    [4, 5, 1],
-    [5, 3, 2],
-    [5, 4, 1],
+    # [3, 5, 2],
+    # [4, 3, 3],
+    # [4, 4, 2],
+    # [4, 5, 1],
+    # [5, 3, 2],
+    # [5, 4, 1],
 
     # [3, 3, 4],
     # # [3, 6, 1],
@@ -59,6 +60,8 @@ def get_current_players(
         is_country=False,
         host_team=None,
         alt_positions=False,
+        alt_prices=False,
+        alt_forms=False,
         use_old_players_data=False,
         use_old_teams_data=False,
         use_comunio_price=False,
@@ -66,6 +69,8 @@ def get_current_players(
         penalties_file_name="transfermarket_la_liga_penalty_takers",
         team_history_file_name="transfermarket_la_liga_team_history",
         alt_positions_file_name="futmondo_la_liga_players_positions",
+        alt_prices_file_name="futbolfantasy_laliga_players_prices",
+        alt_forms_file_name="futbolfantasy_laliga_players_forms",
         debug=False
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price)
@@ -99,20 +104,30 @@ def get_current_players(
         partial_players_data = set_positions(partial_players_data, players_positions, verbose=False)
     if debug:
         print("555555")
-    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if alt_prices:
+        players_prices = get_players_prices_dict(file_name=alt_prices_file_name)
+        partial_players_data = set_prices(partial_players_data, players_prices, verbose=False)
     if debug:
         print("666666")
+    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if debug:
+        print("777777")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
         partial_players_data = set_team_history_boosts(partial_players_data, players_team_history)
     if debug:
-        print("777777")
+        print("8888888")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     if debug:
-        print("888888")
+        print("999999")
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
     if debug:
-        print("999999")
+        print("AAAAAAA")
+    if alt_forms and not no_form:
+        players_form = get_players_forms_dict(file_name=alt_forms_file_name)
+        full_players_data = set_forms(full_players_data, players_form)
+    if debug:
+        print("BBBBBBB")
 
     return full_players_data
 
@@ -158,24 +173,28 @@ def get_last_jornada_players():
 
 
 current_players = get_current_players(
-    no_form=False,
+    no_form=True,
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
     alt_fixture_method=False,
-    alt_positions=False,
+    alt_positions=True,
+    alt_prices=True,
+    alt_forms=True,
     no_penalty_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
-    use_comunio_price=False,
-    # ratings_file_name="sofascore_la_liga_players_ratings",
-    ratings_file_name = "sofascore_eurocopa_players_ratings",
-    penalties_file_name="transfermarket_eurocopa_penalty_takers",
-    team_history_file_name="transfermarket_eurocopa_country_history",
+    use_comunio_price=True,
+    ratings_file_name="sofascore_laliga_players_ratings",
+    penalties_file_name="transfermarket_laliga_penalty_takers",
+    team_history_file_name="transfermarket_laliga_team_history",
+    alt_positions_file_name="futbolfantasy_laliga_players_positions",
     # alt_positions_file_name="futmondo_la_liga_players_positions",
-    is_country=True,
-    host_team="Germany",
+    alt_prices_file_name="futbolfantasy_laliga_players_prices",
+    alt_forms_file_name="futbolfantasy_laliga_players_forms",
+    is_country=False,
+    # host_team="Germany",
     debug=False,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
@@ -187,8 +206,11 @@ current_players = get_current_players(
     # debug=False,
 # )
 
-# worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)
-# worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
+worthy_players = [player for player in current_players if player.price > 0]
+
+
+# worthy_players = sorted(worthy_players, key=lambda x: x.value/x.price, reverse=True)
+worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
 worthy_players = sorted(
     current_players,
     key=lambda x: (-x.value, -x.form, -x.fixture, x.team),
@@ -229,94 +251,14 @@ needed_purge = worthy_players[:150]
 
 # needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
 
-needed_purge = [player for player in needed_purge if player.name != "Palacios"]
-needed_purge = [player for player in needed_purge if player.name != "Paredes"]
-needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
-needed_purge = [player for player in needed_purge if player.name != "Arias"]
-needed_purge = [player for player in needed_purge if player.name != "Quarta"]
-needed_purge = [player for player in needed_purge if player.name != "Varela"]
-needed_purge = [player for player in needed_purge if player.name != "Miguel Borja"]
-needed_purge = [player for player in needed_purge if player.name != "Canobbio"]
-needed_purge = [player for player in needed_purge if player.name != "Quintero"]
-needed_purge = [player for player in needed_purge if player.name != "Nicolás González"]
-needed_purge = [player for player in needed_purge if player.name != "Luis Suárez"]
-# needed_purge = [player for player in needed_purge if player.name != "Di María"]
-
-needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
-needed_purge = [player for player in needed_purge if player.name != "Blind"]
-needed_purge = [player for player in needed_purge if player.name != "Gallagher"]
-needed_purge = [player for player in needed_purge if player.name != "Fofana"]
-needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
-needed_purge = [player for player in needed_purge if player.name != "Veerman"]
-needed_purge = [player for player in needed_purge if player.name != "Undav"]
-needed_purge = [player for player in needed_purge if player.name != "Grimaldo"]
-needed_purge = [player for player in needed_purge if player.name != "Palmer"]
-needed_purge = [player for player in needed_purge if player.name != "Weghorst"]
-needed_purge = [player for player in needed_purge if player.name != "Bergwijn"]
-needed_purge = [player for player in needed_purge if player.name != "Jesús Navas"]
-# needed_purge = [player for player in needed_purge if player.name != "Joselu"]
-needed_purge = [player for player in needed_purge if player.name != "Vivian"]
-needed_purge = [player for player in needed_purge if player.name != "Ferran Torres"]
-needed_purge = [player for player in needed_purge if player.name != "Watkins"]
-needed_purge = [player for player in needed_purge if player.name != "Zubimendi"]
-needed_purge = [player for player in needed_purge if player.name != "Gallagher"]
-needed_purge = [player for player in needed_purge if player.name != "Oyarzabal"]
-needed_purge = [player for player in needed_purge if player.name != "Nacho"]
-needed_purge = [player for player in needed_purge if player.name != "Toney"]
-needed_purge = [player for player in needed_purge if player.name != "Shaw"]
-needed_purge = [player for player in needed_purge if player.name != "Konsa"]
-needed_purge = [player for player in needed_purge if player.name != "Arnold"]
-# needed_purge = [player for player in needed_purge if player.name != "Füllkrug"]
-# needed_purge = [player for player in needed_purge if player.name != "Alisson"]
-# needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
-# needed_purge = [player for player in needed_purge if player.name != "Arana"]
-# needed_purge = [player for player in needed_purge if player.name != "Dibu Martínez"]
-# needed_purge = [player for player in needed_purge if player.name != "Almada"]
-# needed_purge = [player for player in needed_purge if player.name != "Otamendi"]
-# needed_purge = [player for player in needed_purge if player.name != "De la Cruz"]
-# needed_purge = [player for player in needed_purge if player.name != "De Arrascaeta"]
-# needed_purge = [player for player in needed_purge if player.name != "Domínguez"]
-# needed_purge = [player for player in needed_purge if player.name != "Rangel"]
-# needed_purge = [player for player in needed_purge if player.name != "Quintero"]
-# needed_purge = [player for player in needed_purge if player.name != "Daniel Muñoz"]
-# needed_purge = [player for player in needed_purge if player.name != "Julio González"]
-# needed_purge = [player for player in needed_purge if player.name != "Tillman"]
-# needed_purge = [player for player in needed_purge if player.name != "Pineda"]
-# needed_purge = [player for player in needed_purge if player.name != "Arias"]
-# needed_purge = [player for player in needed_purge if player.name != "McKenzie"]
-# needed_purge = [player for player in needed_purge if player.name != "Carter-Vickers"]
-# needed_purge = [player for player in needed_purge if player.name != "Miles Robinson"]
-# needed_purge = [player for player in needed_purge if player.name != "Quarta"]
-# needed_purge = [player for player in needed_purge if player.name != "Lucimi"]
-# needed_purge = [player for player in needed_purge if player.name != "Petkovic"]
-# needed_purge = [player for player in needed_purge if player.name != "Wirtz"]
-# # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
-# needed_purge = [player for player in needed_purge if player.name != "Bruno Fernandes"]
-# needed_purge = [player for player in needed_purge if player.name != "De Bruyne"]
-# needed_purge = [player for player in needed_purge if player.name != "Pentz"]
-# # needed_purge = [player for player in needed_purge if player.name != "Areola"]
-# # needed_purge = [player for player in needed_purge if player.name != "Undav"]
-# needed_purge = [player for player in needed_purge if player.name != "Pascal Groß"]
-# needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
-# needed_purge = [player for player in needed_purge if player.name != "Kroos"]
-# needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
-# needed_purge = [player for player in needed_purge if player.name != "Palmer"]
-# needed_purge = [player for player in needed_purge if player.name != "Clauss"]
-# # needed_purge = [player for player in needed_purge if player.name != "Rodri"]
-# needed_purge = [player for player in needed_purge if player.name != "Skov Olsen"]
-# needed_purge = [player for player in needed_purge if player.name != "Rúben Neves"]
-# needed_purge = [player for player in needed_purge if player.name != "Shaparenko"]
-# needed_purge = [player for player in needed_purge if player.name != "Undav"]
-# needed_purge = [player for player in needed_purge if player.name != "Bakayoko"]
-# needed_purge = [player for player in needed_purge if player.name != "D. von Ballmoos"]
-# needed_purge = [player for player in needed_purge if player.name != "Anders Dreyer"]
-# needed_purge = [player for player in needed_purge if player.name != "Eberechi Eze"]
-# # needed_purge = [player for player in needed_purge if player.name != "Mbappé"]
+# needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
+# needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
 
 
+best_full_teams(needed_purge, possible_formations, 200, verbose=2)
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
-best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 # best_full_teams(needed_purge, possible_formations, 170, verbose=2)
 
 
