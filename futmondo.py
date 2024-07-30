@@ -60,7 +60,7 @@ def get_position(futmondo_position):
 
 
 def get_players_positions_dict(write_file=True, file_name="futmondo_la_liga_players_positions"):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result

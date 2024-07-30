@@ -78,7 +78,7 @@ class TransfermarktScraper:
 
 
 def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_penalty_takers"):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result

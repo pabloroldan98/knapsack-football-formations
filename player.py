@@ -582,7 +582,7 @@ def set_players_value_to_last_fitness(players_list):
 
 
 def get_old_players_data():
-    with open('OLD_players_before_jornada_03.csv', newline='') as f:
+    with open('csv_files/OLD_players_before_jornada_03.csv', newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
     old_players_data = []

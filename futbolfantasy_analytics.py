@@ -9,14 +9,14 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 import csv
 
 def write_dict_to_csv(data, file_name):
-    with open(file_name + '.csv', 'w', newline='', encoding='utf-8') as csv_file:
+    with open('csv_files/' + file_name + '.csv', 'w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in data.items():
             writer.writerow([key, value])
 
 def read_dict_from_csv(file_name):
     data = {}
-    with open(file_name + '.csv', 'r', encoding='utf-8') as csv_file:
+    with open('csv_files/' + file_name + '.csv', 'r', encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
             data[row[0]] = row[1]
@@ -126,7 +126,7 @@ def get_futbolfantasy_data(
         forms_file_name="futbolfantasy_forms",
         start_probability_file_name="futbolfantasy_start_probabilities"
 ):
-    if os.path.isfile('./' + price_file_name + '.csv') and os.path.isfile('./' + positions_file_name + '.csv') and os.path.isfile('./' + forms_file_name + '.csv') and os.path.isfile('./' + start_probability_file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + price_file_name + '.csv') and os.path.isfile('./csv_files/' + positions_file_name + '.csv') and os.path.isfile('./csv_files/' + forms_file_name + '.csv') and os.path.isfile('./csv_files/' + start_probability_file_name + '.csv'):
         prices_data = read_dict_from_csv(price_file_name)
         positions_data = read_dict_from_csv(positions_file_name)
         forms_data = read_dict_from_csv(forms_file_name)
@@ -150,7 +150,7 @@ def get_futbolfantasy_data(
 def get_players_prices_dict(
         file_name="futbolfantasy_prices",
 ):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result
@@ -165,7 +165,7 @@ def get_players_prices_dict(
 def get_players_positions_dict(
         file_name="futbolfantasy_positions",
 ):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result
@@ -180,7 +180,7 @@ def get_players_positions_dict(
 def get_players_forms_dict(
         file_name="futbolfantasy_forms",
 ):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result
@@ -195,7 +195,7 @@ def get_players_forms_dict(
 def get_players_start_probabilities_dict(
         file_name="futbolfantasy_start_probabilities",
 ):
-    if os.path.isfile('./' + file_name + '.csv'):
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
         data = read_dict_from_csv(file_name)
         result = {key: ast.literal_eval(value) for key, value in data.items()}
         return result

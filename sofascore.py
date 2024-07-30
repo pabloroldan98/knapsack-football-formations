@@ -77,8 +77,11 @@ def get_team_links_from_league(league_url, driver):
 
 
 def get_players_data(write_file=True, file_name="sofascore_players_ratings", team_links=None):
-    if os.path.isfile('./' + file_name + '.csv'):
-        return read_dict_from_csv(file_name)
+    if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        data = read_dict_from_csv(file_name)
+        result = {key: ast.literal_eval(value) for key, value in data.items()}
+        return result
+        # return read_dict_from_csv(file_name)
 
     driver = webdriver.Chrome(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
