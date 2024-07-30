@@ -10,7 +10,11 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 import csv
 
 def write_dict_to_csv(data, file_name):
-    with open('csv_files/' + file_name + '.csv', 'w', newline='', encoding='utf-8') as csv_file:
+    file_path = 'csv_files/' + file_name + '.csv'
+    # Check if the file exists and delete it
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in data.items():
             writer.writerow([key, value])

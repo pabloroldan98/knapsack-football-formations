@@ -204,12 +204,18 @@ def purge_eliminated_players(players_list, qualified_teams):
 
 
 def purge_non_starting_players(players_list):
-    result_players = [
-        player for player in players_list
-        if (len(player.fitness) <= 0) or
-            (len(player.fitness) == 1 and isinstance(player.fitness[0], int)) or
-             (len(player.fitness) >= 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
-    ]
+    if not all(player.start_probability == 0 for player in players_list):
+        result_players = [
+            player for player in players_list
+            if (player.start_probability >= 0.5)
+        ]
+    else:
+        result_players = [
+            player for player in players_list
+            if (len(player.fitness) <= 0) or
+                (len(player.fitness) == 1 and isinstance(player.fitness[0], int)) or
+                 (len(player.fitness) >= 2 and (isinstance(player.fitness[0], int) or isinstance(player.fitness[1], int)))
+        ]
     return result_players
 
 
@@ -319,6 +325,8 @@ def set_start_probabilities(players_list, players_start_probabilties_dict, verbo
                 if player.start_probability != new_start_probability:
                     print(f"{player.name}: {player.start_probability} --> {new_start_probability}")
             player.start_probability = new_start_probability
+        # else:
+        #     print(f"{player.name}")
         player.start_probability = new_start_probability
 
     return result_players
