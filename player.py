@@ -165,11 +165,11 @@ def get_position(group):
     return position
 
 
-def purge_everything(players_list, teams_to_purge=[], mega_purge=False):
+def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probability_threshold=0.5):
     purged_players = purge_no_team_players(players_list)
     purged_players = purge_negative_values(purged_players)
     purged_players = purge_injured_players(purged_players)
-    purged_players = purge_non_starting_players(purged_players)
+    purged_players = purge_non_starting_players(purged_players, probability_threshold)
     purged_players = purge_national_teams(purged_players, teams_to_purge)
     if mega_purge:
         purged_players = purge_worse_value_players(purged_players)
@@ -203,11 +203,11 @@ def purge_eliminated_players(players_list, qualified_teams):
     return result_players
 
 
-def purge_non_starting_players(players_list):
+def purge_non_starting_players(players_list, probability_threshold=0.5):
     if not all(player.start_probability == 0 for player in players_list):
         result_players = [
             player for player in players_list
-            if (player.start_probability >= 0.5)
+            if (player.start_probability >= probability_threshold)
         ]
     else:
         result_players = [
