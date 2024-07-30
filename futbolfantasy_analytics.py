@@ -1,5 +1,6 @@
 import ast
 import os
+import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -76,16 +77,28 @@ class FutbolFantasyScraper:
             player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
             team_probabilities = {}
             for player_element in player_elements:
+                player_name = None
+                probability = "0%"
                 try:
-                    player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
-                    player_name = player_name.encode('latin1').decode('utf-8').translate(str.maketrans('', '', '0123456789'))
-                    player_name = player_name.title()
+                    player_name = player_element.find_element(
+                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                except NoSuchElementException:  # Error while getting player_name
+                    try:
+                        player_name = player_element.find_element(
+                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                    except NoSuchElementException:  # Error while getting player_name
+                        player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        player_name = player_name.encode('latin1').decode('utf-8')
+                        player_name = player_name.title()
+                try:
                     probability = player_element.get_attribute('data-probabilidad').strip()
-                    if probability:
-                        probability = float(probability.replace('%', '')) / 100
-                        team_probabilities[player_name] = probability
-                except AttributeError:
+                except AttributeError: # Error while getting probability
                     continue
+                player_name = re.sub(r'[\d%]', '', player_name).strip()
+                probability = re.sub(r'[^0-9%]', '', probability)
+                if player_name and probability:
+                    probability = float(probability.replace('%', '')) / 100
+                    team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities
 
         return probabilities_dict
