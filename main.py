@@ -12,14 +12,15 @@ import numpy as np
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
 from biwenger import get_championship_data
-from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_dict
+from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_dict, \
+    get_players_start_probabilities_dict
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, \
     set_players_value_to_last_fitness, set_manual_boosts, set_penalty_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     set_positions, set_team_history_boosts, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
-    purge_negative_values, fill_with_team_players, get_old_players_data, set_prices, set_forms
+    purge_negative_values, fill_with_team_players, get_old_players_data, set_prices, set_forms, set_start_probabilities
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
@@ -62,6 +63,7 @@ def get_current_players(
         alt_positions=False,
         alt_prices=False,
         alt_forms=False,
+        add_start_probability=False,
         use_old_players_data=False,
         use_old_teams_data=False,
         use_comunio_price=False,
@@ -71,6 +73,7 @@ def get_current_players(
         alt_positions_file_name="futmondo_la_liga_players_positions",
         alt_prices_file_name="futbolfantasy_laliga_players_prices",
         alt_forms_file_name="futbolfantasy_laliga_players_forms",
+        start_probabilit_file_name="futbolfantasy_laliga_players_start_probabilities",
         debug=False
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price)
@@ -109,25 +112,30 @@ def get_current_players(
         partial_players_data = set_prices(partial_players_data, players_prices, verbose=False)
     if debug:
         print("666666")
-    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if add_start_probability:
+        players_start_probabilities = get_players_start_probabilities_dict(file_name=start_probabilit_file_name)
+        partial_players_data = set_start_probabilities(partial_players_data, players_start_probabilities, verbose=False)
     if debug:
         print("777777")
+    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if debug:
+        print("8888888")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
         partial_players_data = set_team_history_boosts(partial_players_data, players_team_history)
     if debug:
-        print("8888888")
+        print("999999")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     if debug:
-        print("999999")
+        print("AAAAAAA")
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
     if debug:
-        print("AAAAAAA")
+        print("BBBBBBB")
     if alt_forms and not no_form:
         players_form = get_players_forms_dict(file_name=alt_forms_file_name)
         full_players_data = set_forms(full_players_data, players_form)
     if debug:
-        print("BBBBBBB")
+        print("CCCCCCC")
 
     return full_players_data
 
@@ -181,6 +189,7 @@ current_players = get_current_players(
     alt_positions=True,
     alt_prices=True,
     alt_forms=True,
+    add_start_probability=True,
     no_penalty_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
@@ -193,6 +202,7 @@ current_players = get_current_players(
     # alt_positions_file_name="futmondo_la_liga_players_positions",
     alt_prices_file_name="futbolfantasy_laliga_players_prices",
     alt_forms_file_name="futbolfantasy_laliga_players_forms",
+    start_probabilit_file_name="futbolfantasy_laliga_players_start_probabilities",
     is_country=False,
     # host_team="Germany",
     debug=False,

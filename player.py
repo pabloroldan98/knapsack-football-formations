@@ -305,6 +305,25 @@ def set_prices(players_list, players_prices_dict, verbose=False):
     return result_players
 
 
+def set_start_probabilities(players_list, players_start_probabilties_dict, verbose=False):
+    result_players = copy.deepcopy(players_list)
+    team_start_probability_names_list = list(players_start_probabilties_dict.keys())
+
+    for player in result_players:
+        closest_player_start_probability_team = find_similar_string(player.team, team_start_probability_names_list, similarity_threshold=0)
+        player_start_probability_names_list = list(players_start_probabilties_dict[closest_player_start_probability_team].keys())
+        closest_player_start_probability_name = find_similar_string(player.name, player_start_probability_names_list)
+        if closest_player_start_probability_name:
+            new_start_probability = players_start_probabilties_dict[closest_player_start_probability_team][closest_player_start_probability_name]
+            if verbose:
+                if player.start_probability != new_start_probability:
+                    print(f"{player.name}: {player.start_probability} --> {new_start_probability}")
+            player.start_probability = new_start_probability
+        player.start_probability = new_start_probability
+
+    return result_players
+
+
 def set_forms(players_list, players_forms_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
     team_form_names_list = list(players_forms_dict.keys())
