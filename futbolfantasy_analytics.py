@@ -1,6 +1,7 @@
 import ast
 import os
 import re
+import shutil
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,6 +14,10 @@ def write_dict_to_csv(data, file_name):
     file_path = 'csv_files/' + file_name + '.csv'
     # Check if the file exists and delete it
     if os.path.exists(file_path):
+        file_path_old = 'csv_files/' + file_name + '_OLD.csv'
+        if os.path.exists(file_path_old):
+            os.remove(file_path_old)
+        shutil.copy(file_path, file_path_old)
         os.remove(file_path)
     with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)

@@ -227,7 +227,7 @@ worthy_players = sorted(
     reverse=False
 )
 
-purged_players = purge_everything(worthy_players)
+purged_players = purge_everything(worthy_players, probability_threshold=0.7)
 worthy_players = purged_players.copy()
 
 for player in worthy_players:
@@ -265,7 +265,7 @@ needed_purge = worthy_players[:150]
 # needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
 
 
-best_full_teams(needed_purge, possible_formations, 200, verbose=2)
+best_full_teams(needed_purge, possible_formations, 150, verbose=2)
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
 # best_full_teams(needed_purge, possible_formations, 300, verbose=2)
