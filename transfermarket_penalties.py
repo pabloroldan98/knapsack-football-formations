@@ -55,8 +55,15 @@ class TransfermarktScraper:
                         is_goal = True if is_goal_text == "in" else False
                         if minute_text.isdigit():
                             date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+                            player_name = name_elem['title']
+                            if player_name == "Abde Ezzalzouli":
+                                player_name = "Ez Abde"
+                            if player_name == "Jon Magunazelaia":
+                                player_name = "Magunacelaya"
+                            if player_name == "Alfonso Espino":
+                                player_name = "Pacha Espino"
                             takers.append({
-                                'name': name_elem['title'],
+                                'name': player_name,
                                 'minute': int(minute_text),
                                 'date': date_obj,
                                 # 'position': len(takers) + 1,

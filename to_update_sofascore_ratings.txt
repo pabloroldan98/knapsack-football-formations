@@ -1,4 +1,6 @@
 Remember to put this  verbosity:
         closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.6, verbose=True)
 
-To  True so you can  check the ones with less than 100%
+To True so you can  check the ones with less than 100%
+
+Also, for specific cases, you can also search "verbose=False" in the specific find_similar_string and put it to True

@@ -63,6 +63,14 @@ class FutbolFantasyScraper:
 
     def get_player_data(self, player_element):
         name = player_element.get_attribute('data-nombre').strip().title()
+        if name == "Alfonso Espino":
+            name = "Pacha Espino"
+        if name == "Peter Gonzales":
+            name = "Peter Federico"
+        if name == "Abde Ezzalzouli":
+            name = "Ez Abde"
+        if name == "Jonathan Montiel":
+            name = "Joni Montiel"
         price = player_element.get_attribute('data-valor').strip()
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
@@ -106,6 +114,14 @@ class FutbolFantasyScraper:
                 player_name = re.sub(r'[\d%]', '', player_name).strip()
                 probability = re.sub(r'[^0-9%]', '', probability)
                 if player_name and probability:
+                    if player_name == "Alfonso Espino":
+                        player_name = "Pacha Espino"
+                    if player_name == "Peter Gonzales":
+                        player_name = "Peter Federico"
+                    if player_name == "Abde Ezzalzouli":
+                        player_name = "Ez Abde"
+                    if player_name == "Jonathan Montiel":
+                        player_name = "Joni Montiel"
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities

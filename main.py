@@ -33,12 +33,12 @@ possible_formations = [
     # [2, 2, 2],
 
     [3, 4, 3],
-    # [3, 5, 2],
-    # [4, 3, 3],
-    # [4, 4, 2],
-    # [4, 5, 1],
-    # [5, 3, 2],
-    # [5, 4, 1],
+    [3, 5, 2],
+    [4, 3, 3],
+    [4, 4, 2],
+    [4, 5, 1],
+    [5, 3, 2],
+    [5, 4, 1],
 
     # [3, 3, 4],
     # # [3, 6, 1],
@@ -122,7 +122,7 @@ def get_current_players(
         print("8888888")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
-        partial_players_data = set_team_history_boosts(partial_players_data, players_team_history)
+        partial_players_data = set_team_history_boosts(partial_players_data, players_team_history, verbose=False)
     if debug:
         print("999999")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
@@ -227,9 +227,13 @@ worthy_players = sorted(
     reverse=False
 )
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.7)
+# purged_players = purge_everything(worthy_players, probability_threshold=0.4)
+
+purged_players = worthy_players.copy()
 worthy_players = purged_players.copy()
 
+
+print()
 for player in worthy_players:
 #     if ((player.position=="ATT") | (player.position=="MID")): # & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
@@ -265,7 +269,7 @@ needed_purge = worthy_players[:150]
 # needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
 
 
-best_full_teams(needed_purge, possible_formations, 150, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 150, verbose=2)
 # best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
 # best_full_teams(needed_purge, possible_formations, -1, verbose=1)
 # best_full_teams(needed_purge, possible_formations, 300, verbose=2)
@@ -296,46 +300,41 @@ best_full_teams(needed_purge, possible_formations, 150, verbose=2)
 
 ################################################### CHECK YOUR TEAM ###################################################
 #
-# print()
-# my_players_names = [
-#     "Guaita",
-#     "Batalla",
-#     "Acuña",
-#     "Foulquier",
-#     "Christensen",
-#     "Koundé",
-#     "Rüdiger",
-#     "Saúl Coco",
-#     "Jordi Martín",
-#     "Fekir",
-#     "Ilaix Moriba",
-#     "Tchouameni",
-#     "Robert Navarro",
-#     "Barrenetxea",
-#     "Llorente",
-#     "Sancet",
-#     "Isi Palazón",
-#     "Omorodion",
-#     "Sheraldo Becker",
-#     "Bertrand Traoré",
-#     "Rodrygo",
-#     "Williams",
-#     # "Ayoze",
-# ]
+print()
+my_players_names = [
+    "Sergio Herrera",
+    "Joan Garcia",
+    "Luis Pérez",
+    "Chavarría",
+    "El Hilali",
+    "Calero",
+    "Llorente",
+    "Dani Rodríguez",
+    "Koke",
+    "Aguado",
+    "Samu Lino",
+    "Carvalho",
+    "Sandro",
+    "Raba",
+    "Iago Aspas",
+    "Parejo",
+    "Ocampos",
+    "De Galarreta",
+]
+
+my_players_list = []
+for player in worthy_players:
+    if player.name in my_players_names:
+        print(player)
+
+for player in purged_players:
+    if player.name in my_players_names:
+        my_players_list.append(player)
+        # print(player)
+
+print()
 #
-# my_players_list = []
-# for player in worthy_players:
-#     if player.name in my_players_names:
-#         print(player)
-#
-# for player in purged_players:
-#     if player.name in my_players_names:
-#         my_players_list.append(player)
-#         # print(player)
-#
-# print()
-#
-# best_full_teams(my_players_list, possible_formations, -1, verbose=1)
+best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 
 
 ################################################### CHECK YOUR TEAM ###################################################

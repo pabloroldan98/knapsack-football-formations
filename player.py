@@ -284,6 +284,8 @@ def set_positions(players_list, players_positions_dict, verbose=False):
                 if player.position != new_position:
                     print(f"{player.name}: {player.position} --> {new_position}")
             player.position = new_position
+        # else:
+        #     print(f"{player.name}")
 
     return result_players
 
@@ -360,7 +362,7 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for penalty_taker_name in penalty_takers_names_list:
-            closest_player_name = find_similar_string(penalty_taker_name, players_names_list)
+            closest_player_name = find_similar_string(penalty_taker_name, players_names_list, verbose=False)
             for player in result_players:
                 if player.name == closest_player_name:
                     players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
@@ -415,31 +417,41 @@ def get_biwinger_transfermarket_teams_dict(biwenger_team_names_list, transfermar
     return result_biwinger_transfermarket_teams_dict
 
 
-def set_team_history_boosts(players_list, players_team_history_dict):
+def set_team_history_boosts(players_list, players_team_history_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
     penalty_team_names_list = list(players_team_history_dict.keys())
-    biwinger_transfermarket_teams_dict = get_biwinger_transfermarket_teams_dict(team_names_list, penalty_team_names_list) #, file_name="biwinger_transfermarket_la_liga_teams")
+    biwinger_transfermarket_teams_dict = get_biwinger_transfermarket_teams_dict(team_names_list, penalty_team_names_list) #, file_name="biwinger_transfermarket_laliga_teams")
 
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for player_name, player_team_history in team_players_history.items():
-            closest_player_name = find_similar_string(player_name, players_names_list)
+            closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
             for player in result_players:
                 if player.name == closest_player_name:
                     player.team_history = player_team_history
                     transfermarket_opponent_name = biwinger_transfermarket_teams_dict[player.opponent]
                     player.team_history_boost = calc_team_history_boost(player_team_history, transfermarket_opponent_name)
+                    if verbose:
+                        if player.team_history_boost != 0:
+                            print(f"{player.name}: {player.team} --> {player.opponent} ({player.team_history_boost:.4f})")
 
     return result_players
 
 
 def calc_team_history_boost(team_history, opponent):
-    # closest_opponent_name = find_similar_string(opponent, team_history)
-    # return 0.005 if closest_opponent_name else 0
-    return 0.005 if opponent in team_history else 0
+    # # closest_opponent_name = find_similar_string(opponent, team_history)
+    # # return 0.005 if closest_opponent_name else 0
+    # return 0.005 if opponent in team_history else 0
+    # We don't pop the current team out of the team_history since it works better for the calculation since it is ordered by matches in a team
+    if opponent not in team_history:
+        return 0
+    position = team_history.index(opponent)
+    length = len(team_history)
+    # Interpolate between 0.01 (first position) and 0.005 (last position)
+    return 0.01 if position == 0 else 0.005 if position == length - 1 else 0.01 - (position / (length - 1)) * 0.005
 
 
 def set_players_elo_dif(players_list, teams_list):
@@ -449,7 +461,8 @@ def set_players_elo_dif(players_list, teams_list):
     clean_players = purge_no_team_players(result_players)
     clean_players = purge_no_opponent_players(clean_players, teams_dict)
     # clean_players = purge_eliminated_players(clean_players, teams_list)
-    checked_teams = check_teams(clean_players, teams_list)
+
+    # checked_teams = check_teams(clean_players, teams_list)
     # if len(checked_teams) != len(teams_list):
     #     print("The following teams do NOT match your Databases:")
     #     for team in teams_list:
@@ -500,7 +513,7 @@ def set_players_sofascore_rating(
         else:
             closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
         player_rating_names_list = list(team_player_rating_dict[closest_player_rating_team].keys())
-        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.8)#, verbose=True
+        closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.8, verbose=False)
         if closest_player_rating_name:
             player.sofascore_rating = team_player_rating_dict[closest_player_rating_team][closest_player_rating_name]
 

@@ -48,7 +48,7 @@ class TransfermarktScraper:
         return player_links
 
     def get_team_player_links(self, team_links):
-        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, 8, 1)))
+        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, 7, 1)))
 
         team_player_links = {}
         for team_name, team_suffix in team_links.items():
@@ -110,6 +110,12 @@ class TransfermarktScraper:
         for team_name, player_links in team_player_links.items():
             team_result = {}
             for player_name, player_link in player_links.items():
+                if player_name == "Abde Ezzalzouli":
+                    player_name = "Ez Abde"
+                if player_name == "Jon Magunazelaia":
+                    player_name = "Magunacelaya"
+                if player_name == "Alfonso Espino":
+                    player_name = "Pacha Espino"
                 print('Extracting player team history from %s ...' % player_name)
                 team_result[player_name] = self.get_player_team_history(player_link, use_country_as_team)
                 # break
