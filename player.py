@@ -426,6 +426,8 @@ def set_team_history_boosts(players_list, players_team_history_dict, verbose=Fal
 
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
+        if team_name == "RCD Espanyol Barcelona":
+            closest_team_name = "Espanyol"
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for player_name, player_team_history in team_players_history.items():
             closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
