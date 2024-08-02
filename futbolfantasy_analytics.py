@@ -35,7 +35,14 @@ def read_dict_from_csv(file_name):
 class FutbolFantasyScraper:
     def __init__(self):
         self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
-        self.driver = webdriver.Chrome()
+        chrome_opt = Options()
+        chrome_opt.add_argument("--disable-search-engine-choice-screen")
+        chrome_opt.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_opt.add_argument("--disable-gpu")  # Disable GPU usage (useful for headless mode)
+        chrome_opt.add_argument("--no-sandbox")  # Bypass OS security model
+        chrome_opt.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+        self.driver = webdriver.Chrome(options=chrome_opt)
+        # self.driver = webdriver.Chrome()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
 
@@ -71,6 +78,8 @@ class FutbolFantasyScraper:
             name = "Ez Abde"
         if name == "Jonathan Montiel":
             name = "Joni Montiel"
+        if name == "Manuel Fuster":
+            name = "Fuster"
         price = player_element.get_attribute('data-valor').strip()
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
@@ -122,6 +131,8 @@ class FutbolFantasyScraper:
                         player_name = "Ez Abde"
                     if player_name == "Jonathan Montiel":
                         player_name = "Joni Montiel"
+                    if player_name == "Manu Fuster":
+                        player_name = "Fuster"
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities

@@ -83,15 +83,18 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
         return result
         # return read_dict_from_csv(file_name)
 
-    driver = webdriver.Chrome(keep_alive=False)
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--disable-search-engine-choice-screen")
+    driver = webdriver.Chrome(keep_alive=False, options=chrome_options)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
-        # chrome_options = webdriver.ChromeOptions()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-search-engine-choice-screen")
         # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
         # chrome_options.add_argument('--disable-extensions')
         # chrome_options.add_argument('--no-sandbox')
         # chrome_options.add_argument('--disable-images')
-        extra_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
+        extra_driver = webdriver.Chrome(keep_alive=True, options=chrome_options)
         # time.sleep(15)
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
@@ -207,6 +210,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 
 
 # chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument("--disable-search-engine-choice-screen")
 # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
 # chrome_options.add_argument('--disable-extensions')
 # chrome_options.add_argument('--no-sandbox')
