@@ -302,25 +302,23 @@ needed_purge = worthy_players[:150]
 #
 print()
 my_players_names = [
-    "Sergio Herrera",
     "Juan Soriano",
     "Joan Garcia",
     "Luis Pérez",
     "Chavarría",
     "El Hilali",
     "Calero",
-    "Llorente",
+    "Puado",
     "Dani Rodríguez",
     "Koke",
     "Aguado",
-    "Samu Lino",
-    "Carvalho",
-    "Sandro",
     "Raba",
     "Iago Aspas",
     "Parejo",
     "Ocampos",
-    "De Galarreta",
+    "Budimir",
+    "Yuri",
+    # "De Galarreta",
 ]
 
 my_players_list = []
