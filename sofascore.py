@@ -61,8 +61,11 @@ def get_team_links_from_league(league_url, driver):
     # La Liga
     teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
     team_name_xpath = teams_base_xpath + "/div/div[2]/div/div"
-    # time.sleep(15)//*[@id="__next"]
+    # time.sleep(15)
+    # driver.save_screenshot('team_links.png')
     team_links = wait.until(EC.presence_of_all_elements_located((By.XPATH, teams_base_xpath)))
+    # time.sleep(15)
+    # driver.save_screenshot('team_names.png')
     team_names = wait.until(EC.presence_of_all_elements_located((By.XPATH, team_name_xpath)))
     # team_links = driver.find_elements(By.XPATH, teams_base_xpath)
     # team_names = driver.find_elements(By.XPATH, team_name_xpath)
@@ -95,17 +98,24 @@ def get_players_data(
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--disable-search-engine-choice-screen")
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+
+
     driver = webdriver.Chrome(keep_alive=False, options=chrome_options)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-search-engine-choice-screen")
-        # chrome_options.add_argument("--headless")
-        # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
-        # chrome_options.add_argument('--disable-extensions')
-        # chrome_options.add_argument('--no-sandbox')
-        # chrome_options.add_argument('--disable-images')
+        chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+
         extra_driver = webdriver.Chrome(keep_alive=True, options=chrome_options)
         # time.sleep(15)
         team_links = get_team_links_from_league(
@@ -230,10 +240,14 @@ def get_players_data(
 
 # chrome_options = webdriver.ChromeOptions()
 # chrome_options.add_argument("--disable-search-engine-choice-screen")
+# chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
+# chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--no-sandbox")
+# chrome_options.add_argument("--disable-dev-shm-usage")
 # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
 # chrome_options.add_argument('--disable-extensions')
-# chrome_options.add_argument('--no-sandbox')
 # chrome_options.add_argument('--disable-images')
+# chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
 # my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
 # # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
