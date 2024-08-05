@@ -77,15 +77,15 @@ start_time = time.time()
 #         print(player, team_history)
 #
 #
-# print()
-# print("##############################")
-# ##############################
-# print("Scraping SOFASCORE...")
-#
-# result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings", force_scrape=True)#, team_links=team_links)
-#
-# for p in result:
-#     print(p)
+print()
+print("##############################")
+##############################
+print("Scraping SOFASCORE...")
+
+result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings", force_scrape=True)#, team_links=team_links)
+
+for p in result:
+    print(p)
 
 
 
