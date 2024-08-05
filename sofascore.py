@@ -1,7 +1,6 @@
 # Source: https://github.com/Urbistondo/sofa-score-scraper/blob/master/player_scraper.py
 
 import os
-
 from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,8 +17,13 @@ from player import Player
 from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file
 
 
-def get_players_ratings_list(write_file=True, file_name="sofascore_players_ratings", team_links=None):
-    teams_data_dict = get_players_data(write_file, file_name, team_links)
+def get_players_ratings_list(
+        write_file=True,
+        file_name="sofascore_players_ratings",
+        team_links=None,
+        force_scrape=False
+):
+    teams_data_dict = get_players_data(write_file, file_name, team_links, force_scrape=force_scrape)
     players_ratings_list = []
     for team_name, players_ratings in teams_data_dict.items():
         if isinstance(players_ratings, str):
@@ -91,11 +95,13 @@ def get_players_data(
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--disable-search-engine-choice-screen")
+    # chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(keep_alive=False, options=chrome_options)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-search-engine-choice-screen")
+        # chrome_options.add_argument("--headless")
         # chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
         # chrome_options.add_argument('--disable-extensions')
         # chrome_options.add_argument('--no-sandbox')
