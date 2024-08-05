@@ -15,7 +15,7 @@ import ast
 import time
 
 from player import Player
-from useful_functions import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file
 
 
 def get_players_ratings_list(write_file=True, file_name="sofascore_players_ratings", team_links=None):
@@ -76,12 +76,18 @@ def get_team_links_from_league(league_url, driver):
     return team_data
 
 
-def get_players_data(write_file=True, file_name="sofascore_players_ratings", team_links=None):
-    if os.path.isfile('./csv_files/' + file_name + '.csv'):
-        data = read_dict_from_csv(file_name)
-        result = {key: ast.literal_eval(value) for key, value in data.items()}
-        return result
-        # return read_dict_from_csv(file_name)
+def get_players_data(
+        write_file=True,
+        file_name="sofascore_players_ratings",
+        team_links=None,
+        backup_files=True,
+        force_scrape=False
+):
+    if not force_scrape:
+        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+            data = read_dict_from_csv(file_name)
+            return data
+            # return read_dict_from_csv(file_name)
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--disable-search-engine-choice-screen")
@@ -198,13 +204,20 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             #         pass
             # break
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
-        write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
+        if backup_files:
+            # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
+            overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
         j += 1
 
     driver.quit()
 
     if write_file:
-        write_dict_to_csv(teams_with_players_ratings, file_name)
+        # write_dict_to_csv(teams_with_players_ratings, file_name)
+        overwrite_dict_to_csv(teams_with_players_ratings, file_name)
+
+    if backup_files:
+        for k in range(j):
+            delete_file(file_name + "_" + str(j))
 
     return teams_with_players_ratings
 
@@ -224,7 +237,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 
 # start_time = time.time()
 #
-# result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings")#, team_links=team_links)
+# result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 #
 # end_time = time.time()

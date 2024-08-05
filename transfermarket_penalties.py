@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import ast
 
-from useful_functions import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv
 
 
 class TransfermarktScraper:
@@ -84,11 +84,15 @@ class TransfermarktScraper:
         return result
 
 
-def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_penalty_takers"):
-    if os.path.isfile('./csv_files/' + file_name + '.csv'):
-        data = read_dict_from_csv(file_name)
-        result = {key: ast.literal_eval(value) for key, value in data.items()}
-        return result
+def get_penalty_takers_dict(
+        write_file=True,
+        file_name="transfermarket_la_liga_penalty_takers",
+        force_scrape=False
+):
+    if not force_scrape:
+        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+            data = read_dict_from_csv(file_name)
+            return data
 
     scraper = TransfermarktScraper()
     penalties_data = scraper.scrape()
@@ -100,12 +104,13 @@ def get_penalty_takers_dict(write_file=True, file_name="transfermarket_la_liga_p
         filtered_penalties_data[team] = filtered_penalties
 
     if write_file:
-        write_dict_to_csv(filtered_penalties_data, file_name)
+        # write_dict_to_csv(filtered_penalties_data, file_name)
+        overwrite_dict_to_csv(filtered_penalties_data, file_name)
 
     return filtered_penalties_data
 
 
-# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers")
+# penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
 #
 # print(penalty_takers)
 # for team, penalties in penalty_takers.items():

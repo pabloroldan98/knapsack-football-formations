@@ -219,18 +219,12 @@ current_players = get_current_players(
 worthy_players = [player for player in current_players if player.price > 0]
 
 
-# worthy_players = sorted(worthy_players, key=lambda x: x.value/x.price, reverse=True)
-worthy_players = sorted(current_players, key=lambda x: x.value, reverse=True)
+# worthy_players = sorted(worthy_players, key=lambda x: (x.value-7)/x.price, reverse=True)
 worthy_players = sorted(
     current_players,
-    key=lambda x: (-x.value, -x.form, -x.fixture, x.team),
+    key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
     reverse=False
 )
-
-# purged_players = purge_everything(worthy_players, probability_threshold=0.4)
-
-purged_players = worthy_players.copy()
-worthy_players = purged_players.copy()
 
 
 print()
@@ -240,12 +234,26 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 15) & (player.start_probability >= 0.6) & ((player.position == "DEF") or (player.position == "MID")):# & (player.form > 1) & (player.fixture > 1):
+#     if (player.price <= 20) & (player.start_probability >= 0.7) & ((player.position == "DEF") or (player.position == "MID")):# & (player.form > 1) & (player.fixture > 1):
+#     if player.start_probability >= 0.7:
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
 
-print(len(worthy_players))
+# print(len(worthy_players))
+print("------------------------- PURGED PLAYERS -------------------------")
+
+purged_players = purge_everything(worthy_players, probability_threshold=0.7)
+worthy_players = purged_players.copy()
+
+
+print()
+for player in worthy_players:
+    print(player)
+print()
+
+# purged_players = worthy_players.copy()
+# worthy_players = purged_players.copy()
 
 # mega_purged_players = purge_everything(purged_players, mega_purge=True)
 
@@ -301,6 +309,8 @@ needed_purge = worthy_players[:150]
 ################################################### CHECK YOUR TEAM ###################################################
 #
 print()
+print("------------------------- YOUR TEAM -------------------------")
+print()
 my_players_names = [
     "Juan Soriano",
     "Joan Garcia",
@@ -309,16 +319,15 @@ my_players_names = [
     "El Hilali",
     "Calero",
     "Puado",
-    "Dani Rodríguez",
+    # "Dani Rodríguez",
     "Koke",
     "Aguado",
-    "Raba",
     "Iago Aspas",
     "Parejo",
     "Ocampos",
     "Budimir",
-    "Yuri",
-    # "De Galarreta",
+    # "Yuri",
+    "Fuster",
 ]
 
 my_players_list = []
@@ -326,6 +335,9 @@ for player in worthy_players:
     if player.name in my_players_names:
         print(player)
 
+print()
+print("------------------------- BEST FORMATIONS -------------------------")
+print()
 for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)

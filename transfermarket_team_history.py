@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import ast
 
-from useful_functions import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv
 
 
 class TransfermarktScraper:
@@ -125,11 +125,16 @@ class TransfermarktScraper:
         return result
 
 
-def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_liga_team_history",  use_country_as_team=False):
-    if os.path.isfile('./csv_files/' + file_name + '.csv'):
-        data = read_dict_from_csv(file_name)
-        result = {key: ast.literal_eval(value) for key, value in data.items()}
-        return result
+def get_players_team_history_dict(
+        write_file=True,
+        file_name="transfermarket_la_liga_team_history",
+        use_country_as_team=False,
+        force_scrape=False
+):
+    if not force_scrape:
+        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+            data = read_dict_from_csv(file_name)
+            return data
 
     scraper = TransfermarktScraper()
     team_history_data = scraper.scrape(use_country_as_team)
@@ -143,14 +148,16 @@ def get_players_team_history_dict(write_file=True, file_name="transfermarket_la_
         filtered_team_history_data[team] = filtered_player_team_history
 
     if write_file:
-        write_dict_to_csv(filtered_team_history_data, file_name)
+        # write_dict_to_csv(filtered_team_history_data, file_name):
+        overwrite_dict_to_csv(filtered_team_history_data, file_name)
 
     return filtered_team_history_data
 
 
 # players_team_history = get_players_team_history_dict(
 #     file_name="transfermarket_laliga_team_history",
-#     use_country_as_team=False
+#     use_country_as_team=False,
+#     force_scrape=True
 # )
 #
 # print(players_team_history)

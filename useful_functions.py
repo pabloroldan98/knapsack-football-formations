@@ -1,3 +1,6 @@
+import ast
+import os
+import shutil
 
 from unidecode import unidecode
 import difflib
@@ -74,6 +77,34 @@ def find_string_positions(string_list, target_string):
     return positions
 
 
+def is_valid_teams_dict(teams, num_teams=10):
+    if not isinstance(teams, dict):
+        return False
+    if len(teams) < num_teams:
+        return False
+    for team, players in teams.items():
+        if isinstance(players, dict):
+            if len(players) < 11:
+                return False
+        if isinstance(players, list):
+            if len(players) < 5:
+                return False
+    return True
+
+
+def overwrite_dict_to_csv(dict_data, file_name):
+    if is_valid_teams_dict(dict_data):
+        file_path = './csv_files/' + file_name + '.csv'
+        # Check if the file exists and delete it
+        if os.path.exists(file_path):
+            file_path_old = 'csv_files/' + file_name + '_OLD.csv'
+            if os.path.exists(file_path_old):
+                os.remove(file_path_old)
+            shutil.copy(file_path, file_path_old)
+            os.remove(file_path)
+        write_dict_to_csv(dict_data, file_name)
+
+
 def write_dict_to_csv(dict_data, file_name):
     with open("./csv_files/" + file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
         writer = csv.writer(csv_file)
@@ -81,8 +112,29 @@ def write_dict_to_csv(dict_data, file_name):
             writer.writerow([key, value])
 
 
+def convert_value(value):
+    try:
+        return ast.literal_eval(value)
+    except (ValueError, SyntaxError):
+        return value
+
+
 def read_dict_from_csv(file_name):
     with open("./csv_files/" + file_name + ".csv", encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         mydict = dict(reader)
+        mydict = {key: convert_value(value) for key, value in mydict.items()}
         return mydict
+
+
+def delete_file(file_name):
+    file_path = './csv_files/' + file_name + '.csv'
+    try:
+        os.remove(file_path)
+        print(f"File '{file_path}' has been deleted successfully.")
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found.")
+    except PermissionError:
+        print(f"Permission denied: Unable to delete '{file_path}'.")
+    except Exception as e:
+        print(f"An error occurred while deleting the file '{file_path}': {e}")

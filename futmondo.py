@@ -4,7 +4,7 @@ from pprint import pprint
 import os
 import ast
 
-from useful_functions import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_to_csv, read_dict_from_csv, is_valid_teams_dict, overwrite_dict_to_csv
 
 
 class FutmondoWebScraper:
@@ -59,11 +59,15 @@ def get_position(futmondo_position):
     return position
 
 
-def get_players_positions_dict(write_file=True, file_name="futmondo_la_liga_players_positions"):
-    if os.path.isfile('./csv_files/' + file_name + '.csv'):
-        data = read_dict_from_csv(file_name)
-        result = {key: ast.literal_eval(value) for key, value in data.items()}
-        return result
+def get_players_positions_dict(
+        write_file=True,
+        file_name="futmondo_la_liga_players_positions",
+        force_scrape=False
+):
+    if not force_scrape:
+        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+            data = read_dict_from_csv(file_name)
+            return data
 
     scraper = FutmondoWebScraper()
     result = scraper.run()
@@ -71,12 +75,14 @@ def get_players_positions_dict(write_file=True, file_name="futmondo_la_liga_play
     team_players_positions_dict = {team_name: team_dict["players"] for team_name, team_dict in result.items()}
 
     if write_file:
-        write_dict_to_csv(team_players_positions_dict, file_name)
+        if is_valid_teams_dict(team_players_positions_dict):
+            # write_dict_to_csv(team_players_positions_dict, file_name)
+            overwrite_dict_to_csv(team_players_positions_dict, file_name)
 
     return team_players_positions_dict
 
 
-# players_positions_dict = get_players_positions_dict("futmondo_la_liga_players_positions)
+# players_positions_dict = get_players_positions_dict(file_name="futmondo_laliga_players_positions", force_scrape=True)
 #
 # # Print the result in a readable way
 # pprint(players_positions_dict)
