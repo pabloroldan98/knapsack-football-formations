@@ -30,49 +30,54 @@ print("##############################")
 ##############################
 print("Scraping FUTBOLFANTASY...")
 
-prices, positions, forms, start_probabilities = get_futbolfantasy_data(
-    price_file_name="futbolfantasy_laliga_players_prices",
-    positions_file_name="futbolfantasy_laliga_players_positions",
-    forms_file_name="futbolfantasy_laliga_players_forms",
-    start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
-    force_scrape=True
-)
-print("Prices:")
-for team, players in prices.items():
-    print(team, players)
-print("\nPositions:")
-for team, players in positions.items():
-    print(team, players)
-print("\nForms:")
-for team, players in forms.items():
-    print(team, players)
-print("\nStart Probabilities:")
-for team, players in start_probabilities.items():
-    print(team, players)
-
+try:
+    prices, positions, forms, start_probabilities = get_futbolfantasy_data(
+        price_file_name="futbolfantasy_laliga_players_prices",
+        positions_file_name="futbolfantasy_laliga_players_positions",
+        forms_file_name="futbolfantasy_laliga_players_forms",
+        start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
+        force_scrape=True
+    )
+    print("Prices:")
+    for team, players in prices.items():
+        print(team, players)
+    print("\nPositions:")
+    for team, players in positions.items():
+        print(team, players)
+    print("\nForms:")
+    for team, players in forms.items():
+        print(team, players)
+    print("\nStart Probabilities:")
+    for team, players in start_probabilities.items():
+        print(team, players)
+except Exception as e:
+    print(f"Error scraping FUTBOLFANTASY: {e}")
 
 print()
 print("##############################")
 ##############################
 print("Scraping FUTMONDO...")
 
-players_positions_dict = get_players_positions_dict(file_name="futmondo_laliga_players_positions", force_scrape=True)
-
-# Print the result in a readable way
-for team, players in players_positions_dict.items():
-    print(team, players)
+try:
+    players_positions_dict = get_players_positions_dict(file_name="futmondo_laliga_players_positions", force_scrape=True)
+    # Print the result in a readable way
+    for team, players in players_positions_dict.items():
+        print(team, players)
+except Exception as e:
+    print(f"Error scraping FUTMONDO: {e}")
 
 print()
 print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (penalties)...")
 
-penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
-
-print(penalty_takers)
-for team, penalties in penalty_takers.items():
-    print(team, penalties)
-
+try:
+    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
+    print(penalty_takers)
+    for team, penalties in penalty_takers.items():
+        print(team, penalties)
+except Exception as e:
+    print(f"Error scraping TRANSFERMARKET (penalties): {e}")
 
 if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2):
     print()
@@ -80,19 +85,20 @@ if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2):
     ##############################
     print("Scraping TRANSFERMARKET (team history)...")
 
-    players_team_history = get_players_team_history_dict(
-        file_name="transfermarket_laliga_team_history",
-        use_country_as_team=False,
-        force_scrape=True
-    )
-
-    print(players_team_history)
-    for team, players in players_team_history.items():
-        print()
-        print(team)
-        for player, team_history in players.items():
-            print(player, team_history)
-
+    try:
+        players_team_history = get_players_team_history_dict(
+            file_name="transfermarket_laliga_team_history",
+            use_country_as_team=False,
+            force_scrape=True
+        )
+        print(players_team_history)
+        for team, players in players_team_history.items():
+            print()
+            print(team)
+            for player, team_history in players.items():
+                print(player, team_history)
+    except Exception as e:
+        print(f"Error scraping TRANSFERMARKET (team history): {e}")
 
 if day_of_week == 1:
     print()
@@ -100,12 +106,16 @@ if day_of_week == 1:
     ##############################
     print("Scraping SOFASCORE...")
 
-    result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings", force_scrape=True)#, team_links=team_links)
-
-    for p in result:
-        print(p)
-
-
+    try:
+        result = get_players_ratings_list(
+            file_name="sofascore_laliga_players_ratings",
+            backup_files=False,
+            force_scrape=True
+        )
+        for p in result:
+            print(p)
+    except Exception as e:
+        print(f"Error scraping SOFASCORE: {e}")
 
 print()
 print("##############################")
@@ -115,5 +125,3 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 
 print(f"Execution time: {elapsed_time} seconds")
-
-

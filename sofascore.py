@@ -21,9 +21,10 @@ def get_players_ratings_list(
         write_file=True,
         file_name="sofascore_players_ratings",
         team_links=None,
+        backup_files=True,
         force_scrape=False
 ):
-    teams_data_dict = get_players_data(write_file, file_name, team_links, force_scrape=force_scrape)
+    teams_data_dict = get_players_data(write_file, file_name, team_links, backup_files=backup_files, force_scrape=force_scrape)
     players_ratings_list = []
     for team_name, players_ratings in teams_data_dict.items():
         if isinstance(players_ratings, str):

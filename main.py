@@ -181,7 +181,7 @@ def get_last_jornada_players():
 
 
 current_players = get_current_players(
-    no_form=True,
+    no_form=False,
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
