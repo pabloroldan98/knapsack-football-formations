@@ -326,8 +326,8 @@ my_players_names = [
     "Parejo",
     "Ocampos",
     "Budimir",
-    # "Yuri",
-    "Fuster",
+    "Yuri",
+    # "Fuster",
 ]
 
 my_players_list = []

@@ -329,7 +329,6 @@ def set_start_probabilities(players_list, players_start_probabilties_dict, verbo
             player.start_probability = new_start_probability
         # else:
         #     print(f"{player.name}")
-        player.start_probability = new_start_probability
 
     return result_players
 
