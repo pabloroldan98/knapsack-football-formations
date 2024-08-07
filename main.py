@@ -234,8 +234,7 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 20) & (player.start_probability >= 0.7) & ((player.position == "DEF") or (player.position == "MID")):# & (player.form > 1) & (player.fixture > 1):
-#     if player.start_probability >= 0.7:
+#     if (player.price <= 12) & (player.start_probability >= 0.5) & (player.position == "MID"):# & (player.form > 1) & (player.fixture > 1):
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
