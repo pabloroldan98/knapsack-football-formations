@@ -189,6 +189,24 @@ def get_players_data(
                 print('Extracting player data from %s ...' % player_name)
                 print(average_rating)
                 if player_name != "":
+                    if player_name == "Alfonso Espino":
+                        player_name = "Pacha Espino"
+                    if player_name == "Abdessamad Ezzalzouli":
+                        player_name = "Ez Abde"
+                    if player_name == "Jon Magunazelaia":
+                        player_name = "Magunacelaya"
+                    if player_name == "Abderrahman Rebbach":
+                        player_name = "Abde Rebbach"
+                    if player_name == "Peter González":
+                        player_name = "Peter Federico"
+                    if player_name == "Ismaila Ciss":
+                        player_name = "Pathé Ciss"
+                    if player_name == "Chuky":
+                        player_name = "Chuki"
+                    if player_name == "Malcom Ares":
+                        player_name = "Adu Ares"
+                    if player_name == "William Carvalho":
+                        player_name = "Carvalho"
                     players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
                 pass

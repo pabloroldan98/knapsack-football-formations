@@ -120,7 +120,7 @@ class Player:
         else:
             return False
 
-    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
         form_coef = ((self.price_trend/math.log(self.standard_price))/300000)*0.9 + 1
         if no_form:
             form_coef = 1
@@ -142,14 +142,15 @@ class Player:
         fixture_coef += home_bonus if not no_home_boost else 0
         fixture_coef += self.team_history_boost
 
-        self.form = form_coef
+        if not alt_forms or (alt_forms and self.form == 0):
+            self.form = form_coef
         self.fixture = fixture_coef
 
         predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(fixture_coef)
         return predicted_value
 
-    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
-        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method)
+    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms)
         self.value = predicted_value
 
 
@@ -576,10 +577,10 @@ def set_players_sofascore_rating(
     return result_players
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
     result_players = copy.deepcopy(players_list)
     for player in result_players:
-        player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method)
+        player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
     return result_players
 
 

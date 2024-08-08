@@ -128,12 +128,12 @@ def get_current_players(
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     if debug:
         print("AAAAAAA")
-    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method)
-    if debug:
-        print("BBBBBBB")
     if alt_forms and not no_form:
         players_form = get_players_forms_dict(file_name=alt_forms_file_name)
-        full_players_data = set_forms(full_players_data, players_form)
+        partial_players_data = set_forms(partial_players_data, players_form)
+    if debug:
+        print("BBBBBBB")
+    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
     if debug:
         print("CCCCCCC")
 
@@ -318,7 +318,7 @@ my_players_names = [
     "El Hilali",
     "Calero",
     "Puado",
-    # "Dani Rodríguez",
+    "Luis Milla",
     "Koke",
     "Aguado",
     "Iago Aspas",
