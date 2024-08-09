@@ -153,11 +153,12 @@ def create_players_list(championship_teams, championship_players, use_comunio_pr
         player_name = championship_player["name"]
         player_group = championship_player["position"]
         if use_comunio_price:
-            player_price = int(championship_player["price"] / 1000)
+            player_price = int(championship_player["price"] / 1000000)
         else:
             player_price = int(championship_player["fantasyPrice"] / 1000000)
         player_status = championship_player["status"]
         player_standard_price = float(championship_player["price"])
+        player_fantasy_price = float(championship_player["fantasyPrice"])
         player_price_trend = float(championship_player["priceIncrement"])
         player_fitness = championship_player["fitness"]
 
@@ -176,6 +177,7 @@ def create_players_list(championship_teams, championship_players, use_comunio_pr
                 team=player_team,
                 status=player_status,
                 standard_price=player_standard_price,
+                fantasy_price=player_fantasy_price,
                 price_trend=player_price_trend,
                 fitness=player_fitness
             )

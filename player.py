@@ -25,6 +25,7 @@ class Player:
             opponent_elo: float = 0,
             status: str = "ok",
             standard_price: float = 0,
+            fantasy_price: float = 0,
             price_trend: float = 0,
             fitness: list = [None, None, None, None, None],
             penalties: list = [False, False, False, False, False, False],
@@ -49,6 +50,7 @@ class Player:
         self.opponent_elo = opponent_elo
         self.status = status
         self.standard_price = standard_price
+        self.fantasy_price = fantasy_price
         self.price_trend = price_trend
         self.fitness = fitness
         self._penalties = penalties
@@ -301,11 +303,11 @@ def set_prices(players_list, players_prices_dict, verbose=False):
         closest_player_price_name = find_similar_string(player.name, player_price_names_list)
         if closest_player_price_name:
             new_price = players_prices_dict[closest_player_price_team][closest_player_price_name]
-            new_price = round(float(new_price) / 1000)
+            new_price = round(float(new_price))
         else:
             # print(player.name)
-            new_price = round(float(player.price) * 5)
-        new_price = round(float(new_price) / 1000)
+            new_price = round(float(player.standard_price) * 5)
+        new_price = round(float(new_price) / 1000000)
         if verbose:
             if player.price != new_price:
                 print(f"{player.name}: {player.price} --> {new_price}")

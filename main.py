@@ -198,8 +198,8 @@ current_players = get_current_players(
     ratings_file_name="sofascore_laliga_players_ratings",
     penalties_file_name="transfermarket_laliga_penalty_takers",
     team_history_file_name="transfermarket_laliga_team_history",
-    alt_positions_file_name="futbolfantasy_laliga_players_positions",
     # alt_positions_file_name="futmondo_la_liga_players_positions",
+    alt_positions_file_name="futbolfantasy_laliga_players_positions",
     alt_prices_file_name="futbolfantasy_laliga_players_prices",
     alt_forms_file_name="futbolfantasy_laliga_players_forms",
     start_probabilit_file_name="futbolfantasy_laliga_players_start_probabilities",
@@ -234,7 +234,7 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 12) & (player.start_probability >= 0.5) & (player.position == "MID"):# & (player.form > 1) & (player.fixture > 1):
+#     if (player.price <= 12) & (player.start_probability >= 0.4) & (player.position == "MID"):# & (player.form > 1) & (player.fixture > 1):
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
@@ -303,6 +303,10 @@ needed_purge = worthy_players[:150]
 #
 #
 # best_full_teams(needed_purge, possible_formations, 14+61+75+30, verbose=2)
+
+
+
+# best_full_teams(needed_purge, possible_formations, 150, verbose=2)
 
 
 ################################################### CHECK YOUR TEAM ###################################################
