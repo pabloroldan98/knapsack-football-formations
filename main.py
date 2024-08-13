@@ -323,7 +323,7 @@ my_players_names = [
     "Luis Pérez",
     "Chavarría",
     "El Hilali",
-    "Calero",
+    "Álvaro Tejero",
     "Puado",
     "Luis Milla",
     "Koke",
