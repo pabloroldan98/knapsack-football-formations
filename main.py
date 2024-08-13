@@ -322,7 +322,6 @@ my_players_names = [
     "Joan Garcia",
     "Luis Pérez",
     "Chavarría",
-    "El Hilali",
     "Álvaro Tejero",
     "Puado",
     "Luis Milla",
