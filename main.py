@@ -319,7 +319,7 @@ print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
     "Juan Soriano",
-    "Joan Garcia",
+    "Joan García",
     "Luis Pérez",
     "Chavarría",
     "Álvaro Tejero",
