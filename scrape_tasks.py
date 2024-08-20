@@ -79,7 +79,7 @@ try:
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalties): {e}")
 
-if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2):
+if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_year == 8 or month_of_year == 1):
     print()
     print("##############################")
     ##############################
