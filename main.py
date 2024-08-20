@@ -234,7 +234,7 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 12) & (player.start_probability >= 0.4) & (player.position == "MID"):# & (player.form > 1) & (player.fixture > 1):
+#     if (player.price <= 25) & (player.start_probability >= 0.6) & (player.position == "DEF"):# & (player.form > 1) & (player.fixture > 1):
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
@@ -244,7 +244,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.7)
+purged_players = purge_everything(worthy_players, probability_threshold=0.6)
 worthy_players = purged_players.copy()
 
 
@@ -318,7 +318,6 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Juan Soriano",
     "Joan García",
     "Luis Pérez",
     "Chavarría",
@@ -330,8 +329,7 @@ my_players_names = [
     "Parejo",
     "Ocampos",
     "Budimir",
-    "Yuri",
-    # "Fuster",
+    "Juan Cruz",
 ]
 # my_players_names = [
 #     "Sinkgraven",
@@ -363,6 +361,9 @@ print()
 for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)
+#         if player.name == "Juan Cruz":
+#             if player.team == "Osasuna":
+#                 my_players_list.pop()
         # print(player)
 
 print()
