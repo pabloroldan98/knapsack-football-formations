@@ -244,7 +244,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.6)
+purged_players = purge_everything(worthy_players, probability_threshold=0.7)
 worthy_players = purged_players.copy()
 
 
@@ -309,7 +309,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 150, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 160, verbose=2)
 
 
 ################################################### CHECK YOUR TEAM ###################################################
@@ -321,12 +321,13 @@ my_players_names = [
     "Joan García",
     "Luis Pérez",
     "Chavarría",
+    "Sergi Cardona",
     "Álvaro Tejero",
     "Puado",
     "Luis Milla",
-    "Koke",
+    "Giménez",
     "Iago Aspas",
-    "Parejo",
+    "Yangel Herrera",
     "Ocampos",
     "Budimir",
     "Juan Cruz",
