@@ -158,7 +158,7 @@ jobs:
       - name: Move FutbolFantasy CSV files to root csv_files directory
         if: needs.scrape_futbolfantasy.result == 'success'
         run: |
-          mv csv_files/futbolfantasy/*.csv csv_files/
+          mv -f csv_files/futbolfantasy/*.csv csv_files/
           rm -rf csv_files/futbolfantasy
 
       - name: Download Futmondo CSV artifact
@@ -171,7 +171,7 @@ jobs:
       - name: Move Futmondo CSV files to root csv_files directory
         if: needs.scrape_futmondo.result == 'success'
         run: |
-          mv csv_files/futmondo/*.csv csv_files/
+          mv -f csv_files/futmondo/*.csv csv_files/
           rm -rf csv_files/futmondo
 
       - name: Download TransferMarket Penalties CSV artifact
@@ -184,7 +184,7 @@ jobs:
       - name: Move TransferMarket Penalties CSV files to root csv_files directory
         if: needs.scrape_transfermarket_penalties.result == 'success'
         run: |
-          mv csv_files/transfermarket_penalties/*.csv csv_files/
+          mv -f csv_files/transfermarket_penalties/*.csv csv_files/
           rm -rf csv_files/transfermarket_penalties
 
       - name: Download TransferMarket Team History CSV artifact
@@ -197,7 +197,7 @@ jobs:
       - name: Move TransferMarket Team History CSV files to root csv_files directory
         if: needs.scrape_transfermarket_teamhistory.result == 'success'
         run: |
-          mv csv_files/transfermarket_teamhistory/*.csv csv_files/
+          mv -f csv_files/transfermarket_teamhistory/*.csv csv_files/
           rm -rf csv_files/transfermarket_teamhistory
 
       - name: Download SofaScore CSV artifact
@@ -210,7 +210,7 @@ jobs:
       - name: Move SofaScore CSV files to root csv_files directory
         if: needs.scrape_sofascore.result == 'success'
         run: |
-          mv csv_files/sofascore/*.csv csv_files/
+          mv -f csv_files/sofascore/*.csv csv_files/
           rm -rf csv_files/sofascore
 
       - name: Configure git
