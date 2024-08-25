@@ -11,6 +11,8 @@ from pprint import pprint
 
 from useful_functions import find_similar_string, find_string_positions, write_dict_to_csv, read_dict_from_csv
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+
 
 class Player:
     def __init__(
@@ -610,7 +612,7 @@ def set_players_value_to_last_fitness(players_list):
 
 
 def get_old_players_data():
-    with open('csv_files/OLD_players_before_jornada_03.csv', newline='') as f:
+    with open(ROOT_DIR + '/csv_files/OLD_players_before_jornada_03.csv', newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
     old_players_data = []

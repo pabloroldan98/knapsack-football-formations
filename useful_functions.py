@@ -99,7 +99,7 @@ def overwrite_dict_to_csv(dict_data, file_name):
         file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
         # Check if the file exists and delete it
         if os.path.exists(file_path):
-            file_path_old = 'csv_files/' + file_name + '_OLD.csv'
+            file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.csv'
             if os.path.exists(file_path_old):
                 os.remove(file_path_old)
             shutil.copy(file_path, file_path_old)

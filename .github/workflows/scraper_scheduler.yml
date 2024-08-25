@@ -6,14 +6,11 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  run-tasks:
+  install-dependencies:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -25,9 +22,67 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tasks
-        run: |
-          python ./scraping_tasks/scrape_tasks.py
+    outputs:
+      python-path: ${{ steps.python-setup.outputs.python-path }}
+
+  scrape_futbolfantasy:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run FutbolFantasy Scraper
+        run: python ./scraping_tasks/scrape_futbolfantasy.py
+
+  scrape_futmondo:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Futmondo Scraper
+        run: python ./scraping_tasks/scrape_futmondo.py
+
+  scrape_transfermarket_penalties:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run TransferMarket Penalties Scraper
+        run: python ./scraping_tasks/scrape_transfermarket_penalties.py
+
+  scrape_transfermarket_teamhistory:
+    needs: install-dependencies
+    if: github.event_name == 'schedule' && (github.event.schedule == '0 2 * * 2') && contains('8 9 1 2', github.event.schedule_month)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run TransferMarket Team History Scraper
+        run: python ./scraping_tasks/scrape_transfermarket_teamhistory.py
+
+  scrape_sofascore:
+    needs: install-dependencies
+    if: github.event_name == 'schedule' && github.event.schedule == '0 2 * * 2'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run SofaScore Scraper
+        run: python ./scraping_tasks/scrape_sofascore.py
+
+  commit-and-push:
+    needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Configure git
         run: |
