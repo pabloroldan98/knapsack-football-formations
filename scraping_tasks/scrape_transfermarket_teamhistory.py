@@ -1,6 +1,9 @@
+import os
+import sys
 from datetime import datetime, timezone
 import time
 import pytz
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from futbolfantasy_analytics import get_futbolfantasy_data
 from futmondo import get_players_positions_dict
