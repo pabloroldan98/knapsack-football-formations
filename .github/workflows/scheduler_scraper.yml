@@ -26,6 +26,12 @@ jobs:
       - name: Run FutbolFantasy Scraper
         run: python ./scraping_tasks/scrape_futbolfantasy.py
 
+      - name: Upload CSV files as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: futbolfantasy-csv
+          path: csv_files/
+
   scrape_futmondo:
     runs-on: ubuntu-latest
     steps:
@@ -44,6 +50,12 @@ jobs:
 
       - name: Run Futmondo Scraper
         run: python ./scraping_tasks/scrape_futmondo.py
+
+      - name: Upload CSV files as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: futmondo-csv
+          path: csv_files/
 
   scrape_transfermarket_penalties:
     runs-on: ubuntu-latest
@@ -65,6 +77,12 @@ jobs:
       - name: Run TransferMarket Penalties Scraper
         run: python ./scraping_tasks/scrape_transfermarket_penalties.py
 
+      - name: Upload CSV files as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: transfermarket-penalties-csv
+          path: csv_files/
+
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' && (github.event.schedule == '0 2 * * 2') && contains('8 9 1 2', github.event.schedule_month)
@@ -84,6 +102,12 @@ jobs:
 
       - name: Run TransferMarket Team History Scraper
         run: python ./scraping_tasks/scrape_transfermarket_teamhistory.py
+
+      - name: Upload CSV files as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: transfermarket-teamhistory-csv
+          path: csv_files/
 
   scrape_sofascore:
     runs-on: ubuntu-latest
@@ -105,6 +129,12 @@ jobs:
       - name: Run SofaScore Scraper
         run: python ./scraping_tasks/scrape_sofascore.py
 
+      - name: Upload CSV files as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: sofascore-csv
+          path: csv_files/
+
   commit-and-push:
     needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
@@ -119,6 +149,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: futbolfantasy-csv
+          path: csv_files/
+      - uses: actions/download-artifact@v2
+        with:
+          name: futmondo-csv
+          path: csv_files/
+      - uses: actions/download-artifact@v2
+        with:
+          name: transfermarket-penalties-csv
+          path: csv_files/
+      - uses: actions/download-artifact@v2
+        with:
+          name: transfermarket-teamhistory-csv
+          path: csv_files/
+      - uses: actions/download-artifact@v2
+        with:
+          name: sofascore-csv
+          path: csv_files/
+
       - name: Configure git
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -126,7 +178,7 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add .
+          git add csv_files/*
           git commit -m "Automated commit by GitHub Action"
 
       - name: Push changes
