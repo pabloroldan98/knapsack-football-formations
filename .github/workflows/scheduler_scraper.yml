@@ -17,13 +17,28 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          python -m venv .venv
+          source .venv/bin/activate
 
-    outputs:
-      python-path: ${{ steps.python-setup.outputs.python-path }}
+      - name: Upload Python environment
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-env
+          path: .venv
 
   scrape_futbolfantasy:
     needs: install-dependencies
@@ -32,8 +47,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run FutbolFantasy Scraper
-        run: python ./scraping_tasks/scrape_futbolfantasy.py
+      - name: Download Python environment
+        uses: actions/download-artifact@v2
+        with:
+          name: python-env
+          path: .venv
+
+      - name: Activate environment and run FutbolFantasy Scraper
+        run: |
+          source .venv/bin/activate
+          python ./scraping_tasks/scrape_futbolfantasy.py
 
   scrape_futmondo:
     needs: install-dependencies
@@ -42,8 +65,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run Futmondo Scraper
-        run: python ./scraping_tasks/scrape_futmondo.py
+      - name: Download Python environment
+        uses: actions/download-artifact@v2
+        with:
+          name: python-env
+          path: .venv
+
+      - name: Activate environment and run Futmondo Scraper
+        run: |
+          source .venv/bin/activate
+          python ./scraping_tasks/scrape_futmondo.py
 
   scrape_transfermarket_penalties:
     needs: install-dependencies
@@ -52,8 +83,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run TransferMarket Penalties Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_penalties.py
+      - name: Download Python environment
+        uses: actions/download-artifact@v2
+        with:
+          name: python-env
+          path: .venv
+
+      - name: Activate environment and run TransferMarket Penalties Scraper
+        run: |
+          source .venv/bin/activate
+          python ./scraping_tasks/scrape_transfermarket_penalties.py
 
   scrape_transfermarket_teamhistory:
     needs: install-dependencies
@@ -63,8 +102,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run TransferMarket Team History Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_teamhistory.py
+      - name: Download Python environment
+        uses: actions/download-artifact@v2
+        with:
+          name: python-env
+          path: .venv
+
+      - name: Activate environment and run TransferMarket Team History Scraper
+        run: |
+          source .venv/bin/activate
+          python ./scraping_tasks/scrape_transfermarket_teamhistory.py
 
   scrape_sofascore:
     needs: install-dependencies
@@ -74,8 +121,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run SofaScore Scraper
-        run: python ./scraping_tasks/scrape_sofascore.py
+      - name: Download Python environment
+        uses: actions/download-artifact@v2
+        with:
+          name: python-env
+          path: .venv
+
+      - name: Activate environment and run SofaScore Scraper
+        run: |
+          source .venv/bin/activate
+          python ./scraping_tasks/scrape_sofascore.py
 
   commit-and-push:
     needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
