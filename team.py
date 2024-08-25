@@ -1,6 +1,9 @@
 import csv
+import os
 
 from unidecode import unidecode
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
 class Team:
@@ -28,7 +31,7 @@ class Team:
 
 
 def get_old_teams_data(forced_matches=[]):
-    with open('csv_files/OLD_teams_before_jornada_03.csv', newline='') as f:
+    with open(f'{ROOT_DIR}/csv_files/OLD_teams_before_jornada_03.csv', newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
     old_teams_data = []

@@ -7,6 +7,8 @@ import difflib
 from fuzzywuzzy import fuzz
 import csv
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+
 
 def cleaned_string(s):
     res = s
@@ -94,7 +96,7 @@ def is_valid_teams_dict(teams, num_teams=10):
 
 def overwrite_dict_to_csv(dict_data, file_name):
     if is_valid_teams_dict(dict_data):
-        file_path = './csv_files/' + file_name + '.csv'
+        file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
         # Check if the file exists and delete it
         if os.path.exists(file_path):
             file_path_old = 'csv_files/' + file_name + '_OLD.csv'
@@ -106,7 +108,7 @@ def overwrite_dict_to_csv(dict_data, file_name):
 
 
 def write_dict_to_csv(dict_data, file_name):
-    with open("./csv_files/" + file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
+    with open(ROOT_DIR + "/csv_files/" + file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
         writer = csv.writer(csv_file)
         for key, value in dict_data.items():
             writer.writerow([key, value])
@@ -120,7 +122,7 @@ def convert_value(value):
 
 
 def read_dict_from_csv(file_name):
-    with open("./csv_files/" + file_name + ".csv", encoding='utf-8') as csv_file:
+    with open(ROOT_DIR + "/csv_files/" + file_name + ".csv", encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file)
         mydict = dict(reader)
         mydict = {key: convert_value(value) for key, value in mydict.items()}
@@ -128,7 +130,7 @@ def read_dict_from_csv(file_name):
 
 
 def delete_file(file_name):
-    file_path = './csv_files/' + file_name + '.csv'
+    file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
     try:
         os.remove(file_path)
         print(f"File '{file_path}' has been deleted successfully.")

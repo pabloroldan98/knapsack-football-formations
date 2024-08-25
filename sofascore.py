@@ -16,6 +16,8 @@ import time
 from player import Player
 from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+
 
 def get_players_ratings_list(
         write_file=True,
@@ -92,7 +94,7 @@ def get_players_data(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
             # return read_dict_from_csv(file_name)

@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python scrape_tasks.py
+          python ./scraping_tasks/scrape_tasks.py
 
       - name: Configure git
         run: |

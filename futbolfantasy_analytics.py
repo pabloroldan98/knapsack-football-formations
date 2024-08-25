@@ -12,6 +12,8 @@ import csv
 
 from useful_functions import overwrite_dict_to_csv, read_dict_from_csv
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+
 
 class FutbolFantasyScraper:
     def __init__(self):
@@ -158,7 +160,12 @@ def get_futbolfantasy_data(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + price_file_name + '.csv') and os.path.isfile('./csv_files/' + positions_file_name + '.csv') and os.path.isfile('./csv_files/' + forms_file_name + '.csv') and os.path.isfile('./csv_files/' + start_probability_file_name + '.csv'):
+        if (
+                os.path.isfile(ROOT_DIR + '/csv_files/' + price_file_name + '.csv') and
+                os.path.isfile(ROOT_DIR + '/csv_files/' + positions_file_name + '.csv') and
+                os.path.isfile(ROOT_DIR + '/csv_files/' + forms_file_name + '.csv') and
+                os.path.isfile(ROOT_DIR + '/csv_files/' + start_probability_file_name + '.csv')
+        ):
             prices_data = read_dict_from_csv(price_file_name)
             positions_data = read_dict_from_csv(positions_file_name)
             forms_data = read_dict_from_csv(forms_file_name)
@@ -180,7 +187,7 @@ def get_players_prices_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
 
@@ -196,7 +203,7 @@ def get_players_positions_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
 
@@ -212,7 +219,7 @@ def get_players_forms_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
 
@@ -228,7 +235,7 @@ def get_players_start_probabilities_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile('./csv_files/' + file_name + '.csv'):
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
 
