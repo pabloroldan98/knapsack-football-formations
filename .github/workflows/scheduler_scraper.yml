@@ -153,35 +153,51 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: futbolfantasy-csv
-          path: csv_files/
+          path: csv_files/futbolfantasy/
 
       - name: Download Futmondo CSV artifact
         if: needs.scrape_futmondo.result == 'success'
         uses: actions/download-artifact@v2
         with:
           name: futmondo-csv
-          path: csv_files/
+          path: csv_files/futmondo/
 
       - name: Download TransferMarket Penalties CSV artifact
         if: needs.scrape_transfermarket_penalties.result == 'success'
         uses: actions/download-artifact@v2
         with:
           name: transfermarket-penalties-csv
-          path: csv_files/
+          path: csv_files/transfermarket_penalties/
 
       - name: Download TransferMarket Team History CSV artifact
         if: needs.scrape_transfermarket_teamhistory.result == 'success'
         uses: actions/download-artifact@v2
         with:
           name: transfermarket-teamhistory-csv
-          path: csv_files/
+          path: csv_files/transfermarket_teamhistory/
 
       - name: Download SofaScore CSV artifact
         if: needs.scrape_sofascore.result == 'success'
         uses: actions/download-artifact@v2
         with:
           name: sofascore-csv
-          path: csv_files/
+          path: csv_files/sofascore/
+
+      - name: Move all CSV files to root csv_files directory
+        run: |
+          mv csv_files/futbolfantasy/* csv_files/
+          mv csv_files/futmondo/* csv_files/
+          mv csv_files/transfermarket_penalties/* csv_files/
+          mv csv_files/transfermarket_teamhistory/* csv_files/
+          mv csv_files/sofascore/* csv_files/
+
+      - name: Remove subdirectories
+        run: |
+          rm -rf csv_files/futbolfantasy
+          rm -rf csv_files/futmondo
+          rm -rf csv_files/transfermarket_penalties
+          rm -rf csv_files/transfermarket_teamhistory
+          rm -rf csv_files/sofascore
 
       - name: Configure git
         run: |
