@@ -149,24 +149,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download artifacts
+      - name: Download FutbolFantasy CSV artifact
+        if: needs.scrape_futbolfantasy.result == 'success'
         uses: actions/download-artifact@v2
         with:
           name: futbolfantasy-csv
           path: csv_files/
-      - uses: actions/download-artifact@v2
+
+      - name: Download Futmondo CSV artifact
+        if: needs.scrape_futmondo.result == 'success'
+        uses: actions/download-artifact@v2
         with:
           name: futmondo-csv
           path: csv_files/
-      - uses: actions/download-artifact@v2
+
+      - name: Download TransferMarket Penalties CSV artifact
+        if: needs.scrape_transfermarket_penalties.result == 'success'
+        uses: actions/download-artifact@v2
         with:
           name: transfermarket-penalties-csv
           path: csv_files/
-      - uses: actions/download-artifact@v2
+
+      - name: Download TransferMarket Team History CSV artifact
+        if: needs.scrape_transfermarket_teamhistory.result == 'success'
+        uses: actions/download-artifact@v2
         with:
           name: transfermarket-teamhistory-csv
           path: csv_files/
-      - uses: actions/download-artifact@v2
+
+      - name: Download SofaScore CSV artifact
+        if: needs.scrape_sofascore.result == 'success'
+        uses: actions/download-artifact@v2
         with:
           name: sofascore-csv
           path: csv_files/
