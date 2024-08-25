@@ -1,4 +1,4 @@
-name: Transfermarket (penalties) Manual Scraper
+name: Manual Scraper - Futmondo
 
 on:
   workflow_dispatch: # Allows manual triggering
@@ -25,7 +25,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_transfermarket_penalties.py
+          python ./scraping_tasks/scrape_futmondo.py
 
       - name: Configure git
         run: |

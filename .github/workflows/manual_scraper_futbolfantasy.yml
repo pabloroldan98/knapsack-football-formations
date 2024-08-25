@@ -1,4 +1,4 @@
-name: Futmondo Manual Scraper
+name: Manual Scraper - FutbolFantasy
 
 on:
   workflow_dispatch: # Allows manual triggering
@@ -25,7 +25,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_futmondo.py
+          python ./scraping_tasks/scrape_futbolfantasy.py
 
       - name: Configure git
         run: |
