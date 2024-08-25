@@ -8,6 +8,7 @@ on:
 jobs:
   scrape_futbolfantasy:
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -46,6 +47,7 @@ jobs:
 
   scrape_transfermarket_penalties:
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -105,6 +107,13 @@ jobs:
 
   commit-and-push:
     needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
+    if: ${{ always() && (
+          needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' ||
+          needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' ||
+          needs.scrape_transfermarket_penalties.result == 'success' || needs.scrape_transfermarket_penalties.result == 'skipped' ||
+          needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped' ||
+          needs.scrape_sofascore.result == 'success' || needs.scrape_sofascore.result == 'skipped'
+        )}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
