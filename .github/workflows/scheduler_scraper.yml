@@ -58,7 +58,6 @@ jobs:
 
   scrape_transfermarket_penalties:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -84,7 +83,7 @@ jobs:
 
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' && (github.event.schedule == '0 2 * * 2') && contains('8 9 1 2', github.event.schedule_month)
+    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && (github.event.schedule == '0 2 * * 2') && contains('8 9 1 2', github.event.schedule_month))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -110,7 +109,7 @@ jobs:
 
   scrape_sofascore:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' && github.event.schedule == '0 2 * * 2'
+    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule == '0 2 * * 2')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
