@@ -150,7 +150,7 @@ class Player:
             self.form = form_coef
         self.fixture = fixture_coef
 
-        predicted_value = ((float(self.sofascore_rating) * float(form_coef)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(fixture_coef)
+        predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
         return predicted_value
 
     def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
