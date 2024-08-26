@@ -331,6 +331,7 @@ my_players_names = [
     "Budimir",
     "Juan Cruz",
     "De La Fuente",
+    "Beñat Prados",
 ]
 # my_players_names = [
 #     "Sinkgraven",
