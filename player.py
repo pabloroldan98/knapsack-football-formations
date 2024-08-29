@@ -125,7 +125,7 @@ class Player:
             return False
 
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
-        form_coef = ((self.price_trend/math.log(self.standard_price))/300000)*0.9 + 1
+        form_coef = ((self.price_trend/math.log(self.standard_price))/250000)*0.9 + 1
         if no_form:
             form_coef = 1
 
@@ -314,6 +314,42 @@ def set_prices(players_list, players_prices_dict, verbose=False):
             if player.price != new_price:
                 print(f"{player.name}: {player.price} --> {new_price}")
         player.price = new_price
+
+    return result_players
+
+
+def set_price_trends(players_list, players_price_trends_dict, players_standard_prices_dict=None, verbose=False):
+    result_players = copy.deepcopy(players_list)
+    team_price_trend_names_list = list(players_price_trends_dict.keys())
+
+    for player in result_players:
+        closest_player_price_trend_team = find_similar_string(player.team, team_price_trend_names_list, similarity_threshold=0)
+        player_price_trend_names_list = list(players_price_trends_dict[closest_player_price_trend_team].keys())
+        closest_player_price_trend_name = find_similar_string(player.name, player_price_trend_names_list)
+        if closest_player_price_trend_name:
+            new_price_trend = players_price_trends_dict[closest_player_price_trend_team][closest_player_price_trend_name]
+            new_price_trend = float(new_price_trend)
+            if verbose:
+                if player.price_trend != new_price_trend:
+                    print(f"{player.name}: {player.price_trend} --> {new_price_trend}")
+            player.price_trend = new_price_trend
+
+
+    if players_standard_prices_dict:
+        result_players = copy.deepcopy(players_list)
+        team_standard_price_names_list = list(players_standard_prices_dict.keys())
+
+        for player in result_players:
+            closest_player_standard_price_team = find_similar_string(player.team, team_standard_price_names_list, similarity_threshold=0)
+            player_standard_price_names_list = list(players_standard_prices_dict[closest_player_standard_price_team].keys())
+            closest_player_standard_price_name = find_similar_string(player.name, player_standard_price_names_list)
+            if closest_player_standard_price_name:
+                new_standard_price = players_standard_prices_dict[closest_player_standard_price_team][closest_player_standard_price_name]
+                new_standard_price = float(new_standard_price)
+                if verbose:
+                    if player.standard_price != new_standard_price:
+                        print(f"{player.name}: {player.standard_price} --> {new_standard_price}")
+                player.standard_price = new_standard_price
 
     return result_players
 

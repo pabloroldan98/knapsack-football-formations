@@ -67,7 +67,7 @@ class FutbolFantasyScraper:
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
         form = player_element.get_attribute('data-diferencia-pct1').strip()
-        price_trend = player_element.get_attribute('data-diferencia1').strip()
+        price_trend = player_element.get_attribute('data-diferencia1').strip() or "0"
         return name, price, position, team_id, form, price_trend
 
     def scrape_probabilities(self):
