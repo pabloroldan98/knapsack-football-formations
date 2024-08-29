@@ -67,7 +67,8 @@ class FutbolFantasyScraper:
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
         form = player_element.get_attribute('data-diferencia-pct1').strip()
-        return name, price, position, team_id, form
+        price_trend = player_element.get_attribute('data-diferencia1').strip()
+        return name, price, position, team_id, form, price_trend
 
     def scrape_probabilities(self):
         self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
@@ -136,27 +137,30 @@ class FutbolFantasyScraper:
         prices_dict = {team_name: {} for team_name in team_options.values()}
         positions_dict = {team_name: {} for team_name in team_options.values()}
         forms_dict = {team_name: {} for team_name in team_options.values()}
+        price_trends_dict = {team_name: {} for team_name in team_options.values()}
 
         player_elements = self.get_player_elements()
         for player_element in player_elements:
-            name, price, position, team_id, form = self.get_player_data(player_element)
+            name, price, position, team_id, form, price_trend = self.get_player_data(player_element)
             team_name = team_options.get(team_id)
             position_name = positions_normalize.get(position)
             if team_name:
                 prices_dict[team_name][name] = price
                 positions_dict[team_name][name] = position_name
                 forms_dict[team_name][name] = form
+                price_trends_dict[team_name][name] = price_trend
 
         probabilities_dict = self.scrape_probabilities()
 
         self.driver.quit()
-        return prices_dict, positions_dict, forms_dict, probabilities_dict
+        return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
 
 def get_futbolfantasy_data(
         price_file_name="futbolfantasy_prices",
         positions_file_name="futbolfantasy_positions",
         forms_file_name="futbolfantasy_forms",
         start_probability_file_name="futbolfantasy_start_probabilities",
+        price_trends_file_name="futbolfantasy_price_trends",
         force_scrape=False
 ):
     if not force_scrape:
@@ -164,23 +168,26 @@ def get_futbolfantasy_data(
                 os.path.isfile(ROOT_DIR + '/csv_files/' + price_file_name + '.csv') and
                 os.path.isfile(ROOT_DIR + '/csv_files/' + positions_file_name + '.csv') and
                 os.path.isfile(ROOT_DIR + '/csv_files/' + forms_file_name + '.csv') and
-                os.path.isfile(ROOT_DIR + '/csv_files/' + start_probability_file_name + '.csv')
+                os.path.isfile(ROOT_DIR + '/csv_files/' + start_probability_file_name + '.csv') and
+                os.path.isfile(ROOT_DIR + '/csv_files/' + price_trends_file_name + '.csv')
         ):
             prices_data = read_dict_from_csv(price_file_name)
             positions_data = read_dict_from_csv(positions_file_name)
             forms_data = read_dict_from_csv(forms_file_name)
             start_probabilities_data = read_dict_from_csv(start_probability_file_name)
-            return prices_data, positions_data, forms_data, start_probabilities_data
+            price_trends_data = read_dict_from_csv(price_trends_file_name)
+            return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
     scraper = FutbolFantasyScraper()
-    prices_data, positions_data, forms_data, start_probabilities_data = scraper.scrape()
+    prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
     overwrite_dict_to_csv(prices_data, price_file_name)
     overwrite_dict_to_csv(positions_data, positions_file_name)
     overwrite_dict_to_csv(forms_data, forms_file_name)
     overwrite_dict_to_csv(start_probabilities_data, start_probability_file_name)
+    overwrite_dict_to_csv(price_trends_data, price_trends_file_name)
 
-    return prices_data, positions_data, forms_data, start_probabilities_data
+    return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
 def get_players_prices_dict(
         file_name="futbolfantasy_prices",
@@ -192,7 +199,7 @@ def get_players_prices_dict(
             return data
 
     scraper = FutbolFantasyScraper()
-    result, _, _, _ = scraper.scrape()
+    result, _, _, _, _ = scraper.scrape()
 
     overwrite_dict_to_csv(result, file_name)
 
@@ -208,7 +215,7 @@ def get_players_positions_dict(
             return data
 
     scraper = FutbolFantasyScraper()
-    _, result, _, _ = scraper.scrape()
+    _, result, _, _, _ = scraper.scrape()
 
     overwrite_dict_to_csv(result, file_name)
 
@@ -224,7 +231,7 @@ def get_players_forms_dict(
             return data
 
     scraper = FutbolFantasyScraper()
-    _, _, result, _ = scraper.scrape()
+    _, _, result, _, _ = scraper.scrape()
 
     overwrite_dict_to_csv(result, file_name)
 
@@ -240,19 +247,36 @@ def get_players_start_probabilities_dict(
             return data
 
     scraper = FutbolFantasyScraper()
-    _, _, _, result = scraper.scrape()
+    _, _, _, result, _ = scraper.scrape()
+
+    overwrite_dict_to_csv(result, file_name)
+
+    return result
+
+def get_players_price_trends_dict(
+        file_name="futbolfantasy_price_trends",
+        force_scrape=False
+):
+    if not force_scrape:
+        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
+            data = read_dict_from_csv(file_name)
+            return data
+
+    scraper = FutbolFantasyScraper()
+    _, _, _, _, result = scraper.scrape()
 
     overwrite_dict_to_csv(result, file_name)
 
     return result
 
 
-# prices, positions, forms, start_probabilities = get_futbolfantasy_data(
+# prices, positions, forms, start_probabilities, price_trends = get_futbolfantasy_data(
 #     price_file_name="futbolfantasy_laliga_players_prices",
 #     positions_file_name="futbolfantasy_laliga_players_positions",
 #     forms_file_name="futbolfantasy_laliga_players_forms",
 #     start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
-#     force_scrape=True
+#     price_trends_file_name="futbolfantasy_laliga_players_price_trends",
+#     force_scrape=False
 # )
 # print("Prices:")
 # for team, players in prices.items():
@@ -265,4 +289,7 @@ def get_players_start_probabilities_dict(
 #     print(team, players)
 # print("\nStart Probabilities:")
 # for team, players in start_probabilities.items():
+#     print(team, players)
+# print("\nPrice Trends:")
+# for team, players in price_trends.items():
 #     print(team, players)

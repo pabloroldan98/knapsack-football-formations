@@ -34,11 +34,12 @@ print("##############################")
 print("Scraping FUTBOLFANTASY...")
 
 try:
-    prices, positions, forms, start_probabilities = get_futbolfantasy_data(
+    prices, positions, forms, start_probabilities, price_trends = get_futbolfantasy_data(
         price_file_name="futbolfantasy_laliga_players_prices",
         positions_file_name="futbolfantasy_laliga_players_positions",
         forms_file_name="futbolfantasy_laliga_players_forms",
         start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
+        price_trends_file_name="futbolfantasy_laliga_players_price_trends",
         force_scrape=True
     )
     print("Prices:")
@@ -52,6 +53,9 @@ try:
         print(team, players)
     print("\nStart Probabilities:")
     for team, players in start_probabilities.items():
+        print(team, players)
+    print("\nPrice Trends:")
+    for team, players in price_trends.items():
         print(team, players)
 except Exception as e:
     print(f"Error scraping FUTBOLFANTASY: {e}")
