@@ -257,7 +257,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.7)
+purged_players = purge_everything(worthy_players, probability_threshold=0.6)
 worthy_players = purged_players.copy()
 
 
@@ -335,15 +335,12 @@ my_players_names = [
     "Luis Pérez",
     "Chavarría",
     "Sergi Cardona",
-    "Lejeune",
     "Puado",
     "Luis Milla",
-    "Giménez",
     "Iago Aspas",
     "Budimir",
-    "Juan Cruz",
+    "Juan Cruz Díaz",
     "Beñat Prados",
-    "Torró",
     "Jailson",
 ]
 # my_players_names = [
