@@ -200,7 +200,7 @@ current_players = get_current_players(
     alt_positions=True,
     alt_prices=True,
     alt_price_trends=True,
-    alt_forms=False,
+    alt_forms=True,
     add_start_probability=True,
     no_penalty_boost=False,
     no_manual_boost=True,
@@ -434,12 +434,12 @@ price_trends = [player.price_trend for player in worthy_players]
 prices = [player.price for player in worthy_players]
 #
 # # Take the logarithms of the data
-# log_standard_prices = np.log(standard_prices)
-# log_price_trends = np.log(price_trends)
+# log_standard_prices = np.log(np.abs(standard_prices)) * np.sign(standard_prices)
+# log_price_trends = np.log(np.abs(price_trends)) * np.sign(price_trends)
 # log_prices = np.log(prices)
 #
 #
-# # Create the first plot: standard_price vs price_trend
+# Create the first plot: standard_price vs price_trend
 # plt.figure(figsize=(10, 6))
 # plt.scatter(standard_prices, price_trends, color='blue', label='Standard Price vs Price Trend')
 # plt.xlabel('Standard Price')
@@ -466,6 +466,49 @@ prices = [player.price for player in worthy_players]
 # # Add player names as annotations
 # for i, player in enumerate(worthy_players):
 #     plt.annotate(player.name, (log_standard_prices[i], price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+# # Create the second plot: log(standard_price) vs log(price_trend)
+# plt.figure(figsize=(10, 6))
+# plt.scatter(standard_prices, log_price_trends, color='orange', label='Standard Price vs Log(Price Trend)')
+# plt.xlabel('Standard Price')
+# plt.ylabel('Log(Price Trend)')
+# plt.title('Standard Price vs Log(Price Trend)')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(worthy_players):
+#     plt.annotate(player.name, (standard_prices[i], log_price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+# # Create the second plot: log(standard_price) vs log(price_trend)
+# plt.figure(figsize=(10, 6))
+# plt.scatter(log_price_trends, standard_prices, color='orange', label='Log(Price Trend) vs Standard Price')
+# plt.xlabel('Log(Price Trend)')
+# plt.ylabel('Standard Price')
+# plt.title('Log(Price Trend) vs Standard Price')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(worthy_players):
+#     plt.annotate(player.name, (log_price_trends[i], standard_prices[i]), textcoords="offset points", xytext=(0,10), ha='center')
+#
+# plt.tight_layout()  # To ensure the annotations fit nicely
+#
+# Create the second plot: log(standard_price) vs log(price_trend)
+# plt.figure(figsize=(10, 6))
+# plt.scatter(log_standard_prices, log_price_trends, color='orange', label='Log(Standard Price) vs Log(Price Trend)')
+# plt.xlabel('Log(Standard Price)')
+# plt.ylabel('Log(Price Trend)')
+# plt.title('Log(Standard Price) vs Log(Price Trend)')
+# plt.legend()
+# plt.grid()
+#
+# # Add player names as annotations
+# for i, player in enumerate(worthy_players):
+#     plt.annotate(player.name, (log_standard_prices[i], log_price_trends[i]), textcoords="offset points", xytext=(0,10), ha='center')
 #
 # plt.tight_layout()  # To ensure the annotations fit nicely
 #

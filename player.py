@@ -125,7 +125,12 @@ class Player:
             return False
 
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
-        form_coef = ((self.price_trend/math.log(self.standard_price))/250000)*0.9 + 1
+        if alt_forms:
+            # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
+            form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
+        else:
+            form_coef = ((self.price_trend / math.log(self.standard_price)) / 300000) * 0.9 + 1
+
         if no_form:
             form_coef = 1
 
@@ -146,8 +151,9 @@ class Player:
         fixture_coef += home_bonus if not no_home_boost else 0
         fixture_coef += self.team_history_boost
 
-        if not alt_forms or (alt_forms and self.form == 0):
-            self.form = form_coef
+        # if not alt_forms or (alt_forms and self.form == 0):
+        #     self.form = form_coef
+        self.form = form_coef
         self.fixture = fixture_coef
 
         predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
@@ -336,7 +342,7 @@ def set_price_trends(players_list, players_price_trends_dict, players_standard_p
 
 
     if players_standard_prices_dict:
-        result_players = copy.deepcopy(players_list)
+        result_players = copy.deepcopy(result_players)
         team_standard_price_names_list = list(players_standard_prices_dict.keys())
 
         for player in result_players:
