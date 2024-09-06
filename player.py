@@ -433,23 +433,8 @@ def calc_penalty_boost(players_penalties):
     for penalty_index in penalty_indexes:
         # if penalty_index < 6: # Take only last 6 pens into account
         #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
-        if penalty_index < 6: # Take only last 6 pens into account
-            penalty_coef = penalty_coef + 0.275 - (penalty_index * 0.05)
-        # if penalty_index < 6: # Take only last 6 pens into account
-        #     penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.025)
-        # penalty_coef = penalty_coef + 0.15 - (penalty_index * 0.025)
-        # if (penalty_index == 0) or (penalty_index == 1):
-        #     penalty_coef = penalty_coef + 0.15
-        # elif (penalty_index == 2) or (penalty_index == 3):
-        #     penalty_coef = penalty_coef + 0.1
-        # else:
-        #     penalty_coef = penalty_coef + 0.075
-        # if penalty_index == 0:
-        #     penalty_coef = penalty_coef + 0.2
-        # elif (penalty_index == 1) or (penalty_index == 2):
-        #     penalty_coef = penalty_coef + 0.15
-        # else:
-        #     penalty_coef = penalty_coef + 0.1
+        if penalty_index < 5: # Take only last 5 pens into account
+            penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.05)
     return penalty_coef
 
 
