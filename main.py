@@ -334,14 +334,20 @@ my_players_names = [
     "Joan García",
     "Luis Pérez",
     "Chavarría",
+    "Juan Iglesias",
     "Sergi Cardona",
     "Puado",
     "Luis Milla",
+    "Beñat Prados",
+    "Carvalho",
     "Iago Aspas",
     "Budimir",
-    "Juan Cruz Díaz",
-    "Beñat Prados",
-    "Jailson",
+    "Muriqi",
+    "Marcos André",
+    "Marcos André",
+    "Jhon Solís",
+    "Raúl Moro",
+    "De Frutos",
 ]
 # my_players_names = [
 #     "Sinkgraven",
@@ -373,9 +379,6 @@ print()
 for player in purged_players:
     if player.name in my_players_names:
         my_players_list.append(player)
-#         if player.name == "Juan Cruz":
-#             if player.team == "Osasuna":
-#                 my_players_list.pop()
         # print(player)
 
 print()
