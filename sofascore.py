@@ -175,14 +175,21 @@ def get_players_data(
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             driver.get(p)
+            # try:
+            #     # Locate the button by its text (you can use XPath to search for text content)
+            #     close_button = wait.until(EC.presence_of_element_located((By.XPATH, "//button[text()='Close']")))
+            #     # Click the button if found
+            #     close_button.click()
+            # except:
+            #     pass
             average_rating = float(6.0)
             try: # Average 12 months
-                # Find the div containing "Average Sofascore Rating"
-                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Average Sofascore Rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                # Find the span containing "Summary (last 12 months)"
+                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
             except:  # NoSuchElementException: # Spelling error making this code not work
                 try: # Average last competition
                     # Find the span containing "Average Sofascore Rating"
-                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
                     average_rating = average_rating*0.95
                 except:
                     pass
@@ -278,7 +285,7 @@ def get_players_data(
 
 # start_time = time.time()
 #
-# result = get_players_ratings_list(file_name="sofascore_laliga_players_ratings", force_scrape=True)#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 #
 # end_time = time.time()
