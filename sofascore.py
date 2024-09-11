@@ -135,7 +135,8 @@ def get_players_data(
         print('Extracting %s player links...' % value[0])
         driver.get(value[1])
         player_paths_list = []
-        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
+        # players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
+        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/') and .//div[contains(@cursor, 'pointer')]]")))
         for i in range(len(players)):  # Iterate by index instead of direct reference
             retries = 3
             while retries:
@@ -283,15 +284,15 @@ def get_players_data(
 # my_driver.quit()
 # pprint(team_links)
 
-# start_time = time.time()
-#
-# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
-# # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
-#
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-#
-# print(f"Execution time: {elapsed_time} seconds")
-#
-# for p in result:
-#     print(p)
+start_time = time.time()
+
+result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print(f"Execution time: {elapsed_time} seconds")
+
+for p in result:
+    print(p)
