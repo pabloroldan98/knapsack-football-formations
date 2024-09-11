@@ -322,7 +322,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 160, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 210, verbose=2)
 
 
 ################################################### CHECK YOUR TEAM ###################################################
@@ -347,6 +347,7 @@ my_players_names = [
     "Jhon Solís",
     "Raúl Moro",
     "De Frutos",
+    "Vieites",
 ]
 # my_players_names = [
 #     "Sinkgraven",
