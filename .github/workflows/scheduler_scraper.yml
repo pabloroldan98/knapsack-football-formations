@@ -136,11 +136,11 @@ jobs:
   commit-and-push:
     needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
-          (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped') &&
-          (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped') &&
-          (needs.scrape_transfermarket_penalties.result == 'success' || needs.scrape_transfermarket_penalties.result == 'skipped') &&
-          (needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped') &&
-          (needs.scrape_sofascore.result == 'success' || needs.scrape_sofascore.result == 'skipped')
+          (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'failure') &&
+          (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' || needs.scrape_futmondo.result == 'failure') &&
+          (needs.scrape_transfermarket_penalties.result == 'success' || needs.scrape_transfermarket_penalties.result == 'skipped' || needs.scrape_transfermarket_penalties.result == 'failure') &&
+          (needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped' || needs.scrape_transfermarket_teamhistory.result == 'failure') &&
+          (needs.scrape_sofascore.result == 'success' || needs.scrape_sofascore.result == 'skipped' || needs.scrape_sofascore.result == 'failure')
         )}}
     runs-on: ubuntu-latest
     steps:
