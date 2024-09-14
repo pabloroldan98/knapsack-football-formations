@@ -340,7 +340,6 @@ my_players_names = [
     "Sergi Cardona",
     "Puado",
     "Luis Milla",
-    "Carvalho",
     "Iago Aspas",
     "Budimir",
     "Muriqi",

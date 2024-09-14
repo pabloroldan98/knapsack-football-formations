@@ -129,7 +129,7 @@ class Player:
             # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
             form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
         else:
-            form_coef = ((self.price_trend / math.log(self.standard_price)) / 300000) * 0.9 + 1
+            form_coef = ((self.price_trend / np.log1p(self.standard_price)) / 300000) * 0.9 + 1
 
         if no_form:
             form_coef = 1
