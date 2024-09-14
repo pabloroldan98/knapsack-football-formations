@@ -26,7 +26,7 @@ jobs:
         run: python ./scraping_tasks/scrape_futbolfantasy.py
 
       - name: Upload FutbolFantasy CSV files as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: futbolfantasy-csv
           path: csv_files/*futbolfantasy*.csv
@@ -51,7 +51,7 @@ jobs:
         run: python ./scraping_tasks/scrape_futmondo.py
 
       - name: Upload Futmondo CSV files as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: futmondo-csv
           path: csv_files/*futmondo*.csv
@@ -76,7 +76,7 @@ jobs:
         run: python ./scraping_tasks/scrape_transfermarket_penalties.py
 
       - name: Upload TransferMarket Penalties CSV files as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: transfermarket-penalties-csv
           path: csv_files/*transfermarket*penalt*.csv
@@ -102,7 +102,7 @@ jobs:
         run: python ./scraping_tasks/scrape_transfermarket_teamhistory.py
 
       - name: Upload TransferMarket Team History CSV files as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: transfermarket-teamhistory-csv
           path: csv_files/*transfermarket*history*.csv
@@ -128,7 +128,7 @@ jobs:
         run: python ./scraping_tasks/scrape_sofascore.py
 
       - name: Upload SofaScore CSV files as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: sofascore-csv
           path: csv_files/*sofascore*.csv
@@ -149,7 +149,7 @@ jobs:
 
       - name: Download FutbolFantasy CSV artifact
         if: needs.scrape_futbolfantasy.result == 'success'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: futbolfantasy-csv
           path: csv_files/futbolfantasy/
@@ -162,7 +162,7 @@ jobs:
 
       - name: Download Futmondo CSV artifact
         if: needs.scrape_futmondo.result == 'success'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: futmondo-csv
           path: csv_files/futmondo/
@@ -175,7 +175,7 @@ jobs:
 
       - name: Download TransferMarket Penalties CSV artifact
         if: needs.scrape_transfermarket_penalties.result == 'success'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: transfermarket-penalties-csv
           path: csv_files/transfermarket_penalties/
@@ -188,7 +188,7 @@ jobs:
 
       - name: Download TransferMarket Team History CSV artifact
         if: needs.scrape_transfermarket_teamhistory.result == 'success'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: transfermarket-teamhistory-csv
           path: csv_files/transfermarket_teamhistory/
@@ -201,7 +201,7 @@ jobs:
 
       - name: Download SofaScore CSV artifact
         if: needs.scrape_sofascore.result == 'success'
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: sofascore-csv
           path: csv_files/sofascore/
