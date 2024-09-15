@@ -94,12 +94,36 @@ def is_valid_teams_dict(teams, num_teams=10):
     return True
 
 
+def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
+    teams_old_data = read_dict_from_csv(teams_old_file_name)
+    if not isinstance(teams_data, dict) or not isinstance(teams_old_data, dict):
+        return teams_data
+    if len(teams_data) < num_teams <= len(teams_old_data):
+        for old_team in teams_old_data:
+            if old_team not in teams_data:
+                teams_data[old_team] = teams_old_data[old_team]
+    for team, players in teams_data.items():
+        if isinstance(players, dict):
+            if team in teams_old_data and len(players) < 11 <= len(teams_old_data[team]):
+                teams_data[team].update(teams_old_data[team])
+        if isinstance(players, list):
+            if team in teams_old_data and len(players) < 5 <= len(teams_old_data[team]):
+                teams_data[team].update(teams_old_data[team])
+    return teams_data
+
+
 def overwrite_dict_to_csv(dict_data, file_name):
+    file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
+    file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.csv'
+    # Check if the data is not valid, and if so, fill it with old data
+    if not is_valid_teams_dict(dict_data):
+        if os.path.exists(file_path):
+            if os.path.exists(file_path_old):
+                dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD")
+    # If data is valid now, we overwrite
     if is_valid_teams_dict(dict_data):
-        file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
         # Check if the file exists and delete it
         if os.path.exists(file_path):
-            file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.csv'
             if os.path.exists(file_path_old):
                 os.remove(file_path_old)
             shutil.copy(file_path, file_path_old)
