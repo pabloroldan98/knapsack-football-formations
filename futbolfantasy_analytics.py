@@ -109,7 +109,7 @@ class FutbolFantasyScraper:
                 if player_name and probability:
                     if player_name == "Alfonso Espino":
                         player_name = "Pacha Espino"
-                    if player_name == "Peter Gonzales":
+                    if player_name == "Peter González":
                         player_name = "Peter Federico"
                     if player_name == "Abde Ezzalzouli":
                         player_name = "Ez Abde"

@@ -32,14 +32,17 @@ from futmondo import get_players_positions_dict
 
 possible_formations = [
     # [2, 2, 2],
+    [3, 0, 0],
+    [2, 1, 0],
+    [1, 2, 0],
 
-    [3, 4, 3],
-    [3, 5, 2],
-    [4, 3, 3],
-    [4, 4, 2],
-    [4, 5, 1],
-    [5, 3, 2],
-    [5, 4, 1],
+    # [3, 4, 3],
+    # [3, 5, 2],
+    # [4, 3, 3],
+    # [4, 4, 2],
+    # [4, 5, 1],
+    # [5, 3, 2],
+    # [5, 4, 1],
 
     # [3, 3, 4],
     # # [3, 6, 1],
@@ -189,6 +192,18 @@ def get_last_jornada_players():
 # BEST POSSIBLE CURRENT
 # --------------------------------------------------------------------
 # current_players = get_current_players()
+jornada_06 = [
+["Real Madrid", "Espanyol"],
+["Osasuna", "Las Palmas"],
+["Real Valladolid", "Real Sociedad"],
+["Valencia", "Girona"],
+["Villarreal", "Barcelona"],
+["Rayo Vallecano", "Atlético"],
+["Alavés", "Sevilla"],
+["Getafe", "Leganés"],
+["Betis", "Mallorca"],
+["Athletic", "Celta"],
+]
 
 
 current_players = get_current_players(
@@ -219,6 +234,7 @@ current_players = get_current_players(
     is_country=False,
     # host_team="Germany",
     debug=False,
+    forced_matches=jornada_06,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalties_file_name="transfermarket_copa_america_penalty_takers",
@@ -247,7 +263,7 @@ for player in worthy_players:
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 25) & (player.start_probability >= 0.6) & (player.position == "DEF"):# & (player.form > 1) & (player.fixture > 1):
+#     if (player.price <= 10) & (player.start_probability >= 0.4) & (player.position == "MID"):# & (player.form > 1) & (player.fixture > 1):
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
@@ -262,9 +278,20 @@ worthy_players = purged_players.copy()
 
 
 print()
+result_players = list()
 for player in worthy_players:
     print(player)
+    if player.position == "GK" and player.name != "Joan García":
+        continue
+    if player.name == "Modric":
+        continue
+    if player.name == "Bretones":
+        continue
+    if player.name == "Beñat Prados":
+        continue
+    result_players.append(player)
 print()
+worthy_players = result_players.copy()
 
 # purged_players = worthy_players.copy()
 # worthy_players = purged_players.copy()
@@ -321,7 +348,7 @@ needed_purge = worthy_players[:150]
 
 
 
-# best_full_teams(needed_purge, possible_formations, 25, verbose=2)
+best_full_teams(needed_purge, possible_formations, 26, verbose=2)
 # best_full_teams(needed_purge, possible_formations, 210, verbose=2)
 
 
