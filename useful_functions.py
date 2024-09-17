@@ -112,16 +112,16 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
     return teams_data
 
 
-def overwrite_dict_to_csv(dict_data, file_name):
+def overwrite_dict_to_csv(dict_data, file_name, ignore_valid_file=False):
     file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
     file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.csv'
     # Check if the data is not valid, and if so, fill it with old data
-    if not is_valid_teams_dict(dict_data):
+    if not is_valid_teams_dict(dict_data) or ignore_valid_file:
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):
                 dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD")
     # If data is valid now, we overwrite
-    if is_valid_teams_dict(dict_data):
+    if is_valid_teams_dict(dict_data) or ignore_valid_file:
         # Check if the file exists and delete it
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):

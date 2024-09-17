@@ -75,6 +75,8 @@ def get_team_links_from_league(league_url, driver):
     # Create a dictionary to hold the team names and their links
     team_data = {}
     for i, (team_link_element, team_name_element) in enumerate(zip(team_links, team_names)):
+        # if i < 17:
+        #     continue
         # if i>=9:
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
@@ -104,7 +106,8 @@ def get_players_data(
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("enable-automation");
     chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
-    chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-extensions")
@@ -122,7 +125,8 @@ def get_players_data(
         chrome_options.add_argument("start-maximized")
         chrome_options.add_argument("enable-automation");
         chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
-        chrome_options.add_argument("--headless")
+        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-extensions")
@@ -263,7 +267,7 @@ def get_players_data(
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
-            overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
+            overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
         j += 1
 
     driver.quit()
