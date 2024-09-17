@@ -101,10 +101,16 @@ def get_players_data(
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--disable-search-engine-choice-screen")
+    chrome_options.add_argument("start-maximized")
+    chrome_options.add_argument("enable-automation");
     chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--dns-prefetch-disable")
+    chrome_options.add_argument("--disable-browser-side-navigation")
+    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
 
@@ -113,10 +119,16 @@ def get_players_data(
     if not team_links:
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-search-engine-choice-screen")
+        chrome_options.add_argument("start-maximized")
+        chrome_options.add_argument("enable-automation");
         chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--dns-prefetch-disable")
+        chrome_options.add_argument("--disable-browser-side-navigation")
+        chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
         extra_driver = webdriver.Chrome(keep_alive=True, options=chrome_options)
@@ -285,7 +297,7 @@ def get_players_data(
 # pprint(team_links)
 
 # start_time = time.time()
-# 
+#
 # result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 # 
