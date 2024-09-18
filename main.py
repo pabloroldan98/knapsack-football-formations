@@ -351,6 +351,9 @@ my_players_names = [
     "Raíllo",
     "Aramburu",
     "Marc Casadó",
+    "Bretones",
+    "Munir",
+    "Francés",
 ]
 # my_players_names = [
 #     "Sinkgraven",
