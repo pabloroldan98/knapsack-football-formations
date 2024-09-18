@@ -116,6 +116,7 @@ def get_players_data(
     for key, value in team_links.items():
         player_paths_list = []
         print('Extracting %s player links...' % value[0])
+        print("AAA")
         driver.get(value[1])
         player_paths_list = []
         # players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
