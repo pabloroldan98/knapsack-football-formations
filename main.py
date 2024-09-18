@@ -155,6 +155,9 @@ def get_last_jornada_players():
     all_teams, all_players = get_championship_data()
     return set_players_value_to_last_fitness(all_players)
 
+
+print()
+
 # Begin:
 
 # --------------------------------------------------------------------
