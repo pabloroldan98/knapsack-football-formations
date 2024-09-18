@@ -1,7 +1,7 @@
 # Source: https://github.com/Urbistondo/sofa-score-scraper/blob/master/player_scraper.py
 
 import os
-from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -146,44 +146,108 @@ def get_players_data(
     for team_name, player_paths in team_players_paths.items():
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
-            driver.get(p)
-            average_rating = float(6.0)
-            try: # Average 12 months
-                # Find the span containing "Summary (last 12 months)"
-                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-            except:  # NoSuchElementException: # Spelling error making this code not work
-                try: # Average last competition
-                    # Find the span containing "Average Sofascore Rating"
-                    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-                    average_rating = average_rating*0.95
-                except:
-                    pass
-            try:
-                player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-                print('Extracting player data from %s ...' % player_name)
-                print(average_rating)
-                if player_name != "":
-                    if player_name == "Alfonso Espino":
-                        player_name = "Pacha Espino"
-                    if player_name == "Abdessamad Ezzalzouli":
-                        player_name = "Ez Abde"
-                    if player_name == "Jon Magunazelaia":
-                        player_name = "Magunacelaya"
-                    if player_name == "Abderrahman Rebbach":
-                        player_name = "Abde Rebbach"
-                    if player_name == "Peter González":
-                        player_name = "Peter Federico"
-                    if player_name == "Ismaila Ciss":
-                        player_name = "Pathé Ciss"
-                    if player_name == "Chuky":
-                        player_name = "Chuki"
-                    if player_name == "Malcom Ares":
-                        player_name = "Adu Ares"
-                    if player_name == "William Carvalho":
-                        player_name = "Carvalho"
-                    players_ratings[player_name] = average_rating
-            except NoSuchElementException:  # Spelling error making this code not work as expected
-                pass
+            attempt = 0
+            player_name = None
+            while attempt < 3:  # Retry up to 3 times
+                try:
+                    start_time = time.time()  # Start the timer for each player
+                    driver.get(p)
+                    # Attempt to retrieve player data within the 5-minute timeout window
+                    while time.time() - start_time < MAX_WAIT_TIME:
+                        average_rating = float(6.0)  # Default rating if not found
+                        try:  # Average 12 months
+                            # Find the span containing "Summary (last 12 months)"
+                            average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH,"//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                        except:  # NoSuchElementException: # Spelling error making this code not work
+                            try:  # Average last competition
+                                # Find the span containing "Average Sofascore Rating"
+                                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH,"//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                                average_rating = average_rating * 0.95  # Adjust weight if needed
+                            except:
+                                pass  # If both fail, keep the default rating
+                        try:
+                            player_name = wait.until(
+                                EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
+                            print('Extracting player data from %s ...' % player_name)
+                            print(average_rating)
+                            if player_name != "":
+                                if player_name == "Alfonso Espino":
+                                    player_name = "Pacha Espino"
+                                if player_name == "Abdessamad Ezzalzouli":
+                                    player_name = "Ez Abde"
+                                if player_name == "Jon Magunazelaia":
+                                    player_name = "Magunacelaya"
+                                if player_name == "Abderrahman Rebbach":
+                                    player_name = "Abde Rebbach"
+                                if player_name == "Peter González":
+                                    player_name = "Peter Federico"
+                                if player_name == "Ismaila Ciss":
+                                    player_name = "Pathé Ciss"
+                                if player_name == "Chuky":
+                                    player_name = "Chuki"
+                                if player_name == "Malcom Ares":
+                                    player_name = "Adu Ares"
+                                if player_name == "William Carvalho":
+                                    player_name = "Carvalho"
+                                # Store the player rating
+                                if player_name:
+                                    players_ratings[player_name] = average_rating
+                        except NoSuchElementException:  # Spelling error making this code not work as expected
+                            break # If you can't retrieve the name you stop trying
+                        break  # Exit the loop if player data is retrieved successfully
+                    if player_name:  # If player data was retrieved, break the retry loop
+                        break
+                except (TimeoutException, WebDriverException) as e:
+                    print(f"Error retrieving player_path '{p}': {str(e)}. Restarting driver and retrying.")
+                    driver.quit()
+                    driver = create_driver()  # Restart the driver
+                print(f"Taking too long to retrieve player_path '{p}'. Retrying... (attempt {attempt+2})")
+                attempt += 1
+                if attempt == 3:
+                    print(f"Failed to retrieve data for player {p} after 3 attempts.")
+    # j = 0
+    # for team_name, player_paths in team_players_paths.items():
+    #     players_ratings = {}  # Dictionary for players in this team
+    #     for p in player_paths:
+    #         driver.get(p)
+    #         average_rating = float(6.0)
+    #         try: # Average 12 months
+    #             # Find the span containing "Summary (last 12 months)"
+    #             average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+    #         except:  # NoSuchElementException: # Spelling error making this code not work
+    #             try: # Average last competition
+    #                 # Find the span containing "Average Sofascore Rating"
+    #                 average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+    #                 average_rating = average_rating*0.95
+    #             except:
+    #                 pass
+
+    #         try:
+    #             player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
+    #             print('Extracting player data from %s ...' % player_name)
+    #             print(average_rating)
+    #             if player_name != "":
+    #                 if player_name == "Alfonso Espino":
+    #                     player_name = "Pacha Espino"
+    #                 if player_name == "Abdessamad Ezzalzouli":
+    #                     player_name = "Ez Abde"
+    #                 if player_name == "Jon Magunazelaia":
+    #                     player_name = "Magunacelaya"
+    #                 if player_name == "Abderrahman Rebbach":
+    #                     player_name = "Abde Rebbach"
+    #                 if player_name == "Peter González":
+    #                     player_name = "Peter Federico"
+    #                 if player_name == "Ismaila Ciss":
+    #                     player_name = "Pathé Ciss"
+    #                 if player_name == "Chuky":
+    #                     player_name = "Chuki"
+    #                 if player_name == "Malcom Ares":
+    #                     player_name = "Adu Ares"
+    #                 if player_name == "William Carvalho":
+    #                     player_name = "Carvalho"
+    #                 players_ratings[player_name] = average_rating
+    #         except NoSuchElementException:  # Spelling error making this code not work as expected
+    #             pass
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
