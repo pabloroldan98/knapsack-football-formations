@@ -6,6 +6,8 @@ from unidecode import unidecode
 import difflib
 from fuzzywuzzy import fuzz
 import csv
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -164,3 +166,22 @@ def delete_file(file_name):
         print(f"Permission denied: Unable to delete '{file_path}'.")
     except Exception as e:
         print(f"An error occurred while deleting the file '{file_path}': {e}")
+
+
+def create_driver(keep_alive=True):
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--disable-search-engine-choice-screen")
+    chrome_options.add_argument("start-maximized")
+    chrome_options.add_argument("enable-automation")
+    chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
+    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--dns-prefetch-disable")
+    chrome_options.add_argument("--disable-browser-side-navigation")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+    return webdriver.Chrome(keep_alive=keep_alive, options=chrome_options)

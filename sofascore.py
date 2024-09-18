@@ -14,7 +14,7 @@ import ast
 import time
 
 from player import Player
-from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file
+from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file, create_driver
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -99,45 +99,11 @@ def get_players_data(
         if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
             data = read_dict_from_csv(file_name)
             return data
-            # return read_dict_from_csv(file_name)
 
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--disable-search-engine-choice-screen")
-    chrome_options.add_argument("start-maximized")
-    chrome_options.add_argument("enable-automation");
-    chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
-    # chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--dns-prefetch-disable")
-    chrome_options.add_argument("--disable-browser-side-navigation")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--remote-debugging-port=9222")
-    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-
-    driver = webdriver.Chrome(keep_alive=False, options=chrome_options)
+    driver = create_driver(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--disable-search-engine-choice-screen")
-        chrome_options.add_argument("start-maximized")
-        chrome_options.add_argument("enable-automation");
-        chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
-        # chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--headless=new")
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-extensions")
-        chrome_options.add_argument("--dns-prefetch-disable")
-        chrome_options.add_argument("--disable-browser-side-navigation")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--remote-debugging-port=9222")
-        chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-
-        extra_driver = webdriver.Chrome(keep_alive=True, options=chrome_options)
-        # time.sleep(15)
+        extra_driver = create_driver(keep_alive=True)  # Keep alive for extra_driver
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
@@ -308,8 +274,8 @@ def get_players_data(
 # 
 # end_time = time.time()
 # elapsed_time = end_time - start_time
-# 
+#
 # print(f"Execution time: {elapsed_time} seconds")
-# 
+#
 # for p in result:
 #     print(p)

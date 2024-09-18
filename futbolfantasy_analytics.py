@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 import csv
 
-from useful_functions import overwrite_dict_to_csv, read_dict_from_csv
+from useful_functions import overwrite_dict_to_csv, read_dict_from_csv, create_driver
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -18,14 +18,14 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 class FutbolFantasyScraper:
     def __init__(self):
         self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
-        chrome_opt = Options()
-        chrome_opt.add_argument("--disable-search-engine-choice-screen")
-        chrome_opt.add_argument("--headless")  # Run Chrome in headless mode
-        chrome_opt.add_argument("--disable-gpu")  # Disable GPU usage (useful for headless mode)
-        chrome_opt.add_argument("--no-sandbox")  # Bypass OS security model
-        chrome_opt.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-        self.driver = webdriver.Chrome(options=chrome_opt)
-        # self.driver = webdriver.Chrome()
+        # chrome_opt = Options()
+        # chrome_opt.add_argument("--disable-search-engine-choice-screen")
+        # chrome_opt.add_argument("--headless")  # Run Chrome in headless mode
+        # chrome_opt.add_argument("--disable-gpu")  # Disable GPU usage (useful for headless mode)
+        # chrome_opt.add_argument("--no-sandbox")  # Bypass OS security model
+        # chrome_opt.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+        # self.driver = webdriver.Chrome(options=chrome_opt)
+        self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
 
