@@ -119,21 +119,30 @@ def get_players_data(
         driver.get(value[1])
         player_paths_list = []
         # players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
-        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/') and .//div[contains(@cursor, 'pointer')]]")))
+        players_xpath = "//a[starts-with(@href, '/player/') and .//div[contains(@cursor, 'pointer')]]"
+        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
         for i in range(len(players)):  # Iterate by index instead of direct reference
             retries = 3
-            while retries:
-                try:
-                    player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
-                    player_paths_list.append(player_href)
-                    break  # Exit the loop successfully
-                except StaleElementReferenceException:
-                    retries -= 1  # Decrement retry counter
-                    if retries == 0:
-                        print(f"Failed to retrieve href for player after several attempts.")
-                        break  # Exit the loop if retries are exhausted
-                    time.sleep(1)  # Short pause to allow DOM to stabilize
-                    players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
+            player_href = None
+            while retries and not player_href:
+                start_time = time.time()  # Start the timer for each player
+                # Attempt to retrieve player data within the 5-minute timeout window
+                while time.time() - start_time < MAX_WAIT_TIME:
+                    try:
+                        player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
+                        player_paths_list.append(player_href)
+                        break  # Exit the loop successfully
+                    except StaleElementReferenceException:
+                        retries -= 1  # Decrement retry counter
+                        if retries == 0:
+                            print(f"Failed to retrieve href for player after several attempts.")
+                            break  # Exit the loop if retries are exhausted
+                        time.sleep(1)  # Short pause to allow DOM to stabilize
+                        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
+                #     if player_href:
+                #         break
+                # if player_href:
+                #     break
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = ['https://www.sofascore.com/player/antonio-rudiger/142622', 'https://www.sofascore.com/player/thibaut-courtois/70988', ]
         print(player_paths_list)
@@ -147,7 +156,7 @@ def get_players_data(
         for p in player_paths:
             attempt = 0
             player_name = None
-            while attempt < 3:  # Retry up to 3 times
+            while attempt < 3 and not player_name:  # Retry up to 3 times
                 try:
                     start_time = time.time()  # Start the timer for each player
                     # Attempt to retrieve player data within the 5-minute timeout window
