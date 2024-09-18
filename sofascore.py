@@ -198,56 +198,18 @@ def get_players_data(
                     if player_name:  # If player data was retrieved, break the retry loop
                         break
                 except (TimeoutException, WebDriverException) as e:
+                    print()
                     print(f"Error retrieving player_path '{p}': {str(e)}. Restarting driver and retrying.")
                     driver.quit()
                     driver = create_driver()  # Restart the driver
-                print(f"Taking too long to retrieve player_path '{p}'. Retrying... (attempt {attempt+2})")
+                print()
+                print(f"Attempt '{attempt+1}': Taking too long to retrieve player_path '{p}'. Retrying...")
                 attempt += 1
                 if attempt == 3:
+                    print()
                     print(f"Failed to retrieve data for player {p} after 3 attempts.")
-    # j = 0
-    # for team_name, player_paths in team_players_paths.items():
-    #     players_ratings = {}  # Dictionary for players in this team
-    #     for p in player_paths:
-    #         driver.get(p)
-    #         average_rating = float(6.0)
-    #         try: # Average 12 months
-    #             # Find the span containing "Summary (last 12 months)"
-    #             average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-    #         except:  # NoSuchElementException: # Spelling error making this code not work
-    #             try: # Average last competition
-    #                 # Find the span containing "Average Sofascore Rating"
-    #                 average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-    #                 average_rating = average_rating*0.95
-    #             except:
-    #                 pass
-
-    #         try:
-    #             player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-    #             print('Extracting player data from %s ...' % player_name)
-    #             print(average_rating)
-    #             if player_name != "":
-    #                 if player_name == "Alfonso Espino":
-    #                     player_name = "Pacha Espino"
-    #                 if player_name == "Abdessamad Ezzalzouli":
-    #                     player_name = "Ez Abde"
-    #                 if player_name == "Jon Magunazelaia":
-    #                     player_name = "Magunacelaya"
-    #                 if player_name == "Abderrahman Rebbach":
-    #                     player_name = "Abde Rebbach"
-    #                 if player_name == "Peter González":
-    #                     player_name = "Peter Federico"
-    #                 if player_name == "Ismaila Ciss":
-    #                     player_name = "Pathé Ciss"
-    #                 if player_name == "Chuky":
-    #                     player_name = "Chuki"
-    #                 if player_name == "Malcom Ares":
-    #                     player_name = "Adu Ares"
-    #                 if player_name == "William Carvalho":
-    #                     player_name = "Carvalho"
-    #                 players_ratings[player_name] = average_rating
-    #         except NoSuchElementException:  # Spelling error making this code not work as expected
-    #             pass
+                    print()
+                    print()
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
@@ -276,7 +238,7 @@ def get_players_data(
 
 # start_time = time.time()
 #
-# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 # 
 # end_time = time.time()

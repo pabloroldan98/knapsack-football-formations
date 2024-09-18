@@ -182,6 +182,6 @@ def create_driver(keep_alive=True):
     chrome_options.add_argument("--dns-prefetch-disable")
     chrome_options.add_argument("--disable-browser-side-navigation")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--remote-debugging-port=9222")
+    # chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
     return webdriver.Chrome(keep_alive=keep_alive, options=chrome_options)
