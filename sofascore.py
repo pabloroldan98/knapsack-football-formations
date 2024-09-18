@@ -150,9 +150,9 @@ def get_players_data(
             while attempt < 3:  # Retry up to 3 times
                 try:
                     start_time = time.time()  # Start the timer for each player
-                    driver.get(p)
                     # Attempt to retrieve player data within the 5-minute timeout window
                     while time.time() - start_time < MAX_WAIT_TIME:
+                        driver.get(p)
                         average_rating = float(6.0)  # Default rating if not found
                         try:  # Average 12 months
                             # Find the span containing "Summary (last 12 months)"
