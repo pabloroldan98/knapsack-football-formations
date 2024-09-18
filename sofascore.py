@@ -18,6 +18,9 @@ from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_di
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
+# Maximum wait time for player data (in seconds)
+MAX_WAIT_TIME = 5 * 60  # 5 minutes in seconds
+
 
 def get_players_ratings_list(
         write_file=True,
@@ -70,8 +73,6 @@ def get_team_links_from_league(league_url, driver):
     # time.sleep(15)
     # driver.save_screenshot('team_names.png')
     team_names = wait.until(EC.presence_of_all_elements_located((By.XPATH, team_name_xpath)))
-    # team_links = driver.find_elements(By.XPATH, teams_base_xpath)
-    # team_names = driver.find_elements(By.XPATH, team_name_xpath)
     # Create a dictionary to hold the team names and their links
     team_data = {}
     for i, (team_link_element, team_name_element) in enumerate(zip(team_links, team_names)):
@@ -134,19 +135,6 @@ def get_players_data(
                         break  # Exit the loop if retries are exhausted
                     time.sleep(1)  # Short pause to allow DOM to stabilize
                     players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
-        # for p in players:
-        #     try:
-        #         player_href = p.get_attribute('href')
-        #         player_paths_list.append(player_href)
-        #     except StaleElementReferenceException:
-        #         continue  # Skip this iteration and let the loop retry fetching fresh elements
-        # # time.sleep(15)
-        # players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
-        # # players = driver.find_elements(By.XPATH, "//a[starts-with(@href, '/player/')]")
-        # for p in players:
-        #     wait.until(EC.staleness_of(p))
-        #     player_paths_list.append(p.get_attribute('href'))
-        #     # break
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = ['https://www.sofascore.com/player/antonio-rudiger/142622', 'https://www.sofascore.com/player/thibaut-courtois/70988', ]
         print(player_paths_list)
@@ -159,13 +147,6 @@ def get_players_data(
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             driver.get(p)
-            # try:
-            #     # Locate the button by its text (you can use XPath to search for text content)
-            #     close_button = wait.until(EC.presence_of_element_located((By.XPATH, "//button[text()='Close']")))
-            #     # Click the button if found
-            #     close_button.click()
-            # except:
-            #     pass
             average_rating = float(6.0)
             try: # Average 12 months
                 # Find the span containing "Summary (last 12 months)"
@@ -203,34 +184,6 @@ def get_players_data(
                     players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
                 pass
-            # break
-            # retries = 3  # Maximum number of retries
-            # for _ in range(retries):
-            #     try:
-            #         average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[@color='surface.s1'][@font-size='21']"))))
-            #         # average_rating = float(driver.find_element(By.XPATH, "//span[@color='surface.s1'][@font-size='21']").get_attribute("textContent"))
-            #         break  # Break out of the loop if successful
-            #     except: # NoSuchElementException: # Spelling error making this code not work
-            #         # if _ == retries - 1:  # Last attempt
-            #         #     print("Failed to fetch rating after several attempts.")
-            #         pass
-            # for _ in range(retries):
-            #     try:
-            #         # time.sleep(15)
-            #         player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-            #         # player_name = driver.find_element(By.XPATH, "(//h2)[1]").get_attribute("textContent")
-            #         print('Extracting player data from %s ...' % player_name)
-            #         # player_data = {
-            #         #     "rating": average_rating,
-            #         #     "team": team_name,
-            #         # }
-            #         # players_ratings[player_name] = player_data
-            #         if player_name != "":
-            #             players_ratings[player_name] = average_rating
-            #         break  # Break out of the loop if successful
-            #     except NoSuchElementException:  # Spelling error making this code not work as expected
-            #         pass
-            # break
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
@@ -250,22 +203,12 @@ def get_players_data(
     return teams_with_players_ratings
 
 
-# chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument("--disable-search-engine-choice-screen")
-# chrome_options.add_argument("--window-size=1920,1080")  # Set the window size
-# chrome_options.add_argument("--headless")
-# chrome_options.add_argument("--no-sandbox")
-# chrome_options.add_argument("--disable-dev-shm-usage")
-# chrome_options.add_argument('--disable-gpu')  # If no GPU is available.
-# chrome_options.add_argument('--disable-extensions')
-# chrome_options.add_argument('--disable-images')
-# chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-
-# my_driver = webdriver.Chrome(keep_alive=True) #, options=chrome_options)
+# my_driver = create_driver(keep_alive=True)
 # # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376", my_driver)
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953", my_driver)
 # my_driver.quit()
 # pprint(team_links)
+
 
 # start_time = time.time()
 #
