@@ -14,7 +14,8 @@ import ast
 import time
 
 from player import Player
-from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file, create_driver
+from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file, create_driver, \
+    run_with_timeout, CustomTimeoutException
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -115,36 +116,40 @@ def get_players_data(
     team_players_paths = dict()
     for key, value in team_links.items():
         player_paths_list = []
-        print('Extracting %s player links...' % value[0])
-        print("AAA")
-        driver.get(value[1])
-        player_paths_list = []
-        # players = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[starts-with(@href, '/player/')]")))
-        players_xpath = "//a[starts-with(@href, '/player/') and .//div[contains(@cursor, 'pointer')]]"
-        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
-        for i in range(len(players)):  # Iterate by index instead of direct reference
-            retries = 3
-            player_href = None
-            while retries and not player_href:
-                start_time = time.time()  # Start the timer for each player
-                # Attempt to retrieve player data within the 5-minute timeout window
-                while time.time() - start_time < MAX_WAIT_TIME:
-                    try:
-                        player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
-                        print(player_href)
-                        player_paths_list.append(player_href)
-                        break  # Exit the loop successfully
-                    except StaleElementReferenceException:
-                        retries -= 1  # Decrement retry counter
-                        if retries == 0:
-                            print(f"Failed to retrieve href for player after several attempts.")
-                            break  # Exit the loop if retries are exhausted
-                        time.sleep(1)  # Short pause to allow DOM to stabilize
-                        players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
-                #     if player_href:
-                #         break
-                # if player_href:
-                #     break
+        timeout_retries = 3
+        while timeout_retries > 0:
+            def scrape_team_players_task():
+                player_paths_list = []
+                print('Extracting %s player links...' % value[0])
+                driver.get(value[1])
+                players_xpath = "//a[starts-with(@href, '/player/') and .//div[contains(@cursor, 'pointer')]]"
+                players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
+                for i in range(len(players)):  # Iterate by index instead of direct reference
+                    retries = 3
+                    while retries > 0:
+                        try:
+                            player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
+                            player_paths_list.append(player_href)
+                            break  # Exit the loop successfully
+                        except StaleElementReferenceException:
+                            retries -= 1  # Decrement retry counter
+                            if retries == 0:
+                                print(f"Failed to retrieve href for player after several attempts.")
+                                break  # Exit the loop if retries are exhausted
+                            time.sleep(1)  # Short pause to allow DOM to stabilize
+                            players = wait.until(EC.presence_of_all_elements_located((By.XPATH, players_xpath)))
+                return player_paths_list
+            try:
+                # Run the task with timeout
+                player_paths_list = run_with_timeout(MAX_WAIT_TIME, scrape_team_players_task)
+                break  # Exit the loop if successful
+            except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException):
+                timeout_retries -= 1  # Decrement retry counter
+                driver.quit()
+                driver = create_driver(keep_alive=False)  # Restart the driver
+                wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
+                print(f"Retrying to fetch team players ({value[1]}) due to timeout... ({timeout_retries} retry left)")
+
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = ['https://www.sofascore.com/player/antonio-rudiger/142622', 'https://www.sofascore.com/player/thibaut-courtois/70988', ]
         print(player_paths_list)
@@ -156,70 +161,61 @@ def get_players_data(
     for team_name, player_paths in team_players_paths.items():
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
-            attempt = 0
-            player_name = None
-            while attempt < 3 and not player_name:  # Retry up to 3 times
+            average_rating = float(6.0)
+            timeout_retries = 1
+            while timeout_retries > 0:
+                def scrape_players_rating_task():
+                    driver.get(p)
+                    average_rating = float(6.0)
+                    try:  # Average 12 months
+                        # Find the span containing "Summary (last 12 months)"
+                        average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                    except:  # NoSuchElementException: # Spelling error making this code not work
+                        try: # Average last competition
+                            # Find the span containing "Average Sofascore Rating"
+                            average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+                            average_rating = average_rating*0.95
+                        except:
+                            pass
+                    return average_rating
                 try:
-                    start_time = time.time()  # Start the timer for each player
-                    # Attempt to retrieve player data within the 5-minute timeout window
-                    while time.time() - start_time < MAX_WAIT_TIME:
-                        driver.get(p)
-                        average_rating = float(6.0)  # Default rating if not found
-                        try:  # Average 12 months
-                            # Find the span containing "Summary (last 12 months)"
-                            average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH,"//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-                        except:  # NoSuchElementException: # Spelling error making this code not work
-                            try:  # Average last competition
-                                # Find the span containing "Average Sofascore Rating"
-                                average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH,"//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-                                average_rating = average_rating * 0.95  # Adjust weight if needed
-                            except:
-                                pass  # If both fail, keep the default rating
-                        try:
-                            player_name = wait.until(
-                                EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-                            print('Extracting player data from %s ...' % player_name)
-                            print(average_rating)
-                            if player_name != "":
-                                if player_name == "Alfonso Espino":
-                                    player_name = "Pacha Espino"
-                                if player_name == "Abdessamad Ezzalzouli":
-                                    player_name = "Ez Abde"
-                                if player_name == "Jon Magunazelaia":
-                                    player_name = "Magunacelaya"
-                                if player_name == "Abderrahman Rebbach":
-                                    player_name = "Abde Rebbach"
-                                if player_name == "Peter González":
-                                    player_name = "Peter Federico"
-                                if player_name == "Ismaila Ciss":
-                                    player_name = "Pathé Ciss"
-                                if player_name == "Chuky":
-                                    player_name = "Chuki"
-                                if player_name == "Malcom Ares":
-                                    player_name = "Adu Ares"
-                                if player_name == "William Carvalho":
-                                    player_name = "Carvalho"
-                                # Store the player rating
-                                if player_name:
-                                    players_ratings[player_name] = average_rating
-                        except NoSuchElementException:  # Spelling error making this code not work as expected
-                            break # If you can't retrieve the name you stop trying
-                        break  # Exit the loop if player data is retrieved successfully
-                    if player_name:  # If player data was retrieved, break the retry loop
-                        break
-                except (TimeoutException, WebDriverException) as e:
-                    print()
-                    print(f"Error retrieving player_path '{p}': {str(e)}. Restarting driver and retrying.")
+                    # Run the task with timeout
+                    average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
+                    break  # Exit the loop if successful
+                except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException):
+                    timeout_retries -= 1  # Decrement retry counter
                     driver.quit()
                     driver = create_driver(keep_alive=False)  # Restart the driver
-                print()
-                print(f"Attempt '{attempt+1}': Taking too long to retrieve player_path '{p}'. Retrying...")
-                attempt += 1
-                if attempt == 3:
-                    print()
-                    print(f"Failed to retrieve data for player {p} after 3 attempts.")
-                    print()
-                    print()
+                    wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
+                    print(f"Retrying to fetch sofascore player rating ({p}) due to timeout... ({timeout_retries} retry left)")
+                    if timeout_retries <= 0:
+                        driver.get(p)
+            try:
+                player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
+                print('Extracting player data from %s ...' % player_name)
+                print(average_rating)
+                if player_name != "":
+                    if player_name == "Alfonso Espino":
+                        player_name = "Pacha Espino"
+                    if player_name == "Abdessamad Ezzalzouli":
+                        player_name = "Ez Abde"
+                    if player_name == "Jon Magunazelaia":
+                        player_name = "Magunacelaya"
+                    if player_name == "Abderrahman Rebbach":
+                        player_name = "Abde Rebbach"
+                    if player_name == "Peter González":
+                        player_name = "Peter Federico"
+                    if player_name == "Ismaila Ciss":
+                        player_name = "Pathé Ciss"
+                    if player_name == "Chuky":
+                        player_name = "Chuki"
+                    if player_name == "Malcom Ares":
+                        player_name = "Adu Ares"
+                    if player_name == "William Carvalho":
+                        player_name = "Carvalho"
+                    players_ratings[player_name] = average_rating
+            except NoSuchElementException:  # Spelling error making this code not work as expected
+                pass
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))

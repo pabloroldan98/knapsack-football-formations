@@ -8,6 +8,7 @@ from fuzzywuzzy import fuzz
 import csv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import concurrent.futures
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -185,3 +186,20 @@ def create_driver(keep_alive=True):
     # chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
     return webdriver.Chrome(keep_alive=keep_alive, options=chrome_options)
+
+
+# Define a custom exception for timeout
+class CustomTimeoutException(Exception):
+    pass
+
+
+# A wrapper to run each iteration with a timeout
+def run_with_timeout(timeout, task):
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(task)
+        try:
+            result = future.result(timeout=timeout)  # Wait for the result with a timeout
+            return result  # Return the result if task completes in time
+        except concurrent.futures.TimeoutError:
+            print("Timeout occurred during task execution.")
+            raise CustomTimeoutException("The task took too long and was stopped.")
