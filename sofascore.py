@@ -238,7 +238,7 @@ def get_players_data(
 
 # start_time = time.time()
 #
-result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 # 
 # end_time = time.time()
