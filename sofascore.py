@@ -78,7 +78,6 @@ def get_team_links_from_league(league_url, driver):
     for i, (team_link_element, team_name_element) in enumerate(zip(team_links, team_names)):
         # if i < 17:
         #     continue
-        # if i>=9:
         link = team_link_element.get_attribute('href')
         name = team_name_element.text
         # if (name=="Spain" or name=="France" or name=="England" or name=="Netherlands"
@@ -238,7 +237,7 @@ def get_players_data(
 
 # start_time = time.time()
 #
-# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
 # 
 # end_time = time.time()
