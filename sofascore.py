@@ -100,10 +100,10 @@ def get_players_data(
             data = read_dict_from_csv(file_name)
             return data
 
-    driver = create_driver(keep_alive=True)
+    driver = create_driver(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
-        extra_driver = create_driver(keep_alive=True)  # Keep alive for extra_driver
+        extra_driver = create_driver(keep_alive=False)  # Keep alive for extra_driver
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
@@ -200,7 +200,7 @@ def get_players_data(
                     print()
                     print(f"Error retrieving player_path '{p}': {str(e)}. Restarting driver and retrying.")
                     driver.quit()
-                    driver = create_driver(keep_alive=True)  # Restart the driver
+                    driver = create_driver(keep_alive=False)  # Restart the driver
                 print()
                 print(f"Attempt '{attempt+1}': Taking too long to retrieve player_path '{p}'. Retrying...")
                 attempt += 1
