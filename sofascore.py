@@ -103,7 +103,7 @@ def get_players_data(
     driver = create_driver(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
     if not team_links:
-        extra_driver = create_driver(keep_alive=False)  # Keep alive for extra_driver
+        extra_driver = create_driver(keep_alive=True)  # Keep alive for extra_driver
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
@@ -131,6 +131,7 @@ def get_players_data(
                 while time.time() - start_time < MAX_WAIT_TIME:
                     try:
                         player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
+                        print(player_href)
                         player_paths_list.append(player_href)
                         break  # Exit the loop successfully
                     except StaleElementReferenceException:
