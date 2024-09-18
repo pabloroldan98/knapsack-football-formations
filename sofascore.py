@@ -114,8 +114,8 @@ def get_players_data(
     chrome_options.add_argument("--dns-prefetch-disable")
     chrome_options.add_argument("--disable-browser-side-navigation")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-
 
     driver = webdriver.Chrome(keep_alive=False, options=chrome_options)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
@@ -133,6 +133,7 @@ def get_players_data(
         chrome_options.add_argument("--dns-prefetch-disable")
         chrome_options.add_argument("--disable-browser-side-navigation")
         chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--remote-debugging-port=9222")
         chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
 
         extra_driver = webdriver.Chrome(keep_alive=True, options=chrome_options)
