@@ -87,13 +87,7 @@ jobs:
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
     timeout-minutes: 120  # Set the job timeout to 120 minutes
-    if: (github.event_name == 'workflow_dispatch') ||
-      (github.event_name == 'schedule' &&
-      github.event.schedule_weekday == 2 &&  # Tuesday (0-6 for Sunday-Saturday)
-      (github.event.schedule_month == 8 ||  # August
-      github.event.schedule_month == 9 ||  # September
-      github.event.schedule_month == 1 ||  # January
-      github.event.schedule_month == 2))   # February
+    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == 2 && (github.event.schedule_month == 8 || github.event.schedule_month == 9 || github.event.schedule_month == 1 || github.event.schedule_month == 2))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -120,9 +114,7 @@ jobs:
   scrape_sofascore:
     runs-on: ubuntu-latest
     timeout-minutes: 120  # Set the job timeout to 120 minutes
-    if: (github.event_name == 'workflow_dispatch') ||
-      (github.event_name == 'schedule' &&
-      github.event.schedule_weekday == 2)  # Tuesday (0-6 for Sunday-Saturday)
+    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == 2)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

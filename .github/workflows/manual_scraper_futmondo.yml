@@ -3,7 +3,7 @@ name: Manual Scraper - Futmondo
 on:
   workflow_dispatch: # Allows manual triggering
   schedule:
-    - cron: '* * * * *' # This runs at 4 AM every day (Spanish time)
+    - cron: "*/5 * * * *"  # Every 5 minutes
 
 jobs:
   run-tasks:
