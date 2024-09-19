@@ -162,7 +162,7 @@ def get_players_data(
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             average_rating = float(6.0)
-            timeout_retries = 1
+            timeout_retries = 3
             while timeout_retries > 0:
                 def scrape_players_rating_task():
                     driver.get(p)
