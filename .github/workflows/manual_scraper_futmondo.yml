@@ -2,14 +2,11 @@ name: Manual Scraper - Futmondo
 
 on:
   workflow_dispatch: # Allows manual triggering
-  schedule:
-    - cron: "* * * * *"  # Every 5 minutes
 
 jobs:
   run-tasks:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
-#    if: github.event.schedule_weekday == '4'
 
     steps:
       - name: Checkout repository
