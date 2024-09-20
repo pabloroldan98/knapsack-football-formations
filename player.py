@@ -176,7 +176,7 @@ def get_position(group):
     return position
 
 
-def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probability_threshold=0.5):
+def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probability_threshold=0.5, fixture_filter=False):
     purged_players = purge_no_team_players(players_list)
     purged_players = purge_negative_values(purged_players)
     if not probability_threshold or mega_purge:
@@ -185,6 +185,8 @@ def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probabil
     purged_players = purge_national_teams(purged_players, teams_to_purge)
     if mega_purge:
         purged_players = purge_worse_value_players(purged_players)
+    if fixture_filter:
+        purged_players = purge_bad_fixture_players_positions(purged_players)
     return purged_players
 
 
@@ -251,6 +253,13 @@ def purge_worse_value_players(players_list):
                     and player_to_check.value < player.value \
                     and player_to_check.position == player.position:
                 result_players.remove(player_to_check)
+    return result_players
+
+
+def purge_bad_fixture_players_positions(players_list):
+    result_players = copy.deepcopy(players_list)
+    result_players = [player for player in result_players if not ((player.position == "DEF") and (player.fixture < 0.985))]
+    result_players = [player for player in result_players if not ((player.position == "MID") and (player.fixture < 0.97))]
     return result_players
 
 
