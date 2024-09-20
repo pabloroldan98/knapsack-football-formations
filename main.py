@@ -341,7 +341,6 @@ my_players_names = [
     "Luis Pérez",
     "Sergi Cardona",
     "Francés",
-    "Paredes",
     "Juan Iglesias",
     "Aramburu",
     "Chavarría",
@@ -357,7 +356,6 @@ my_players_names = [
     "Budimir",
     "Marcos André",
     "Raba",
-    "Munir",
 ]
 
 # my_players_names = [
