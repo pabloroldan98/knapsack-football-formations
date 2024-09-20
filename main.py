@@ -355,7 +355,6 @@ my_players_names = [
     "Iago Aspas",
     "Budimir",
     "Marcos André",
-    "Raba",
 ]
 
 # my_players_names = [

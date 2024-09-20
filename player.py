@@ -136,9 +136,13 @@ class Player:
 
         if alt_fixture_method:
             capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
+            if self.position == "GK":
+                capped_elo_dif = capped_elo_dif * 0.2
             base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
         else:
             capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            if self.position == "GK":
+                capped_elo_dif = capped_elo_dif * 0.2
             base_coef = capped_elo_dif * 0.00015 + 1
         if no_fixtures:
             fixture_coef = 1
@@ -146,8 +150,7 @@ class Player:
             fixture_coef = base_coef
 
         home_bonus = 0.005 if self.is_playing_home else 0
-        # fixture_coef = 1+(1-fixture_coef) if self.position == "GK" else fixture_coef
-        fixture_coef = 1 if self.position == "GK" else fixture_coef
+        # fixture_coef = 1 if self.position == "GK" else fixture_coef
         fixture_coef += home_bonus if not no_home_boost else 0
         fixture_coef += self.team_history_boost
 
