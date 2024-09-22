@@ -69,10 +69,21 @@ def print_best_full_teams(best_results_teams):
 
 
 def players_preproc(players_list, formation):
-    max_gk = 1
-    max_def = formation[0]
-    max_mid = formation[1]
-    max_att = formation[2]
+    if len(formation) == 3:
+        max_gk = 1
+        max_def = formation[0]
+        max_mid = formation[1]
+        max_att = formation[2]
+    elif len(formation) == 4:
+        max_gk = formation[0]
+        max_def = formation[1]
+        max_mid = formation[2]
+        max_att = formation[3]
+    else:
+        max_gk = 1
+        max_def = formation[0]
+        max_mid = sum(formation[1:-1])
+        max_att = formation[-1]
 
     gk_values, gk_weights, gk_indexes = generate_group(players_list, "GK")
     gk_comb_values, gk_comb_weights, gk_comb_indexes = group_preproc(gk_values, gk_weights, gk_indexes, max_gk)
@@ -90,7 +101,24 @@ def players_preproc(players_list, formation):
     result_comb_weights = [gk_comb_weights, def_comb_weights, mid_comb_weights, att_comb_weights]
     result_comb_indexes = [gk_comb_indexes, def_comb_indexes, mid_comb_indexes, att_comb_indexes]
 
+    result_comb_values, result_comb_weights = remove_zero_combinations(result_comb_values, result_comb_weights)
+
     return result_comb_values, result_comb_weights, result_comb_indexes
+
+
+def remove_zero_combinations(values_combinations, weights_combinations):
+    # Create copies of the lists to avoid modifying the originals
+    values_combinations_copy = values_combinations.copy()
+    weights_combinations_copy = weights_combinations.copy()
+
+    # Identify indices of sublists in values_combinations that are entirely zeros
+    indices_to_delete = [i for i, sublist in enumerate(values_combinations_copy) if all(x == 0 for x in sublist)]
+
+    # Remove the sublists from the copied lists based on indices
+    values_combinations_copy = [sublist for i, sublist in enumerate(values_combinations_copy) if i not in indices_to_delete]
+    weights_combinations_copy = [sublist for i, sublist in enumerate(weights_combinations_copy) if i not in indices_to_delete]
+
+    return values_combinations_copy, weights_combinations_copy
 
 
 def generate_group(full_list, group):

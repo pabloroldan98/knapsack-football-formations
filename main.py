@@ -32,6 +32,7 @@ from futmondo import get_players_positions_dict
 
 possible_formations = [
     # [2, 2, 2],
+    # [0, 1, 1, 0],
 
     [3, 4, 3],
     [3, 5, 2],
@@ -232,7 +233,8 @@ current_players = get_current_players(
     # debug=False,
 # )
 
-worthy_players = [player for player in current_players if player.price > 0]
+# worthy_players = [player for player in current_players if player.price > 0]
+worthy_players = [player for player in current_players if player.price >= 0]
 
 
 # worthy_players = sorted(worthy_players, key=lambda x: (x.value-7)/x.price, reverse=True)
@@ -335,14 +337,11 @@ print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
     "Joan García",
-    "Greif",
+    "Leo Román",
     "Vieites",
     "Raíllo",
     "Luis Pérez",
     "Sergi Cardona",
-    "Francés",
-    "Juan Iglesias",
-    "Aramburu",
     "Chavarría",
     "Areso",
     "Puado",
