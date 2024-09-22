@@ -101,15 +101,16 @@ def players_preproc(players_list, formation):
     result_comb_weights = [gk_comb_weights, def_comb_weights, mid_comb_weights, att_comb_weights]
     result_comb_indexes = [gk_comb_indexes, def_comb_indexes, mid_comb_indexes, att_comb_indexes]
 
-    result_comb_values, result_comb_weights = remove_zero_combinations(result_comb_values, result_comb_weights)
+    result_comb_values, result_comb_weights, result_comb_indexes = remove_zero_combinations(result_comb_values, result_comb_weights, result_comb_indexes)
 
     return result_comb_values, result_comb_weights, result_comb_indexes
 
 
-def remove_zero_combinations(values_combinations, weights_combinations):
+def remove_zero_combinations(values_combinations, weights_combinations, indexes_combinations):
     # Create copies of the lists to avoid modifying the originals
     values_combinations_copy = values_combinations.copy()
     weights_combinations_copy = weights_combinations.copy()
+    indexes_combinations_copy = indexes_combinations.copy()
 
     # Identify indices of sublists in values_combinations that are entirely zeros
     indices_to_delete = [i for i, sublist in enumerate(values_combinations_copy) if all(x == 0 for x in sublist)]
@@ -117,8 +118,9 @@ def remove_zero_combinations(values_combinations, weights_combinations):
     # Remove the sublists from the copied lists based on indices
     values_combinations_copy = [sublist for i, sublist in enumerate(values_combinations_copy) if i not in indices_to_delete]
     weights_combinations_copy = [sublist for i, sublist in enumerate(weights_combinations_copy) if i not in indices_to_delete]
+    indexes_combinations_copy = [sublist for i, sublist in enumerate(indexes_combinations_copy) if i not in indices_to_delete]
 
-    return values_combinations_copy, weights_combinations_copy
+    return values_combinations_copy, weights_combinations_copy, indexes_combinations_copy
 
 
 def generate_group(full_list, group):
