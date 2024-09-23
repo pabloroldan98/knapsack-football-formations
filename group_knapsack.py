@@ -113,7 +113,7 @@ def remove_zero_combinations(values_combinations, weights_combinations, indexes_
     indexes_combinations_copy = indexes_combinations.copy()
 
     # Identify indices of sublists in values_combinations that are entirely zeros
-    indices_to_delete = [i for i, sublist in enumerate(values_combinations_copy) if all(x == 0 for x in sublist)]
+    indices_to_delete = [i for i, sublist in enumerate(values_combinations_copy) if sublist and all(x == 0 for x in sublist)]
 
     # Remove the sublists from the copied lists based on indices
     values_combinations_copy = [sublist for i, sublist in enumerate(values_combinations_copy) if i not in indices_to_delete]
