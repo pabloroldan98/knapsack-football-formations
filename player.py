@@ -136,13 +136,13 @@ class Player:
 
         if alt_fixture_method:
             capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
-            if self.position == "GK":
-                capped_elo_dif = capped_elo_dif * 0.2
+            # if self.position == "GK":
+            #     capped_elo_dif = capped_elo_dif * 0.2
             base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
         else:
             capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
-            if self.position == "GK":
-                capped_elo_dif = capped_elo_dif * 0.2
+            # if self.position == "GK":
+            #     capped_elo_dif = capped_elo_dif * 0.2
             base_coef = capped_elo_dif * 0.00015 + 1
         if no_fixtures:
             fixture_coef = 1
