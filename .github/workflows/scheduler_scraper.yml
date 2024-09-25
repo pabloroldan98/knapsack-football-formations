@@ -38,6 +38,7 @@ jobs:
   scrape_futmondo:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
+    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 2 * 1,2,8,9 2')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
