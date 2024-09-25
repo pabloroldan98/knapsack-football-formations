@@ -112,12 +112,18 @@ class TransfermarktScraper:
         for team_name, player_links in team_player_links.items():
             team_result = {}
             for player_name, player_link in player_links.items():
-                if player_name == "Abde Ezzalzouli":
-                    player_name = "Ez Abde"
-                if player_name == "Jon Magunazelaia":
-                    player_name = "Magunacelaya"
                 if player_name == "Alfonso Espino":
                     player_name = "Pacha Espino"
+                if player_name == "Peter González" or player_name == "Peter Gonzales":
+                    player_name = "Peter Federico"
+                if player_name == "Abde Ezzalzouli":
+                    player_name = "Ez Abde"
+                if player_name == "Jonathan Montiel":
+                    player_name = "Joni Montiel"
+                if player_name == "Manuel Fuster":
+                    player_name = "Fuster"
+                if player_name == "Jon Magunazelaia":
+                    player_name = "Magunacelaya"
                 if player_name == "Álvaro Aguado":
                     player_name = "Aguado"
                 print('Extracting player team history from %s ...' % player_name)

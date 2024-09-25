@@ -55,7 +55,7 @@ class FutbolFantasyScraper:
         name = player_element.get_attribute('data-nombre').strip().title()
         if name == "Alfonso Espino":
             name = "Pacha Espino"
-        if name == "Peter Gonzales":
+        if name == "Peter González" or name == "Peter Gonzales":
             name = "Peter Federico"
         if name == "Abde Ezzalzouli":
             name = "Ez Abde"
@@ -63,6 +63,10 @@ class FutbolFantasyScraper:
             name = "Joni Montiel"
         if name == "Manuel Fuster":
             name = "Fuster"
+        if name == "Jon Magunazelaia":
+            name = "Magunacelaya"
+        if name == "Álvaro Aguado":
+            name = "Aguado"
         price = player_element.get_attribute('data-valor').strip()
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
@@ -109,7 +113,7 @@ class FutbolFantasyScraper:
                 if player_name and probability:
                     if player_name == "Alfonso Espino":
                         player_name = "Pacha Espino"
-                    if player_name == "Peter González":
+                    if player_name == "Peter González" or player_name == "Peter Gonzales":
                         player_name = "Peter Federico"
                     if player_name == "Abde Ezzalzouli":
                         player_name = "Ez Abde"
@@ -117,6 +121,10 @@ class FutbolFantasyScraper:
                         player_name = "Joni Montiel"
                     if player_name == "Manu Fuster":
                         player_name = "Fuster"
+                    if player_name == "Jon Magunazelaia":
+                        player_name = "Magunacelaya"
+                    if player_name == "Álvaro Aguado":
+                        player_name = "Aguado"
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities

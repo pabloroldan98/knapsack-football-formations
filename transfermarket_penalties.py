@@ -58,12 +58,20 @@ class TransfermarktScraper:
                         if minute_text.isdigit():
                             date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
                             player_name = name_elem['title']
-                            if player_name == "Abde Ezzalzouli":
-                                player_name = "Ez Abde"
-                            if player_name == "Jon Magunazelaia":
-                                player_name = "Magunacelaya"
                             if player_name == "Alfonso Espino":
                                 player_name = "Pacha Espino"
+                            if player_name == "Peter González" or player_name == "Peter Gonzales":
+                                player_name = "Peter Federico"
+                            if player_name == "Abde Ezzalzouli":
+                                player_name = "Ez Abde"
+                            if player_name == "Jonathan Montiel":
+                                player_name = "Joni Montiel"
+                            if player_name == "Manuel Fuster":
+                                player_name = "Fuster"
+                            if player_name == "Jon Magunazelaia":
+                                player_name = "Magunacelaya"
+                            if player_name == "Álvaro Aguado":
+                                player_name = "Aguado"
                             takers.append({
                                 'name': player_name,
                                 'minute': int(minute_text),
