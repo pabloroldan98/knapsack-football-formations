@@ -233,8 +233,8 @@ current_players = get_current_players(
     # debug=False,
 # )
 
-# worthy_players = [player for player in current_players if player.price > 0]
-worthy_players = [player for player in current_players if player.price >= 0]
+worthy_players = [player for player in current_players if player.price > 0]
+# worthy_players = [player for player in current_players if player.price >= 0]
 
 
 # worthy_players = sorted(worthy_players, key=lambda x: (x.value-7)/x.price, reverse=True)
@@ -349,7 +349,6 @@ my_players_names = [
     "Marc Casadó",
     "Ilaix Moriba",
     "Raúl Moro",
-    "Brasanac",
     "Jhon Solís",
     "Iago Aspas",
     "Budimir",
