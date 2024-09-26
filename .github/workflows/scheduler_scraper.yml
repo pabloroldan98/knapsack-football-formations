@@ -62,7 +62,7 @@ jobs:
           name: futmondo-csv
           path: csv_files/*futmondo*.csv
 
-  scrape_transfermarket_penalties:
+  scrape_transfermarket_penalty_takers:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
     steps:
@@ -79,14 +79,40 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run TransferMarket Penalties Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_penalties.py
+      - name: Run TransferMarket Penalty Takers Scraper
+        run: python ./scraping_tasks/scrape_transfermarket_penalty_takers.py
 
-      - name: Upload TransferMarket Penalties CSV files as artifact
+      - name: Upload TransferMarket Penalty Takers CSV files as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: transfermarket-penalties-csv
-          path: csv_files/*transfermarket*penalt*.csv
+          name: transfermarket-penalty-takers-csv
+          path: csv_files/*transfermarket*penalt*taker*.csv
+
+  scrape_transfermarket_penalty_savers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run TransferMarket Penalty Savers Scraper
+        run: python ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+
+      - name: Upload TransferMarket Penalty Savers CSV files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: transfermarket-penalty-savers-csv
+          path: csv_files/*transfermarket*penalt*saver*.csv
 
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
@@ -145,11 +171,12 @@ jobs:
           path: csv_files/*sofascore*.csv
 
   commit-and-push:
-    needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalties, scrape_transfermarket_teamhistory, scrape_sofascore]
+    needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
           (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'cancelled' || needs.scrape_futbolfantasy.result == 'failure') &&
           (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' || needs.scrape_futmondo.result == 'cancelled' || needs.scrape_futmondo.result == 'failure') &&
-          (needs.scrape_transfermarket_penalties.result == 'success' || needs.scrape_transfermarket_penalties.result == 'skipped' || needs.scrape_transfermarket_penalties.result == 'cancelled' || needs.scrape_transfermarket_penalties.result == 'failure') &&
+          (needs.scrape_transfermarket_penalty_takers.result == 'success' || needs.scrape_transfermarket_penalty_takers.result == 'skipped' || needs.scrape_transfermarket_penalty_takers.result == 'cancelled' || needs.scrape_transfermarket_penalty_takers.result == 'failure') &&
+          (needs.scrape_transfermarket_penalty_savers.result == 'success' || needs.scrape_transfermarket_penalty_savers.result == 'skipped' || needs.scrape_transfermarket_penalty_savers.result == 'cancelled' || needs.scrape_transfermarket_penalty_savers.result == 'failure') &&
           (needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped' || needs.scrape_transfermarket_teamhistory.result == 'cancelled' || needs.scrape_transfermarket_teamhistory.result == 'failure') &&
           (needs.scrape_sofascore.result == 'success' || needs.scrape_sofascore.result == 'skipped' || needs.scrape_sofascore.result == 'cancelled' || needs.scrape_sofascore.result == 'failure')
         )}}
@@ -185,18 +212,31 @@ jobs:
           mv -f csv_files/futmondo/*.csv csv_files/
           rm -rf csv_files/futmondo
 
-      - name: Download TransferMarket Penalties CSV artifact
-        if: needs.scrape_transfermarket_penalties.result == 'success'
+      - name: Download TransferMarket Penalty Takers CSV artifact
+        if: needs.scrape_transfermarket_penalty_takers.result == 'success'
         uses: actions/download-artifact@v4
         with:
-          name: transfermarket-penalties-csv
-          path: csv_files/transfermarket_penalties/
+          name: transfermarket-penalty-takers-csv
+          path: csv_files/transfermarket_penalty_takers/
 
-      - name: Move TransferMarket Penalties CSV files to root csv_files directory
-        if: needs.scrape_transfermarket_penalties.result == 'success'
+      - name: Move TransferMarket Penalty Takers CSV files to root csv_files directory
+        if: needs.scrape_transfermarket_penalty_takers.result == 'success'
         run: |
-          mv -f csv_files/transfermarket_penalties/*.csv csv_files/
-          rm -rf csv_files/transfermarket_penalties
+          mv -f csv_files/transfermarket_penalty_takers/*.csv csv_files/
+          rm -rf csv_files/transfermarket_penalty_takers
+
+      - name: Download TransferMarket Penalty Savers CSV artifact
+        if: needs.scrape_transfermarket_penalty_savers.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: transfermarket-penalty-savers-csv
+          path: csv_files/transfermarket_penalty_savers/
+
+      - name: Move TransferMarket Penalty Savers CSV files to root csv_files directory
+        if: needs.scrape_transfermarket_penalty_savers.result == 'success'
+        run: |
+          mv -f csv_files/transfermarket_penalty_savers/*.csv csv_files/
+          rm -rf csv_files/transfermarket_penalty_savers
 
       - name: Download TransferMarket Team History CSV artifact
         if: needs.scrape_transfermarket_teamhistory.result == 'success'

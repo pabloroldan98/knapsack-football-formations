@@ -32,22 +32,22 @@ print(f"Month of the year: {month_of_year}")
 print()
 print("##############################")
 ##############################
-print("Scraping TRANSFERMARKET (team history)...")
+print("Scraping TRANSFERMARKET (penalty SAVERS)...")
 
 try:
-    players_team_history = get_players_team_history_dict(
-        file_name="transfermarket_laliga_team_history",
-        use_country_as_team=False,
+    goalkeepers_penalty_saves = get_penalty_savers_dict(
+        file_name="transfermarket_laliga_penalty_savers",
         force_scrape=True
     )
-    print(players_team_history)
-    for team, players in players_team_history.items():
+
+    print(goalkeepers_penalty_saves)
+    for team, goalkeepers_penalties in goalkeepers_penalty_saves.items():
         print()
         print(team)
-        for player, team_history in players.items():
-            print(player, team_history)
+        for goalkeeper, penalty_saves in goalkeepers_penalties.items():
+            print(goalkeeper, penalty_saves)
 except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (team history): {e}")
+    print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
 
 print()
 print("##############################")

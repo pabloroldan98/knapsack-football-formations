@@ -79,7 +79,7 @@ class TransfermarktScraper:
                                 # 'position': len(takers) + 1,
                                 # 'is_goal': is_goal
                             })
-        takers.sort(key=lambda x: x['date'], reverse=True)
+        takers.sort(key=lambda x: (x['date'], x['minute']), reverse=True)
         return takers
 
     def scrape(self):

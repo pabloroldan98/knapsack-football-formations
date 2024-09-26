@@ -31,6 +31,7 @@ class Player:
             price_trend: float = 0,
             fitness: list = [None, None, None, None, None],
             penalties: list = [False, False, False, False, False, False],
+            penalty_saves: list = [False, False, False, False, False, False, False, False, False, False, False],
             penalty_boost: float = 0,
             strategy_boost: float = 0,
             team_history: list = [],
@@ -56,6 +57,7 @@ class Player:
         self.price_trend = price_trend
         self.fitness = fitness
         self._penalties = penalties
+        self.penalty_saves = penalty_saves
         self.penalty_boost = penalty_boost
         self.strategy_boost = strategy_boost
         self.team_history = team_history
@@ -412,7 +414,7 @@ def set_forms(players_list, players_forms_dict, verbose=False):
     return result_players
 
 
-def set_penalty_boosts(players_list, penalty_takers_dict):
+def set_penalty_takers_boosts(players_list, penalty_takers_dict):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
@@ -440,14 +442,43 @@ def set_penalty_boosts(players_list, penalty_takers_dict):
         #             player.penalty_boost = calc_penalty_boost(players_penalties)
     return result_players
 
+
+def set_penalty_savers_boosts(players_list, penalty_savers_dict):
+    result_players = copy.deepcopy(players_list)
+
+    team_names_list = list(set(player.team for player in result_players))
+
+    for team_name, penalty_savers in penalty_savers_dict.items():
+        closest_team_name = find_similar_string(team_name, team_names_list)
+        if team_name == "RCD Espanyol Barcelona":
+            closest_team_name = "Espanyol"
+        players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        for player_name, player_penalty_saves in penalty_savers.items():
+            closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
+            for player in result_players:
+                if player.name == closest_player_name:
+                    player.penalty_saves = player_penalty_saves
+                    player.penalty_boost = calc_penalty_boost(player_penalty_saves)
+
+    return result_players
+
 def calc_penalty_boost(players_penalties):
-    penalty_indexes = [index for index, value in enumerate(players_penalties) if value]
     penalty_coef = 0
-    for penalty_index in penalty_indexes:
-        # if penalty_index < 6: # Take only last 6 pens into account
-        #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
-        if penalty_index < 5: # Take only last 5 pens into account
-            penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.05)
+    penalty_indexes = [index for index, value in enumerate(players_penalties) if value]
+    # Not Goalkeepers
+    if len(players_penalties) < 10:
+        for penalty_index in penalty_indexes:
+            # if penalty_index < 6: # Take only last 6 pens into account
+            #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
+            if penalty_index < 5: # Take only last 5 pens into account
+                penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.05)
+    # Goalkeepers
+    else:
+        for penalty_index in penalty_indexes:
+            if penalty_index < 11: # Take only last 11 pens into account
+                penalty_coef = penalty_coef + 0.015 - (penalty_index * 0.001)
+        penalty_coef = penalty_coef * 0.5
+
     return penalty_coef
 
 

@@ -15,11 +15,11 @@ from group_knapsack import best_full_teams, best_transfers
 from player import Player, set_players_value_to_last_fitness, set_manual_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
-    purge_negative_values, fill_with_team_players, get_old_players_data, set_penalty_boosts
+    purge_negative_values, fill_with_team_players, get_old_players_data, set_penalty_takers_boosts
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
-from transfermarket_penalties import get_penalty_takers_dict
+from transfermarket_penalty_takers import get_penalty_takers_dict
 
 playersDB_example = [
     Player("Mendy", "GK", 20, 6.8, "SEN"),
@@ -293,7 +293,7 @@ def get_current_players(
         partial_players_data = set_manual_boosts(all_players, players_manual_boosts)
     if not no_penalty_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalties_file_name)
-        partial_players_data = set_penalty_boosts(all_players, players_manual_boosts)
+        partial_players_data = set_penalty_takers_boosts(all_players, players_manual_boosts)
     partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost)

@@ -16,16 +16,17 @@ from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_d
     get_players_start_probabilities_dict, get_players_price_trends_dict
 from group_knapsack import best_full_teams, best_transfers
 from player import Player, \
-    set_players_value_to_last_fitness, set_manual_boosts, set_penalty_boosts, \
+    set_players_value_to_last_fitness, set_manual_boosts, set_penalty_takers_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     set_positions, set_team_history_boosts, \
     purge_everything, purge_worse_value_players, purge_no_team_players, \
     purge_negative_values, fill_with_team_players, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
-    set_price_trends
+    set_price_trends, set_penalty_savers_boosts
 from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
 from team import Team, get_old_teams_data
-from transfermarket_penalties import get_penalty_takers_dict
+from transfermarket_penalty_savers import get_penalty_savers_dict
+from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
 from futmondo import get_players_positions_dict
 
@@ -55,7 +56,8 @@ def get_current_players(
         no_fixtures=False,
         no_home_boost=False,
         alt_fixture_method=False,
-        no_penalty_boost=False,
+        no_penalty_takers_boost=False,
+        no_penalty_savers_boost=False, 
         no_team_history_boost=False,
         no_manual_boost=True,
         players_manual_boosts=[],
@@ -71,7 +73,8 @@ def get_current_players(
         use_old_teams_data=False,
         use_comunio_price=False,
         ratings_file_name="sofascore_players_ratings",
-        penalties_file_name="transfermarket_la_liga_penalty_takers",
+        penalty_takers_file_name="transfermarket_la_liga_penalty_takers",
+        penalty_saves_file_name="transfermarket_laliga_penalty_savers", 
         team_history_file_name="transfermarket_la_liga_team_history",
         alt_positions_file_name="futmondo_la_liga_players_positions",
         alt_prices_file_name="futbolfantasy_laliga_players_prices",
@@ -101,21 +104,26 @@ def get_current_players(
         partial_players_data = set_manual_boosts(partial_players_data, players_manual_boosts)
     if debug:
         print("333333")
-    if not no_penalty_boost:
-        penalty_takers = get_penalty_takers_dict(file_name=penalties_file_name)
-        partial_players_data = set_penalty_boosts(partial_players_data, penalty_takers)
-    if debug:
-        print("444444")
     if alt_positions:
         players_positions = get_players_positions_dict(file_name=alt_positions_file_name)
         partial_players_data = set_positions(partial_players_data, players_positions, verbose=False)
     if debug:
+        print("444444")
+    if not no_penalty_takers_boost:
+        penalty_takers = get_penalty_takers_dict(file_name=penalty_takers_file_name)
+        partial_players_data = set_penalty_takers_boosts(partial_players_data, penalty_takers)
+    if debug:
         print("555555")
+    if not no_penalty_savers_boost:
+        penalty_savers = get_penalty_savers_dict(file_name=penalty_saves_file_name)
+        partial_players_data = set_penalty_savers_boosts(partial_players_data, penalty_savers)
+    if debug:
+        print("666666")
     if alt_prices:
         players_prices = get_players_prices_dict(file_name=alt_prices_file_name)
         partial_players_data = set_prices(partial_players_data, players_prices, verbose=False)
     if debug:
-        print("666666")
+        print("777777")
     if alt_price_trends:
         players_price_trends = get_players_price_trends_dict(file_name=alt_price_trends_file_name)
         players_standard_prices=None
@@ -123,31 +131,31 @@ def get_current_players(
             players_standard_prices = get_players_prices_dict(file_name=alt_prices_file_name)
         partial_players_data = set_price_trends(partial_players_data, players_price_trends, players_standard_prices, verbose=False)
     if debug:
-        print("777777")
+        print("888888")
     if add_start_probability:
         players_start_probabilities = get_players_start_probabilities_dict(file_name=start_probabilit_file_name)
         partial_players_data = set_start_probabilities(partial_players_data, players_start_probabilities, verbose=False)
     if debug:
-        print("8888888")
+        print("999999")
     partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
     if debug:
-        print("999999")
+        print("AAAAAA")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
         partial_players_data = set_team_history_boosts(partial_players_data, players_team_history, verbose=False)
     if debug:
-        print("AAAAAAA")
+        print("BBBBBB")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     if debug:
-        print("BBBBBBB")
+        print("CCCCCC")
     if alt_forms and not no_form:
         players_form = get_players_forms_dict(file_name=alt_forms_file_name)
         partial_players_data = set_forms(partial_players_data, players_form)
     if debug:
-        print("CCCCCCC")
+        print("DDDDDD")
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
     if debug:
-        print("DDDDDDD")
+        print("EEEEEE")
 
     return full_players_data
 
@@ -206,13 +214,15 @@ current_players = get_current_players(
     alt_price_trends=True,
     alt_forms=True,
     add_start_probability=True,
-    no_penalty_boost=False,
+    no_penalty_takers_boost=False,
+    no_penalty_savers_boost=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
     use_comunio_price=True,
     ratings_file_name="sofascore_laliga_players_ratings",
-    penalties_file_name="transfermarket_laliga_penalty_takers",
+    penalty_takers_file_name="transfermarket_laliga_penalty_takers",
+    penalty_saves_file_name="transfermarket_laliga_penalty_savers",
     team_history_file_name="transfermarket_laliga_team_history",
     # alt_positions_file_name="futmondo_la_liga_players_positions",
     alt_positions_file_name="futbolfantasy_laliga_players_positions",
@@ -225,7 +235,7 @@ current_players = get_current_players(
     debug=False,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
-    # penalties_file_name="transfermarket_copa_america_penalty_takers",
+    # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
     # team_history_file_name="transfermarket_copa_america_country_history",
     # # alt_positions_file_name="futmondo_la_liga_players_positions",
     # is_country=True,
@@ -342,7 +352,6 @@ my_players_names = [
     "Luis Pérez",
     "Sergi Cardona",
     "Chavarría",
-    "Areso",
     "Eric García",
     "Koke",
     "Marc Casadó",

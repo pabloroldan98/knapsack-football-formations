@@ -8,8 +8,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from futbolfantasy_analytics import get_futbolfantasy_data
 from futmondo import get_players_positions_dict
 from sofascore import get_players_ratings_list
-from transfermarket_penalties import get_penalty_takers_dict
+from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
+from transfermarket_penalty_savers import get_penalty_savers_dict
 
 
 start_time = time.time()
@@ -76,7 +77,7 @@ except Exception as e:
 print()
 print("##############################")
 ##############################
-print("Scraping TRANSFERMARKET (penalties)...")
+print("Scraping TRANSFERMARKET (penalty TAKERS)...")
 
 try:
     penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
@@ -84,7 +85,20 @@ try:
     for team, penalties in penalty_takers.items():
         print(team, penalties)
 except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (penalties): {e}")
+    print(f"Error scraping TRANSFERMARKET (penalty TAKERS): {e}")
+
+print()
+print("##############################")
+##############################
+print("Scraping TRANSFERMARKET (penalty SAVERS)...")
+
+try:
+    penalty_savers = get_penalty_savers_dict(file_name="transfermarket_laliga_penalty_savers", force_scrape=True)
+    print(penalty_savers)
+    for team, penalties in penalty_savers.items():
+        print(team, penalties)
+except Exception as e:
+    print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
 
 if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_year == 8 or month_of_year == 1):
     print()
