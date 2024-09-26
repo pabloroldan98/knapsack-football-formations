@@ -1,4 +1,4 @@
-name: Manual Scraper - Transfermarket (penalty SAVERS)
+name: Manual Scraper - Penalty Takers (Transfermarket)
 
 on:
   workflow_dispatch: # Allows manual triggering
@@ -26,7 +26,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+          python ./scraping_tasks/scrape_transfermarket_penalty_takers.py
 
       - name: Configure git
         run: |
