@@ -351,7 +351,6 @@ my_players_names = [
     "Raíllo",
     "Luis Pérez",
     "Chavarría",
-    "Ratiu",
     "Correia",
     "Badé",
     "Eric García",
