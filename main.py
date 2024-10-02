@@ -357,7 +357,6 @@ my_players_names = [
     "Luis Milla",
     "Raúl Moro",
     "Juan Cruz Díaz",
-    "Johnny",
     "Jhon Solís",
     "Iago Aspas",
     "Budimir",

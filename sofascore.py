@@ -197,14 +197,12 @@ def get_players_data(
                 if player_name != "":
                     if player_name == "Alfonso Espino":
                         player_name = "Pacha Espino"
-                    if player_name == "Abdessamad Ezzalzouli":
-                        player_name = "Ez Abde"
-                    if player_name == "Jon Magunazelaia":
-                        player_name = "Magunacelaya"
                     if player_name == "Abderrahman Rebbach":
                         player_name = "Abde Rebbach"
-                    if player_name == "Peter González":
+                    if player_name == "Peter González" or player_name == "Peter Gonzales":
                         player_name = "Peter Federico"
+                    if player_name == "Abde Ezzalzouli" or player_name == "Abdessamad Ezzalzouli":
+                        player_name = "Ez Abde"
                     if player_name == "Ismaila Ciss":
                         player_name = "Pathé Ciss"
                     if player_name == "Chuky":
@@ -213,6 +211,16 @@ def get_players_data(
                         player_name = "Adu Ares"
                     if player_name == "William Carvalho":
                         player_name = "Carvalho"
+                    if player_name == "Fabio González":
+                        player_name = "Fabio"
+                    if player_name == "Jonathan Montiel":
+                        player_name = "Joni Montiel"
+                    if player_name == "Manuel Fuster" or player_name == "Manu Fuster" :
+                        player_name = "Fuster"
+                    if player_name == "Jon Magunazelaia":
+                        player_name = "Magunacelaya"
+                    if player_name == "Álvaro Aguado":
+                        player_name = "Aguado"
                     players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
                 pass

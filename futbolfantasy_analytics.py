@@ -55,13 +55,25 @@ class FutbolFantasyScraper:
         name = player_element.get_attribute('data-nombre').strip().title()
         if name == "Alfonso Espino":
             name = "Pacha Espino"
+        if name == "Abderrahman Rebbach":
+            name = "Abde Rebbach"
         if name == "Peter González" or name == "Peter Gonzales":
             name = "Peter Federico"
-        if name == "Abde Ezzalzouli":
+        if name == "Abde Ezzalzouli" or name == "Abdessamad Ezzalzouli":
             name = "Ez Abde"
+        if name == "Ismaila Ciss":
+            name = "Pathé Ciss"
+        if name == "Chuky":
+            name = "Chuki"
+        if name == "Malcom Ares":
+            name = "Adu Ares"
+        if name == "William Carvalho":
+            name = "Carvalho"
+        if name == "Fabio González":
+            name = "Fabio"
         if name == "Jonathan Montiel":
             name = "Joni Montiel"
-        if name == "Manuel Fuster":
+        if name == "Manuel Fuster" or name == "Manu Fuster" :
             name = "Fuster"
         if name == "Jon Magunazelaia":
             name = "Magunacelaya"
@@ -113,13 +125,25 @@ class FutbolFantasyScraper:
                 if player_name and probability:
                     if player_name == "Alfonso Espino":
                         player_name = "Pacha Espino"
+                    if player_name == "Abderrahman Rebbach":
+                        player_name = "Abde Rebbach"
                     if player_name == "Peter González" or player_name == "Peter Gonzales":
                         player_name = "Peter Federico"
-                    if player_name == "Abde Ezzalzouli":
+                    if player_name == "Abde Ezzalzouli" or player_name == "Abdessamad Ezzalzouli":
                         player_name = "Ez Abde"
+                    if player_name == "Ismaila Ciss":
+                        player_name = "Pathé Ciss"
+                    if player_name == "Chuky":
+                        player_name = "Chuki"
+                    if player_name == "Malcom Ares":
+                        player_name = "Adu Ares"
+                    if player_name == "William Carvalho":
+                        player_name = "Carvalho"
+                    if player_name == "Fabio González":
+                        player_name = "Fabio"
                     if player_name == "Jonathan Montiel":
                         player_name = "Joni Montiel"
-                    if player_name == "Manu Fuster":
+                    if player_name == "Manuel Fuster" or player_name == "Manu Fuster" :
                         player_name = "Fuster"
                     if player_name == "Jon Magunazelaia":
                         player_name = "Magunacelaya"
