@@ -79,6 +79,8 @@ class FutbolFantasyScraper:
             name = "Magunacelaya"
         if name == "Álvaro Aguado":
             name = "Aguado"
+        if name == "Isco Alarcon":
+            name = "Isco"
         price = player_element.get_attribute('data-valor').strip()
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
@@ -149,6 +151,8 @@ class FutbolFantasyScraper:
                         player_name = "Magunacelaya"
                     if player_name == "Álvaro Aguado":
                         player_name = "Aguado"
+                    if player_name == "Isco Alarcon":
+                        player_name = "Isco"
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities

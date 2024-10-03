@@ -84,6 +84,8 @@ class TransfermarktScraper:
                                 player_name = "Magunacelaya"
                             if player_name == "Álvaro Aguado":
                                 player_name = "Aguado"
+                            if player_name == "Isco Alarcon":
+                                player_name = "Isco"
                             takers.append({
                                 'name': player_name,
                                 'minute': int(minute_text),

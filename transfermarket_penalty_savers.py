@@ -151,6 +151,8 @@ class TransfermarktScraper:
                     player_name = "Magunacelaya"
                 if player_name == "Álvaro Aguado":
                     player_name = "Aguado"
+                if player_name == "Isco Alarcon":
+                    player_name = "Isco"
                 print('Extracting goalkeeper penalty saves from %s ...' % player_name)
                 team_result[player_name] = self.get_player_penalty_saves(player_link)
                 # break
