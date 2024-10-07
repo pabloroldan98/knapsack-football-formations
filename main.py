@@ -346,19 +346,20 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Gazzaniga",
-    "Gomis",
+    "Joan García",
+    "Astralaga",
     "Raíllo",
     "Luis Pérez",
     "Chavarría",
     "Correia",
     "Badé",
+    "Krejci",
+    "Lejeune",
     "Eric García",
     "Luis Milla",
     "Raúl Moro",
     "Juan Cruz Díaz",
     "Jhon Solís",
-    "Iago Aspas",
     "Budimir",
     "Iñaki Williams",
     "Marcos André",
