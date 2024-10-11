@@ -358,9 +358,9 @@ my_players_names = [
     "Luis Milla",
     "Raúl Moro",
     "Juan Cruz Díaz",
+    "Gallagher",
     "Jhon Solís",
     "Budimir",
-    "Iñaki Williams",
     "Sergio Gómez",
     "Marcos André",
 ]
