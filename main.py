@@ -346,6 +346,7 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
+    "Greif",
     "Ferrer",
     "Luis Pérez",
     "Chavarría",
