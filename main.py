@@ -348,6 +348,8 @@ print()
 my_players_names = [
     "Greif",
     "Ferrer",
+    "Tenaglia",
+    "Areso",
     "Luis Pérez",
     "Chavarría",
     "Krejci",
