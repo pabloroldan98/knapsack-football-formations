@@ -5,7 +5,8 @@ on:
 
 jobs:
   run-tasks:
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 180  # Set the job timeout to 3 hours (180 minutes)
 
     steps:
