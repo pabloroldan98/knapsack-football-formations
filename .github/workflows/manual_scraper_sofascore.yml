@@ -9,6 +9,10 @@ jobs:
     timeout-minutes: 180  # Set the job timeout to 3 hours (180 minutes)
 
     steps:
+      - name: Enable Debug Logging
+        run: |
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
