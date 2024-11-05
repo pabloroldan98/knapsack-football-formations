@@ -348,12 +348,12 @@ print()
 my_players_names = [
     "Álvaro Fernández",
     "Gomis",
-    "Modric",
     "Luis Pérez",
     "Chavarría",
     "Krejci",
     "Kiko Femenía",
     "Lejeune",
+    "Lucas Vázquez",
     "Baena",
     "Comesaña",
     "Lokonga",
@@ -362,6 +362,7 @@ my_players_names = [
     "Griezmann",
     "Budimir",
     "Iago Aspas",
+    "Isi Palazón",
     "Marcos André",
 ]
 
