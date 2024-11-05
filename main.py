@@ -348,6 +348,7 @@ print()
 my_players_names = [
     "Álvaro Fernández",
     "Gomis",
+    "Modric",
     "Luis Pérez",
     "Chavarría",
     "Krejci",
