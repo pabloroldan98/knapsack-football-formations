@@ -201,7 +201,7 @@ def get_players_data(
                         try: # Average last competition
                             # Find the span containing "Average Sofascore Rating"
                             average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
-                            average_rating = average_rating*0.95
+                            average_rating = round(average_rating * 0.95, 4)
                         except:
                             pass
                     return average_rating
