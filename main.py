@@ -1,30 +1,18 @@
-import ast
-import copy
-import gc
-from pprint import pprint
 # from pympler.tracker import SummaryTracker
-from statistics import mean
-import matplotlib.pyplot as plt
-import math
-import csv
-import numpy as np
 
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
 from biwenger import get_championship_data
 from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_dict, \
     get_players_start_probabilities_dict, get_players_price_trends_dict
-from group_knapsack import best_full_teams, best_transfers
-from player import Player, \
-    set_players_value_to_last_fitness, set_manual_boosts, set_penalty_takers_boosts, \
+from group_knapsack import best_full_teams
+from player import set_players_value_to_last_fitness, set_manual_boosts, set_penalty_takers_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     set_positions, set_team_history_boosts, \
-    purge_everything, purge_worse_value_players, purge_no_team_players, \
-    purge_negative_values, fill_with_team_players, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
+    purge_everything, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
     set_price_trends, set_penalty_savers_boosts
-from OLD_group_knapsack import best_squads, best_teams
 from sofascore import get_players_ratings_list
-from team import Team, get_old_teams_data
+from team import get_old_teams_data
 from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
@@ -315,19 +303,9 @@ needed_purge = worthy_players[:150]
 
 
 
-# a = [player for player in worthy_players if player.position == "GK"][4]
-# b = [player for player in worthy_players if player.position == "MID"][0]
-# c = [player for player in worthy_players if player.position == "ATT"][0]
-# needed_purge = [player for player in worthy_players if player.position == "DEF"] + [a] + [b] + [c]
 #
 # needed_purge = [player for player in needed_purge if player.name != "Grimaldo"]
 # needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
-# needed_purge = [player for player in needed_purge if player.name != "Clauss"]
-# needed_purge = [player for player in needed_purge if player.name != "Raum"]
-# needed_purge = [player for player in needed_purge if player.name != "Danilo"]
-# needed_purge = [player for player in needed_purge if player.name != "Carvajal"]
-# needed_purge = [player for player in needed_purge if player.name != "Henrichs"]
-# needed_purge = [player for player in needed_purge if player.name != "Geertruida"]
 #
 # needed_purge = [player for player in needed_purge if player.price > 7]
 #
@@ -340,8 +318,11 @@ needed_purge = worthy_players[:150]
 # best_full_teams(needed_purge, possible_formations, 210, verbose=2)
 
 
+
 ################################################### CHECK YOUR TEAM ###################################################
-#
+
+
+
 print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
@@ -399,7 +380,11 @@ print()
 best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 
 
-################################################### CHECK YOUR TEAM ###################################################
+
+
+
+
+################################################### BEST TRANSFERS ###################################################
 
 
 
@@ -410,6 +395,10 @@ best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 #
 # best_transfers(my_team, mega_purge, 5, n_results=25, by_n_transfers=False)
 
+
+
+
+################################################### PLOT DATA ###################################################
 
 
 

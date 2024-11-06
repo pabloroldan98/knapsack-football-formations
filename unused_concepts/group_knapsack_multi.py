@@ -3,7 +3,7 @@ import gc
 import itertools
 import math
 
-from MCKP import multipleChoiceKnapsack, knapsack_multichoice, \
+from MCKP_multi import multipleChoiceKnapsack, knapsack_multichoice, \
     knapsack_multichoice_onepick
 
 
@@ -18,9 +18,10 @@ possible_formations = [
 ]
 
 
-def best_full_teams(players_list, formations=possible_formations, budget=300, verbose=1):
-    super_verbose = bool(verbose-1)
+def best_full_teams(players_list, formations=possible_formations, budget=300, num_results=1, verbose=1):
+    super_verbose = bool(verbose - 1)
     verbose = bool(verbose)
+
     # players_by_group = sorted(players_list, key=lambda x: x.get_group())
     if budget <= 0 or budget >= 100000:
         budget = 1
@@ -32,27 +33,35 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
     for formation in formations:
         players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
 
-        score, comb_result_indexes = knapsack_multichoice_onepick(players_prices, players_values, budget, verbose=super_verbose)
+        # Modify to get the top num_results
+        top_results = knapsack_multichoice_onepick(
+            players_prices,
+            players_values,
+            budget,
+            num_results=num_results,
+            verbose=super_verbose
+        )
 
-        result_indexes = []
-        for comb_index in comb_result_indexes:
-            for winning_i in players_comb_indexes[comb_index[0]][comb_index[1]]:
-                result_indexes.append(winning_i)
+        for score, comb_result_indexes in top_results:
+            result_indexes = []
+            for comb_index in comb_result_indexes:
+                for winning_i in players_comb_indexes[comb_index[0]][comb_index[1]]:
+                    result_indexes.append(winning_i)
 
-        result_players = []
-        for res_index in result_indexes:
-            result_players.append(players_list[res_index])
+            result_players = []
+            for res_index in result_indexes:
+                result_players.append(players_list[res_index])
 
-        formation_score_players.append((formation, score, result_players))
+            formation_score_players.append((formation, score, result_players))
 
         # print_best_full_teams(formation_score_players)
 
     formation_score_players_by_score = sorted(formation_score_players, key=lambda tup: tup[1], reverse=True)
 
     if verbose:
-        print_best_full_teams(formation_score_players_by_score)
+        print_best_full_teams(formation_score_players_by_score)#[:num_results])
 
-    return formation_score_players_by_score
+    return formation_score_players_by_score#[:num_results]
 
 
 def print_best_full_teams(best_results_teams):
