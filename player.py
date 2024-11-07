@@ -145,10 +145,14 @@ class Player:
             #     capped_elo_dif = capped_elo_dif * 0.2
             base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
         else:
-            capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            # capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
             # if self.position == "GK":
             #     capped_elo_dif = capped_elo_dif * 0.2
-            base_coef = capped_elo_dif * 0.00015 + 1
+            # base_coef = capped_elo_dif * 1.5 / 10000 + 1
+            # base_coef = capped_elo_dif * 1.15 / 10000 + 1
+            capped_elo_dif = np.sign(capped_elo_dif) * np.log1p(abs(capped_elo_dif/1000))
+            base_coef = capped_elo_dif * 1.25 / 10 + 1
         if no_fixtures:
             fixture_coef = 1
         else:
@@ -268,6 +272,7 @@ def purge_bad_fixture_players_positions(players_list):
     result_players = copy.deepcopy(players_list)
     result_players = [player for player in result_players if not ((player.position == "DEF") and (player.fixture < 0.985))]
     result_players = [player for player in result_players if not ((player.position == "MID") and (player.fixture < 0.97))]
+    result_players = [player for player in result_players if not ((player.position == "ATT") and (player.fixture < 0.96))]
     return result_players
 
 
