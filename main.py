@@ -330,7 +330,6 @@ my_players_names = [
     "Álvaro Fernández",
     "Gomis",
     "Luis Pérez",
-    "Chavarría",
     "Krejci",
     "Kiko Femenía",
     "Lejeune",
