@@ -540,7 +540,8 @@ def calc_team_history_boost(team_history, opponent):
     length = len(team_history)
     # Interpolate between 0.01 (first position) and 0.005 (last position)
     # return 0.01 if position == 0 else 0.005 if position == length - 1 else 0.01 - (position / (length - 1)) * 0.005
-    return 0.0075 if position == 0 else 0.0025 if position == length - 1 else 0.0075 - (position / (length - 1)) * 0.0025
+    # return 0.0075 if position == 0 else 0.0025 if position == length - 1 else 0.0075 - (position / (length - 1)) * 0.0025
+    return 0.005 if position == 0 else 0.0025 if position == length - 1 else 0.005 - (position / (length - 1)) * 0.0025
 
 
 def set_players_elo_dif(players_list, teams_list):
