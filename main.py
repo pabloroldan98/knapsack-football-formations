@@ -337,6 +337,7 @@ my_players_names = [
     "Maffeo",
     "Diego Rico",
     "Pedrosa",
+    "Fran García",
     "Baena",
     "Comesaña",
     "Lokonga",
