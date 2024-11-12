@@ -338,6 +338,7 @@ my_players_names = [
     "Diego Rico",
     "Pedrosa",
     "Fran García",
+    "Miguel Gutiérrez",
     "Baena",
     "Comesaña",
     "Lokonga",
