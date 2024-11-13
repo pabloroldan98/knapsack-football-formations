@@ -12,12 +12,22 @@ class Team:
             name: str,
             next_opponent: str,
             elo: float,
-            is_home: bool
+            is_home: bool = False,
+            num_ok: int = 0,
+            num_injured: int = 0,
+            num_doubt: int = 0,
+            num_sanctioned: int = 0,
+            num_warned: int = 0
     ):
         self.name = name
         self.next_opponent = next_opponent
         self.elo = elo
         self.is_home = is_home
+        self.num_ok = num_ok
+        self.num_injured = num_injured
+        self.num_doubt = num_doubt
+        self.num_sanctioned = num_sanctioned
+        self.num_warned = num_warned
 
     def __str__(self):
         return f"({self.name}, {self.elo})"
@@ -31,7 +41,7 @@ class Team:
 
 
 def get_old_teams_data(forced_matches=[]):
-    with open(f'{ROOT_DIR}/csv_files/OLD_teams_before_jornada_03.csv', newline='') as f:
+    with open(f'{ROOT_DIR}/csv_files/unused/OLD_teams_before_jornada_03.csv', newline='') as f:
         reader = csv.reader(f)
         data = list(reader)
     old_teams_data = []
@@ -40,7 +50,12 @@ def get_old_teams_data(forced_matches=[]):
             d[0],
             d[1],
             float(d[2]),
-            bool(d[3])
+            bool(d[3]),
+            int(d[4]),
+            int(d[5]),
+            int(d[6]),
+            int(d[7]),
+            int(d[8])
         )
         old_teams_data.append(new_team)
     if forced_matches:

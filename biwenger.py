@@ -37,9 +37,11 @@ def get_championship_data(forced_matches=[], is_country=False, host_team=None, u
 
 def get_teams_championship_data(data, is_country=False, host_team=None, forced_matches=[]):
     championship_teams = data['data']['teams']
+    championship_players = data['data']['players']
     teams_elos_dict = get_teams_elos(is_country=is_country)
     championship_teams_db = create_teams_list(
         championship_teams,
+        championship_players,
         teams_elos_dict,
         host_team=host_team,
         forced_matches=forced_matches
@@ -48,10 +50,30 @@ def get_teams_championship_data(data, is_country=False, host_team=None, forced_m
     return championship_teams_db
 
 
-def create_teams_list(championship_teams, teams_elos_dict, host_team=None, forced_matches=[]):
+def create_teams_list(championship_teams, championship_players, teams_elos_dict, host_team=None, forced_matches=[]):
     teams_list = []
     if not forced_matches:
         for championship_team_id in championship_teams:
+            num_ok = 0
+            num_injured = 0
+            num_doubt = 0
+            num_sanctioned = 0
+            num_warned = 0
+            for championship_player_id in championship_players:
+                championship_player = championship_players[str(championship_player_id)]
+                if str(championship_player["teamID"]) == str(championship_team_id):
+                    player_status = championship_player["status"]
+                    if player_status == "ok":
+                        num_ok += 1
+                    if player_status == "injured":
+                        num_injured += 1
+                    if player_status == "doubt":
+                        num_doubt += 1
+                    if player_status == "sanctioned":
+                        num_sanctioned += 1
+                    if player_status == "warned":
+                        num_warned += 1
+
             championship_team = championship_teams[str(championship_team_id)]
 
             team_name = championship_team["name"]
@@ -72,7 +94,12 @@ def create_teams_list(championship_teams, teams_elos_dict, host_team=None, force
                 team_name,
                 team_name_next_opponent,
                 team_elo,
-                is_team_home
+                is_team_home,
+                num_ok,
+                num_injured,
+                num_doubt,
+                num_sanctioned,
+                num_warned
             )
             teams_list.append(new_team)
 
@@ -140,11 +167,11 @@ def get_next_opponent(team_id, teams):
 def get_players_championship_data(data, use_comunio_price=False):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    championship_players_db = create_players_list(championship_teams, championship_players, use_comunio_price=use_comunio_price)
+    championship_players_db = create_players_list(championship_players, championship_teams, use_comunio_price=use_comunio_price)
     return championship_players_db
 
 
-def create_players_list(championship_teams, championship_players, use_comunio_price=False):
+def create_players_list(championship_players, championship_teams, use_comunio_price=False):
     players_list = []
     for championship_player_id in championship_players:
         championship_player = championship_players[str(championship_player_id)]
