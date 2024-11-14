@@ -2,6 +2,7 @@
 
 import os
 
+from http.client import RemoteDisconnected
 from requests.exceptions import ReadTimeout
 from urllib3.exceptions import ReadTimeoutError
 from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException, WebDriverException
@@ -136,7 +137,7 @@ def get_players_data(
                             player_paths_list.append(player_href)
                             break  # Exit the loop successfully
                         # except StaleElementReferenceException:
-                        except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError):
+                        except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
                             retries -= 1  # Decrement retry counter
                             if retries == 0:
                                 print(f"Failed to retrieve href for player after several attempts.")
@@ -148,7 +149,7 @@ def get_players_data(
                 # Run the task with timeout
                 player_paths_list = run_with_timeout(MAX_WAIT_TIME, scrape_team_players_task)
                 break  # Exit the loop if successful
-            except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError):
+            except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
                 timeout_retries -= 1  # Decrement retry counter
                 driver.quit()
                 driver = create_driver(keep_alive=False)  # Restart the driver
@@ -187,7 +188,7 @@ def get_players_data(
                     # Run the task with timeout
                     average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
                     break  # Exit the loop if successful
-                except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException):
+                except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
                     timeout_retries -= 1  # Decrement retry counter
                     driver.quit()
                     driver = create_driver(keep_alive=False)  # Restart the driver
