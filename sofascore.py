@@ -165,12 +165,10 @@ def get_players_data(
     teams_with_players_ratings = dict()
     j = 0
     for team_name, player_paths in team_players_paths.items():
-        print("A")
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             average_rating = float(6.0)
             timeout_retries = 3
-            print("1")
             while timeout_retries > 0:
                 def scrape_players_rating_task():
                     driver.get(p)
@@ -199,9 +197,7 @@ def get_players_data(
                     if timeout_retries <= 0:
                         driver.get(p)
             try:
-                print("2")
                 player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-                print("3")
                 print('Extracting player data from %s ...' % player_name)
                 print(average_rating)
                 if player_name != "":
@@ -235,11 +231,8 @@ def get_players_data(
                         player_name = "Isco"
                     players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
-                print("4")
                 pass
-            print("5")
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
-        print("6")
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
             overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
