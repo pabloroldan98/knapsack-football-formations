@@ -66,7 +66,8 @@ def get_team_links_from_league(league_url, driver):
     # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
     # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
     # La Liga
-    teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
+    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div/div[1]/div/div/div[1]/div/div[2]/div/a"
+    teams_base_xpath = "//*[@data-testid='standings_row']"
     team_name_xpath = teams_base_xpath + "/div/div[2]/div/div"
     # time.sleep(15)
     # driver.save_screenshot('team_links.png')
@@ -256,7 +257,7 @@ def get_players_data(
 #
 # result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
 # # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
-# 
+#
 # end_time = time.time()
 # elapsed_time = end_time - start_time
 #
