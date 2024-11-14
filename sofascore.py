@@ -5,7 +5,7 @@ import os
 from http.client import RemoteDisconnected
 from requests.exceptions import ReadTimeout
 from urllib3.exceptions import ReadTimeoutError
-from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
