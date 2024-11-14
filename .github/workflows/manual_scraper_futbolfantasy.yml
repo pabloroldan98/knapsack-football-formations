@@ -28,10 +28,6 @@ jobs:
         run: |
           python ./scraping_tasks/scrape_futbolfantasy.py
 
-      - name: Clean up cache files
-        run: |
-          rm -rf __pycache__
-
       - name: Configure git
         run: |
           git config --global user.name 'github-actions[bot]'
