@@ -17,7 +17,10 @@ def get_championship_data(forced_matches=[], is_country=False, host_team=None, u
     # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
     # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
-    response = requests.get(all_data_url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(all_data_url, headers=headers)
     data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
 
     if verbose:
