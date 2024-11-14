@@ -165,6 +165,7 @@ def get_players_data(
     teams_with_players_ratings = dict()
     j = 0
     for team_name, player_paths in team_players_paths.items():
+        print("A")
         players_ratings = {}  # Dictionary for players in this team
         for p in player_paths:
             average_rating = float(6.0)
@@ -174,28 +175,22 @@ def get_players_data(
                 def scrape_players_rating_task():
                     driver.get(p)
                     average_rating = float(6.0)
-                    print("2")
                     try:  # Average 12 months
-                        print("3")
                         # Find the span containing "Summary (last 12 months)"
                         average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Summary (last 12 months)')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
                     except:  # NoSuchElementException: # Spelling error making this code not work
                         try: # Average last competition
-                            print("4")
                             # Find the span containing "Average Sofascore Rating"
                             average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
                             average_rating = round(average_rating * 0.95, 4)
                         except:
-                            print("5")
                             pass
                     return average_rating
                 try:
-                    print("6")
                     # Run the task with timeout
                     average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
                     break  # Exit the loop if successful
                 except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
-                    print("7")
                     timeout_retries -= 1  # Decrement retry counter
                     driver.quit()
                     driver = create_driver(keep_alive=False)  # Restart the driver
@@ -204,8 +199,9 @@ def get_players_data(
                     if timeout_retries <= 0:
                         driver.get(p)
             try:
-                print("8")
+                print("2")
                 player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
+                print("3")
                 print('Extracting player data from %s ...' % player_name)
                 print(average_rating)
                 if player_name != "":
@@ -239,9 +235,11 @@ def get_players_data(
                         player_name = "Isco"
                     players_ratings[player_name] = average_rating
             except NoSuchElementException:  # Spelling error making this code not work as expected
-                print("9")
+                print("4")
                 pass
+            print("5")
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
+        print("6")
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
             overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
