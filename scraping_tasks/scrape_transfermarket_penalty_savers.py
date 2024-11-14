@@ -48,6 +48,7 @@ try:
             print(goalkeeper, penalty_saves)
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")

@@ -60,6 +60,7 @@ try:
         print(team, players)
 except Exception as e:
     print(f"Error scraping FUTBOLFANTASY: {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")
@@ -73,6 +74,7 @@ try:
         print(team, players)
 except Exception as e:
     print(f"Error scraping FUTMONDO: {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")
@@ -86,6 +88,7 @@ try:
         print(team, penalties)
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty TAKERS): {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")
@@ -99,6 +102,7 @@ try:
         print(team, penalties)
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_year == 8 or month_of_year == 1):
     print()
@@ -120,6 +124,7 @@ if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_ye
                 print(player, team_history)
     except Exception as e:
         print(f"Error scraping TRANSFERMARKET (team history): {e}")
+        print(f"Exception type: {type(e).__name__}")
 
 if day_of_week == 1:
     print()
@@ -137,6 +142,7 @@ if day_of_week == 1:
             print(p)
     except Exception as e:
         print(f"Error scraping SOFASCORE: {e}")
+        print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")

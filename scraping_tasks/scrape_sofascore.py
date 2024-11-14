@@ -44,6 +44,7 @@ try:
         print(p)
 except Exception as e:
     print(f"Error scraping SOFASCORE: {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")

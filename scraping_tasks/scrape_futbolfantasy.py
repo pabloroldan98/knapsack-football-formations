@@ -60,6 +60,7 @@ try:
         print(team, players)
 except Exception as e:
     print(f"Error scraping FUTBOLFANTASY: {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")

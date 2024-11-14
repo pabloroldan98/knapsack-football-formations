@@ -48,6 +48,7 @@ try:
             print(player, team_history)
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (team history): {e}")
+    print(f"Exception type: {type(e).__name__}")
 
 print()
 print("##############################")
