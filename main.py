@@ -12,7 +12,7 @@ from player import set_players_value_to_last_fitness, set_manual_boosts, set_pen
     purge_everything, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
     set_price_trends, set_penalty_savers_boosts
 from sofascore import get_players_ratings_list
-from team import get_old_teams_data
+from team import get_old_teams_data, set_team_status_nerf
 from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
@@ -57,6 +57,7 @@ def get_current_players(
         alt_price_trends=False,
         alt_forms=False,
         add_start_probability=False,
+        no_team_status_nerf=False,
         use_old_players_data=False,
         use_old_teams_data=False,
         use_comunio_price=False,
@@ -125,25 +126,29 @@ def get_current_players(
         partial_players_data = set_start_probabilities(partial_players_data, players_start_probabilities, verbose=False)
     if debug:
         print("999999")
-    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if not no_team_status_nerf:
+        all_teams = set_team_status_nerf(all_teams, verbose=False)
     if debug:
         print("AAAAAA")
+    partial_players_data = set_players_elo_dif(partial_players_data, all_teams)
+    if debug:
+        print("BBBBBB")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
         partial_players_data = set_team_history_boosts(partial_players_data, players_team_history, verbose=False)
     if debug:
-        print("BBBBBB")
+        print("CCCCCC")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)
     if debug:
-        print("CCCCCC")
+        print("DDDDDD")
     if alt_forms and not no_form:
         players_form = get_players_forms_dict(file_name=alt_forms_file_name)
         partial_players_data = set_forms(partial_players_data, players_form)
     if debug:
-        print("DDDDDD")
+        print("EEEEEE")
     full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
     if debug:
-        print("EEEEEE")
+        print("FFFFFF")
 
     return full_players_data
 
@@ -204,6 +209,7 @@ current_players = get_current_players(
     add_start_probability=True,
     no_penalty_takers_boost=False,
     no_penalty_savers_boost=False,
+    no_team_status_nerf=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
@@ -221,6 +227,7 @@ current_players = get_current_players(
     is_country=False,
     # host_team="Germany",
     debug=False,
+    # forced_matches=jornada_XX,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",

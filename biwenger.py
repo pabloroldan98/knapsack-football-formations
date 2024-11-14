@@ -54,30 +54,25 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
     teams_list = []
     if not forced_matches:
         for championship_team_id in championship_teams:
-            num_ok = 0
-            num_injured = 0
-            num_doubt = 0
-            num_sanctioned = 0
-            num_warned = 0
+            team_status_num = {
+                "ok": 0,
+                "injured": 0,
+                "doubt": 0,
+                "sanctioned": 0,
+                "warned": 0,
+            }
             for championship_player_id in championship_players:
                 championship_player = championship_players[str(championship_player_id)]
                 if str(championship_player["teamID"]) == str(championship_team_id):
                     player_status = championship_player["status"]
-                    if player_status == "ok":
-                        num_ok += 1
-                    if player_status == "injured":
-                        num_injured += 1
-                    if player_status == "doubt":
-                        num_doubt += 1
-                    if player_status == "sanctioned":
-                        num_sanctioned += 1
-                    if player_status == "warned":
-                        num_warned += 1
+                    if player_status in team_status_num:
+                        team_status_num[player_status] += 1
 
             championship_team = championship_teams[str(championship_team_id)]
 
             team_name = championship_team["name"]
             team_name_next_opponent = None
+            is_team_home = False
             if championship_team["nextGames"]:
                 team_next_opponent, is_team_home = get_next_opponent(
                     int(championship_team_id),
@@ -95,36 +90,68 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 team_name_next_opponent,
                 team_elo,
                 is_team_home,
-                num_ok,
-                num_injured,
-                num_doubt,
-                num_sanctioned,
-                num_warned
+                team_status_num["ok"],
+                team_status_num["injured"],
+                team_status_num["doubt"],
+                team_status_num["sanctioned"],
+                team_status_num["warned"]
             )
             teams_list.append(new_team)
 
     else:
+        teams_status_num_dict = {}
+        for championship_team_id in championship_teams:
+            team_name = championship_teams[str(championship_team_id)]["name"]
+
+            team_status_num = {
+                "ok": 0,
+                "injured": 0,
+                "doubt": 0,
+                "sanctioned": 0,
+                "warned": 0,
+            }
+            for championship_player_id in championship_players:
+                championship_player = championship_players[str(championship_player_id)]
+                if str(championship_player["teamID"]) == str(championship_team_id):
+                    player_status = championship_player["status"]
+                    if player_status in team_status_num:
+                        team_status_num[player_status] += 1
+
+            teams_status_num_dict[team_name] = team_status_num
+
         for new_match in forced_matches:
             home_team = new_match[0]
             away_team = new_match[1]
 
             team_elo = get_team_elo(home_team, teams_elos_dict)
             is_team_home = True
+            team_status_num = teams_status_num_dict[home_team]
             new_team = Team(
                 home_team,
                 away_team,
                 team_elo,
-                is_team_home
+                is_team_home,
+                team_status_num["ok"],
+                team_status_num["injured"],
+                team_status_num["doubt"],
+                team_status_num["sanctioned"],
+                team_status_num["warned"]
             )
             teams_list.append(new_team)
 
             team_elo = get_team_elo(away_team, teams_elos_dict)
             is_team_home = False
+            team_status_num = teams_status_num_dict[away_team]
             new_team = Team(
                 away_team,
                 home_team,
                 team_elo,
-                is_team_home
+                is_team_home,
+                team_status_num["ok"],
+                team_status_num["injured"],
+                team_status_num["doubt"],
+                team_status_num["sanctioned"],
+                team_status_num["warned"]
             )
             teams_list.append(new_team)
 

@@ -1,5 +1,6 @@
 import csv
 import os
+import copy
 
 from unidecode import unidecode
 
@@ -62,6 +63,7 @@ def get_old_teams_data(forced_matches=[]):
         for old_team in old_teams_data:
             team_name = old_team.name
             team_name_next_opponent = None
+            is_playing_home = False
             for new_match in forced_matches:
                 home_team = new_match[0]
                 away_team = new_match[1]
@@ -75,3 +77,16 @@ def get_old_teams_data(forced_matches=[]):
             old_team.is_home = is_playing_home
 
     return old_teams_data
+
+
+def set_team_status_nerf(teams_list, verbose=False):
+    result_teams = copy.deepcopy(teams_list)
+
+    for team in result_teams:
+        team_nerf = 10 * (team.num_injured + team.num_sanctioned) + 5 * (team.num_doubt)
+        prev_elo = team.elo
+        team.elo = team.elo - team_nerf
+        if verbose:
+            print(f"{team.name}: {prev_elo} --> {team.elo} (-{team_nerf})")
+
+    return result_teams
