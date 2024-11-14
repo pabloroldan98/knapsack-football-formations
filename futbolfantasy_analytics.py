@@ -40,7 +40,8 @@ class FutbolFantasyScraper:
             print("No cookie accept button found or clickable.")
 
     def get_team_options(self):
-        select = self.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main_wrapper"]/div/div[1]/main/div[3]/div[2]/div[2]/select')))
+        # select = self.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main_wrapper"]/div/div[1]/main/div[3]/div[2]/div[2]/select')))
+        select = self.wait.until(EC.presence_of_element_located((By.XPATH, '//select[@name="equipo"]')))
         options = select.find_elements(By.TAG_NAME, 'option')
         team_options = {option.get_attribute('value'): option.text for option in options if option.get_attribute('value') != '0'}
         return team_options
