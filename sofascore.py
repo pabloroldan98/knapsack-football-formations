@@ -1,6 +1,9 @@
 # Source: https://github.com/Urbistondo/sofa-score-scraper/blob/master/player_scraper.py
 
 import os
+
+from requests.exceptions import ReadTimeout
+from urllib3.exceptions import ReadTimeoutError
 from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -132,7 +135,8 @@ def get_players_data(
                             player_href = players[i].get_attribute('href')  # Directly use the index to refer to the current player
                             player_paths_list.append(player_href)
                             break  # Exit the loop successfully
-                        except StaleElementReferenceException:
+                        # except StaleElementReferenceException:
+                        except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError):
                             retries -= 1  # Decrement retry counter
                             if retries == 0:
                                 print(f"Failed to retrieve href for player after several attempts.")
@@ -144,7 +148,7 @@ def get_players_data(
                 # Run the task with timeout
                 player_paths_list = run_with_timeout(MAX_WAIT_TIME, scrape_team_players_task)
                 break  # Exit the loop if successful
-            except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException):
+            except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError):
                 timeout_retries -= 1  # Decrement retry counter
                 driver.quit()
                 driver = create_driver(keep_alive=False)  # Restart the driver
