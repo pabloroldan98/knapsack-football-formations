@@ -196,19 +196,6 @@ print()
 # current_players = get_current_players()
 
 
-jornada_15 = [
-    ["Barcelona", "Las Palmas"],
-    ["Mallorca", "Valencia"],
-    ["Alavés", "Leganés"],
-    ["Espanyol", "Celta"],
-    ["Rayo Vallecano", "Athletic"],
-    ["Real Valladolid", "Atlético"],
-    ["Real Sociedad", "Betis"],
-    ["Real Madrid", "Getafe"],
-    ["Villarreal", "Girona"],
-    ["Sevilla", "Osasuna"]
-]
-
 current_players = get_current_players(
     no_form=False,
     no_fixtures=False,
@@ -240,7 +227,7 @@ current_players = get_current_players(
     is_country=False,
     # host_team="Germany",
     debug=False,
-    forced_matches=jornada_15,
+    # forced_matches=jornada_XX,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
@@ -280,7 +267,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.7, fixture_filter=True)
+purged_players = purge_everything(worthy_players, probability_threshold=0.6, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
