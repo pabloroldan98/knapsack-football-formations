@@ -352,7 +352,6 @@ my_players_names = [
     "Morlanes",
     "Aimar Oroz",
     "Jhon Solís",
-    "Lokonga",
     "Griezmann",
     "Budimir",
     "Iago Aspas",
