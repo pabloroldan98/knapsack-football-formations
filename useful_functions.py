@@ -97,21 +97,38 @@ def is_valid_teams_dict(teams, num_teams=10):
     return True
 
 
+def add_old_data_to_teams(teams_data, teams_old_file_name):
+    teams_old_data = read_dict_from_csv(teams_old_file_name)
+    if not isinstance(teams_data, dict) or not isinstance(teams_old_data, dict):
+        return teams_data
+    # Add players that were in OLD Data and not here
+    for team, players in teams_data.items():
+        if team in teams_old_data and isinstance(players, dict) and isinstance(teams_old_data[team], dict):
+            for old_player, old_player_val in teams_old_data[team].items():
+                if old_player not in teams_data[team]:
+                    teams_data[team][old_player] = old_player_val
+    return teams_data
+
+
 def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
     teams_old_data = read_dict_from_csv(teams_old_file_name)
     if not isinstance(teams_data, dict) or not isinstance(teams_old_data, dict):
         return teams_data
+    # Check I have all the teams I used to have
     if len(teams_data) < num_teams <= len(teams_old_data):
         for old_team in teams_old_data:
             if old_team not in teams_data:
                 teams_data[old_team] = teams_old_data[old_team]
+    # Add players that were in OLD Data and not here
+    teams_data = add_old_data_to_teams(teams_data, teams_old_file_name)
+    # Correct team data with not a lot of data
     for team, players in teams_data.items():
         if isinstance(players, dict):
             if team in teams_old_data and len(players) < 11 <= len(teams_old_data[team]):
                 teams_data[team].update(teams_old_data[team])
         if isinstance(players, list):
             if team in teams_old_data and len(players) < 5 <= len(teams_old_data[team]):
-                teams_data[team].update(teams_old_data[team])
+                teams_data[team] = teams_old_data[team]
     return teams_data
 
 
@@ -123,7 +140,12 @@ def overwrite_dict_to_csv(dict_data, file_name, ignore_valid_file=False):
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):
                 dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD")
-    # If data is valid now, we overwrite
+    # If data is valid now, we use old data that we missed
+    if is_valid_teams_dict(dict_data) or ignore_valid_file:
+        if os.path.exists(file_path):
+            if os.path.exists(file_path_old):
+                dict_data = add_old_data_to_teams(dict_data, file_name + "_OLD")
+    # If data is valid again, we overwrite
     if is_valid_teams_dict(dict_data) or ignore_valid_file:
         # Check if the file exists and delete it
         if os.path.exists(file_path):
