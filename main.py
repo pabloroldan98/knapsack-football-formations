@@ -349,7 +349,6 @@ my_players_names = [
     "Comesaña",
     "Morlanes",
     "Javi Guerra",
-    "Morlanes",
     "Hugo Álvarez",
     "Luna",
     "Griezmann",
