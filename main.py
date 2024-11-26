@@ -347,14 +347,12 @@ my_players_names = [
     "Sancet",
     "Baena",
     "Comesaña",
-    "Morlanes",
     "Javi Guerra",
     "Hugo Álvarez",
     "Luna",
     "Griezmann",
     "Budimir",
     "Iago Aspas",
-    "De Tomás",
     "Chiquinho",
 ]
 
