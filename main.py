@@ -344,6 +344,8 @@ my_players_names = [
     "Krejci",
     "Cabrera",
     "De Marcos",
+    "Lenglet",
+    "Valery",
     "Bellingham",
     "Brais Méndez",
     "Sancet",
