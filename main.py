@@ -350,13 +350,10 @@ my_players_names = [
     "Brais Méndez",
     "Sancet",
     "Baena",
-    "Comesaña",
     "Javi Guerra",
     "Hugo Álvarez",
-    "Luna",
     "Budimir",
     "Iago Aspas",
-    "Chiquinho",
 ]
 
 # my_players_names = [
