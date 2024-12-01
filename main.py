@@ -352,6 +352,7 @@ my_players_names = [
     "Baena",
     "Budimir",
     "Iago Aspas",
+    "Fábio Silva",
 ]
 
 # my_players_names = [
