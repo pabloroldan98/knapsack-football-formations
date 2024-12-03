@@ -25,6 +25,10 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False):
+    # Before anything, we check the manual checks
+    my_manual_string = find_manual_similar_string(my_string)
+    if my_manual_string != my_string: # If it found something
+        return my_manual_string
     # First, check for '==' in the list
     if my_string in string_list:
         # if verbose:
@@ -72,6 +76,36 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
     if max_similarity >= similarity_threshold:
         return most_similar_string
     return None
+
+
+def find_manual_similar_string(my_string):
+    normalization_dict = {
+        "Alfonso Espino": "Pacha Espino",
+        "Abderrahman Rebbach": "Abde Rebbach",
+        "Peter González": "Peter Federico",
+        "Peter Gonzales": "Peter Federico",
+        "Abde Ezzalzouli": "Ez Abde",
+        "Abdessamad Ezzalzouli": "Ez Abde",
+        "Ismaila Ciss": "Pathé Ciss",
+        "Chuky": "Chuki",
+        "Malcom Ares": "Adu Ares",
+        "William Carvalho": "Carvalho",
+        "Fabio González": "Fabio",
+        "Jonathan Montiel": "Joni Montiel",
+        "Manuel Fuster": "Fuster",
+        "Manu Fuster": "Fuster",
+        "Jon Magunazelaia": "Magunacelaya",
+        "Álvaro Aguado": "Aguado",
+        "Isco Alarcon": "Isco",
+        "Isco Alarcón": "Isco",
+
+        "RCD Espanyol Barcelona": "Espanyol",
+        "Bilbao": "Athletic",
+        "Czechia": "Czech Republic",
+        "Turkey": "Türkiye",
+    }
+    # Return the normalized name if it exists in the dictionary; otherwise, return the original name
+    return normalization_dict.get(my_string, my_string)
 
 
 def find_string_positions(string_list, target_string):

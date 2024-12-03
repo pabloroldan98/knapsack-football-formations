@@ -163,14 +163,7 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
 
 def get_team_elo(team_name, teams_elos_dict):
     teams_list = list(teams_elos_dict.keys())
-    if team_name == "Athletic":
-        closest_team_name = "Bilbao"
-    elif team_name == "Czech Republic":
-        closest_team_name = "Czechia"
-    elif team_name == "Türkiye":
-        closest_team_name = "Turkey"
-    else:
-        closest_team_name = find_similar_string(team_name, teams_list) #, 0.7)
+    closest_team_name = find_similar_string(team_name, teams_list) #, 0.7)
     if closest_team_name in teams_elos_dict:
         team_elo = teams_elos_dict[closest_team_name]
     else:

@@ -430,8 +430,6 @@ def set_penalty_takers_boosts(players_list, penalty_takers_dict):
 
     for team_name, penalty_takers_names_list in penalty_takers_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
-        if team_name == "RCD Espanyol Barcelona":
-            closest_team_name = "Espanyol"
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for penalty_taker_name in penalty_takers_names_list:
             closest_player_name = find_similar_string(penalty_taker_name, players_names_list, verbose=False)
@@ -459,8 +457,6 @@ def set_penalty_savers_boosts(players_list, penalty_savers_dict):
 
     for team_name, penalty_savers in penalty_savers_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
-        if team_name == "RCD Espanyol Barcelona":
-            closest_team_name = "Espanyol"
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for player_name, player_penalty_saves in penalty_savers.items():
             closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
@@ -512,8 +508,6 @@ def set_team_history_boosts(players_list, players_team_history_dict, verbose=Fal
 
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
-        if team_name == "RCD Espanyol Barcelona":
-            closest_team_name = "Espanyol"
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
         for player_name, player_team_history in team_players_history.items():
             closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)

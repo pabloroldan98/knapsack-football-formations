@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 import csv
 
-from useful_functions import overwrite_dict_to_csv, read_dict_from_csv, create_driver
+from useful_functions import overwrite_dict_to_csv, read_dict_from_csv, create_driver, find_manual_similar_string
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -54,34 +54,7 @@ class FutbolFantasyScraper:
 
     def get_player_data(self, player_element):
         name = player_element.get_attribute('data-nombre').strip().title()
-        if name == "Alfonso Espino":
-            name = "Pacha Espino"
-        if name == "Abderrahman Rebbach":
-            name = "Abde Rebbach"
-        if name == "Peter González" or name == "Peter Gonzales":
-            name = "Peter Federico"
-        if name == "Abde Ezzalzouli" or name == "Abdessamad Ezzalzouli":
-            name = "Ez Abde"
-        if name == "Ismaila Ciss":
-            name = "Pathé Ciss"
-        if name == "Chuky":
-            name = "Chuki"
-        if name == "Malcom Ares":
-            name = "Adu Ares"
-        if name == "William Carvalho":
-            name = "Carvalho"
-        if name == "Fabio González":
-            name = "Fabio"
-        if name == "Jonathan Montiel":
-            name = "Joni Montiel"
-        if name == "Manuel Fuster" or name == "Manu Fuster" :
-            name = "Fuster"
-        if name == "Jon Magunazelaia":
-            name = "Magunacelaya"
-        if name == "Álvaro Aguado":
-            name = "Aguado"
-        if name == "Isco Alarcon":
-            name = "Isco"
+        name = find_manual_similar_string(name)
         price = player_element.get_attribute('data-valor').strip()
         position = player_element.get_attribute('data-posicion').strip()
         team_id = player_element.get_attribute('data-equipo').strip()
@@ -126,34 +99,7 @@ class FutbolFantasyScraper:
                 player_name = re.sub(r'[\d%]', '', player_name).strip()
                 probability = re.sub(r'[^0-9%]', '', probability)
                 if player_name and probability:
-                    if player_name == "Alfonso Espino":
-                        player_name = "Pacha Espino"
-                    if player_name == "Abderrahman Rebbach":
-                        player_name = "Abde Rebbach"
-                    if player_name == "Peter González" or player_name == "Peter Gonzales":
-                        player_name = "Peter Federico"
-                    if player_name == "Abde Ezzalzouli" or player_name == "Abdessamad Ezzalzouli":
-                        player_name = "Ez Abde"
-                    if player_name == "Ismaila Ciss":
-                        player_name = "Pathé Ciss"
-                    if player_name == "Chuky":
-                        player_name = "Chuki"
-                    if player_name == "Malcom Ares":
-                        player_name = "Adu Ares"
-                    if player_name == "William Carvalho":
-                        player_name = "Carvalho"
-                    if player_name == "Fabio González":
-                        player_name = "Fabio"
-                    if player_name == "Jonathan Montiel":
-                        player_name = "Joni Montiel"
-                    if player_name == "Manuel Fuster" or player_name == "Manu Fuster" :
-                        player_name = "Fuster"
-                    if player_name == "Jon Magunazelaia":
-                        player_name = "Magunacelaya"
-                    if player_name == "Álvaro Aguado":
-                        player_name = "Aguado"
-                    if player_name == "Isco Alarcon":
-                        player_name = "Isco"
+                    player_name = find_manual_similar_string(player_name)
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
             probabilities_dict[team_name] = team_probabilities
