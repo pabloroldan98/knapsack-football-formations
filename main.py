@@ -349,7 +349,6 @@ my_players_names = [
     "Bellingham",
     "Brais Méndez",
     "Baena",
-    "Budimir",
     "Iago Aspas",
     "Fábio Silva",
 ]
