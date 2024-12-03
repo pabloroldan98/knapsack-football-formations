@@ -17,7 +17,7 @@ from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
 from futmondo import get_players_positions_dict
-
+from useful_functions import find_similar_string
 
 possible_formations = [
     # [2, 2, 2],
@@ -603,3 +603,30 @@ prices = [player.price for player in worthy_players]
 #
 # for playerName in attrs:
 #     print(playerName)
+#
+#
+# CHECK SIMILAR PLAYERS IN DB
+#
+# import csv
+#
+# # Read the dictionary from the CSV file
+# with open('./csv_files/sofascore_laliga_players_ratings.csv', 'r', encoding='utf-8') as file:
+#     reader = csv.reader(file)
+#     data_dict = {row[0]: row[1] for row in reader}  # Convert rows into a dictionary
+#
+# # Iterate through the dictionary and check each name against its list
+# for team, players in data_dict.items():
+#     print(f"Checking for similarities in team: {team}")
+#     # Convert the string representation of the dictionary to an actual Python dictionary
+#     players_dict = eval(players)
+#     player_names = list(players_dict.keys())
+#
+#     # Iterate through each player's name
+#     for player in player_names:
+#         # Create a new list excluding the current player
+#         other_players = [p for p in player_names if p != player]
+#
+#         # Call the function to find similar players
+#         similar_player = find_similar_string(player, other_players, similarity_threshold=0.7, verbose=False)
+#         if similar_player and similar_player != player:
+#             print(f"Similar names found: '{player}' and '{similar_player}' in team '{team}'.")
