@@ -343,12 +343,12 @@ my_players_names = [
     "Cabrera",
     "De Marcos",
     "Lenglet",
-    "Aguerd",
     "Alderete",
     "Aramburu",
     "Bellingham",
     "Brais Méndez",
     "Baena",
+    "Kirian",
     "Iago Aspas",
     "Fábio Silva",
 ]
