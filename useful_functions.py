@@ -98,6 +98,8 @@ def find_manual_similar_string(my_string):
         "Álvaro Aguado": "Aguado",
         "Isco Alarcon": "Isco",
         "Isco Alarcón": "Isco",
+        "Fabio Gonzalez": "Fabio",
+        "Fabio Silva": "Fábio Silva",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
