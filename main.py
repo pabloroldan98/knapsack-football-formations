@@ -238,6 +238,19 @@ current_players = get_current_players(
     # debug=False,
 # )
 
+# # FOR MULTIPLE JORNADAS
+# # Update current_players in-place
+# for current_player in current_players:
+#     for future_player in future_players:
+#         if current_player.name == future_player.name:
+#             # Calculate the mean of value, form, and fixture
+#             current_player.value = (current_player.value + future_player.value) / 2
+#             current_player.form = (current_player.form + future_player.form) / 2
+#             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
+
+
+
+
 worthy_players = [player for player in current_players if player.price > 0]
 # worthy_players = [player for player in current_players if player.price >= 0]
 
@@ -295,24 +308,12 @@ print()
 needed_purge = worthy_players[:150]
 # needed_purge = worthy_players.copy()
 
-# needed_purge = [player for player in needed_purge if (player.team != "Spain" and player.team != "Portugal")]
-
-# needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
-# needed_purge = [player for player in needed_purge if player.name != "Mikel Merino"]
-
-
-# best_full_teams(needed_purge, possible_formations, 150, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 30000, verbose=1)
-# best_full_teams(needed_purge, possible_formations, -1, verbose=1)
-# best_full_teams(needed_purge, possible_formations, 300, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 170, verbose=2)
-
-
 
 
 #
-# needed_purge = [player for player in needed_purge if player.name != "Grimaldo"]
-# needed_purge = [player for player in needed_purge if player.name != "Mittelstädt"]
+# needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
+# needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
+# needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
 #
 # needed_purge = [player for player in needed_purge if player.price > 7]
 #
