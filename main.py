@@ -337,25 +337,21 @@ print()
 my_players_names = [
     "Courtois",
     "Álvaro Fernández",
-    "Fraga",
+    "Stamatakis",
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
     "Cabrera",
     "De Marcos",
-    "Lenglet",
-    "Alderete",
     "Aramburu",
     "Zubeldia",
     "Bellingham",
     "Brais Méndez",
     "Baena",
-    "Kirian",
-    "Moleiro",
+    "Misehouy",
     "Puado",
-    "De la Hoz",
     "Iago Aspas",
-    "Fábio Silva",
+    "Conechny",
 ]
 
 # my_players_names = [
