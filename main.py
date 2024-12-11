@@ -341,7 +341,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
-    "Cabrera",
     "De Marcos",
     "Aramburu",
     "Zubeldia",
