@@ -267,10 +267,10 @@ print()
 for player in worthy_players:
 #     if ((player.position=="ATT") | (player.position=="MID")): # & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
+#     if (player.price <= 25) & (player.start_probability >= 0.6) & (player.position == "DEF"):# & (player.form > 1) & (player.fixture > 1):
 #     if player.sofascore_rating == 6:
 #     if (player.position == "GK"):
 #     if (player.team_history_boost > 0):
-#     if (player.price <= 25) & (player.start_probability >= 0.6) & (player.position == "DEF"):# & (player.form > 1) & (player.fixture > 1):
     print(player)
     # print((player.standard_price/player.price)/300000)
 print()
