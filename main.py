@@ -345,6 +345,8 @@ my_players_names = [
     "De Marcos",
     "Aramburu",
     "Zubeldia",
+    "Javi López",
+    "Santiago Mouriño",
     "Bellingham",
     "Brais Méndez",
     "Baena",
@@ -352,6 +354,8 @@ my_players_names = [
     "Puado",
     "Lo Celso",
     "Iago Aspas",
+    "Gerard Moreno",
+    "Fábio Silva",
     "Alfon González",
 ]
 
