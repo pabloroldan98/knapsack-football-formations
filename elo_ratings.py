@@ -14,6 +14,7 @@ def get_teams_elos(is_country=False, country="ESP"):
         teams_alias_df = pd.read_table(teams_alias_url, sep="\t", header=None, names=range(10), na_filter=False)[[0, 1]]
         teams_alias_dict = dict(teams_alias_df.values)
 
+        full_teams_elos = dict()
         full_teams_elos_dict = dict()
         for team_short, team_elo in teams_elos_dict.items():
             team_name = teams_alias_dict[str(team_short)]
