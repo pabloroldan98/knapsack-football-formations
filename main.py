@@ -354,7 +354,7 @@ my_players_names = [
     "Lo Celso",
     "Iago Aspas",
     "Gerard Moreno",
-    "Fábio Silva",
+    "Raphinha",
     "Alfon González",
 ]
 
