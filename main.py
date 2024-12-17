@@ -265,6 +265,10 @@ worthy_players = sorted(
 
 print()
 for player in worthy_players:
+    if player.name == "Baena":
+        player.start_probability = 0.9
+    if player.name == "Kiko Femenía":
+        player.start_probability = 0.9
 #     if ((player.position=="ATT") | (player.position=="MID")): # & (player.value>=7) & (player.sofascore_rating>=7) & (player.form>1.01) & (player.fixture>=0.9):
 #         print(player)
 #     if (player.price <= 25) & (player.start_probability >= 0.6) & (player.position == "DEF"):# & (player.form > 1) & (player.fixture > 1):
@@ -342,8 +346,6 @@ my_players_names = [
     "Luis Pérez",
     "Krejci",
     "De Marcos",
-    "Aramburu",
-    "Zubeldia",
     "Brais Méndez",
     "Baena",
     "Puado",
@@ -352,6 +354,7 @@ my_players_names = [
     "Iago Aspas",
     "Gerard Moreno",
     "Raphinha",
+    "Portu",
     "Alfon González",
 ]
 
