@@ -341,6 +341,7 @@ my_players_names = [
     "Luis Pérez",
     "Krejci",
     "Maffeo",
+    "Vivian",
     "Brais Méndez",
     "Sergi Altimira",
     "Lo Celso",
