@@ -340,15 +340,15 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
-    "Blind",
+    "Maffeo",
     "Brais Méndez",
-    "Arda Güler",
     "Sergi Altimira",
     "Lo Celso",
-    "Iago Aspas",
-    "Gerard Moreno",
+    "De Jong",
+    "Valverde",
+    "Rioja",
     "Raphinha",
-    "Ez Abde",
+    "Rodrygo",
 ]
 
 # my_players_names = [
