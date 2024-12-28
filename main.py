@@ -352,7 +352,7 @@ my_players_names = [
     "Raphinha",
     "Rodrygo",
     "Raba",
-    "Pau Cubanes",
+    "Pau Cabanes",
 ]
 
 # my_players_names = [
