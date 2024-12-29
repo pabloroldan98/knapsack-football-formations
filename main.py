@@ -343,16 +343,16 @@ my_players_names = [
     "Krejci",
     "Maffeo",
     "Vivian",
+    "Mumin",
     "David López",
     "Sergi Altimira",
     "Lo Celso",
     "De Jong",
-    "Valverde",
     "Rioja",
     "Raphinha",
     "Rodrygo",
     "Raba",
-    "Pau Cabanes",
+    "Sandro",
 ]
 
 # my_players_names = [
