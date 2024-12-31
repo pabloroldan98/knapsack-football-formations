@@ -344,6 +344,7 @@ my_players_names = [
     "Maffeo",
     "Vivian",
     "David López",
+    "Alderete",
     "Lo Celso",
     "De Jong",
     "Rioja",
