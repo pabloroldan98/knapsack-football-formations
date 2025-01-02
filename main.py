@@ -336,13 +336,14 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
+    "Agirrezabala",
     "Álvaro Fernández",
     "César Fernández",
     "Kiko Femenía",
     "Luis Pérez",
+    "Miguel Gutiérrez",
     "Krejci",
     "Maffeo",
-    "Vivian",
     "David López",
     "Alderete",
     "Lo Celso",
