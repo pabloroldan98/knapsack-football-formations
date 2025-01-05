@@ -352,6 +352,7 @@ my_players_names = [
     "De Jong",
     "Pedri",
     "Jordán",
+    "Ceballos",
     "Raphinha",
     "Rodrygo",
     "Raba",
