@@ -249,18 +249,18 @@ current_players = get_current_players(
 #             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
 
 
-
-
-worthy_players = [player for player in current_players if player.price > 0]
-# worthy_players = [player for player in current_players if player.price >= 0]
-
-
-# worthy_players = sorted(worthy_players, key=lambda x: (x.value-7)/x.price, reverse=True)
-worthy_players = sorted(
+# current_players = sorted(current_players, key=lambda x: (x.value-7)/x.price, reverse=True)
+current_players = sorted(
     current_players,
     key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
     reverse=False
 )
+
+
+worthy_players = current_players.copy()
+
+# worthy_players = [player for player in worthy_players if player.price > 0]
+worthy_players = [player for player in worthy_players if player.price >= 0]
 
 
 print()
