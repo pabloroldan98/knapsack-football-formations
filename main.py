@@ -373,7 +373,7 @@ my_players_names = [
 
 
 my_players_list = []
-for player in worthy_players:
+for player in current_players:
     if player.name in my_players_names:
         print(player)
 
