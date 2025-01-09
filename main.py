@@ -345,7 +345,7 @@ my_players_names = [
     "Krejci",
     "Maffeo",
     "Pacha Espino",
-    "Alderete",
+    "Cabrera",
     "El Hilali",
     "Lo Celso",
     "De Jong",
@@ -353,8 +353,9 @@ my_players_names = [
     "Jordán",
     "Ceballos",
     "Raphinha",
+    "Yamal",
+    "Ferran Torres",
     "Raba",
-    "Sandro",
 ]
 
 # my_players_names = [
