@@ -341,12 +341,13 @@ my_players_names = [
     "Luiz Júnior",
     "Kiko Femenía",
     "Luis Pérez",
-    "Miguel Gutiérrez",
     "Krejci",
     "Maffeo",
     "Pacha Espino",
     "Cabrera",
     "El Hilali",
+    "Lejeune",
+    "Raúl Asencio",
     "Lo Celso",
     "De Jong",
     "Pedri",
@@ -355,7 +356,7 @@ my_players_names = [
     "Raphinha",
     "Yamal",
     "Ferran Torres",
-    "Raba",
+    "Guruzeta",
 ]
 
 # my_players_names = [
