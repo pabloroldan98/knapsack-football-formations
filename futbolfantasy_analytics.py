@@ -4,7 +4,7 @@ import re
 import shutil
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
@@ -76,6 +76,18 @@ class FutbolFantasyScraper:
         probabilities_dict = {}
         for team_name, team_link in team_links.items():
             self.fetch_page(team_link)
+
+            try:
+                select_probabilidad_element = self.wait.until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//select[option[@value="probabilidad"]]')
+                    )
+                )
+                select_probabilidad_obj = Select(select_probabilidad_element)
+                select_probabilidad_obj.select_by_value("probabilidad")
+            except:
+                pass
+
             player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
             team_probabilities = {}
             for player_element in player_elements:
