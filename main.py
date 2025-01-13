@@ -349,6 +349,7 @@ my_players_names = [
     "Lo Celso",
     "Puado",
     "Jordán",
+    "Antoniu Roca",
     "Raphinha",
     "Yamal",
     "Yéremy Pino",
