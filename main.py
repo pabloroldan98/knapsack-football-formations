@@ -346,13 +346,13 @@ my_players_names = [
     "Cabrera",
     "El Hilali",
     "Lejeune",
-    "Lo Celso",
     "Puado",
     "Jordán",
     "Antoniu Roca",
     "Raphinha",
     "Yamal",
     "Yéremy Pino",
+    "Oyarzabal",
 ]
 
 # my_players_names = [
