@@ -249,7 +249,7 @@ current_players = get_current_players(
 #             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
 
 
-# current_players = sorted(current_players, key=lambda x: (x.value-7)/x.price, reverse=True)
+# current_players = sorted(current_players, key=lambda x: (x.value-7)/max(x.price, 1), reverse=True)
 current_players = sorted(
     current_players,
     key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
