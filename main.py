@@ -339,16 +339,21 @@ my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
     "Luiz Júnior",
+
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
     "Maffeo",
     "Cabrera",
     "El Hilali",
+
     "Luka Sucic",
     "Puado",
     "Jordán",
     "Antoniu Roca",
+    "Marc Casadó",
+    "Comesaña",
+
     "Raphinha",
     "Yamal",
     "Yéremy Pino",
