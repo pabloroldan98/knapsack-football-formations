@@ -339,6 +339,7 @@ my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
     "Luiz Júnior",
+    "Dimitrievski",
 
     "Kiko Femenía",
     "Luis Pérez",
@@ -346,6 +347,7 @@ my_players_names = [
     "Maffeo",
     "Cabrera",
     "El Hilali",
+    "Adrià Altimira",
 
     "Luka Sucic",
     "Puado",
@@ -353,6 +355,7 @@ my_players_names = [
     "Antoniu Roca",
     "Marc Casadó",
     "Comesaña",
+    "Kike Pérez",
 
     "Raphinha",
     "Yamal",
