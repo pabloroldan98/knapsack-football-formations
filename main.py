@@ -347,14 +347,11 @@ my_players_names = [
     "Maffeo",
     "Cabrera",
     "El Hilali",
-    "Adrià Altimira",
 
     "Luka Sucic",
     "Puado",
     "Jordán",
-    "Antoniu Roca",
     "Marc Casadó",
-    "Comesaña",
     "Kike Pérez",
 
     "Raphinha",
