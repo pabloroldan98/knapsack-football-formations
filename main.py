@@ -338,7 +338,6 @@ print()
 my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
-    "Luiz Júnior",
     "Dimitrievski",
 
     "Kiko Femenía",
@@ -346,18 +345,15 @@ my_players_names = [
     "Krejci",
     "Maffeo",
     "Cabrera",
-    "El Hilali",
     "Blind",
 
     "Luka Sucic",
     "Puado",
     "Jordán",
     "Marc Casadó",
-    "Kike Pérez",
 
     "Raphinha",
     "Yamal",
-    "Yéremy Pino",
     "Oyarzabal",
 ]
 
