@@ -347,6 +347,7 @@ my_players_names = [
     "Maffeo",
     "Cabrera",
     "El Hilali",
+    "Blind",
 
     "Luka Sucic",
     "Puado",
