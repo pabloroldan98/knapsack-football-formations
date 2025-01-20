@@ -351,6 +351,7 @@ my_players_names = [
     "Puado",
     "Jordán",
     "Marc Casadó",
+    "Sow",
 
     "Raphinha",
     "Yamal",
