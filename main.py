@@ -351,7 +351,7 @@ my_players_names = [
     "Luka Sucic",
     "Puado",
     "Jordán",
-    "Marc Casadó",
+    "Coba Gomes",
     "Sow",
 
     "Raphinha",
