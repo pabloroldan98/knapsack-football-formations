@@ -353,6 +353,7 @@ my_players_names = [
     "Jordán",
     "Coba Gomes",
     "Sow",
+    "Neyou",
 
     "Raphinha",
     "Yamal",
