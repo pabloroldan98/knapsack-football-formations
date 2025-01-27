@@ -345,19 +345,18 @@ my_players_names = [
     "Krejci",
     "Maffeo",
     "Cabrera",
-    "Blind",
     "Koundé",
 
     "Luka Sucic",
-    "Puado",
     "Jordán",
     "Coba Gomes",
     "Sow",
     "Neyou",
+    "Baena",
 
     "Raphinha",
     "Yamal",
-    "Oyarzabal",
+    "Raba",
 ]
 
 # my_players_names = [
