@@ -339,6 +339,7 @@ my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
     "Dimitrievski",
+    "Dmitrovic",
 
     "Kiko Femenía",
     "Luis Pérez",
@@ -346,6 +347,7 @@ my_players_names = [
     "Maffeo",
     "Cabrera",
     "Koundé",
+    "Ristic",
 
     "Luka Sucic",
     "Jordán",
