@@ -61,6 +61,8 @@ try:
 except Exception as e:
     print(f"Error scraping FUTBOLFANTASY: {e}")
     print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
@@ -75,6 +77,8 @@ try:
 except Exception as e:
     print(f"Error scraping FUTMONDO: {e}")
     print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
@@ -89,6 +93,8 @@ try:
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty TAKERS): {e}")
     print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
@@ -103,6 +109,8 @@ try:
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
     print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
 
 if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_year == 8 or month_of_year == 1):
     print()
@@ -125,6 +133,8 @@ if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_ye
     except Exception as e:
         print(f"Error scraping TRANSFERMARKET (team history): {e}")
         print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
 
 if day_of_week == 1:
     print()
@@ -143,6 +153,8 @@ if day_of_week == 1:
     except Exception as e:
         print(f"Error scraping SOFASCORE: {e}")
         print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")

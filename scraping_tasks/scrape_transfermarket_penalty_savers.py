@@ -49,6 +49,8 @@ try:
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
     print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
