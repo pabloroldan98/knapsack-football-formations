@@ -353,10 +353,12 @@ my_players_names = [
     "Sow",
     "Neyou",
     "Baena",
+    "Pathé Ciss",
 
     "Raphinha",
     "Yamal",
     "Raba",
+    "Yéremy Pino",
 ]
 
 # my_players_names = [
