@@ -338,7 +338,6 @@ print()
 my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
-    "Dimitrievski",
     "Dmitrovic",
 
     "Kiko Femenía",
