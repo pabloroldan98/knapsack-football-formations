@@ -346,12 +346,11 @@ my_players_names = [
     "Maffeo",
     "Cabrera",
     "Koundé",
-    "Ristic",
+    "Arnau Martínez",
 
     "Luka Sucic",
     "Jordán",
     "Coba Gomes",
-    "Sow",
     "Neyou",
     "Baena",
     "Pathé Ciss",
