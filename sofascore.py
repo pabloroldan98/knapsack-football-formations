@@ -196,15 +196,33 @@ def get_players_data(
                     print(f"Retrying to fetch sofascore player rating ({p}) due to timeout... ({timeout_retries} retry left)")
                     if timeout_retries <= 0:
                         driver.get(p)
-            try:
-                player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
-                print('Extracting player data from %s ...' % player_name)
-                print(average_rating)
-                if player_name != "":
-                    player_name = find_manual_similar_string(player_name)
-                    players_ratings[player_name] = average_rating
-            except NoSuchElementException:  # Spelling error making this code not work as expected
-                pass
+            timeout_retries = 3
+            while timeout_retries > 0:
+                def scrape_players_name_task():
+                    driver.get(p)
+                    player_name = ""
+                    try:
+                        player_name = wait.until(EC.presence_of_element_located((By.XPATH, "(//h2)[1]"))).get_attribute("textContent")
+                    except NoSuchElementException:  # Spelling error making this code not work as expected
+                        pass
+                    return player_name
+                try:
+                    # Run the task with timeout
+                    player_name = run_with_timeout(MAX_WAIT_TIME, scrape_players_name_task)
+                    print('Extracting player data from %s ...' % player_name)
+                    print(average_rating)
+                    if player_name != "":
+                        player_name = find_manual_similar_string(player_name)
+                        players_ratings[player_name] = average_rating
+                    break  # Exit the loop if successful
+                except (CustomTimeoutException, TimeoutException, WebDriverException, StaleElementReferenceException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
+                    timeout_retries -= 1  # Decrement retry counter
+                    driver.quit()
+                    driver = create_driver(keep_alive=False)  # Restart the driver
+                    wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
+                    print(f"Retrying to fetch sofascore player name ({p}) due to timeout... ({timeout_retries} retry left)")
+                    if timeout_retries <= 0:
+                        driver.get(p)
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
             # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
