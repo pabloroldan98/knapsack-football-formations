@@ -339,26 +339,28 @@ my_players_names = [
     "Sergio Herrera",
     "Álvaro Fernández",
     "Dmitrovic",
+    "Nyland",
 
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
-    "Maffeo",
-    "Cabrera",
+    "Yeray",
     "Koundé",
     "Arnau Martínez",
+    "Mingueza",
 
-    "Luka Sucic",
     "Jordán",
     "Coba Gomes",
     "Neyou",
     "Baena",
     "Pathé Ciss",
+    "Vesga",
+    "Ceballos",
+    "De Jong",
 
     "Raphinha",
     "Yamal",
     "Raba",
-    "Yéremy Pino",
 ]
 
 # my_players_names = [
