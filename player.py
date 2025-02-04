@@ -590,6 +590,9 @@ def set_players_sofascore_rating(
             team_player_rating_dict[player_rating.team] = {}
         team_player_rating_dict[player_rating.team][player_rating.name] = player_rating.sofascore_rating
 
+    # # Find unassigned teams with players
+    # assigned_teams_players = set()
+
     team_rating_names_list = list(team_player_rating_dict.keys())
     for player in result_players:
         if player.team == "Atlético":
@@ -600,6 +603,23 @@ def set_players_sofascore_rating(
         closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.8, verbose=False)
         if closest_player_rating_name:
             player.sofascore_rating = team_player_rating_dict[closest_player_rating_team][closest_player_rating_name]
+            # assigned_teams_players.add((closest_player_rating_team, closest_player_rating_name))
+
+    # # Find unassigned teams with players
+    # unassigned_dict = {}
+    #
+    # for team, players in team_player_rating_dict.items():
+    #     unassigned_players = {
+    #         player_name: rating
+    #         for player_name, rating in players.items()
+    #         if (team, player_name) not in assigned_teams_players
+    #     }
+    #     if unassigned_players:  # Only keep teams with unassigned players
+    #         unassigned_dict[team] = unassigned_players
+    #
+    # # Print unassigned teams and players
+    # print("Unassigned teams and players:")
+    # pprint(unassigned_dict)
 
     # has_previous_file = False
     # if os.path.isfile('./' + file_name + '.csv'):
