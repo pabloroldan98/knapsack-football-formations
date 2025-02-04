@@ -354,7 +354,6 @@ my_players_names = [
     "Neyou",
     "Baena",
     "Pathé Ciss",
-    "Vesga",
     "Ceballos",
     "De Jong",
 
