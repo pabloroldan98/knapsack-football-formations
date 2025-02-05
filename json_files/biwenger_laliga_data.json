@@ -427,7 +427,7 @@
           {
             "id": 41794,
             "date": 1739106000,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 91,
               "name": "Alavés",
@@ -444,7 +444,7 @@
           {
             "id": 41797,
             "date": 1739114100,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 18,
               "name": "Valencia",
@@ -5136,10 +5136,12 @@
         "position": 2,
         "price": 550000,
         "fantasyPrice": 9000000,
-        "status": "warned",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Muscle injury.",
         "playedHome": 10,
         "playedAway": 11,
+        "extraStatus": "warned",
         "fitness": [
           2,
           -2,
@@ -5288,7 +5290,7 @@
         "fantasyPrice": 8000000,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Fibrillar rupture in the biceps femoris. Estimated return: Early March.",
+        "statusInfo": "Fibrillar rupture in the biceps femoris. Estimated return: End of February.",
         "playedHome": 2,
         "playedAway": 4,
         "fitness": [
@@ -5511,9 +5513,8 @@
         "position": 3,
         "price": 6820000,
         "fantasyPrice": 29000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -60000,
-        "statusInfo": "Severe blow to the head.",
         "iconHero": "i/p/hero/24732.png",
         "playedHome": 6,
         "playedAway": 6,
@@ -14241,7 +14242,7 @@
       }
     },
     "update": 1738821610,
-    "etag": 721584388,
+    "etag": 252538191,
     "scoreID": 1
   },
   "meta": {
@@ -16073,7 +16074,7 @@
         "name": "Liga 1 Te Apuesto",
         "slug": "liga-1-peru",
         "sport": "football",
-        "currency": "S/",
+        "currency": "$",
         "hidden": true,
         "scores": [
           {
@@ -16082,7 +16083,9 @@
             "kind": "SofaScore"
           }
         ],
-        "config": []
+        "config": {
+          "playerIcons": "jersey"
+        }
       },
       {
         "id": 6,
