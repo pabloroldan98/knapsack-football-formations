@@ -351,7 +351,6 @@ my_players_names = [
     "Yeray",
     "Koundé",
     "Arnau Martínez",
-    "Mingueza",
     "Sergi Cardona",
 
     "Jordán",
@@ -360,7 +359,7 @@ my_players_names = [
     "Baena",
     "Pathé Ciss",
     "Ceballos",
-    "De Jong",
+    "Pape Gueye",
 
     "Raphinha",
     "Yamal",
