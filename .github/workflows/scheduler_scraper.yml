@@ -276,7 +276,7 @@ jobs:
           path: json_files/*sofascore*.json
 
   commit-and-push:
-    needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
+    needs: [scrape_biwenger, scrape_elo_ratings, scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
           (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
           (needs.scrape_elo_ratings.result == 'success' || needs.scrape_elo_ratings.result == 'skipped' || needs.scrape_elo_ratings.result == 'cancelled' || needs.scrape_elo_ratings.result == 'failure') &&
