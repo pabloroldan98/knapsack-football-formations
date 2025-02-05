@@ -61,18 +61,20 @@ def get_current_players(
         use_old_players_data=False,
         use_old_teams_data=False,
         use_comunio_price=False,
+        biwenger_file_name="biwenger_laliga_data",
+        elo_ratings_file_name="elo_ratings_laliga_data",
         ratings_file_name="sofascore_players_ratings",
-        penalty_takers_file_name="transfermarket_la_liga_penalty_takers",
+        penalty_takers_file_name="transfermarket_laliga_penalty_takers",
         penalty_saves_file_name="transfermarket_laliga_penalty_savers",
-        team_history_file_name="transfermarket_la_liga_team_history",
-        alt_positions_file_name="futmondo_la_liga_players_positions",
+        team_history_file_name="transfermarket_laliga_team_history",
+        alt_positions_file_name="futmondo_laliga_players_positions",
         alt_prices_file_name="futbolfantasy_laliga_players_prices",
         alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
         alt_forms_file_name="futbolfantasy_laliga_players_forms",
         start_probabilit_file_name="futbolfantasy_laliga_players_start_probabilities",
         debug=False
 ):
-    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
     if debug:
         print("000000")
 
@@ -214,11 +216,13 @@ current_players = get_current_players(
     use_old_players_data=False,
     use_old_teams_data=False,
     use_comunio_price=True,
+    biwenger_file_name="biwenger_laliga_data",
+    elo_ratings_file_name="elo_ratings_laliga_data",
     ratings_file_name="sofascore_laliga_players_ratings",
     penalty_takers_file_name="transfermarket_laliga_penalty_takers",
     penalty_saves_file_name="transfermarket_laliga_penalty_savers",
     team_history_file_name="transfermarket_laliga_team_history",
-    # alt_positions_file_name="futmondo_la_liga_players_positions",
+    # alt_positions_file_name="futmondo_laliga_players_positions",
     alt_positions_file_name="futbolfantasy_laliga_players_positions",
     alt_prices_file_name="futbolfantasy_laliga_players_prices",
     alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
@@ -232,7 +236,7 @@ current_players = get_current_players(
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
     # team_history_file_name="transfermarket_copa_america_country_history",
-    # # alt_positions_file_name="futmondo_la_liga_players_positions",
+    # # alt_positions_file_name="futmondo_laliga_players_positions",
     # is_country=True,
     # host_team="US",
     # debug=False,

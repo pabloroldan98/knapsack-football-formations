@@ -34,22 +34,29 @@ print(f"Month of the year: {month_of_year}")
 print()
 print("##############################")
 ##############################
-print("Scraping TRANSFERMARKET (penalty SAVERS)...")
+print("Scraping ELO RATINGS...")
 
 try:
-    goalkeepers_penalty_saves = get_penalty_savers_dict(
-        file_name="transfermarket_laliga_penalty_savers",
+    league_elo_ratings_dict = get_teams_elos_dict(
+        is_country=False,
+        write_file=True,
+        file_name="elo_ratings_laliga_data",
         force_scrape=True
     )
-
-    print(goalkeepers_penalty_saves)
-    for team, goalkeepers_penalties in goalkeepers_penalty_saves.items():
-        print()
-        print(team)
-        for goalkeeper, penalty_saves in goalkeepers_penalties.items():
-            print(goalkeeper, penalty_saves)
+    country_elo_ratings_dict = get_teams_elos_dict(
+        is_country=True,
+        write_file=True,
+        file_name="elo_ratings_countries_data",
+        force_scrape=True
+    )
+    print("League Elo Ratings:")
+    for team, elo in league_elo_ratings_dict.items():
+        print(f"{team}: {elo}")
+    print("\nCountry Elo Ratings:")
+    for team, elo in country_elo_ratings_dict.items():
+        print(f"{team}: {elo}")
 except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+    print(f"Error scraping ELO RATINGS: {e}")
     print(f"Exception type: {type(e).__name__}")
     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
     print(f"Error class: {e.__class__}")

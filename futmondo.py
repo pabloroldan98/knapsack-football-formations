@@ -4,7 +4,7 @@ from pprint import pprint
 import os
 import ast
 
-from useful_functions import write_dict_to_csv, read_dict_from_csv, is_valid_teams_dict, overwrite_dict_to_csv
+from useful_functions import write_dict_data, read_dict_data, is_valid_league_dict, overwrite_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -63,12 +63,12 @@ def get_position(futmondo_position):
 
 def get_players_positions_dict(
         write_file=True,
-        file_name="futmondo_la_liga_players_positions",
+        file_name="futmondo_laliga_players_positions",
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutmondoWebScraper()
@@ -77,9 +77,8 @@ def get_players_positions_dict(
     team_players_positions_dict = {team_name: team_dict["players"] for team_name, team_dict in result.items()}
 
     if write_file:
-        if is_valid_teams_dict(team_players_positions_dict):
-            # write_dict_to_csv(team_players_positions_dict, file_name)
-            overwrite_dict_to_csv(team_players_positions_dict, file_name)
+        # write_dict_data(team_players_positions_dict, file_name)
+        overwrite_dict_data(team_players_positions_dict, file_name)
 
     return team_players_positions_dict
 

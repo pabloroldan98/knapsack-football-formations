@@ -9,7 +9,7 @@ from unidecode import unidecode
 import os
 from pprint import pprint
 
-from useful_functions import find_similar_string, find_string_positions, write_dict_to_csv, read_dict_from_csv
+from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -489,7 +489,7 @@ def calc_penalty_boost(players_penalties):
 
 def get_biwinger_transfermarket_teams_dict(biwenger_team_names_list, transfermarket_team_names_list, file_name="biwinger_transfermarket_teams"):
     if os.path.isfile('./' + file_name + '.csv'):
-        return read_dict_from_csv(file_name)
+        return read_dict_data(file_name)
     result_biwinger_transfermarket_teams_dict = dict()
 
     for biwenger_team_name in biwenger_team_names_list:

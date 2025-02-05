@@ -5,7 +5,7 @@ import csv
 import os
 
 from player import Player
-from useful_functions import write_dict_to_csv, read_dict_from_csv
+from useful_functions import write_dict_data, read_dict_data
 
 def get_team_links_from_league(league_url):
     response = requests.get(league_url)
@@ -24,7 +24,7 @@ def get_team_links_from_league(league_url):
 
 def get_players_data(write_file=True, file_name="sofascore_players_ratings", team_links=None):
     if os.path.isfile('./' + file_name + '.csv'):
-        return read_dict_from_csv(file_name)
+        return read_dict_data(file_name)
 
     team_players_paths = dict()
     for key, value in team_links.items():
@@ -57,11 +57,11 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
             players_ratings[player_name] = average_rating
 
         teams_with_players_ratings[team_name] = players_ratings
-        write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
+        write_dict_data(teams_with_players_ratings, file_name + "_" + str(j))
         j += 1
 
     if write_file:
-        write_dict_to_csv(teams_with_players_ratings, file_name)
+        write_dict_data(teams_with_players_ratings, file_name)
 
     return teams_with_players_ratings
 
@@ -69,7 +69,7 @@ def get_players_data(write_file=True, file_name="sofascore_players_ratings", tea
 # league_url = "https://www.sofascore.com/tournament/football/spain/laliga/8"
 # team_links = get_team_links_from_league(league_url)
 # pprint(team_links)
-# result = get_players_data(file_name="sofascore_la_liga_players_ratings", team_links=team_links)
+# result = get_players_data(file_name="sofascore_laliga_players_ratings", team_links=team_links)
 # for team, players in result.items():
 #     for player, rating in players.items():
 #         print(f"{player} from {team} has a rating of {rating}")

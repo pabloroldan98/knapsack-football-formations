@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import ast
 
-from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, find_manual_similar_string
+from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, find_manual_similar_string
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -83,12 +83,12 @@ class TransfermarktScraper:
 
 def get_penalty_takers_dict(
         write_file=True,
-        file_name="transfermarket_la_liga_penalty_takers",
+        file_name="transfermarket_laliga_penalty_takers",
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = TransfermarktScraper()
@@ -101,8 +101,8 @@ def get_penalty_takers_dict(
         filtered_penalties_data[team] = filtered_penalties
 
     if write_file:
-        # write_dict_to_csv(filtered_penalties_data, file_name)
-        overwrite_dict_to_csv(filtered_penalties_data, file_name)
+        # write_dict_data(filtered_penalties_data, file_name)
+        overwrite_dict_data(filtered_penalties_data, file_name)
 
     return filtered_penalties_data
 

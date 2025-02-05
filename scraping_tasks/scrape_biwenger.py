@@ -34,22 +34,17 @@ print(f"Month of the year: {month_of_year}")
 print()
 print("##############################")
 ##############################
-print("Scraping TRANSFERMARKET (penalty SAVERS)...")
+print("Scraping BIWENGER...")
 
 try:
-    goalkeepers_penalty_saves = get_penalty_savers_dict(
-        file_name="transfermarket_laliga_penalty_savers",
+    biwenger_data = get_biwenger_data_dict(
+        write_file=True,
+        file_name="biwenger_laliga_data",
         force_scrape=True
     )
-
-    print(goalkeepers_penalty_saves)
-    for team, goalkeepers_penalties in goalkeepers_penalty_saves.items():
-        print()
-        print(team)
-        for goalkeeper, penalty_saves in goalkeepers_penalties.items():
-            print(goalkeeper, penalty_saves)
+    print(biwenger_data)
 except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+    print(f"Error scraping BIWENGER: {e}")
     print(f"Exception type: {type(e).__name__}")
     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
     print(f"Error class: {e.__class__}")

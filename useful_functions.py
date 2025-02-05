@@ -1,4 +1,5 @@
 import ast
+import json
 import os
 import shutil
 
@@ -119,23 +120,50 @@ def find_string_positions(string_list, target_string):
     return positions
 
 
-def is_valid_teams_dict(teams, num_teams=10):
-    if not isinstance(teams, dict):
+def is_valid_league_dict(league, min_teams=10):
+    if not isinstance(league, dict):
         return False
-    if len(teams) < num_teams:
-        return False
-    for team, players in teams.items():
-        if isinstance(players, dict):
-            if len(players) < 11:
-                return False
-        if isinstance(players, list):
-            if len(players) < 5:
-                return False
+    if "data" in league: # For Biwenger data
+        if not isinstance(league["data"], dict): # or "data" not in league
+            return False
+        # 2. Check if 'teams' is valid
+        if "teams" not in league["data"]:
+            return False
+        teams = league["data"]["teams"]
+        if not isinstance(teams, dict):
+            return False
+        # 3. Minimum number of teams
+        if len(teams) < min_teams:
+            return False
+        # 4. Check if 'players' is valid
+        if "players" not in league["data"]:
+            return False
+        players = league["data"]["players"]
+        if not isinstance(players, dict):
+            return False
+        # 5. Minimum number of players
+        if len(players) < 100:
+            return False
+        return True
+
+    else:
+        if len(league) < min_teams:
+            return False
+        for team, players in league.items():
+            if isinstance(players, dict):
+                if len(players) < 11:
+                    return False
+            if isinstance(players, list):
+                if len(players) < 5:
+                    return False
     return True
 
 
-def add_old_data_to_teams(teams_data, teams_old_file_name):
-    teams_old_data = read_dict_from_csv(teams_old_file_name)
+def add_old_data_to_teams(teams_data, teams_old_file_name, file_type="json"):
+    if "data" in teams_data: # For Biwenger data
+        return teams_data
+
+    teams_old_data = read_dict_data(teams_old_file_name, file_type)
     if not isinstance(teams_data, dict) or not isinstance(teams_old_data, dict):
         return teams_data
     # Add players that were in OLD Data and not here
@@ -147,8 +175,11 @@ def add_old_data_to_teams(teams_data, teams_old_file_name):
     return teams_data
 
 
-def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
-    teams_old_data = read_dict_from_csv(teams_old_file_name)
+def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10, file_type="json"):
+    if "data" in teams_data: # For Biwenger data
+        return teams_data
+
+    teams_old_data = read_dict_data(teams_old_file_name, file_type)
     if not isinstance(teams_data, dict) or not isinstance(teams_old_data, dict):
         return teams_data
     # Check I have all the teams I used to have
@@ -157,7 +188,7 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
             if old_team not in teams_data:
                 teams_data[old_team] = teams_old_data[old_team]
     # Add players that were in OLD Data and not here
-    teams_data = add_old_data_to_teams(teams_data, teams_old_file_name)
+    teams_data = add_old_data_to_teams(teams_data, teams_old_file_name, file_type=file_type)
     # Correct team data with not a lot of data
     for team, players in teams_data.items():
         if isinstance(players, dict):
@@ -169,28 +200,31 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10):
     return teams_data
 
 
-def overwrite_dict_to_csv(dict_data, file_name, ignore_valid_file=False):
-    file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
-    file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.csv'
+def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, file_type="json"):
+    file_path = ROOT_DIR + '/json_files/' + file_name + '.json'
+    file_path_old = ROOT_DIR + '/json_files/' + file_name + '_OLD.json'
+    if file_type and isinstance(file_type, str):
+        file_path = ROOT_DIR + '/csv_files/' + file_name + '.' + file_type
+        file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.' + file_type
     # Check if the data is not valid, and if so, fill it with old data
-    if not is_valid_teams_dict(dict_data) or ignore_valid_file:
+    if not is_valid_league_dict(dict_data) or ignore_valid_file:
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):
-                dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD")
+                dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD", file_type=file_type)
     # If data is valid now, we use old data that we missed
-    if is_valid_teams_dict(dict_data) or ignore_valid_file:
+    if is_valid_league_dict(dict_data) or ignore_valid_file:
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):
-                dict_data = add_old_data_to_teams(dict_data, file_name + "_OLD")
+                dict_data = add_old_data_to_teams(dict_data, file_name + "_OLD", file_type=file_type)
     # If data is valid again, we overwrite
-    if is_valid_teams_dict(dict_data) or ignore_valid_file:
+    if is_valid_league_dict(dict_data) or ignore_valid_file:
         # Check if the file exists and delete it
         if os.path.exists(file_path):
             if os.path.exists(file_path_old):
                 os.remove(file_path_old)
             shutil.copy(file_path, file_path_old)
             os.remove(file_path)
-        write_dict_to_csv(dict_data, file_name)
+        write_dict_data(dict_data, file_name, file_type)
 
 
 def write_dict_to_csv(dict_data, file_name):
@@ -215,8 +249,44 @@ def read_dict_from_csv(file_name):
         return mydict
 
 
-def delete_file(file_name):
-    file_path = ROOT_DIR + '/csv_files/' + file_name + '.csv'
+def write_dict_to_json(dict_data, file_name):
+    file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(dict_data, f, ensure_ascii=False, indent=2)
+
+
+def read_dict_from_json(file_name):
+    file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
+    with open(file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return data
+
+
+def read_dict_data(file_name, file_type="json"):
+    dict_data = None
+    if file_type == "csv" and os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
+        dict_data = read_dict_from_csv(file_name)
+    elif file_type == "json" and os.path.isfile(ROOT_DIR + '/json_files/' + file_name + '.json'):
+        dict_data = read_dict_from_json(file_name)
+    else:
+        if os.path.isfile(ROOT_DIR + '/json_files/' + file_name + '.json'):
+            dict_data = read_dict_from_json(file_name)
+    return dict_data
+
+
+def write_dict_data(dict_data, file_name, file_type="json"):
+    if file_type == "csv":
+        write_dict_to_csv(dict_data, file_name)
+    elif file_type == "json":
+        write_dict_to_json(dict_data, file_name)
+    else:
+        write_dict_to_json(dict_data, file_name)
+
+
+def delete_file(file_name, file_type="json"):
+    file_path = ROOT_DIR + '/json_files/' + file_name + '.json'
+    if file_type and isinstance(file_type, str):
+        file_path = ROOT_DIR + '/csv_files/' + file_name + '.' + file_type
     try:
         os.remove(file_path)
         print(f"File '{file_path}' has been deleted successfully.")

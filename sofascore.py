@@ -18,7 +18,7 @@ import ast
 import time
 
 from player import Player
-from useful_functions import write_dict_to_csv, read_dict_from_csv, overwrite_dict_to_csv, delete_file, create_driver, \
+from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
     run_with_timeout, CustomTimeoutException, find_manual_similar_string
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -102,8 +102,8 @@ def get_players_data(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     driver = create_driver(keep_alive=False)
@@ -225,15 +225,15 @@ def get_players_data(
                         driver.get(p)
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
         if backup_files:
-            # write_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j))
-            overwrite_dict_to_csv(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
+            # write_dict_data(teams_with_players_ratings, file_name + "_" + str(j))
+            overwrite_dict_data(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
         j += 1
 
     driver.quit()
 
     if write_file:
-        # write_dict_to_csv(teams_with_players_ratings, file_name)
-        overwrite_dict_to_csv(teams_with_players_ratings, file_name)
+        # write_dict_data(teams_with_players_ratings, file_name)
+        overwrite_dict_data(teams_with_players_ratings, file_name)
 
     if backup_files:
         for k in range(j):

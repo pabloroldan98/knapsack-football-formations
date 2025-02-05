@@ -1,32 +1,64 @@
 # Source: https://stackoverflow.com/questions/59444927/html-request-for-biwenger-in-python
-
+import os
 import re
 import json
 import requests
 from pprint import pprint
 
 from player import Player, get_position
-from elo_ratings import get_teams_elos
+from elo_ratings import get_teams_elos_dict
 from team import Team
 
-from useful_functions import find_similar_string
+from useful_functions import find_similar_string, read_dict_data, overwrite_dict_data
 
-def get_championship_data(forced_matches=[], is_country=False, host_team=None, use_comunio_price=False, verbose=True):
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
-    all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
-    # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
-    # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    response = requests.get(all_data_url, headers=headers)
-    data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
+def get_biwenger_data_dict(
+        write_file=False,
+        file_name="biwenger_laliga_data",
+        force_scrape=True
+):
+    data = None
+    if force_scrape:
+        try:
+            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
+            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
+
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(all_data_url, headers=headers)
+            data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
+        except:
+            pass
+    if not data: # if force_scrape failed or not force_scrape
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    if write_file:
+        # write_dict_data(data, file_name)
+        overwrite_dict_data(data, file_name)
+
+    return data
+
+def get_championship_data(
+        forced_matches=[],
+        is_country=False,
+        host_team=None,
+        use_comunio_price=False,
+        biwenger_file_name="biwenger_laliga_data",
+        elo_ratings_file_name="elo_ratings_laliga_data",
+        verbose=True
+):
+    data = get_biwenger_data_dict(file_name=biwenger_file_name)
 
     if verbose:
         print("Loading teams data...")
         print()
-    championship_teams = get_teams_championship_data(data, is_country=is_country, host_team=host_team, forced_matches=forced_matches)
+    championship_teams = get_teams_championship_data(data, is_country=is_country, host_team=host_team, forced_matches=forced_matches, file_name=elo_ratings_file_name)
     if verbose:
         print("Loading players data...")
         print()
@@ -38,10 +70,10 @@ def get_championship_data(forced_matches=[], is_country=False, host_team=None, u
     return sorted_championship_teams, sorted_championship_players
 
 
-def get_teams_championship_data(data, is_country=False, host_team=None, forced_matches=[]):
+def get_teams_championship_data(data, is_country=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    teams_elos_dict = get_teams_elos(is_country=is_country)
+    teams_elos_dict = get_teams_elos_dict(is_country=is_country, file_name=file_name)
     championship_teams_db = create_teams_list(
         championship_teams,
         championship_players,

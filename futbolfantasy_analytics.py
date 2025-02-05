@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 import csv
 
-from useful_functions import overwrite_dict_to_csv, read_dict_from_csv, create_driver, find_manual_similar_string
+from useful_functions import overwrite_dict_data, read_dict_data, create_driver, find_manual_similar_string
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -159,28 +159,23 @@ def get_futbolfantasy_data(
         force_scrape=False
 ):
     if not force_scrape:
-        if (
-                os.path.isfile(ROOT_DIR + '/csv_files/' + price_file_name + '.csv') and
-                os.path.isfile(ROOT_DIR + '/csv_files/' + positions_file_name + '.csv') and
-                os.path.isfile(ROOT_DIR + '/csv_files/' + forms_file_name + '.csv') and
-                os.path.isfile(ROOT_DIR + '/csv_files/' + start_probability_file_name + '.csv') and
-                os.path.isfile(ROOT_DIR + '/csv_files/' + price_trends_file_name + '.csv')
-        ):
-            prices_data = read_dict_from_csv(price_file_name)
-            positions_data = read_dict_from_csv(positions_file_name)
-            forms_data = read_dict_from_csv(forms_file_name)
-            start_probabilities_data = read_dict_from_csv(start_probability_file_name)
-            price_trends_data = read_dict_from_csv(price_trends_file_name)
+        prices_data = read_dict_data(price_file_name)
+        positions_data = read_dict_data(positions_file_name)
+        forms_data = read_dict_data(forms_file_name)
+        start_probabilities_data = read_dict_data(start_probability_file_name)
+        price_trends_data = read_dict_data(price_trends_file_name)
+
+        if prices_data and positions_data and forms_data and start_probabilities_data and price_trends_data:
             return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
     scraper = FutbolFantasyScraper()
     prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
-    overwrite_dict_to_csv(prices_data, price_file_name)
-    overwrite_dict_to_csv(positions_data, positions_file_name)
-    overwrite_dict_to_csv(forms_data, forms_file_name)
-    overwrite_dict_to_csv(start_probabilities_data, start_probability_file_name)
-    overwrite_dict_to_csv(price_trends_data, price_trends_file_name)
+    overwrite_dict_data(prices_data, price_file_name)
+    overwrite_dict_data(positions_data, positions_file_name)
+    overwrite_dict_data(forms_data, forms_file_name)
+    overwrite_dict_data(start_probabilities_data, start_probability_file_name)
+    overwrite_dict_data(price_trends_data, price_trends_file_name)
 
     return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
@@ -189,14 +184,14 @@ def get_players_prices_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutbolFantasyScraper()
     result, _, _, _, _ = scraper.scrape()
 
-    overwrite_dict_to_csv(result, file_name)
+    overwrite_dict_data(result, file_name)
 
     return result
 
@@ -205,14 +200,14 @@ def get_players_positions_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutbolFantasyScraper()
     _, result, _, _, _ = scraper.scrape()
 
-    overwrite_dict_to_csv(result, file_name)
+    overwrite_dict_data(result, file_name)
 
     return result
 
@@ -221,14 +216,14 @@ def get_players_forms_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutbolFantasyScraper()
     _, _, result, _, _ = scraper.scrape()
 
-    overwrite_dict_to_csv(result, file_name)
+    overwrite_dict_data(result, file_name)
 
     return result
 
@@ -237,14 +232,14 @@ def get_players_start_probabilities_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutbolFantasyScraper()
     _, _, _, result, _ = scraper.scrape()
 
-    overwrite_dict_to_csv(result, file_name)
+    overwrite_dict_data(result, file_name)
 
     return result
 
@@ -253,14 +248,14 @@ def get_players_price_trends_dict(
         force_scrape=False
 ):
     if not force_scrape:
-        if os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):
-            data = read_dict_from_csv(file_name)
+        data = read_dict_data(file_name)
+        if data:
             return data
 
     scraper = FutbolFantasyScraper()
     _, _, _, _, result = scraper.scrape()
 
-    overwrite_dict_to_csv(result, file_name)
+    overwrite_dict_data(result, file_name)
 
     return result
 

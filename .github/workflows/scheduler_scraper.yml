@@ -9,6 +9,70 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
+  scrape_biwenger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # Set the job timeout to 10 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Biwenger Scraper
+        run: python ./scraping_tasks/scrape_biwenger.py
+
+      - name: Upload Biwenger CSV files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: biwenger-csv
+          path: csv_files/*biwenger*.csv
+
+      - name: Upload Biwenger JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: biwenger-json
+          path: json_files/*biwenger*.json
+
+  scrape_elo_ratings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # Set the job timeout to 10 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Elo Ratings Scraper
+        run: python ./scraping_tasks/scrape_elo_ratings.py
+
+      - name: Upload Elo Ratings CSV files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elo-ratings-csv
+          path: csv_files/*elo*ratings*.csv
+
+      - name: Upload Elo Ratings JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elo-ratings-json
+          path: json_files/*elo*ratings*.json
+
   scrape_futbolfantasy:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -34,6 +98,12 @@ jobs:
         with:
           name: futbolfantasy-csv
           path: csv_files/*futbolfantasy*.csv
+
+      - name: Upload FutbolFantasy JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: futbolfantasy-json
+          path: json_files/*futbolfantasy*.json
 
   scrape_futmondo:
     runs-on: ubuntu-latest
@@ -62,6 +132,12 @@ jobs:
           name: futmondo-csv
           path: csv_files/*futmondo*.csv
 
+      - name: Upload Futmondo JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: futmondo-json
+          path: json_files/*futmondo*.json
+
   scrape_transfermarket_penalty_takers:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -88,6 +164,12 @@ jobs:
           name: transfermarket-penalty-takers-csv
           path: csv_files/*transfermarket*penalt*taker*.csv
 
+      - name: Upload TransferMarket Penalty Takers JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: transfermarket-penalty-takers-json
+          path: json_files/*transfermarket*penalt*taker*.json
+
   scrape_transfermarket_penalty_savers:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -113,6 +195,12 @@ jobs:
         with:
           name: transfermarket-penalty-savers-csv
           path: csv_files/*transfermarket*penalt*saver*.csv
+
+      - name: Upload TransferMarket Penalty Savers JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: transfermarket-penalty-savers-json
+          path: json_files/*transfermarket*penalt*saver*.json
 
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
@@ -141,6 +229,12 @@ jobs:
         with:
           name: transfermarket-teamhistory-csv
           path: csv_files/*transfermarket*history*.csv
+
+      - name: Upload TransferMarket Team History JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: transfermarket-teamhistory-json
+          path: json_files/*transfermarket*history*.json
 
   scrape_sofascore:
 #    runs-on: ubuntu-latest
@@ -175,9 +269,17 @@ jobs:
           name: sofascore-csv
           path: csv_files/*sofascore*.csv
 
+      - name: Upload SofaScore JSON files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sofascore-json
+          path: json_files/*sofascore*.json
+
   commit-and-push:
     needs: [scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
+          (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
+          (needs.scrape_elo_ratings.result == 'success' || needs.scrape_elo_ratings.result == 'skipped' || needs.scrape_elo_ratings.result == 'cancelled' || needs.scrape_elo_ratings.result == 'failure') &&
           (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'cancelled' || needs.scrape_futbolfantasy.result == 'failure') &&
           (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' || needs.scrape_futmondo.result == 'cancelled' || needs.scrape_futmondo.result == 'failure') &&
           (needs.scrape_transfermarket_penalty_takers.result == 'success' || needs.scrape_transfermarket_penalty_takers.result == 'skipped' || needs.scrape_transfermarket_penalty_takers.result == 'cancelled' || needs.scrape_transfermarket_penalty_takers.result == 'failure') &&
@@ -191,6 +293,58 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Download Biwenger CSV artifact
+        if: needs.scrape_biwenger.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: biwenger-csv
+          path: csv_files/biwenger/
+
+      - name: Download Biwenger JSON artifact
+        if: needs.scrape_biwenger.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: biwenger-json
+          path: json_files/biwenger/
+
+      - name: Move Biwenger CSV files to root csv_files directory
+        if: needs.scrape_biwenger.result == 'success'
+        run: |
+          mv -f csv_files/biwenger/*.csv csv_files/
+          rm -rf csv_files/biwenger
+
+      - name: Move Biwenger JSON files to root json_files directory
+        if: needs.scrape_biwenger.result == 'success'
+        run: |
+          mv -f json_files/biwenger/*.json json_files/
+          rm -rf json_files/biwenger
+
+      - name: Download Elo Ratings CSV artifact
+        if: needs.scrape_elo_ratings.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: elo-ratings-csv
+          path: csv_files/elo_ratings/
+
+      - name: Download Elo Ratings JSON artifact
+        if: needs.scrape_elo_ratings.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: elo-ratings-json
+          path: json_files/elo_ratings/
+
+      - name: Move Elo Ratings CSV files to root csv_files directory
+        if: needs.scrape_elo_ratings.result == 'success'
+        run: |
+          mv -f csv_files/elo_ratings/*.csv csv_files/
+          rm -rf csv_files/elo_ratings
+
+      - name: Move Elo Ratings JSON files to root json_files directory
+        if: needs.scrape_elo_ratings.result == 'success'
+        run: |
+          mv -f json_files/elo_ratings/*.json json_files/
+          rm -rf json_files/elo_ratings
+
       - name: Download FutbolFantasy CSV artifact
         if: needs.scrape_futbolfantasy.result == 'success'
         uses: actions/download-artifact@v4
@@ -198,11 +352,24 @@ jobs:
           name: futbolfantasy-csv
           path: csv_files/futbolfantasy/
 
+      - name: Download FutbolFantasy JSON artifact
+        if: needs.scrape_futbolfantasy.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: futbolfantasy-json
+          path: json_files/futbolfantasy/
+
       - name: Move FutbolFantasy CSV files to root csv_files directory
         if: needs.scrape_futbolfantasy.result == 'success'
         run: |
           mv -f csv_files/futbolfantasy/*.csv csv_files/
           rm -rf csv_files/futbolfantasy
+
+      - name: Move FutbolFantasy JSON files to root json_files directory
+        if: needs.scrape_futbolfantasy.result == 'success'
+        run: |
+          mv -f json_files/futbolfantasy/*.json json_files/
+          rm -rf json_files/futbolfantasy
 
       - name: Download Futmondo CSV artifact
         if: needs.scrape_futmondo.result == 'success'
@@ -211,11 +378,24 @@ jobs:
           name: futmondo-csv
           path: csv_files/futmondo/
 
+      - name: Download Futmondo JSON artifact
+        if: needs.scrape_futmondo.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: futmondo-json
+          path: json_files/futmondo/
+
       - name: Move Futmondo CSV files to root csv_files directory
         if: needs.scrape_futmondo.result == 'success'
         run: |
           mv -f csv_files/futmondo/*.csv csv_files/
           rm -rf csv_files/futmondo
+
+      - name: Move Futmondo JSON files to root json_files directory
+        if: needs.scrape_futmondo.result == 'success'
+        run: |
+          mv -f json_files/futmondo/*.json json_files/
+          rm -rf json_files/futmondo
 
       - name: Download TransferMarket Penalty Takers CSV artifact
         if: needs.scrape_transfermarket_penalty_takers.result == 'success'
@@ -224,11 +404,24 @@ jobs:
           name: transfermarket-penalty-takers-csv
           path: csv_files/transfermarket_penalty_takers/
 
+      - name: Download TransferMarket Penalty Takers JSON artifact
+        if: needs.scrape_transfermarket_penalty_takers.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: transfermarket-penalty-takers-json
+          path: json_files/transfermarket_penalty_takers/
+
       - name: Move TransferMarket Penalty Takers CSV files to root csv_files directory
         if: needs.scrape_transfermarket_penalty_takers.result == 'success'
         run: |
           mv -f csv_files/transfermarket_penalty_takers/*.csv csv_files/
           rm -rf csv_files/transfermarket_penalty_takers
+
+      - name: Move TransferMarket Penalty Takers JSON files to root json_files directory
+        if: needs.scrape_transfermarket_penalty_takers.result == 'success'
+        run: |
+          mv -f json_files/transfermarket_penalty_takers/*.json json_files/
+          rm -rf json_files/transfermarket_penalty_takers
 
       - name: Download TransferMarket Penalty Savers CSV artifact
         if: needs.scrape_transfermarket_penalty_savers.result == 'success'
@@ -237,11 +430,24 @@ jobs:
           name: transfermarket-penalty-savers-csv
           path: csv_files/transfermarket_penalty_savers/
 
+      - name: Download TransferMarket Penalty Savers JSON artifact
+        if: needs.scrape_transfermarket_penalty_savers.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: transfermarket-penalty-savers-json
+          path: json_files/transfermarket_penalty_savers/
+
       - name: Move TransferMarket Penalty Savers CSV files to root csv_files directory
         if: needs.scrape_transfermarket_penalty_savers.result == 'success'
         run: |
           mv -f csv_files/transfermarket_penalty_savers/*.csv csv_files/
           rm -rf csv_files/transfermarket_penalty_savers
+
+      - name: Move TransferMarket Penalty Savers JSON files to root json_files directory
+        if: needs.scrape_transfermarket_penalty_savers.result == 'success'
+        run: |
+          mv -f json_files/transfermarket_penalty_savers/*.json json_files/
+          rm -rf json_files/transfermarket_penalty_savers
 
       - name: Download TransferMarket Team History CSV artifact
         if: needs.scrape_transfermarket_teamhistory.result == 'success'
@@ -250,11 +456,24 @@ jobs:
           name: transfermarket-teamhistory-csv
           path: csv_files/transfermarket_teamhistory/
 
+      - name: Download TransferMarket Team History JSON artifact
+        if: needs.scrape_transfermarket_teamhistory.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: transfermarket-teamhistory-json
+          path: json_files/transfermarket_teamhistory/
+
       - name: Move TransferMarket Team History CSV files to root csv_files directory
         if: needs.scrape_transfermarket_teamhistory.result == 'success'
         run: |
           mv -f csv_files/transfermarket_teamhistory/*.csv csv_files/
           rm -rf csv_files/transfermarket_teamhistory
+
+      - name: Move TransferMarket Team History JSON files to root json_files directory
+        if: needs.scrape_transfermarket_teamhistory.result == 'success'
+        run: |
+          mv -f json_files/transfermarket_teamhistory/*.json json_files/
+          rm -rf json_files/transfermarket_teamhistory
 
       - name: Download SofaScore CSV artifact
         if: needs.scrape_sofascore.result == 'success'
@@ -263,11 +482,24 @@ jobs:
           name: sofascore-csv
           path: csv_files/sofascore/
 
+      - name: Download SofaScore JSON artifact
+        if: needs.scrape_sofascore.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: sofascore-json
+          path: json_files/sofascore/
+
       - name: Move SofaScore CSV files to root csv_files directory
         if: needs.scrape_sofascore.result == 'success'
         run: |
           mv -f csv_files/sofascore/*.csv csv_files/
           rm -rf csv_files/sofascore
+
+      - name: Move SofaScore JSON files to root json_files directory
+        if: needs.scrape_sofascore.result == 'success'
+        run: |
+          mv -f json_files/sofascore/*.json json_files/
+          rm -rf json_files/sofascore
 
       - name: Configure git
         run: |
@@ -277,6 +509,7 @@ jobs:
       - name: Commit changes
         run: |
           git add csv_files/*.csv
+          git add json_files/*.json
           git commit -m "Automated commit by GitHub Action"
 
       - name: Push changes

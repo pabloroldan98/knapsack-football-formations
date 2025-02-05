@@ -276,7 +276,7 @@ def get_current_players(
         use_old_players_data=False,
         use_old_teams_data=False,
         ratings_file_name="sofascore_players_ratings",
-        penalties_file_name="transfermarket_la_liga_penalty_takers"
+        penalties_file_name="transfermarket_laliga_penalty_takers"
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches)
 
@@ -348,7 +348,7 @@ current_players = get_current_players(
     no_home_boost=False,
     use_old_players_data=False,
     use_old_teams_data=False,
-    ratings_file_name="sofascore_la_liga_players_ratings"
+    ratings_file_name="sofascore_laliga_players_ratings"
 )
 
 # worthy_players = sorted(current_players, key=lambda x: x.value/x.price, reverse=True)

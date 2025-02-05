@@ -11,6 +11,8 @@ from sofascore import get_players_ratings_list
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
 from transfermarket_penalty_savers import get_penalty_savers_dict
+from biwenger import get_biwenger_data_dict
+from elo_ratings import get_teams_elos_dict
 
 
 start_time = time.time()
@@ -108,6 +110,54 @@ try:
         print(team, penalties)
 except Exception as e:
     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+    print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
+
+print()
+print("##############################")
+##############################
+print("Scraping BIWENGER...")
+
+try:
+    biwenger_data = get_biwenger_data_dict(
+        write_file=True,
+        file_name="biwenger_laliga_data",
+        force_scrape=True
+    )
+    print(biwenger_data)
+except Exception as e:
+    print(f"Error scraping BIWENGER: {e}")
+    print(f"Exception type: {type(e).__name__}")
+    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+    print(f"Error class: {e.__class__}")
+
+print()
+print("##############################")
+##############################
+print("Scraping ELO RATINGS...")
+
+try:
+    league_elo_ratings_dict = get_teams_elos_dict(
+        is_country=False,
+        write_file=True,
+        file_name="elo_ratings_laliga_data",
+        force_scrape=True
+    )
+    country_elo_ratings_dict = get_teams_elos_dict(
+        is_country=True,
+        write_file=True,
+        file_name="elo_ratings_countries_data",
+        force_scrape=True
+    )
+    print("League Elo Ratings:")
+    for team, elo in league_elo_ratings_dict.items():
+        print(f"{team}: {elo}")
+    print("\nCountry Elo Ratings:")
+    for team, elo in country_elo_ratings_dict.items():
+        print(f"{team}: {elo}")
+except Exception as e:
+    print(f"Error scraping ELO RATINGS: {e}")
     print(f"Exception type: {type(e).__name__}")
     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
     print(f"Error class: {e.__class__}")
