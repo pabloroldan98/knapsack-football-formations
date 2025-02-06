@@ -461,7 +461,7 @@
           {
             "id": 41798,
             "date": 1739122200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 13,
               "name": "Real Sociedad",
@@ -478,7 +478,7 @@
           {
             "id": 41795,
             "date": 1739131200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 17,
               "name": "Sevilla",
@@ -510,6 +510,9 @@
             }
           }
         ],
+        "pool": {
+          "id": 547112
+        },
         "probableLineups": true
       }
     ],
@@ -1527,30 +1530,6 @@
         "pointsAway": 2,
         "pointsLastSeason": null
       },
-      "29962": {
-        "id": 29962,
-        "name": "Alvaro Aceves",
-        "slug": "alvaro-aceves",
-        "teamID": null,
-        "position": 1,
-        "price": 150000,
-        "fantasyPrice": 7000000,
-        "status": "ok",
-        "priceIncrement": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "fitness": [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
-        "points": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "17367": {
         "id": 17367,
         "name": "Aguado",
@@ -2495,7 +2474,7 @@
       },
       "10751": {
         "id": 10751,
-        "name": "Benito Ramirez",
+        "name": "Benito Ramírez",
         "slug": "benito",
         "teamID": 89,
         "position": 4,
@@ -5911,8 +5890,9 @@
         "position": 4,
         "price": 3900000,
         "fantasyPrice": 19000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 30000,
+        "statusInfo": "Hamstring discomfort.",
         "playedHome": 10,
         "playedAway": 9,
         "fitness": [
@@ -5957,6 +5937,9 @@
         "slug": "hugo-novoa",
         "teamID": 91,
         "position": 2,
+        "altPositions": [
+          3
+        ],
         "price": 170000,
         "fantasyPrice": 7000000,
         "status": "ok",
@@ -6558,6 +6541,24 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
+      "16070": {
+        "id": 16070,
+        "name": "Jacobo",
+        "slug": "jacobo",
+        "teamID": 15,
+        "position": 4,
+        "price": 650000,
+        "fantasyPrice": 8000000,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "fitness": [],
+        "points": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "32122": {
         "id": 32122,
         "name": "Jailson",
@@ -6934,7 +6935,7 @@
       },
       "17434": {
         "id": 17434,
-        "name": "Jesús Rodriguez",
+        "name": "Jesús Rodríguez",
         "slug": "jesus-rodriguez",
         "teamID": 87,
         "position": 4,
@@ -7577,6 +7578,7 @@
         "teamID": 92,
         "position": 4,
         "altPositions": [
+          2,
           3
         ],
         "price": 3480000,
@@ -8123,8 +8125,9 @@
         "position": 3,
         "price": 6290000,
         "fantasyPrice": 20000000,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -60000,
+        "statusInfo": "Personal reasons.",
         "iconHero": "i/p/hero/30496.png",
         "playedHome": 10,
         "playedAway": 11,
@@ -9711,30 +9714,6 @@
         "pointsAway": 19,
         "pointsLastSeason": 73
       },
-      "10525": {
-        "id": 10525,
-        "name": "Nacho Vidal",
-        "slug": "nacho-vidal",
-        "teamID": null,
-        "position": 2,
-        "price": 160000,
-        "fantasyPrice": 8000000,
-        "status": "ok",
-        "priceIncrement": 0,
-        "playedHome": 2,
-        "playedAway": 3,
-        "fitness": [
-          null,
-          null,
-          "injured",
-          0,
-          null
-        ],
-        "points": 6,
-        "pointsHome": 2,
-        "pointsAway": 4,
-        "pointsLastSeason": 35
-      },
       "27059": {
         "id": 27059,
         "name": "Molina",
@@ -10362,6 +10341,9 @@
         "slug": "pablo-duran",
         "teamID": 5,
         "position": 4,
+        "altPositions": [
+          3
+        ],
         "price": 2740000,
         "fantasyPrice": 7000000,
         "status": "ok",
@@ -13211,6 +13193,9 @@
         "slug": "urko-gonzalez",
         "teamID": 7,
         "position": 2,
+        "altPositions": [
+          3
+        ],
         "price": 180000,
         "fantasyPrice": 7000000,
         "status": "discarded",
@@ -14241,8 +14226,8 @@
         ]
       }
     },
-    "update": 1738821610,
-    "etag": 252538191,
+    "update": 1738803542,
+    "etag": 3899339097,
     "scoreID": 1
   },
   "meta": {
