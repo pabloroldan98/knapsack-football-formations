@@ -65,34 +65,6 @@ jobs:
             csv_files/*elo*ratings*.csv
             json_files/*elo*ratings*.json
 
-#  scrape_futbolfantasy:
-#    runs-on: ubuntu-latest
-#    timeout-minutes: 30  # Set the job timeout to 30 minutes
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: '3.x'
-#
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install -r requirements.txt
-#
-#      - name: Run FutbolFantasy Scraper
-#        run: python ./scraping_tasks/scrape_futbolfantasy.py
-#
-#      - name: Upload FutbolFantasy DATA files as artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: futbolfantasy-data
-#          path: |
-#            csv_files/*futbolfantasy*.csv
-#            json_files/*futbolfantasy*.json
-
   scrape_futmondo:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -208,52 +180,15 @@ jobs:
             csv_files/*transfermarket*history*.csv
             json_files/*transfermarket*history*.json
 
-#  scrape_sofascore:
-##    runs-on: ubuntu-latest
-#    runs-on: ubuntu-22.04
-#    timeout-minutes: 180  # Set the job timeout to 180 minutes
-##    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == '2')
-#    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 2 * 1,2,8,9 2' || github.event.schedule == '0 2 * 3,4,5,6,7,10,11,12 2')
-#    steps:
-#      - name: Enable Debug Logging
-#        run: |
-#          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
-#          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
-#      - name: Checkout repository
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: '3.x'
-#
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          pip install -r requirements.txt
-#
-#      - name: Run SofaScore Scraper
-#        run: python ./scraping_tasks/scrape_sofascore.py
-#
-#      - name: Upload SofaScore DATA files as artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: sofascore-data
-#          path: |
-#            csv_files/*sofascore*.csv
-#            json_files/*sofascore*.json
-
   commit-and-push:
     needs: [scrape_biwenger, scrape_elo_ratings, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory]
     if: ${{ always() && (
           (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
           (needs.scrape_elo_ratings.result == 'success' || needs.scrape_elo_ratings.result == 'skipped' || needs.scrape_elo_ratings.result == 'cancelled' || needs.scrape_elo_ratings.result == 'failure') &&
-#          (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'cancelled' || needs.scrape_futbolfantasy.result == 'failure') &&
           (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' || needs.scrape_futmondo.result == 'cancelled' || needs.scrape_futmondo.result == 'failure') &&
           (needs.scrape_transfermarket_penalty_takers.result == 'success' || needs.scrape_transfermarket_penalty_takers.result == 'skipped' || needs.scrape_transfermarket_penalty_takers.result == 'cancelled' || needs.scrape_transfermarket_penalty_takers.result == 'failure') &&
           (needs.scrape_transfermarket_penalty_savers.result == 'success' || needs.scrape_transfermarket_penalty_savers.result == 'skipped' || needs.scrape_transfermarket_penalty_savers.result == 'cancelled' || needs.scrape_transfermarket_penalty_savers.result == 'failure') &&
-          (needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped' || needs.scrape_transfermarket_teamhistory.result == 'cancelled' || needs.scrape_transfermarket_teamhistory.result == 'failure') # &&
-#          (needs.scrape_sofascore.result == 'success' || needs.scrape_sofascore.result == 'skipped' || needs.scrape_sofascore.result == 'cancelled' || needs.scrape_sofascore.result == 'failure')
+          (needs.scrape_transfermarket_teamhistory.result == 'success' || needs.scrape_transfermarket_teamhistory.result == 'skipped' || needs.scrape_transfermarket_teamhistory.result == 'cancelled' || needs.scrape_transfermarket_teamhistory.result == 'failure')
         )}}
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -288,20 +223,6 @@ jobs:
           mv -f data_files/elo_ratings/*.csv csv_files/ 2>/dev/null || true
           mv -f data_files/elo_ratings/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/elo_ratings
-
-#      - name: Download FutbolFantasy DATA artifact
-#        if: needs.scrape_futbolfantasy.result == 'success'
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: futbolfantasy-data
-#          -path: data_files/futbolfantasy/
-#
-#      - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
-#        if: needs.scrape_futbolfantasy.result == 'success'
-#        run: |
-#          mv -f data_files/futbolfantasy/*.csv csv_files/ 2>/dev/null || true
-#          mv -f data_files/futbolfantasy/*.json json_files/ 2>/dev/null || true
-#          rm -rf data_files/futbolfantasy
 
       - name: Download Futmondo DATA artifact
         if: needs.scrape_futmondo.result == 'success'
@@ -358,20 +279,6 @@ jobs:
           mv -f data_files/transfermarket_teamhistory/*.csv csv_files/ 2>/dev/null || true
           mv -f data_files/transfermarket_teamhistory/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/transfermarket_teamhistory
-
-#      - name: Download SofaScore DATA artifact
-#        if: needs.scrape_sofascore.result == 'success'
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: sofascore-data
-#          -path: data_files/sofascore/
-#
-#      - name: Move SofaScore DATA files to root csv_files and json_files directories
-#        if: needs.scrape_sofascore.result == 'success'
-#        run: |
-#          mv -f data_files/sofascore/*.csv csv_files/ 2>/dev/null || true
-#          mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
-#          rm -rf data_files/sofascore
 
       - name: Configure git
         run: |
