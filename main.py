@@ -361,6 +361,7 @@ my_players_names = [
     "Pathé Ciss",
     "Ceballos",
     "Pape Gueye",
+    "Rubén García",
 
     "Raphinha",
     "Yamal",
