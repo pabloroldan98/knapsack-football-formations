@@ -348,7 +348,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
-    "Yeray",
     "Koundé",
     "Arnau Martínez",
     "Sergi Cardona",
