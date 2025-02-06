@@ -352,6 +352,7 @@ my_players_names = [
     "Koundé",
     "Arnau Martínez",
     "Sergi Cardona",
+    "Tenaglia",
 
     "Jordán",
     "Coba Gomes",
