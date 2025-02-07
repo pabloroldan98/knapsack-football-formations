@@ -355,7 +355,6 @@ my_players_names = [
 
     "Jordán",
     "Coba Gomes",
-    "Neyou",
     "Baena",
     "Pathé Ciss",
     "Ceballos",
