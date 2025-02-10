@@ -347,7 +347,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Krejci",
-    "Koundé",
     "Arnau Martínez",
     "Sergi Cardona",
     "Tenaglia",
@@ -355,10 +354,9 @@ my_players_names = [
 
     "Jordán",
     "Coba Gomes",
-    "Baena",
+    "Barrios",
     "Ceballos",
     "Pape Gueye",
-    "Rubén García",
 
     "Raphinha",
     "Raba",
