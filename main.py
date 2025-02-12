@@ -357,6 +357,7 @@ my_players_names = [
     "Ceballos",
     "Pape Gueye",
     "Valverde",
+    "Juan Cruz Díaz",
 
     "Raphinha",
     "Raba",
