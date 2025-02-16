@@ -342,22 +342,17 @@ print()
 my_players_names = [
     "Dmitrovic",
     "Nyland",
-    "Letacek",
 
     "Kiko Femenía",
     "Luis Pérez",
-    "Arnau Martínez",
     "Sergi Cardona",
     "Tenaglia",
     "De Marcos",
+    "Vivian",
 
     "Jordán",
-    "Coba Gomes",
-    "Ceballos",
     "Pape Gueye",
-    "Valverde",
     "Arambarri",
-    "Sow",
 
     "Raphinha",
     "Raba",
