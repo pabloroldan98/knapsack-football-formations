@@ -349,6 +349,7 @@ my_players_names = [
     "Tenaglia",
     "De Marcos",
     "Vivian",
+    "Alderete",
 
     "Jordán",
     "Pape Gueye",
@@ -357,7 +358,6 @@ my_players_names = [
     "Raphinha",
     "Raba",
     "Lewandowski",
-    "Rodrygo",
 ]
 
 # my_players_names = [
