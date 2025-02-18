@@ -201,11 +201,11 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10, f
 
 
 def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, file_type="json"):
-    file_path = ROOT_DIR + '/json_files/' + file_name + '.json'
-    file_path_old = ROOT_DIR + '/json_files/' + file_name + '_OLD.json'
+    file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
+    file_path_old = os.path.join(ROOT_DIR, 'json_files', f"{file_name}_OLD.json")
     if file_type and isinstance(file_type, str):
-        file_path = ROOT_DIR + '/csv_files/' + file_name + '.' + file_type
-        file_path_old = ROOT_DIR + '/csv_files/' + file_name + '_OLD.' + file_type
+        file_path = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}.{file_type}")
+        file_path_old = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}_OLD.{file_type}")
     # Check if the data is not valid, and if so, fill it with old data
     if not is_valid_league_dict(dict_data) or ignore_valid_file:
         if os.path.exists(file_path):
@@ -284,9 +284,9 @@ def write_dict_data(dict_data, file_name, file_type="json"):
 
 
 def delete_file(file_name, file_type="json"):
-    file_path = ROOT_DIR + '/json_files/' + file_name + '.json'
+    file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
     if file_type and isinstance(file_type, str):
-        file_path = ROOT_DIR + '/csv_files/' + file_name + '.' + file_type
+        file_path = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}.{file_type}")
     try:
         os.remove(file_path)
         print(f"File '{file_path}' has been deleted successfully.")
