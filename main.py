@@ -354,6 +354,7 @@ my_players_names = [
     "Jordán",
     "Pape Gueye",
     "Arambarri",
+    "Losada",
 
     "Raphinha",
     "Raba",
