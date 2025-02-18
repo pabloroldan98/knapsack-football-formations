@@ -348,6 +348,7 @@ my_players_names = [
     "Tenaglia",
     "De Marcos",
     "Vivian",
+    "Giménez",
     "Alderete",
 
     "Jordán",
