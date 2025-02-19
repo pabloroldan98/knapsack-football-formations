@@ -361,6 +361,7 @@ my_players_names = [
     "Raphinha",
     "Raba",
     "Lewandowski",
+    "Pablo Durán",
 ]
 
 # my_players_names = [
