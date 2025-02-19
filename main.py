@@ -350,11 +350,13 @@ my_players_names = [
     "Vivian",
     "Giménez",
     "Alderete",
+    "Lenglet",
 
     "Jordán",
     "Pape Gueye",
     "Arambarri",
     "Losada",
+    "Jesús Rodríguez",
 
     "Raphinha",
     "Raba",
