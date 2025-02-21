@@ -351,12 +351,16 @@ my_players_names = [
     "Giménez",
     "Alderete",
     "Lenglet",
+    "Juan Cruz",
 
     "Jordán",
     "Pape Gueye",
     "Arambarri",
     "Losada",
     "Jesús Rodríguez",
+    "Comesaña",
+    "Samú Costa",
+    "Pathé Ciss",
 
     "Raphinha",
     "Raba",
