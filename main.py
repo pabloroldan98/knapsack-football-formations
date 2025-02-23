@@ -346,12 +346,10 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Tenaglia",
-    "De Marcos",
-    "Vivian",
     "Giménez",
     "Alderete",
-    "Lenglet",
     "Juan Cruz",
+    "Mika Mármol",
 
     "Jordán",
     "Pape Gueye",
@@ -361,6 +359,7 @@ my_players_names = [
     "Comesaña",
     "Samú Costa",
     "Pathé Ciss",
+    "Essugo",
 
     "Raphinha",
     "Raba",
