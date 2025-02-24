@@ -346,8 +346,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Tenaglia",
-    "Giménez",
-    "Alderete",
     "Juan Cruz",
     "Mika Mármol",
 
@@ -357,7 +355,6 @@ my_players_names = [
     "Losada",
     "Jesús Rodríguez",
     "Comesaña",
-    "Samú Costa",
     "Pathé Ciss",
     "Essugo",
 
@@ -366,6 +363,7 @@ my_players_names = [
     "Lewandowski",
     "Pablo Durán",
     "Kike García",
+    "Mbappé",
 ]
 
 # my_players_names = [
