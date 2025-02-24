@@ -352,7 +352,6 @@ my_players_names = [
     "Jordán",
     "Pape Gueye",
     "Arambarri",
-    "Losada",
     "Jesús Rodríguez",
     "Comesaña",
     "Pathé Ciss",
