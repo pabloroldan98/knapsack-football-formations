@@ -70,7 +70,7 @@ class Player:
         self.start_probability = start_probability
 
     def __str__(self):
-        return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
+        return f"({self.name}, {self.position}, {self.team}, {self.price}, {self.value:.3f}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
         # return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f})"
         # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
