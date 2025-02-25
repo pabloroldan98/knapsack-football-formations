@@ -346,7 +346,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Tenaglia",
-    "Juan Cruz",
     "Mika Mármol",
     "Carreira",
     "Nastasić",
