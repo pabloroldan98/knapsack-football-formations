@@ -348,20 +348,23 @@ my_players_names = [
     "Tenaglia",
     "Juan Cruz",
     "Mika Mármol",
+    "Carreira",
+    "Nastasić",
+    "Herzog",
 
     "Jordán",
     "Pape Gueye",
     "Arambarri",
     "Jesús Rodríguez",
-    "Comesaña",
     "Pathé Ciss",
     "Essugo",
+    "Aimar Oroz",
+    "Rubén García",
 
     "Raphinha",
     "Raba",
     "Lewandowski",
     "Pablo Durán",
-    "Kike García",
     "Mbappé",
 ]
 
