@@ -350,6 +350,7 @@ my_players_names = [
     "Carreira",
     "Nastasić",
     "Herzog",
+    "Valjent",
 
     "Jordán",
     "Pape Gueye",
@@ -365,6 +366,7 @@ my_players_names = [
     "Lewandowski",
     "Pablo Durán",
     "Mbappé",
+    "Fer López",
 ]
 
 # my_players_names = [
