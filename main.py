@@ -352,6 +352,7 @@ my_players_names = [
     "Herzog",
     "Valjent",
 
+    "Baena",
     "Jordán",
     "Pape Gueye",
     "Jesús Rodríguez",
@@ -364,7 +365,6 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Pablo Durán",
-    "Mbappé",
     "Fer López",
 ]
 
