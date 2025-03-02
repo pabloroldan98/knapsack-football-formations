@@ -349,13 +349,11 @@ my_players_names = [
     "Carreira",
     "Nastasić",
     "Arnau Martínez",
-    "Valjent",
     "Tárrega",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
-    "Pathé Ciss",
     "Isco",
     "Rioja",
     "Boiro",
