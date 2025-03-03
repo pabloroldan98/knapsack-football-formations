@@ -102,6 +102,8 @@ def find_manual_similar_string(my_string):
         "Fabio Gonzalez": "Fabio",
         "Fabio Silva": "Fábio Silva",
         "Coba da Costa": "Coba Gomes",
+        "Jose Maria Gimenez": "Giménez",
+        "José María Giménez": "Giménez",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
