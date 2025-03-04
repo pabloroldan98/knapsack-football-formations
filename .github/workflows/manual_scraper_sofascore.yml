@@ -7,7 +7,7 @@ jobs:
   run-tasks:
 #    runs-on: ubuntu-latest
     runs-on: ubuntu-22.04
-    timeout-minutes: 240  # Set the job timeout to 4 hours (240 minutes)
+    timeout-minutes: 300  # Set the job timeout to 5 hours (300 minutes)
 
     steps:
       - name: Enable Debug Logging

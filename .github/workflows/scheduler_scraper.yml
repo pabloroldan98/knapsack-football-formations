@@ -211,7 +211,7 @@ jobs:
   scrape_sofascore:
 #    runs-on: ubuntu-latest
     runs-on: ubuntu-22.04
-    timeout-minutes: 240  # Set the job timeout to 240 minutes
+    timeout-minutes: 300  # Set the job timeout to 300 minutes
 #    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == '2')
     if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 2 * 1,2,8,9 2' || github.event.schedule == '0 2 * 3,4,5,6,7,10,11,12 2')
     steps:
