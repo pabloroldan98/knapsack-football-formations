@@ -24,7 +24,7 @@ from useful_functions import write_dict_data, read_dict_data, overwrite_dict_dat
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 # Maximum wait time for player data (in seconds)
-MAX_WAIT_TIME = 5 * 60  # 5 minutes in seconds
+MAX_WAIT_TIME = 2 * 60  # 2 minutes in seconds
 
 
 def get_players_ratings_list(
