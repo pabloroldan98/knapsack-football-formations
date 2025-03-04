@@ -349,6 +349,8 @@ my_players_names = [
     "Carreira",
     "Arnau Martínez",
     "Tárrega",
+    "Starfelt",
+    "Tenaglia",
 
     "Baena",
     "Jordán",
@@ -356,6 +358,7 @@ my_players_names = [
     "Isco",
     "Rioja",
     "Tapia",
+    "Sotelo",
 
     "Raphinha",
     "Raba",
