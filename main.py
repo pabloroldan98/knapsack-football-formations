@@ -363,7 +363,7 @@ my_players_names = [
     "Raphinha",
     "Raba",
     "Lewandowski",
-    "Pablo Durán",
+    "Tsygankov",
     "Fer López",
 ]
 
