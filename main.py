@@ -342,7 +342,7 @@ print()
 my_players_names = [
     "Dmitrovic",
     "Nyland",
-    "Tristán",
+    "Guaita",
 
     "Kiko Femenía",
     "Luis Pérez",
@@ -357,7 +357,6 @@ my_players_names = [
     "Pape Gueye",
     "Isco",
     "Rioja",
-    "Tapia",
     "Sotelo",
 
     "Raphinha",
