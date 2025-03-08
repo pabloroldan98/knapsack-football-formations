@@ -350,6 +350,7 @@ my_players_names = [
     "Tárrega",
     "Starfelt",
     "Tenaglia",
+    "Diego Rico",
 
     "Baena",
     "Jordán",
@@ -358,6 +359,7 @@ my_players_names = [
     "Rioja",
     "Sotelo",
     "Tapia",
+    "Mascarell",
 
     "Raphinha",
     "Raba",
