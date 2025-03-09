@@ -351,12 +351,12 @@ my_players_names = [
     "Starfelt",
     "Tenaglia",
     "Diego Rico",
+    "Marvin",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
     "Isco",
-    "Rioja",
     "Sotelo",
     "Tapia",
     "Mascarell",
