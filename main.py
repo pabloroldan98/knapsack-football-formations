@@ -358,6 +358,9 @@ my_players_names = [
     "Pape Gueye",
     "Isco",
     "Mascarell",
+    "Modric",
+    "Pedro Díaz",
+    "Moleiro",
 
     "Raphinha",
     "Raba",
