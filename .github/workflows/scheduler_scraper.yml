@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Biwenger Scraper
-        run: python ./scraping_tasks/scrape_biwenger.py
+        run: python -u ./scraping_tasks/scrape_biwenger.py
 
       - name: Upload Biwenger DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -55,7 +55,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Elo Ratings Scraper
-        run: python ./scraping_tasks/scrape_elo_ratings.py
+        run: python -u ./scraping_tasks/scrape_elo_ratings.py
 
       - name: Upload Elo Ratings DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -83,7 +83,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run FutbolFantasy Scraper
-        run: python ./scraping_tasks/scrape_futbolfantasy.py
+        run: python -u ./scraping_tasks/scrape_futbolfantasy.py
 
       - name: Upload FutbolFantasy DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -112,7 +112,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Futmondo Scraper
-        run: python ./scraping_tasks/scrape_futmondo.py
+        run: python -u ./scraping_tasks/scrape_futmondo.py
 
       - name: Upload Futmondo DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -140,7 +140,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run TransferMarket Penalty Takers Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_penalty_takers.py
+        run: python -u ./scraping_tasks/scrape_transfermarket_penalty_takers.py
 
       - name: Upload TransferMarket Penalty Takers DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -168,7 +168,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run TransferMarket Penalty Savers Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+        run: python -u ./scraping_tasks/scrape_transfermarket_penalty_savers.py
 
       - name: Upload TransferMarket Penalty Savers DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -198,7 +198,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run TransferMarket Team History Scraper
-        run: python ./scraping_tasks/scrape_transfermarket_teamhistory.py
+        run: python -u ./scraping_tasks/scrape_transfermarket_teamhistory.py
 
       - name: Upload TransferMarket Team History DATA files as artifact
         uses: actions/upload-artifact@v4
@@ -233,7 +233,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run SofaScore Scraper
-        run: python ./scraping_tasks/scrape_sofascore.py
+        run: python -u ./scraping_tasks/scrape_sofascore.py
 
       - name: Upload SofaScore DATA files as artifact
         uses: actions/upload-artifact@v4

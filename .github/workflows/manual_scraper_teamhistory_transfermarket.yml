@@ -26,7 +26,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_transfermarket_teamhistory.py
+          python -u ./scraping_tasks/scrape_transfermarket_teamhistory.py
 
       - name: Configure git
         run: |

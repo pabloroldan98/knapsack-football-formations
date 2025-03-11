@@ -26,7 +26,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+          python -u ./scraping_tasks/scrape_transfermarket_penalty_savers.py
 
       - name: Configure git
         run: |

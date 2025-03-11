@@ -31,7 +31,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_sofascore.py
+          python -u ./scraping_tasks/scrape_sofascore.py
 
       - name: Configure git
         run: |

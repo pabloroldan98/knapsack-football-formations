@@ -26,7 +26,7 @@ jobs:
 
       - name: Run tasks
         run: |
-          python ./scraping_tasks/scrape_futbolfantasy.py
+          python -u ./scraping_tasks/scrape_futbolfantasy.py
 
       - name: Configure git
         run: |
