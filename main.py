@@ -357,7 +357,6 @@ my_players_names = [
     "Jordán",
     "Pape Gueye",
     "Isco",
-    "Sotelo",
     "Tapia",
     "Mascarell",
 
@@ -365,7 +364,6 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Tsygankov",
-    "Fer López",
 ]
 
 # my_players_names = [
