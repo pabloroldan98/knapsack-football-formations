@@ -357,7 +357,6 @@ my_players_names = [
     "Jordán",
     "Pape Gueye",
     "Isco",
-    "Tapia",
     "Mascarell",
 
     "Raphinha",
