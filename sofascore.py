@@ -141,6 +141,7 @@ def get_player_statistics_rating(player_url):
       5) Returns the 'statistics'->'rating' float or None if not found
     """
     print("Fallback rating")
+    time.sleep(1)
 
     # 1) Extract the player ID from the URL via regex or string split
     match = re.search(r"/player/[^/]+/(\d+)$", player_url)
