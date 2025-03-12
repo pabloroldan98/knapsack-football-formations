@@ -42,8 +42,10 @@ try:
         backup_files=False,
         force_scrape=True
     )
+    print()
     for p in result:
         print(p)
+        print(p.sofascore_rating)
 except Exception as e:
     print(f"Error scraping SOFASCORE: {e}")
     print(f"Exception type: {type(e).__name__}")

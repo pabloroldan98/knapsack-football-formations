@@ -140,6 +140,7 @@ def get_player_statistics_rating(player_url):
       4) Calls the 'statistics/overall' endpoint for that uniqueTournament/season
       5) Returns the 'statistics'->'rating' float or None if not found
     """
+    print("Fallback rating")
 
     # 1) Extract the player ID from the URL via regex or string split
     match = re.search(r"/player/[^/]+/(\d+)$", player_url)
