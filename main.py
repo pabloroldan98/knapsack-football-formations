@@ -345,7 +345,6 @@ my_players_names = [
 
     "Kiko Femenía",
     "Luis Pérez",
-    "Carreira",
     "Arnau Martínez",
     "Tárrega",
     "Starfelt",
