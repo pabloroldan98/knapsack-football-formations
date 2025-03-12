@@ -99,7 +99,7 @@ def get_team_links_from_league(league_url):
 
     team_data = {}
     for i, row in enumerate(rows):
-        # if i < 17:
+        # if i < 15:
         #     continue
         link = row.get("href", "")
         if link.startswith("/"):
@@ -141,7 +141,8 @@ def get_player_statistics_rating(player_url):
       5) Returns the 'statistics'->'rating' float or None if not found
     """
     print("Fallback rating")
-    time.sleep(1)
+    time.sleep(5)
+    print(player_url)
 
     # 1) Extract the player ID from the URL via regex or string split
     match = re.search(r"/player/[^/]+/(\d+)$", player_url)
@@ -159,6 +160,7 @@ def get_player_statistics_rating(player_url):
             "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
+    print(seasons_url)
     resp = requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
@@ -190,6 +192,7 @@ def get_player_statistics_rating(player_url):
     stats_url = (f"https://www.sofascore.com/api/v1/player/{player_id}"
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
+    print(stats_url)
 
     resp_stats = requests.get(stats_url, headers=headers, verify=False)
     if resp_stats.status_code != 200:
@@ -256,7 +259,7 @@ def get_players_data(
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = [path for path in player_paths_list if "unai-marrero" in path]
         # player_paths_list = [path for path in player_paths_list if "marc-bernal" in path]
-        # player_paths_list = [path for path in player_paths_list if "carvalho" in path]
+        player_paths_list = [path for path in player_paths_list if "diakhaby" in path]
         print(player_paths_list)
         team_players_paths[team_name] = player_paths_list
 
@@ -380,16 +383,16 @@ def get_players_data(
 # pprint(team_links)
 
 
-# start_time = time.time()
-#
-# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
-# # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
-#
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-#
-# print(f"Execution time: {elapsed_time} seconds")
-#
-# for p in result:
-#     print(p)
-#     print(p.sofascore_rating)
+start_time = time.time()
+
+result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print(f"Execution time: {elapsed_time} seconds")
+
+for p in result:
+    print(p)
+    print(p.sofascore_rating)
