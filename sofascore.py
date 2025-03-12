@@ -99,8 +99,8 @@ def get_team_links_from_league(league_url):
 
     team_data = {}
     for i, row in enumerate(rows):
-        # if i < 15:
-        #     continue
+        if i < 15:
+            continue
         link = row.get("href", "")
         if link.startswith("/"):
             link = "https://www.sofascore.com" + link
@@ -124,7 +124,7 @@ def get_team_links_from_league(league_url):
             team_name = name_div.get_text(strip=True)
 
         team_data[str(i+1)] = [team_name, link]
-        # break
+        break
     team_data = fix_team_data(team_data)
     return team_data
 
@@ -202,7 +202,9 @@ def get_player_statistics_rating(player_url):
 
     stats_data = resp_stats.json()
     statistics = stats_data.get("statistics", {})
+    print(statistics)
     rating = statistics.get("rating")
+    print(rating)
 
     return rating
 
