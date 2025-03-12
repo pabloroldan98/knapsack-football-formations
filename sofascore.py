@@ -28,7 +28,7 @@ from useful_functions import write_dict_data, read_dict_data, overwrite_dict_dat
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 # Maximum wait time for player data (in seconds)
-MAX_WAIT_TIME = 30  # 30 seconds
+MAX_WAIT_TIME = 2 * 60  # 2 minutes (120 seconds)
 
 
 def get_players_ratings_list(
@@ -99,8 +99,8 @@ def get_team_links_from_league(league_url):
 
     team_data = {}
     for i, row in enumerate(rows):
-        if i < 15:
-            continue
+        # if i < 15:
+        #     continue
         link = row.get("href", "")
         if link.startswith("/"):
             link = "https://www.sofascore.com" + link
@@ -124,9 +124,20 @@ def get_team_links_from_league(league_url):
             team_name = name_div.get_text(strip=True)
 
         team_data[str(i+1)] = [team_name, link]
-        break
+        # break
     team_data = fix_team_data(team_data)
     return team_data
+
+
+def get_player_average_rating(player_url):
+    print("Fallback rating")
+    driver = create_driver(keep_alive=False)
+    wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
+    driver.get(player_url)
+    average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
+    average_rating = round(average_rating * 0.95, 4)
+    driver.quit()
+    return average_rating
 
 
 def get_player_statistics_rating(player_url):
@@ -142,7 +153,6 @@ def get_player_statistics_rating(player_url):
     """
     print("Fallback rating")
     # time.sleep(5)
-    print(player_url)
 
     # 1) Extract the player ID from the URL via regex or string split
     match = re.search(r"/player/[^/]+/(\d+)$", player_url)
@@ -160,7 +170,6 @@ def get_player_statistics_rating(player_url):
             "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
-    print(seasons_url)
     resp = requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
@@ -192,7 +201,6 @@ def get_player_statistics_rating(player_url):
     stats_url = (f"https://www.sofascore.com/api/v1/player/{player_id}"
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
-    print(stats_url)
     resp_stats = requests.get(stats_url, headers=headers, verify=False)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
@@ -201,9 +209,7 @@ def get_player_statistics_rating(player_url):
 
     stats_data = resp_stats.json()
     statistics = stats_data.get("statistics", {})
-    print(statistics)
     rating = statistics.get("rating")
-    print(rating)
 
     return rating
 
@@ -260,7 +266,7 @@ def get_players_data(
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = [path for path in player_paths_list if "unai-marrero" in path]
         # player_paths_list = [path for path in player_paths_list if "marc-bernal" in path]
-        player_paths_list = [path for path in player_paths_list if "diakhaby" in path]
+        # player_paths_list = [path for path in player_paths_list if "diakhaby" in path]
         print(player_paths_list)
         team_players_paths[team_name] = player_paths_list
 
@@ -304,8 +310,9 @@ def get_players_data(
                     # Attempt #2: "Average Sofascore Rating" fallback
                     # Find the rating of the last tournament
                     try:
-                        average_rating = float(get_player_statistics_rating(p))
-                        return round(average_rating * 0.95, 4)
+                        # average_rating = float(get_player_statistics_rating(p))
+                        # return round(average_rating * 0.95, 4)
+                        average_rating = get_player_average_rating(p)
                     except:
                         pass
 
@@ -363,7 +370,6 @@ def get_players_data(
                         print("Failed to fetch player name after several attempts.")
                         break
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
-        # print(teams_with_players_ratings)
 
         if backup_files:
             # write_dict_data(teams_with_players_ratings, file_name + "_" + str(j))
@@ -384,16 +390,16 @@ def get_players_data(
 # pprint(team_links)
 
 
-# start_time = time.time()
-#
-# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
-# # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
-#
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-#
-# print(f"Execution time: {elapsed_time} seconds")
-#
-# for p in result:
-#     print(p)
-#     print(p.sofascore_rating)
+start_time = time.time()
+
+result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print(f"Execution time: {elapsed_time} seconds")
+
+for p in result:
+    print(p)
+    print(p.sofascore_rating)
