@@ -154,11 +154,6 @@ def get_player_statistics_rating(player_url):
     # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/seasons
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/seasons"
     headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        ),
         "Accept": "*/*",
         "Accept-Encoding": "gzip, deflate, br, zstd",
         "Accept-Language": "es-ES,es;q=0.9",
@@ -176,8 +171,20 @@ def get_player_statistics_rating(player_url):
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
         "sentry-trace": "7db844fc80bc1e89f5611e10c96fe779-872c4448a56de697",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
         "x-requested-with": "943198"
     }
+    # headers = {
+    #     "User-Agent": (
+    #         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    #         "AppleWebKit/537.36 (KHTML, like Gecko) "
+    #         "Chrome/91.0.4472.124 Safari/537.36"
+    #     ),
+    #     "Accept": "application/json, text/plain, */*",
+    #     "Accept-Language": "en-US,en;q=0.9",
+    #     "Accept-Encoding": "gzip, deflate, br",
+    #     "Referer": "https://www.sofascore.com/",  # or the actual page from which you'd ordinarily access the API
+    # }
     print(seasons_url)
     resp = requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
