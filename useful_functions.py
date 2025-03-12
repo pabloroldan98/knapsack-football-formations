@@ -324,6 +324,12 @@ class CustomTimeoutException(Exception):
     pass
 
 
+# Define a custom exception for non-200 HTTP status codes
+class CustomConnectionException(Exception):
+    """Custom exception for non-200 HTTP status codes."""
+    pass
+
+
 # A wrapper to run each iteration with a timeout
 def run_with_timeout(timeout, task):
     with concurrent.futures.ThreadPoolExecutor() as executor:
