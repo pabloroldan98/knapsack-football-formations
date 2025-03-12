@@ -159,10 +159,24 @@ def get_player_statistics_rating(player_url):
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/91.0.4472.124 Safari/537.36"
         ),
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Referer": "https://www.sofascore.com/",  # or the actual page from which you'd ordinarily access the API
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "es-ES,es;q=0.9",
+        "Baggage": "sentry-environment=production,sentry-release=WwbwOoXKQbgOFgZa0-KN7,sentry-public_key=d693747a6bb242d9bb9cf7069fb57988,sentry-trace_id=7db844fc80bc1e89f5611e10c96fe779",
+        "Cache-Control": "max-age=0",
+        "Connection": "keep-alive",
+        "Cookie": "_ga=GA1.1.590702724.1741772197; _ga_HNQ9P9MGZR=GS1.1.1741792939.7.1.1741797639.60.0.0",
+        "Host": "www.sofascore.com",
+        "If-None-Match": "W/\"9ba20850f2\"",
+        "Referer": "https://www.sofascore.com/player/mouctar-diakhaby/797306",
+        "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"133\", \"Chromium\";v=\"133\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Windows\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "sentry-trace": "7db844fc80bc1e89f5611e10c96fe779-872c4448a56de697",
+        "x-requested-with": "943198"
     }
     print(seasons_url)
     resp = requests.get(seasons_url, headers=headers, verify=False)
