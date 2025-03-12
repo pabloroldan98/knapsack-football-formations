@@ -141,7 +141,7 @@ def get_player_statistics_rating(player_url):
       5) Returns the 'statistics'->'rating' float or None if not found
     """
     print("Fallback rating")
-    time.sleep(5)
+    # time.sleep(5)
     print(player_url)
 
     # 1) Extract the player ID from the URL via regex or string split
@@ -158,7 +158,11 @@ def get_player_statistics_rating(player_url):
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/91.0.4472.124 Safari/537.36"
-        )
+        ),
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Referer": "https://www.sofascore.com/",  # or the actual page from which you'd ordinarily access the API
     }
     print(seasons_url)
     resp = requests.get(seasons_url, headers=headers, verify=False)
@@ -193,7 +197,6 @@ def get_player_statistics_rating(player_url):
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
     print(stats_url)
-
     resp_stats = requests.get(stats_url, headers=headers, verify=False)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
@@ -385,16 +388,16 @@ def get_players_data(
 # pprint(team_links)
 
 
-start_time = time.time()
-
-result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
-# result = get_players_ratings_list(file_name="test")#, team_links=team_links)
-
-end_time = time.time()
-elapsed_time = end_time - start_time
-
-print(f"Execution time: {elapsed_time} seconds")
-
-for p in result:
-    print(p)
-    print(p.sofascore_rating)
+# start_time = time.time()
+#
+# result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)
+# # result = get_players_ratings_list(file_name="test")#, team_links=team_links)
+#
+# end_time = time.time()
+# elapsed_time = end_time - start_time
+#
+# print(f"Execution time: {elapsed_time} seconds")
+#
+# for p in result:
+#     print(p)
+#     print(p.sofascore_rating)
