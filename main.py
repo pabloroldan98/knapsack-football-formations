@@ -345,18 +345,13 @@ my_players_names = [
 
     "Kiko Femenía",
     "Luis Pérez",
-    "Arnau Martínez",
     "Tárrega",
     "Starfelt",
-    "Tenaglia",
-    "Diego Rico",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
     "Isco",
-    "Marvin",
-    "Modric",
     "Pedro Díaz",
     "Moleiro",
 
@@ -364,6 +359,7 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Tsygankov",
+    "Budimir",
 ]
 
 # my_players_names = [
