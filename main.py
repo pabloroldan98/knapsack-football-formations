@@ -354,6 +354,7 @@ my_players_names = [
     "Isco",
     "Pedro Díaz",
     "Moleiro",
+    "Olasagasti",
 
     "Raphinha",
     "Raba",
