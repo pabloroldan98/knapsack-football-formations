@@ -211,7 +211,9 @@ def get_player_statistics_rating(player_url):
     statistics = stats_data.get("statistics", {})
     rating = statistics.get("rating")
 
-    return rating
+    average_rating = float(rating)
+    average_rating = round(average_rating * 0.95, 4)
+    return average_rating
 
 
 def get_players_data(
@@ -310,8 +312,7 @@ def get_players_data(
                     # Attempt #2: "Average Sofascore Rating" fallback
                     # Find the rating of the last tournament
                     try:
-                        # average_rating = float(get_player_statistics_rating(p))
-                        # return round(average_rating * 0.95, 4)
+                        # average_rating = get_player_statistics_rating(p)
                         average_rating = get_player_average_rating(p)
                     except:
                         pass
