@@ -343,11 +343,13 @@ my_players_names = [
     "Dmitrovic",
     "Guaita",
     "Lucas",
+    "Guillermo Ruiz",
 
     "Kiko Femenía",
     "Luis Pérez",
     "Tárrega",
     "Starfelt",
+    "Mingueza",
 
     "Baena",
     "Jordán",
@@ -362,7 +364,6 @@ my_players_names = [
     "Lewandowski",
     "Tsygankov",
     "Budimir",
-    "Rodrygo",
 ]
 
 # my_players_names = [
