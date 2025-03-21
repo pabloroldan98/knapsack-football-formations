@@ -349,6 +349,7 @@ my_players_names = [
     "Luis Pérez",
     "Tárrega",
     "Starfelt",
+    "Lucas Vázquez",
     "Mingueza",
 
     "Baena",
@@ -358,6 +359,7 @@ my_players_names = [
     "Pedro Díaz",
     "Moleiro",
     "Olasagasti",
+    "Zubimendi",
 
     "Raphinha",
     "Raba",
