@@ -342,22 +342,19 @@ print()
 my_players_names = [
     "Dmitrovic",
     "Guaita",
-    "Lucas",
-    "Guillermo Ruiz",
+    "Israel",
 
     "Kiko Femenía",
     "Luis Pérez",
     "Tárrega",
     "Starfelt",
     "Lucas Vázquez",
-    "Mingueza",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
     "Isco",
     "Pedro Díaz",
-    "Moleiro",
     "Olasagasti",
     "Zubimendi",
 
@@ -365,7 +362,6 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Tsygankov",
-    "Budimir",
 ]
 
 # my_players_names = [
