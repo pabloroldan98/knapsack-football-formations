@@ -349,6 +349,7 @@ my_players_names = [
     "Tárrega",
     "Starfelt",
     "Lucas Vázquez",
+    "Aridane",
 
     "Baena",
     "Jordán",
