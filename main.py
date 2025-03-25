@@ -350,12 +350,13 @@ my_players_names = [
     "Starfelt",
     "Lucas Vázquez",
     "Aridane",
+    "Marcos Alonso",
+    "Elustondo",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
     "Isco",
-    "Pedro Díaz",
     "Olasagasti",
     "Zubimendi",
 
@@ -363,6 +364,8 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Tsygankov",
+    "Cucho",
+    "Asano",
 ]
 
 # my_players_names = [
