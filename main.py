@@ -351,6 +351,7 @@ my_players_names = [
     "Lucas Vázquez",
     "Aridane",
     "Marcos Alonso",
+    "Urko Gonzalez",
 
     "Baena",
     "Jordán",
