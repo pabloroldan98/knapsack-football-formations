@@ -350,7 +350,6 @@ my_players_names = [
     "Lucas Vázquez",
     "Aridane",
     "Marcos Alonso",
-    "Urko Gonzalez",
     "Miguel Gutiérrez",
 
     "Baena",
@@ -364,7 +363,6 @@ my_players_names = [
     "Raba",
     "Lewandowski",
     "Cucho",
-    "Asano",
 ]
 
 # my_players_names = [
