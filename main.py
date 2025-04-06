@@ -351,13 +351,15 @@ my_players_names = [
     "Aridane",
     "Marcos Alonso",
     "Miguel Gutiérrez",
+    "Zubeldia",
 
     "Baena",
     "Jordán",
     "Pape Gueye",
-    "Zubimendi",
     "Luis Milla",
     "Darder",
+    "Gavi",
+    "Tchouameni",
 
     "Raphinha",
     "Raba",
