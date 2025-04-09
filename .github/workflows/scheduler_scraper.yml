@@ -93,6 +93,34 @@ jobs:
             csv_files/*futbolfantasy*.csv
             json_files/*futbolfantasy*.json
 
+  scrape_analiticafantasy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run AnaliticaFantasy Scraper
+        run: python -u ./scraping_tasks/scrape_analiticafantasy.py
+
+      - name: Upload AnaliticaFantasy DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: analiticafantasy-data
+          path: |
+            csv_files/*analiticafantasy*.csv
+            json_files/*analiticafantasy*.json
+
   scrape_futmondo:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -245,11 +273,12 @@ jobs:
             json_files/*sofascore*.json
 
   commit-and-push:
-    needs: [scrape_biwenger, scrape_elo_ratings, scrape_futbolfantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
+    needs: [scrape_biwenger, scrape_elo_ratings, scrape_futbolfantasy, scrape_analiticafantasy, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]
     if: ${{ always() && (
           (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
           (needs.scrape_elo_ratings.result == 'success' || needs.scrape_elo_ratings.result == 'skipped' || needs.scrape_elo_ratings.result == 'cancelled' || needs.scrape_elo_ratings.result == 'failure') &&
           (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'cancelled' || needs.scrape_futbolfantasy.result == 'failure') &&
+          (needs.scrape_analiticafantasy.result == 'success' || needs.scrape_analiticafantasy.result == 'skipped' || needs.scrape_analiticafantasy.result == 'cancelled' || needs.scrape_analiticafantasy.result == 'failure') &&
           (needs.scrape_futmondo.result == 'success' || needs.scrape_futmondo.result == 'skipped' || needs.scrape_futmondo.result == 'cancelled' || needs.scrape_futmondo.result == 'failure') &&
           (needs.scrape_transfermarket_penalty_takers.result == 'success' || needs.scrape_transfermarket_penalty_takers.result == 'skipped' || needs.scrape_transfermarket_penalty_takers.result == 'cancelled' || needs.scrape_transfermarket_penalty_takers.result == 'failure') &&
           (needs.scrape_transfermarket_penalty_savers.result == 'success' || needs.scrape_transfermarket_penalty_savers.result == 'skipped' || needs.scrape_transfermarket_penalty_savers.result == 'cancelled' || needs.scrape_transfermarket_penalty_savers.result == 'failure') &&
@@ -303,6 +332,20 @@ jobs:
           mv -f data_files/futbolfantasy/*.csv csv_files/ 2>/dev/null || true
           mv -f data_files/futbolfantasy/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/futbolfantasy
+
+      - name: Download AnaliticaFantasy DATA artifact
+        if: needs.scrape_analiticafantasy.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: analiticafantasy-data
+          -path: data_files/analiticafantasy/
+
+      - name: Move AnaliticaFantasy DATA files to root csv_files and json_files directories
+        if: needs.scrape_analiticafantasy.result == 'success'
+        run: |
+          mv -f data_files/analiticafantasy/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/analiticafantasy/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/analiticafantasy
 
       - name: Download Futmondo DATA artifact
         if: needs.scrape_futmondo.result == 'success'
