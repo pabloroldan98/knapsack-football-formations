@@ -360,6 +360,7 @@ my_players_names = [
     "Tchouameni",
     "André Almeida",
     "Marcos Llorente",
+    "Kubo",
 
     "Raphinha",
     "Raba",
