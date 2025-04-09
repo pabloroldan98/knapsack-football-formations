@@ -9,9 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, StaleElementReferenceException
 import csv
-import requests
-from bs4 import BeautifulSoup
-import urllib3
 
 from useful_functions import overwrite_dict_data, read_dict_data, create_driver, find_manual_similar_string
 
@@ -28,155 +25,103 @@ class FutbolFantasyScraper:
         # chrome_opt.add_argument("--no-sandbox")  # Bypass OS security model
         # chrome_opt.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
         # self.driver = webdriver.Chrome(options=chrome_opt)
-        # self.driver = create_driver()
-        # self.wait = WebDriverWait(self.driver, 15)
-        # self.small_wait = WebDriverWait(self.driver, 5)
-        self.session = requests.Session()
-        # Use this custom headers dict when making GET requests
-        self.headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
-        }
+        self.driver = create_driver()
+        self.wait = WebDriverWait(self.driver, 15)
+        self.small_wait = WebDriverWait(self.driver, 5)
 
     def fetch_page(self, url):
-        # Instead of using Selenium's driver.get, we perform a GET request using requests
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, verify=False)
-        response.raise_for_status()
-        return response.text
+        self.driver.get(url)
 
     def accept_cookies(self):
-        # This function was used to click a cookie accept button with Selenium,
-        # but it's not needed when using requests unless the site strictly requires
-        # special headers or cookies. We'll leave it here to keep the comment.
-        pass
+        try:
+            accept_button = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@mode="primary"]')))
+            accept_button.click()
+        except TimeoutException:
+            print("No cookie accept button found or clickable.")
 
-    def get_team_options(self, html):
+    def get_team_options(self):
         # select = self.wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="main_wrapper"]/div/div[1]/main/div[3]/div[2]/div[2]/select')))
-        # Instead, parse HTML with BeautifulSoup
-        soup = BeautifulSoup(html, 'html.parser')
-        select = soup.find('select', {'name': 'equipo'})
-        team_options = {}
-        if select:
-            options = select.find_all('option')
-            for option in options:
-                value = option.get('value', '')
-                if value and value != '0':
-                    team_options[value] = option.text.strip()
+        select = self.wait.until(EC.presence_of_element_located((By.XPATH, '//select[@name="equipo"]')))
+        options = select.find_elements(By.TAG_NAME, 'option')
+        team_options = {option.get_attribute('value'): option.text for option in options if option.get_attribute('value') != '0'}
         return team_options
 
-
-    def get_player_elements(self, html):
-        # players_container = self.wait.until(EC.presence_of_element_located((By.XPATH, f'//div[@class="lista_elementos"]')))
-        # Instead, parse HTML with BeautifulSoup
-        soup = BeautifulSoup(html, 'html.parser')
-        players_container = soup.find('div', class_='lista_elementos')
-        if not players_container:
-            return []
-        # player_elements = players_container.find_elements(By.XPATH, './div')
-        player_elements = players_container.find_all('div', recursive=False)
+    def get_player_elements(self):
+        players_container = self.wait.until(EC.presence_of_element_located(
+            (By.XPATH, f'//div[@class="lista_elementos"]')))
+        player_elements = players_container.find_elements(By.XPATH, './div')
         return player_elements
 
     def get_player_data(self, player_element):
-        # We gather attributes from the HTML element
-        # Because these are stored in data-* attributes, we can access them via get(...)
-        name = player_element.get('data-nombre', '').strip().title()
+        name = player_element.get_attribute('data-nombre').strip().title()
         name = find_manual_similar_string(name)
-        price = player_element.get('data-valor', '').strip()
-        position = player_element.get('data-posicion', '').strip()
-        team_id = player_element.get('data-equipo', '').strip()
-        form = player_element.get('data-diferencia-pct1', '').strip()
-        price_trend = player_element.get('data-diferencia1', '').strip() or "0"
+        price = player_element.get_attribute('data-valor').strip()
+        position = player_element.get_attribute('data-posicion').strip()
+        team_id = player_element.get_attribute('data-equipo').strip()
+        form = player_element.get_attribute('data-diferencia-pct1').strip()
+        price_trend = player_element.get_attribute('data-diferencia1').strip() or "0"
         return name, price, position, team_id, form, price_trend
 
     def scrape_probabilities(self):
-        # We now fetch the classification page with requests and parse
-        classification_html = self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
-        soup = BeautifulSoup(classification_html, 'html.parser')
+        self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
 
-        team_elements = soup.find_all('tr', class_=lambda c: c and 'team' in c)
-        # We limit to the first 20, same as the original code
+        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class, "team")]')))
         team_elements = team_elements[:20]
-
         team_links = {}
         for team_element in team_elements:
-            strong_tag = team_element.find('strong')
-            if strong_tag:
-                team_name = strong_tag.get_text(strip=True)
-                a_tag = team_element.find('a')
-                if a_tag and a_tag.get('href'):
-                    team_link = a_tag.get('href').strip()
-                    team_links[team_name] = team_link
+            team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
+            team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+            team_links[team_name] = team_link
 
         probabilities_dict = {}
         for team_name, team_link in team_links.items():
-            # fetch the team page
-            team_html = self.fetch_page(team_link)
-            team_soup = BeautifulSoup(team_html, 'html.parser')
+            self.fetch_page(team_link)
 
-            # This was originally selecting a <select> with "probabilidad" value
-            # We'll mimic it by simply parsing the same page
-            # The data-probabilidad is typically in <a class="camiseta ..."> elements
-            player_elements = team_soup.find_all('a', class_=lambda c: c and 'camiseta' in c)
+            try:
+                select_probabilidad_element = self.wait.until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//select[option[@value="probabilidad"]]')
+                    )
+                )
+                select_probabilidad_obj = Select(select_probabilidad_element)
+                select_probabilidad_obj.select_by_value("probabilidad")
+            except:
+                pass
+
+            player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
             team_probabilities = {}
-
-            for p_elem in player_elements:
+            for player_element in player_elements:
                 player_name = None
                 probability = "0%"
-                # We try to get the player's name from the alt attribute of the <img> inside
-                # or from the href, just like in the original Selenium code
                 try:
-                    # In some cases there's a container .fotocontainer, in others .img, etc.
-                    # We'll check for an <img> within the same ancestor
-                    ancestor = p_elem.find_parent('div', class_=lambda c: c and 'fotocontainer laliga' in c)
-                    if ancestor:
-                        img = ancestor.find('img')
-                        if img and img.get('alt'):
-                            player_name = img.get('alt').strip()
-                    if not player_name:
-                        # fallback
-                        img = p_elem.find('img', class_=lambda c: c and 'laliga' in c)
-                        if img and img.get('alt'):
-                            player_name = img.get('alt').strip()
-                    if not player_name:
-                        # last fallback: parse from the href
-                        # e.g. /laliga/jugador/xxxx-name
-                        link = p_elem.get('href', '')
-                        if link:
-                            raw_name = link.split('/')[-1].replace('-', ' ').strip()
-                            # handle encoding if needed
-                            player_name = raw_name.encode('latin1').decode('utf-8', errors='ignore')
-                            player_name = player_name.title()
-                except:
-                    # If there's any error, we continue
+                    player_name = player_element.find_element(
+                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                except NoSuchElementException:  # Error while getting player_name
+                    try:
+                        player_name = player_element.find_element(
+                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                    except NoSuchElementException:  # Error while getting player_name
+                        player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        player_name = player_name.encode('latin1').decode('utf-8')
+                        player_name = player_name.title()
+                try:
+                    probability = player_element.get_attribute('data-probabilidad').strip()
+                except AttributeError: # Error while getting probability
                     continue
-
-                # Probability from data-probabilidad
-                prob_data = p_elem.get('data-probabilidad')
-                if prob_data is not None:
-                    probability = prob_data.strip()
-
-                # Clean up the name and probability
-                player_name = re.sub(r'[\d%]', '', player_name).strip() if player_name else None
+                player_name = re.sub(r'[\d%]', '', player_name).strip()
                 probability = re.sub(r'[^0-9%]', '', probability)
                 if player_name and probability:
                     player_name = find_manual_similar_string(player_name)
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
-
             probabilities_dict[team_name] = team_probabilities
 
         return probabilities_dict
 
     def scrape(self):
-        # self.fetch_page(self.base_url)
+        self.fetch_page(self.base_url)
         # self.accept_cookies()
-        main_html = self.fetch_page(self.base_url)
-        team_options = self.get_team_options(main_html)
-
+        team_options = self.get_team_options()
         positions_normalize = {
             "Portero": "GK",
             "Defensa": "DEF",
@@ -189,7 +134,7 @@ class FutbolFantasyScraper:
         forms_dict = {team_name: {} for team_name in team_options.values()}
         price_trends_dict = {team_name: {} for team_name in team_options.values()}
 
-        player_elements = self.get_player_elements(main_html)
+        player_elements = self.get_player_elements()
         for player_element in player_elements:
             name, price, position, team_id, form, price_trend = self.get_player_data(player_element)
             team_name = team_options.get(team_id)
@@ -202,10 +147,8 @@ class FutbolFantasyScraper:
 
         probabilities_dict = self.scrape_probabilities()
 
-        # We don't have a browser to quit, but we'll keep the comment
-        # self.driver.quit()
+        self.driver.quit()
         return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
-
 
 def get_futbolfantasy_data(
         price_file_name="futbolfantasy_prices",
@@ -236,7 +179,6 @@ def get_futbolfantasy_data(
 
     return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
-
 def get_players_prices_dict(
         file_name="futbolfantasy_prices",
         force_scrape=False
@@ -252,7 +194,6 @@ def get_players_prices_dict(
     overwrite_dict_data(result, file_name)
 
     return result
-
 
 def get_players_positions_dict(
         file_name="futbolfantasy_positions",
@@ -270,7 +211,6 @@ def get_players_positions_dict(
 
     return result
 
-
 def get_players_forms_dict(
         file_name="futbolfantasy_forms",
         force_scrape=False
@@ -287,7 +227,6 @@ def get_players_forms_dict(
 
     return result
 
-
 def get_players_start_probabilities_dict(
         file_name="futbolfantasy_start_probabilities",
         force_scrape=False
@@ -303,7 +242,6 @@ def get_players_start_probabilities_dict(
     overwrite_dict_data(result, file_name)
 
     return result
-
 
 def get_players_price_trends_dict(
         file_name="futbolfantasy_price_trends",
@@ -323,11 +261,11 @@ def get_players_price_trends_dict(
 
 
 # prices, positions, forms, start_probabilities, price_trends = get_futbolfantasy_data(
-#     price_file_name="test_futbolfantasy_laliga_players_prices",
-#     positions_file_name="test_futbolfantasy_laliga_players_positions",
-#     forms_file_name="test_futbolfantasy_laliga_players_forms",
-#     start_probability_file_name="test_futbolfantasy_laliga_players_start_probabilities",
-#     price_trends_file_name="test_futbolfantasy_laliga_players_price_trends",
+#     price_file_name="futbolfantasy_laliga_players_prices",
+#     positions_file_name="futbolfantasy_laliga_players_positions",
+#     forms_file_name="futbolfantasy_laliga_players_forms",
+#     start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
+#     price_trends_file_name="futbolfantasy_laliga_players_price_trends",
 #     force_scrape=False
 # )
 # print("Prices:")
