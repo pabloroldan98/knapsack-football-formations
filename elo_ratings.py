@@ -5,6 +5,33 @@ from pprint import pprint
 from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data
 
 
+def get_teams_elos_dict(
+        is_country=False,
+        country="ESP",
+        write_file=False,
+        file_name="elo_ratings_laliga_data",
+        force_scrape=True
+):
+    data = None
+    if force_scrape:
+        try:
+            data = get_teams_elos(is_country=is_country, country=country)
+        except:
+            pass
+    if not data: # if force_scrape failed or not force_scrape
+        if is_country:
+            file_name = "elo_ratings_countries_data"
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    if write_file:
+        # write_dict_data(data, file_name)
+        overwrite_dict_data(data, file_name)
+
+    return data
+
+
 def get_teams_elos(is_country=False, country="ESP"):
     if is_country:
         teams_elos_url = "https://www.eloratings.net/World.tsv"
@@ -35,33 +62,6 @@ def get_teams_elos(is_country=False, country="ESP"):
         # teams_elos_dict = full_teams_elos_dict.copy()
 
     return full_teams_elos_dict  # , teams_elos_dict
-
-
-def get_teams_elos_dict(
-        is_country=False,
-        country="ESP",
-        write_file=False,
-        file_name="elo_ratings_laliga_data",
-        force_scrape=True
-):
-    data = None
-    if force_scrape:
-        try:
-            data = get_teams_elos(is_country=is_country, country=country)
-        except:
-            pass
-    if not data: # if force_scrape failed or not force_scrape
-        if is_country:
-            file_name = "elo_ratings_countries_data"
-        data = read_dict_data(file_name)
-        if data:
-            return data
-
-    if write_file:
-        # write_dict_data(data, file_name)
-        overwrite_dict_data(data, file_name)
-
-    return data
 
 
 # result = get_teams_elos()
