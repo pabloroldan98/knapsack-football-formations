@@ -10,6 +10,7 @@ import csv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import concurrent.futures
+import stopit
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -332,11 +333,17 @@ class CustomConnectionException(Exception):
 
 # A wrapper to run each iteration with a timeout
 def run_with_timeout(timeout, task):
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(task)
-        try:
-            result = future.result(timeout=timeout)  # Wait for the result with a timeout
-            return result  # Return the result if task completes in time
-        except concurrent.futures.TimeoutError:
-            print("Timeout occurred during task execution.")
-            raise CustomTimeoutException("The task took too long and was stopped.")
+    with stopit.ThreadingTimeout(timeout) as to_ctx:
+        result = task()  # Run the task
+    if to_ctx.state == to_ctx.TIMED_OUT:
+        print("Timeout occurred during task execution.")
+        raise CustomTimeoutException("The task took too long and was stopped.")
+    return result
+    # with concurrent.futures.ThreadPoolExecutor() as executor:
+    #     future = executor.submit(task)
+    #     try:
+    #         result = future.result(timeout=timeout)  # Wait for the result with a timeout
+    #         return result  # Return the result if task completes in time
+    #     except concurrent.futures.TimeoutError:
+    #         print("Timeout occurred during task execution.")
+    #         raise CustomTimeoutException("The task took too long and was stopped.")
