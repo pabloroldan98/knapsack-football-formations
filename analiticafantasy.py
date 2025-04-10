@@ -163,7 +163,7 @@ def get_players_start_probabilities_dict_extra(
 # # Example usage:
 # data = get_analiticafantasy_data(
 #     start_probability_file_name="test_analiticafantasy_laliga_players_start_probabilities",
-#     force_scrape=False
+#     force_scrape=True
 # )
 #
 # print("Probabilities:")
