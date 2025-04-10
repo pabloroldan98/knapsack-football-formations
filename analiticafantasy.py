@@ -4,7 +4,7 @@ import urllib3
 from bs4 import BeautifulSoup
 import json
 
-from useful_functions import read_dict_data, overwrite_dict_data  # same as before
+from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string  # same as before
 
 
 class AnaliticaFantasyScraper:
@@ -84,8 +84,10 @@ class AnaliticaFantasyScraper:
         match_dict = {}
         for chance_player in all_chance_players:
             # Example: chance=40, team->"name"="Valencia", information->"name"="Diakhaby"
-            team_name = chance_player.get("team", {}).get("name", "").strip()
-            player_name = chance_player.get("information", {}).get("name", "").strip()
+            team_name = chance_player.get("team", {}).get("name", "").strip().title()
+            team_name = find_manual_similar_string(team_name)
+            player_name = chance_player.get("information", {}).get("name", "").strip().title()
+            player_name = find_manual_similar_string(player_name)
             chance_int = chance_player.get("chance", 0)  # e.g. 40
     
             if team_name and player_name:
@@ -160,10 +162,10 @@ def get_players_start_probabilities_dict_extra(
 
 # # Example usage:
 # data = get_analiticafantasy_data(
-#     file_name="test_analiticafantasy_laliga_players_start_probabilities",
+#     start_probability_file_name="test_analiticafantasy_laliga_players_start_probabilities",
 #     force_scrape=False
 # )
-# 
+#
 # print("Probabilities:")
 # for team, players in data.items():
 #     print(f"Team: {team}")
