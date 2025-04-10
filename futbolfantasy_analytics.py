@@ -21,16 +21,9 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 class FutbolFantasyScraper:
     def __init__(self):
         self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
-        # chrome_opt = Options()
-        # chrome_opt.add_argument("--disable-search-engine-choice-screen")
-        # chrome_opt.add_argument("--headless")  # Run Chrome in headless mode
-        # chrome_opt.add_argument("--disable-gpu")  # Disable GPU usage (useful for headless mode)
-        # chrome_opt.add_argument("--no-sandbox")  # Bypass OS security model
-        # chrome_opt.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-        # self.driver = webdriver.Chrome(options=chrome_opt)
-        # self.driver = create_driver()
-        # self.wait = WebDriverWait(self.driver, 15)
-        # self.small_wait = WebDriverWait(self.driver, 5)
+        self.driver = create_driver()
+        self.wait = WebDriverWait(self.driver, 15)
+        self.small_wait = WebDriverWait(self.driver, 5)
         self.session = requests.Session()
         # Use this custom headers dict when making GET requests
         self.headers = {
@@ -42,7 +35,9 @@ class FutbolFantasyScraper:
         }
 
     def fetch_page(self, url):
-        # Instead of using Selenium's driver.get, we perform a GET request using requests
+        self.driver.get(url)
+
+    def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         response = self.session.get(url, headers=self.headers, verify=False)
         response.raise_for_status()
@@ -93,80 +88,57 @@ class FutbolFantasyScraper:
         return name, price, position, team_id, form, price_trend
 
     def scrape_probabilities(self):
-        # We now fetch the classification page with requests and parse
-        classification_html = self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
-        soup = BeautifulSoup(classification_html, 'html.parser')
+        self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
 
-        team_elements = soup.find_all('tr', class_=lambda c: c and 'team' in c)
-        # We limit to the first 20, same as the original code
+        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class, "team")]')))
         team_elements = team_elements[:20]
-
         team_links = {}
         for team_element in team_elements:
-            strong_tag = team_element.find('strong')
-            if strong_tag:
-                team_name = strong_tag.get_text(strip=True)
-                a_tag = team_element.find('a')
-                if a_tag and a_tag.get('href'):
-                    team_link = a_tag.get('href').strip()
-                    team_links[team_name] = team_link
+            team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
+            team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+            team_links[team_name] = team_link
 
         probabilities_dict = {}
         for team_name, team_link in team_links.items():
-            # fetch the team page
-            team_html = self.fetch_page(team_link)
-            team_soup = BeautifulSoup(team_html, 'html.parser')
+            self.fetch_page(team_link)
 
-            # This was originally selecting a <select> with "probabilidad" value
-            # We'll mimic it by simply parsing the same page
-            # The data-probabilidad is typically in <a class="camiseta ..."> elements
-            player_elements = team_soup.find_all('a', class_=lambda c: c and 'camiseta' in c)
+            try:
+                select_probabilidad_element = self.wait.until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//select[option[@value="probabilidad"]]')
+                    )
+                )
+                select_probabilidad_obj = Select(select_probabilidad_element)
+                select_probabilidad_obj.select_by_value("probabilidad")
+            except:
+                pass
+
+            player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
             team_probabilities = {}
-
-            for p_elem in player_elements:
+            for player_element in player_elements:
                 player_name = None
                 probability = "0%"
-                # We try to get the player's name from the alt attribute of the <img> inside
-                # or from the href, just like in the original Selenium code
                 try:
-                    # In some cases there's a container .fotocontainer, in others .img, etc.
-                    # We'll check for an <img> within the same ancestor
-                    ancestor = p_elem.find_parent('div', class_=lambda c: c and 'fotocontainer laliga' in c)
-                    if ancestor:
-                        img = ancestor.find('img')
-                        if img and img.get('alt'):
-                            player_name = img.get('alt').strip()
-                    if not player_name:
-                        # fallback
-                        img = p_elem.find('img', class_=lambda c: c and 'laliga' in c)
-                        if img and img.get('alt'):
-                            player_name = img.get('alt').strip()
-                    if not player_name:
-                        # last fallback: parse from the href
-                        # e.g. /laliga/jugador/xxxx-name
-                        link = p_elem.get('href', '')
-                        if link:
-                            raw_name = link.split('/')[-1].replace('-', ' ').strip()
-                            # handle encoding if needed
-                            player_name = raw_name.encode('latin1').decode('utf-8', errors='ignore')
-                            player_name = player_name.title()
-                except:
-                    # If there's any error, we continue
+                    player_name = player_element.find_element(
+                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                except NoSuchElementException:  # Error while getting player_name
+                    try:
+                        player_name = player_element.find_element(
+                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                    except NoSuchElementException:  # Error while getting player_name
+                        player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        player_name = player_name.encode('latin1').decode('utf-8')
+                        player_name = player_name.title()
+                try:
+                    probability = player_element.get_attribute('data-probabilidad').strip()
+                except AttributeError: # Error while getting probability
                     continue
-
-                # Probability from data-probabilidad
-                prob_data = p_elem.get('data-probabilidad')
-                if prob_data is not None:
-                    probability = prob_data.strip()
-
-                # Clean up the name and probability
-                player_name = re.sub(r'[\d%]', '', player_name).strip() if player_name else None
+                player_name = re.sub(r'[\d%]', '', player_name).strip()
                 probability = re.sub(r'[^0-9%]', '', probability)
                 if player_name and probability:
                     player_name = find_manual_similar_string(player_name)
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
-
             probabilities_dict[team_name] = team_probabilities
 
         return probabilities_dict
@@ -174,7 +146,7 @@ class FutbolFantasyScraper:
     def scrape(self):
         # self.fetch_page(self.base_url)
         # self.accept_cookies()
-        main_html = self.fetch_page(self.base_url)
+        main_html = self.fetch_response(self.base_url)
         team_options = self.get_team_options(main_html)
 
         positions_normalize = {
@@ -328,7 +300,7 @@ def get_players_price_trends_dict(
 #     forms_file_name="test_futbolfantasy_laliga_players_forms",
 #     start_probability_file_name="test_futbolfantasy_laliga_players_start_probabilities",
 #     price_trends_file_name="test_futbolfantasy_laliga_players_price_trends",
-#     force_scrape=False
+#     force_scrape=True
 # )
 # print("Prices:")
 # for team, players in prices.items():
