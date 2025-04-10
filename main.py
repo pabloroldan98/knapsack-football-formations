@@ -354,7 +354,6 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Tárrega",
-    "Lucas Vázquez",
     "Aridane",
     "Marcos Alonso",
     "Foulquier",
@@ -371,7 +370,6 @@ my_players_names = [
 
     "Raphinha",
     "Raba",
-    "Lewandowski",
     "Cucho",
 ]
 
