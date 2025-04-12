@@ -358,6 +358,8 @@ my_players_names = [
     "Marcos Alonso",
     "Foulquier",
     "Bartra",
+    "Ronald Araújo",
+    "Natan",
 
     "Baena",
     "Jordán",
