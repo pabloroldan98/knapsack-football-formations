@@ -367,7 +367,6 @@ my_players_names = [
     "Darder",
     "André Almeida",
     "Marcos Llorente",
-    "Kubo",
     "Camavinga",
 
     "Raphinha",
