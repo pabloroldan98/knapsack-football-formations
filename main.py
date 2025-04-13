@@ -357,7 +357,7 @@ my_players_names = [
     "Marcos Alonso",
     "Bartra",
     "Ronald Araújo",
-    "Natan",
+    "Catena",
     "El Hilali",
     "Cubarsi",
 
