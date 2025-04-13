@@ -354,12 +354,12 @@ my_players_names = [
     "Kiko Femenía",
     "Luis Pérez",
     "Tárrega",
-    "Aridane",
     "Marcos Alonso",
-    "Foulquier",
     "Bartra",
     "Ronald Araújo",
     "Natan",
+    "El Hilali",
+    "Cubarsi",
 
     "Baena",
     "Jordán",
@@ -368,10 +368,12 @@ my_players_names = [
     "André Almeida",
     "Marcos Llorente",
     "Kubo",
+    "Camavinga",
 
     "Raphinha",
     "Raba",
     "Cucho",
+    "Oyarzabal",
 ]
 
 # my_players_names = [
