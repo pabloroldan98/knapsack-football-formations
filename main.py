@@ -353,7 +353,6 @@ my_players_names = [
 
     "Kiko Femenía",
     "Luis Pérez",
-    "Tárrega",
     "Marcos Alonso",
     "Bartra",
     "Catena",
