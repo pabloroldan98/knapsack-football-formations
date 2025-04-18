@@ -357,7 +357,6 @@ my_players_names = [
     "Bartra",
     "Catena",
     "El Hilali",
-    "Cubarsi",
     "Gerard Martín",
     "Badé",
 
@@ -373,6 +372,7 @@ my_players_names = [
     "Raphinha",
     "Raba",
     "Oyarzabal",
+    "Sergio Gómez",
 ]
 
 # my_players_names = [
