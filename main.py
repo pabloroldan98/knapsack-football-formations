@@ -350,6 +350,7 @@ my_players_names = [
     "Dmitrovic",
     "Guaita",
     "Greif",
+    "Horkaš",
 
     "Kiko Femenía",
     "Luis Pérez",
@@ -358,7 +359,6 @@ my_players_names = [
     "Catena",
     "El Hilali",
     "Gerard Martín",
-    "Badé",
 
     "Jordán",
     "Pape Gueye",
@@ -366,12 +366,11 @@ my_players_names = [
     "Marcos Llorente",
     "Camavinga",
     "Moncayola",
-    "Dani Rodríguez",
     "Isco",
+    "Puado",
 
     "Raphinha",
     "Raba",
-    "Oyarzabal",
     "Sergio Gómez",
 ]
 
