@@ -364,7 +364,6 @@ my_players_names = [
     "Pape Gueye",
     "André Almeida",
     "Marcos Llorente",
-    "Moncayola",
     "Isco",
     "Puado",
 
