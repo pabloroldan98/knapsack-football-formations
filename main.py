@@ -363,7 +363,6 @@ my_players_names = [
     "Jordán",
     "Pape Gueye",
     "André Almeida",
-    "Marcos Llorente",
     "Isco",
     "Puado",
 
