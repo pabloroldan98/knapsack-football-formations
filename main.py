@@ -364,14 +364,15 @@ my_players_names = [
     "Pape Gueye",
     "André Almeida",
     "Marcos Llorente",
-    "Camavinga",
     "Moncayola",
     "Isco",
     "Puado",
 
     "Raphinha",
     "Raba",
-    "Sergio Gómez",
+    "Antony",
+    "Julián Alvarez",
+    "Ferran Torres",
 ]
 
 # my_players_names = [
