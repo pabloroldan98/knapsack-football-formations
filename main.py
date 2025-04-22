@@ -359,6 +359,7 @@ my_players_names = [
     "Catena",
     "El Hilali",
     "Gerard Martín",
+    "Alderete",
 
     "Jordán",
     "Pape Gueye",
