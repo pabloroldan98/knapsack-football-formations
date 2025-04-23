@@ -351,13 +351,12 @@ my_players_names = [
     "Guaita",
     "Greif",
     "Horkaš",
+    "Luiz Júnior",
 
     "Kiko Femenía",
     "Luis Pérez",
     "Marcos Alonso",
     "Bartra",
-    "Catena",
-    "El Hilali",
     "Gerard Martín",
     "Alderete",
 
