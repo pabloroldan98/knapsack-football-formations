@@ -102,26 +102,28 @@ def get_team_links_from_league(league_url):
         # if i < 15:
         #     continue
         link = row.get("href", "")
+        team_name = None
         if link.startswith("/"):
             link = "https://www.sofascore.com" + link
+            team_name = link.split("/")[-2]
+            team_name = team_name.replace("-", " ").strip().title()
 
-        # Step 1: find the main <div> inside the <a>
-        outer_div = row.find("div", class_="Box")
-        if not outer_div:
-            continue  # Might be a malformed row
-
-        # Step 2: get all direct child elements (div/img/etc)
-        children = list(outer_div.children)
-
-        if len(children) < 3:
+        # grab the first <div> under the <a> (the “wrapper”)
+        wrapper = row.find("div", recursive=False)
+        if not wrapper:
+            if team_name:
+                team_data[str(i + 1)] = [team_name, link]
             continue
-        name_container = children[2]
 
-        name_div = name_container.find("div", class_="Text fsoviT")
-        if not name_div:
-            team_name = ""
-        else:
-            team_name = name_div.get_text(strip=True)
+        # get its direct-child <div>s
+        cells = wrapper.find_all("div", recursive=False)
+        if len(cells) < 3:
+            if team_name:
+                team_data[str(i + 1)] = [team_name, link]
+            continue
+
+        # the 3rd cell is the team name – just take its text
+        team_name = cells[2].get_text(strip=True)
 
         team_data[str(i+1)] = [team_name, link]
         # break
