@@ -94,8 +94,14 @@ def get_team_links_from_league(league_url):
 
     # Find all <a> tags with data-testid="standings_row"
     rows = soup.find_all("a", attrs={"data-testid": "standings_row"})
-    half_len = len(rows) // 2
-    rows = rows[:half_len]
+    # half_len = len(rows) // 2
+    # rows = rows[:half_len]
+    rows = [
+        row
+        for row in rows
+        if len(row.find_all("bdi")) <= 3
+    ]
+    # print(len(rows))
 
     team_data = {}
     for i, row in enumerate(rows):
