@@ -22,7 +22,7 @@ class FutbolFantasyScraper:
     def __init__(self):
         self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
         self.driver = create_driver()
-        self.wait = WebDriverWait(self.driver, 30)
+        self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
         self.session = requests.Session()
         # Use this custom headers dict when making GET requests
@@ -103,6 +103,7 @@ class FutbolFantasyScraper:
         probabilities_dict = {}
 
         for match_url in match_links:
+            print(match_url)
             # 2) Load each match page with Selenium
             self.fetch_page(match_url)
 
@@ -118,79 +119,87 @@ class FutbolFantasyScraper:
             except:
                 pass
 
-            # 4) Extract home & away team names
-            local_el = self.wait.until(
-                EC.presence_of_element_located((By.XPATH, '//*[starts-with(@class,"equipo local ")]'))
-            )
-            home_team_name = local_el.find_element(
-                By.XPATH, './/*[starts-with(@class,"nombre ")]'
-            ).text.strip()
+            try:
+                # 4) Extract home & away team names
+                local_el = self.wait.until(
+                    EC.presence_of_element_located((By.XPATH, '//*[starts-with(@class,"equipo local ")]'))
+                )
+                home_team_name = local_el.find_element(
+                    By.XPATH, './/*[starts-with(@class,"nombre ")]'
+                ).text.strip()
 
-            visit_el = self.wait.until(
-                EC.presence_of_element_located((By.XPATH, '//*[starts-with(@class,"equipo visitante ")]'))
-            )
-            away_team_name = visit_el.find_element(
-                By.XPATH, './/*[starts-with(@class,"nombre ")]'
-            ).text.strip()
+                visit_el = self.wait.until(
+                    EC.presence_of_element_located((By.XPATH, '//*[starts-with(@class,"equipo visitante ")]'))
+                )
+                away_team_name = visit_el.find_element(
+                    By.XPATH, './/*[starts-with(@class,"nombre ")]'
+                ).text.strip()
 
-            # 5) Grab the two halves (starters)
-            row = self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, 'div.row.fondo-campo.m-auto'))
-            )
-            team_divs = row.find_elements(By.XPATH, './div')
-            home_start = team_divs[0]
-            away_start = team_divs[1]
+                # 5) Grab the two halves (starters)
+                row = self.wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, 'div.row.fondo-campo.m-auto'))
+                )
+                team_divs = row.find_elements(By.XPATH, './div')
+                home_start = team_divs[0]
+                away_start = team_divs[1]
 
-            # 6) Grab the single suplentes-container, split its two inner divs into home_sup/away_sup
-            sup_container = self.wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '.suplentes-container'))
-            )
-            inner = sup_container.find_element(By.TAG_NAME, 'div')
-            child_divs = inner.find_elements(By.XPATH, './div')
-            home_sup = child_divs[0]
-            away_sup = child_divs[1]
+                # 6) Grab the single suplentes-container, split its two inner divs into home_sup/away_sup
+                sup_container = self.wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, '.suplentes-container'))
+                )
+                inner = sup_container.find_element(By.TAG_NAME, 'div')
+                child_divs = inner.find_elements(By.XPATH, './div')
+                home_sup = child_divs[0]
+                away_sup = child_divs[1]
 
-            teams_elements = {
-                home_team_name: [home_start, home_sup],
-                away_team_name: [away_start, away_sup],
-            }
+                teams_elements = {
+                    home_team_name: [home_start, home_sup],
+                    away_team_name: [away_start, away_sup],
+                }
+            except TimeoutException:
+                # skip this match if anything timed out
+                continue
 
             # 7) For each team, find all its camiseta elements and extract probabilities
             for team_name, containers in teams_elements.items():
-                team_probabilities = {}
-                for container in containers:
-                    # scoped wait for any camiseta under this container
-                    player_elements = self.wait.until(
-                        lambda d: container.find_elements(By.XPATH, './/*[contains(@class,"camiseta ")]')
-                    )
-                    for player_element in player_elements:
-                        player_name = None
-                        probability = "0%"
-                        try:
-                            player_name = player_element.find_element(
-                                By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]'
-                            ).find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
-                        except NoSuchElementException:  # Error while getting player_name
+                try:
+                    team_probabilities = {}
+                    for container in containers:
+                        # scoped wait for any camiseta under this container
+                        player_elements = self.wait.until(
+                            lambda d: container.find_elements(By.XPATH, './/*[contains(@class,"camiseta ")]')
+                        )
+                        for player_element in player_elements:
+                            player_name = None
+                            probability = "0%"
                             try:
                                 player_name = player_element.find_element(
-                                    By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                                    By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]'
+                                ).find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                             except NoSuchElementException:  # Error while getting player_name
-                                player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
-                                player_name = player_name.encode('latin1').decode('utf-8')
-                                player_name = player_name.title()
-                        try:
-                            probability = player_element.get_attribute('data-probabilidad').strip()
-                        except AttributeError: # Error while getting probability
-                            continue
+                                try:
+                                    player_name = player_element.find_element(
+                                        By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                                except NoSuchElementException:  # Error while getting player_name
+                                    player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                                    player_name = player_name.encode('latin1').decode('utf-8')
+                                    player_name = player_name.title()
+                            try:
+                                probability = player_element.get_attribute('data-probabilidad').strip()
+                            except AttributeError: # Error while getting probability
+                                continue
 
-                        # Clean up name & percent
-                        player_name = re.sub(r'[\d%]', '', player_name).strip()
-                        probability = re.sub(r'[^0-9%]', '', probability)
-                        if player_name and probability:
-                            player_name = find_manual_similar_string(player_name)
-                            team_probabilities[player_name] = float(probability.replace('%','')) / 100
+                            # Clean up name & percent
+                            player_name = re.sub(r'[\d%]', '', player_name).strip()
+                            probability = re.sub(r'[^0-9%]', '', probability)
+                            if player_name and probability:
+                                player_name = find_manual_similar_string(player_name)
+                                team_probabilities[player_name] = float(probability.replace('%','')) / 100
 
-                probabilities_dict[team_name] = team_probabilities
+                    probabilities_dict[team_name] = team_probabilities
+                except TimeoutException:
+                    # skip this team if anything timed out
+                    continue
 
         return probabilities_dict
 
