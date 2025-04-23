@@ -22,7 +22,7 @@ class FutbolFantasyScraper:
     def __init__(self):
         self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
         self.driver = create_driver()
-        self.wait = WebDriverWait(self.driver, 15)
+        self.wait = WebDriverWait(self.driver, 30)
         self.small_wait = WebDriverWait(self.driver, 5)
         self.session = requests.Session()
         # Use this custom headers dict when making GET requests
