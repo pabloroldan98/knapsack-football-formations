@@ -38,6 +38,11 @@ class AnaliticaFantasyScraper:
                 # Construct the full URL
                 full_url = "https://www.analiticafantasy.com" + a_tag["href"]
                 links.append(full_url)
+        # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
+        # links = sorted(
+        #     list(set(links)),
+        #     key=lambda u: int(u.split('/')[4])
+        # )
         return links
 
     def parse_match_page(self, match_url):
