@@ -134,7 +134,7 @@ def find_string_positions(string_list, target_string):
     return positions
 
 
-def is_valid_league_dict(league, min_teams=18):
+def is_valid_league_dict(league, min_teams=10):
     if not isinstance(league, dict):
         return False
     if "data" in league: # For Biwenger data
