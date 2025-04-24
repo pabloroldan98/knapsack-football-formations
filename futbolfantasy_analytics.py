@@ -1,6 +1,7 @@
 import ast
 import os
 import re
+import copy
 import shutil
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -87,7 +88,66 @@ class FutbolFantasyScraper:
         price_trend = player_element.get('data-diferencia1', '').strip() or "0"
         return name, price, position, team_id, form, price_trend
 
-    def scrape_probabilities(self):
+    def scrape_teams_probabilities(self):
+        self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
+
+        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class, "team")]')))
+        team_elements = team_elements[:20]
+        team_links = {}
+        for team_element in team_elements:
+            team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
+            team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+            team_links[team_name] = team_link
+
+        probabilities_dict = {}
+        for team_name, team_link in team_links.items():
+            self.fetch_page(team_link)
+
+            try:
+                select_probabilidad_element = self.wait.until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//select[option[@value="probabilidad"]]')
+                    )
+                )
+                select_probabilidad_obj = Select(select_probabilidad_element)
+                select_probabilidad_obj.select_by_value("probabilidad")
+            except:
+                pass
+
+            player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
+            team_probabilities = {}
+            for player_element in player_elements:
+                player_name = None
+                probability = "0%"
+                try:
+                    player_name = player_element.find_element(
+                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                except NoSuchElementException:  # Error while getting player_name
+                    try:
+                        player_name = player_element.find_element(
+                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                    except NoSuchElementException:  # Error while getting player_name
+                        player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        player_name = player_name.encode('latin1').decode('utf-8')
+                        player_name = player_name.title()
+                try:
+                    probability = player_element.get_attribute('data-probabilidad').strip()
+                except AttributeError: # Error while getting probability
+                    continue
+                player_name = re.sub(r'[\d%]', '', player_name).strip()
+                probability = re.sub(r'[^0-9%]', '', probability)
+                if player_name and probability:
+                    player_name = find_manual_similar_string(player_name)
+                    probability = float(probability.replace('%', '')) / 100
+                    team_probabilities[player_name] = probability
+            probabilities_dict[team_name] = team_probabilities
+
+        return probabilities_dict
+
+    def scrape_matches_probabilities(self, probabilities_dict=None):
+        if not probabilities_dict:
+            probabilities_dict = {}
+
         # 1) Fetch the possible lineups page via requests and parse out match URLs
         html = self.fetch_response("https://www.futbolfantasy.com/laliga/posibles-alineaciones")
         soup = BeautifulSoup(html, 'html.parser')
@@ -99,8 +159,6 @@ class FutbolFantasyScraper:
             if 'www.futbolfantasy.com/partidos/' in href:
                 match_links.append(href)
         match_links = sorted(list(set(match_links)))
-
-        probabilities_dict = {}
 
         for match_url in match_links:
             print(match_url)
@@ -232,7 +290,9 @@ class FutbolFantasyScraper:
                 forms_dict[team_name][name] = form
                 price_trends_dict[team_name][name] = price_trend
 
-        probabilities_dict = self.scrape_probabilities()
+        teams_probabilities_dict = self.scrape_teams_probabilities()
+        matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
+        probabilities_dict = copy.deepcopy(matches_probabilities_dict)
 
         # We don't have a browser to quit, but we'll keep the comment
         # self.driver.quit()
