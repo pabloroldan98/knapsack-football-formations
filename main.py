@@ -356,7 +356,7 @@ my_players_names = [
     "Luis Pérez",
     "Marcos Alonso",
     "Bartra",
-    "Alderete",
+    "Raíllo",
 
     "Jordán",
     "Pape Gueye",
