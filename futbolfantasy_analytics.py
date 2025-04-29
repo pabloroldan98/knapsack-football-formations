@@ -161,7 +161,7 @@ class FutbolFantasyScraper:
         match_links = sorted(list(set(match_links)))
 
         for match_url in match_links:
-            print(match_url)
+            # print(match_url)
             # 2) Load each match page with Selenium
             self.fetch_page(match_url)
 
@@ -232,12 +232,13 @@ class FutbolFantasyScraper:
                             probability = "0%"
                             try:
                                 player_name = player_element.find_element(
-                                    By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]'
+                                    By.CSS_SELECTOR, 'div.fotocontainer.laliga'
                                 ).find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                             except NoSuchElementException:  # Error while getting player_name
                                 try:
                                     player_name = player_element.find_element(
-                                        By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                                        By.XPATH, './/*[contains(@class, "img") and contains(@class, "laliga")]'
+                                    ).get_attribute('alt').strip()
                                 except NoSuchElementException:  # Error while getting player_name
                                     player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
                                     player_name = player_name.encode('latin1').decode('utf-8')
