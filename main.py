@@ -356,7 +356,8 @@ my_players_names = [
     "Luis Pérez",
     "Marcos Alonso",
     "Bartra",
-    "Raíllo",
+    "Blind",
+    "Alderete",
 
     "Jordán",
     "Pape Gueye",
@@ -364,6 +365,9 @@ my_players_names = [
     "Isco",
     "Puado",
     "Gavi",
+    "Darder",
+    "Pablo Torre",
+    "Pau Víctor",
 
     "Raphinha",
     "Raba",
