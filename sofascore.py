@@ -217,7 +217,6 @@ def get_player_statistics_rating(player_url):
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {stats_url}")
 
-
     stats_data = resp_stats.json()
     statistics = stats_data.get("statistics", {})
     rating = statistics.get("rating")
@@ -325,8 +324,8 @@ def get_players_data(
                     # Attempt #2: "Average Sofascore Rating" fallback
                     # Find the rating of the last tournament
                     try:
-                        # average_rating = get_player_statistics_rating(p)
-                        average_rating = get_player_average_rating(p)
+                        average_rating = get_player_statistics_rating(p)
+                        # average_rating = get_player_average_rating(p)
                     except:
                         pass
 
