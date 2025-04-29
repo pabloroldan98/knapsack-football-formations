@@ -372,7 +372,9 @@ def get_working_proxy(
                 timeout=timeout,
                 verify=False
             )
-            if resp.ok:
+            body = resp.text.lstrip()
+            # only accept if status 200 and body starts with an HTML doctype
+            if resp.status_code == 200 and body.startswith("<!DOCTYPE html"):
                 return proxy
         except Exception:
             continue
