@@ -3,6 +3,7 @@
 import os
 import re
 
+from random_header_generator import HeaderGenerator
 import requests
 from bs4 import BeautifulSoup
 import urllib3
@@ -72,9 +73,8 @@ def get_team_links_from_league(league_url):
             "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
-    }
+    generator = HeaderGenerator(user_agents='scrape')
+    headers = generator(country='es', device='desktop', browser='chrome')
     response = requests.get(league_url, headers=headers, verify=False)
     print("response")
     print(response)
