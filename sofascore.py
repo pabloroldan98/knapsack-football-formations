@@ -74,9 +74,16 @@ def get_team_links_from_league(league_url):
     }
     # Insecure: Disables certificate verification
     response = requests.get(league_url, headers=headers, verify=False)
+    print("response")
+    print(response)
+    print(response.status_code)
     html = response.text
+    print("html")
+    print(html)
 
     soup = BeautifulSoup(html, "html.parser")
+    print("soup")
+    print(soup)
 
     # # Copa America
     # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[7]/div[2]/div[2]/button"
@@ -94,6 +101,8 @@ def get_team_links_from_league(league_url):
 
     # Find all <a> tags with data-testid="standings_row"
     rows = soup.find_all("a", attrs={"data-testid": "standings_row"})
+    print("rows")
+    print(rows)
     # half_len = len(rows) // 2
     # rows = rows[:half_len]
     rows = [
@@ -247,6 +256,7 @@ def get_players_data(
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
         )
+    print(team_links)
     print("a6")
 
     print()
