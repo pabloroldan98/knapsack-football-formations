@@ -231,17 +231,23 @@ def get_players_data(
         backup_files=True,
         force_scrape=False
 ):
+    print("a1")
     if not force_scrape:
+        print("a2")
         data = read_dict_data(file_name)
         if data:
+            print("a3")
             return data
 
+    print("a4")
     if not team_links:
+        print("a5")
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
         )
+    print("a6")
 
     print()
     team_players_paths = dict()
@@ -254,6 +260,7 @@ def get_players_data(
     }
 
     for key, value in team_links.items():
+        print("a7")
         team_name = value[0]
         team_url = value[1]
         player_paths_list = []
@@ -285,6 +292,7 @@ def get_players_data(
 
     # Now we fetch each player's rating
     for team_name, player_paths in team_players_paths.items():
+        print("a8")
         players_ratings = {}
         for p in player_paths:
             # 1) Attempt rating with timeouts + fallback
@@ -385,14 +393,19 @@ def get_players_data(
             overwrite_dict_data(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
         j += 1
 
+    print("a9")
     if write_file:
+        print("a10")
         # write_dict_data(teams_with_players_ratings, file_name)
         overwrite_dict_data(teams_with_players_ratings, file_name)
 
+    print("a11")
     if backup_files:
+        print("a12")
         for k in range(j):
             delete_file(file_name + "_" + str(j))
 
+    print("a13")
     return teams_with_players_ratings
 
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376")
