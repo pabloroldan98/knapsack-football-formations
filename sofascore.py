@@ -75,15 +75,9 @@ def get_team_links_from_league(league_url):
     }
     # response = requests.get(league_url, headers=headers, verify=False)
     response = tls_requests.get(league_url, headers=headers, verify=False)
-    print("response")
-    print(response.status_code)
     html = response.text
-    print("html")
-    print(html)
 
     soup = BeautifulSoup(html, "html.parser")
-    print("soup")
-    print(soup)
 
     # # Copa America
     # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[7]/div[2]/div[2]/button"
@@ -101,8 +95,6 @@ def get_team_links_from_league(league_url):
 
     # Find all <a> tags with data-testid="standings_row"
     rows = soup.find_all("a", attrs={"data-testid": "standings_row"})
-    print("rows")
-    print(rows)
     # half_len = len(rows) // 2
     # rows = rows[:half_len]
     rows = [
@@ -187,7 +179,8 @@ def get_player_statistics_rating(player_url):
             "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
-    resp = requests.get(seasons_url, headers=headers, verify=False)
+    # resp = requests.get(seasons_url, headers=headers, verify=False)
+    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -218,7 +211,8 @@ def get_player_statistics_rating(player_url):
     stats_url = (f"https://www.sofascore.com/api/v1/player/{player_id}"
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
-    resp_stats = requests.get(stats_url, headers=headers, verify=False)
+    # resp_stats = requests.get(stats_url, headers=headers, verify=False)
+    resp_stats = tls_requests.get(stats_url, headers=headers, verify=False)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {stats_url}")
@@ -240,24 +234,17 @@ def get_players_data(
         backup_files=True,
         force_scrape=False
 ):
-    print("a1")
     if not force_scrape:
-        print("a2")
         data = read_dict_data(file_name)
         if data:
-            print("a3")
             return data
 
-    print("a4")
     if not team_links:
-        print("a5")
         team_links = get_team_links_from_league(
             "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
         )
-    print(team_links)
-    print("a6")
 
     print()
     team_players_paths = dict()
@@ -270,7 +257,6 @@ def get_players_data(
     }
 
     for key, value in team_links.items():
-        print("a7")
         team_name = value[0]
         team_url = value[1]
         player_paths_list = []
@@ -279,7 +265,8 @@ def get_players_data(
         print('Extracting %s player links...' % team_name)
 
         # GET the team page
-        response = requests.get(team_url, headers=headers, verify=False)
+        # response = requests.get(team_url, headers=headers, verify=False)
+        response = tls_requests.get(team_url, headers=headers, verify=False)
         soup = BeautifulSoup(response.text, "html.parser")
 
         a_tags = soup.find_all("a", href=True)
@@ -302,7 +289,6 @@ def get_players_data(
 
     # Now we fetch each player's rating
     for team_name, player_paths in team_players_paths.items():
-        print("a8")
         players_ratings = {}
         for p in player_paths:
             # 1) Attempt rating with timeouts + fallback
@@ -319,7 +305,8 @@ def get_players_data(
                        apply *0.95.
                     """
                     average_rating = float(6.0)
-                    resp = requests.get(p, headers=headers, verify=False)
+                    # resp = requests.get(p, headers=headers, verify=False)
+                    resp = tls_requests.get(p, headers=headers, verify=False)
                     if resp.status_code != 200:
                         # Raise your custom exception if HTTP status is not 200
                         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
@@ -366,7 +353,8 @@ def get_players_data(
                     Just tries to find an <h2> (like your Selenium code: "(//h2)[1]")
                     """
                     player_name = ""
-                    resp = requests.get(p, headers=headers, verify=False)
+                    # resp = requests.get(p, headers=headers, verify=False)
+                    resp = tls_requests.get(p, headers=headers, verify=False)
                     if resp.status_code != 200:
                         # Raise your custom exception if HTTP status is not 200
                         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
@@ -403,19 +391,14 @@ def get_players_data(
             overwrite_dict_data(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
         j += 1
 
-    print("a9")
     if write_file:
-        print("a10")
         # write_dict_data(teams_with_players_ratings, file_name)
         overwrite_dict_data(teams_with_players_ratings, file_name)
 
-    print("a11")
     if backup_files:
-        print("a12")
         for k in range(j):
             delete_file(file_name + "_" + str(j))
 
-    print("a13")
     return teams_with_players_ratings
 
 # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376")
