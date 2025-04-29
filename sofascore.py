@@ -72,9 +72,10 @@ def get_team_links_from_league(league_url):
             "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
-    proxy = get_working_proxy(league_url, headers=headers, max_proxies=50)
-    # Insecure: Disables certificate verification
-    response = requests.get(league_url, headers=headers, proxies={"https": proxy}, verify=False)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    }
+    response = requests.get(league_url, headers=headers, verify=False)
     print("response")
     print(response)
     print(response.status_code)
