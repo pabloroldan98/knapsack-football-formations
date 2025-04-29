@@ -23,7 +23,7 @@ import time
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
-    run_with_timeout, CustomTimeoutException, CustomConnectionException, find_manual_similar_string
+    run_with_timeout, CustomTimeoutException, CustomConnectionException, find_manual_similar_string, get_working_proxy
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -69,40 +69,12 @@ def get_team_links_from_league(league_url):
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/135.0.0.0 Safari/537.36"
+            "Chrome/91.0.4472.124 Safari/537.36"
         )
     }
+    proxy = get_working_proxy(league_url, headers=headers, max_proxies=50)
     # Insecure: Disables certificate verification
-    # response = requests.get(league_url, headers=headers, verify=False)
-
-    headers = {
-        "Host": "www.sofascore.com",
-        "Connection": "keep-alive",
-        "Cache-Control": "max-age=0",
-        "sec-ch-ua": '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                      "AppleWebKit/537.36 (KHTML, like Gecko) "
-                      "Chrome/135.0.0.0 Safari/537.36",
-        "Accept": ("text/html,application/xhtml+xml,application/xml;"
-                   "q=0.9,image/avif,image/webp,image/apng,*/*;"
-                   "q=0.8,application/signed-exchange;v=b3;q=0.7"),
-        "Sec-Fetch-Site": "same-origin",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-User": "?1",
-        "Sec-Fetch-Dest": "document",
-        "Accept-Encoding": "gzip, deflate, br, zstd",
-        "Accept-Language": "es-ES,es;q=0.9",
-        # add the etag/cookie you got from your initial “real” browser visit:
-        "If-None-Match": '"15a7z869daod4ef"',
-        "Cookie": "_lr_retry_request=true; _lr_env_src_ats=false; "
-                  "gc_session_id=…; _ga=…; _awl=…",
-    }
-    session = requests.Session()
-    session.headers.update(headers)
-    response = requests.get(league_url, verify=False)
+    response = requests.get(league_url, headers=headers, proxies={"https": proxy}, verify=False)
     print("response")
     print(response)
     print(response.status_code)

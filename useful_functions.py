@@ -3,6 +3,9 @@ import json
 import os
 import shutil
 
+import requests
+import urllib3
+from bs4 import BeautifulSoup
 from unidecode import unidecode
 import difflib
 from fuzzywuzzy import fuzz
@@ -329,6 +332,52 @@ def create_driver(keep_alive=True):
     # chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
     return webdriver.Chrome(keep_alive=keep_alive, options=chrome_options)
+
+
+def get_working_proxy(
+        target_url: str,
+        headers: dict | None = None,
+        max_proxies: int | None = None,
+        timeout: float = 5.0
+) -> str:
+    """
+    Fetches a fresh list of public proxies, tests them against `target_url`
+    using the supplied `headers`, and returns the first proxy that works.
+
+    :param target_url: The URL to test connectivity through the proxy.
+    :param headers:    (Optional) A dict of headers to send with each test request.
+    :param max_proxies:(Optional) Max number of proxies to try (None = all).
+    :param timeout:    Request timeout in seconds.
+    :return:           A working proxy string in "IP:port" format.
+    :raises RuntimeError: If no proxy succeeds.
+    """
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    # 1) Fetch and parse the raw proxy list
+    html = requests.get("https://free-proxy-list.net/", verify=False).text
+    soup = BeautifulSoup(html, "html.parser")
+    raw = soup.find("textarea", {"class": "form-control"}).get_text()
+    lines = raw.splitlines()[2:]  # skip header lines
+    proxy_list = [line.strip() for line in lines if line.strip()]
+
+    # 2) Test each proxy
+    for idx, proxy in enumerate(proxy_list):
+        if max_proxies and idx >= max_proxies:
+            break
+        try:
+            resp = requests.get(
+                target_url,
+                proxies={"https": proxy},
+                headers=headers or {},
+                timeout=timeout,
+                verify=False
+            )
+            if resp.ok:
+                return proxy
+        except Exception:
+            continue
+
+    raise RuntimeError("No working proxy found")
 
 
 # Define a custom exception for timeout
