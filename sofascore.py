@@ -20,6 +20,7 @@ import copy
 from pprint import pprint
 import ast
 import time
+import cloudscraper
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
@@ -72,8 +73,9 @@ def get_team_links_from_league(league_url):
             "Chrome/135.0.0.0 Safari/537.36"
         )
     }
-    # Insecure: Disables certificate verification
-    response = requests.get(league_url, headers=headers, verify=False)
+    scraper = cloudscraper.create_scraper()  # handles Cloudflare challenge
+    response = scraper.get(league_url)
+    # response = requests.get(league_url, headers=headers, verify=False)
     print("response")
     print(response)
     print(response.status_code)
