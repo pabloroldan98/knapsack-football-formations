@@ -14,7 +14,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import concurrent.futures
 import stopit
-from typing import Optional
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -337,8 +336,8 @@ def create_driver(keep_alive=True):
 
 def get_working_proxy(
         target_url: str,
-        headers: Optional[dict] = None,
-        max_proxies: Optional[int] = None,
+        headers: dict | None = None,
+        max_proxies: int | None = None,
         timeout: float = 5.0
 ) -> str:
     """
