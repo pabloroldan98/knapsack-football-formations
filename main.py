@@ -357,6 +357,7 @@ my_players_names = [
     "Marcos Alonso",
     "Bartra",
     "Blind",
+    "Vivian",
 
     "Jordán",
     "Pape Gueye",
@@ -368,7 +369,6 @@ my_players_names = [
     "Raphinha",
     "Raba",
     "Antony",
-    "Julián Alvarez",
     "Ferran Torres",
     "Muriqi",
 ]
