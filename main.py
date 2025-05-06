@@ -353,12 +353,12 @@ my_players_names = [
     "Owono",
 
     "Kiko Femenía",
-    "Luis Pérez",
     "Marcos Alonso",
     "Bartra",
     "Blind",
     "Vivian",
     "Arnau Martínez",
+    "Iñigo Martínez",
 
     "Jordán",
     "Pape Gueye",
@@ -367,6 +367,8 @@ my_players_names = [
     "Puado",
     "Darder",
     "Raúl Moro",
+    "Baena",
+    "Dani Rodríguez",
 
     "Raphinha",
     "Raba",
