@@ -359,6 +359,7 @@ my_players_names = [
     "Vivian",
     "Arnau Martínez",
     "Iñigo Martínez",
+    "Luis Pérez",
 
     "Jordán",
     "Pape Gueye",
@@ -367,12 +368,11 @@ my_players_names = [
     "Puado",
     "Darder",
     "Raúl Moro",
-    "Baena",
-    "Dani Rodríguez",
 
     "Raphinha",
     "Raba",
     "Muriqi",
+    "Kike García",
 ]
 
 # my_players_names = [
