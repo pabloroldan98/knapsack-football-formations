@@ -347,10 +347,7 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Dmitrovic",
-    "Guaita",
-    "Luiz Júnior",
-    "Owono",
+    "Courtois",
 
     "Kiko Femenía",
     "Marcos Alonso",
