@@ -350,7 +350,7 @@ my_players_names = [
     "Courtois",
 
     "Kiko Femenía",
-    "Marcos Alonso",
+    "Tárrega",
     "Bartra",
     "Blind",
     "Vivian",
