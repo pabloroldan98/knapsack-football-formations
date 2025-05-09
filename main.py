@@ -370,6 +370,7 @@ my_players_names = [
     "Muriqi",
     "Kike García",
     "Ayoze",
+    "Portu",
 ]
 
 # my_players_names = [
