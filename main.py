@@ -355,12 +355,12 @@ my_players_names = [
     "Blind",
     "Vivian",
     "Arnau Martínez",
+    "Foyth",
 
     "Jordán",
     "Pape Gueye",
     "André Almeida",
     "Isco",
-    "Puado",
     "Darder",
     "Raúl Moro",
     "Beñat Prados",
