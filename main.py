@@ -364,7 +364,6 @@ my_players_names = [
     "Isco",
     "Raúl Moro",
     "Beñat Prados",
-    "Van de Beek",
 
     "Raphinha",
     "Raba",
