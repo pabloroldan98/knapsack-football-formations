@@ -349,13 +349,14 @@ print()
 my_players_names = [
     "Courtois",
 
-    "Kiko Femenía",
+    "Mingueza",
     "Tárrega",
     "Bartra",
     "Blind",
     "Vivian",
     "Arnau Martínez",
     "Foyth",
+    "Chavarría",
 
     "Jordán",
     "Pape Gueye",
@@ -370,6 +371,8 @@ my_players_names = [
     "Kike García",
     "Ayoze",
     "Portu",
+    "Hugo Duro",
+    "Carlos Vicente",
 ]
 
 # my_players_names = [
