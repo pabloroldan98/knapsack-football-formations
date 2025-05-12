@@ -357,6 +357,7 @@ my_players_names = [
     "Arnau Martínez",
     "Foyth",
     "Miguel Gutiérrez",
+    "Mojica",
 
     "Jordán",
     "Pape Gueye",
@@ -366,8 +367,6 @@ my_players_names = [
     "Ceballos",
     "Guridi",
 
-    "Raphinha",
-    "Raba",
     "Kike García",
     "Ayoze",
     "Portu",
