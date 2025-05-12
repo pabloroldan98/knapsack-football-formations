@@ -356,14 +356,15 @@ my_players_names = [
     "Vivian",
     "Arnau Martínez",
     "Foyth",
-    "Chavarría",
+    "Miguel Gutiérrez",
 
     "Jordán",
     "Pape Gueye",
     "André Almeida",
     "Isco",
     "Raúl Moro",
-    "Beñat Prados",
+    "Ceballos",
+    "Guridi",
 
     "Raphinha",
     "Raba",
