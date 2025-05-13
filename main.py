@@ -366,6 +366,7 @@ my_players_names = [
     "Raúl Moro",
     "Ceballos",
     "Guridi",
+    "Brais Méndez",
 
     "Kike García",
     "Ayoze",
