@@ -352,16 +352,13 @@ my_players_names = [
     "Mingueza",
     "Tárrega",
     "Bartra",
-    "Blind",
     "Vivian",
-    "Arnau Martínez",
     "Foyth",
     "Miguel Gutiérrez",
     "Mojica",
 
     "Jordán",
     "Pape Gueye",
-    "André Almeida",
     "Isco",
     "Raúl Moro",
     "Ceballos",
@@ -370,7 +367,6 @@ my_players_names = [
 
     "Kike García",
     "Ayoze",
-    "Portu",
     "Hugo Duro",
     "Carlos Vicente",
 ]
