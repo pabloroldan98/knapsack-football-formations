@@ -353,8 +353,6 @@ my_players_names = [
     "Tárrega",
     "Bartra",
     "Vivian",
-    "Foyth",
-    "Miguel Gutiérrez",
     "Mojica",
 
     "Jordán",
@@ -364,6 +362,9 @@ my_players_names = [
     "Ceballos",
     "Guridi",
     "Brais Méndez",
+    "Luis Milla",
+    "Dani Olmo",
+    "Samú Costa",
 
     "Kike García",
     "Ayoze",
