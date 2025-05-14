@@ -356,7 +356,6 @@ my_players_names = [
     "Mojica",
 
     "Jordán",
-    "Pape Gueye",
     "Isco",
     "Raúl Moro",
     "Ceballos",
