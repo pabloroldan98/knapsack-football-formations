@@ -202,6 +202,19 @@ print()
 # --------------------------------------------------------------------
 # current_players = get_current_players()
 
+jornada_37 = [
+    ["Atlético", "Betis"],
+    ["Barcelona", "Villarreal"],
+    ["Celta", "Rayo Vallecano"],
+    ["Valencia", "Athletic"],
+    ["Mallorca", "Getafe"],
+    ["Real Sociedad", "Girona"],
+    ["Sevilla", "Real Madrid"],
+    ["Real Valladolid", "Alavés"],
+    ["Las Palmas", "Leganés"],
+    ["Osasuna", "Espanyol"]
+]
+
 
 current_players = get_current_players(
     no_form=False,
@@ -238,7 +251,7 @@ current_players = get_current_players(
     is_country=False,
     # host_team="Germany",
     debug=False,
-    # forced_matches=jornada_XX,
+    forced_matches=jornada_37,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
@@ -292,7 +305,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
+purged_players = purge_everything(worthy_players, probability_threshold=0.4, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -350,10 +363,11 @@ my_players_names = [
     "Courtois",
 
     "Mingueza",
-    "Tárrega",
     "Bartra",
     "Vivian",
     "Mojica",
+    "Zubeldia",
+    "Jorge Sáenz",
 
     "Jordán",
     "Isco",
@@ -364,9 +378,9 @@ my_players_names = [
     "Luis Milla",
     "Dani Olmo",
     "Samú Costa",
+    "Tchouameni",
 
     "Kike García",
-    "Ayoze",
     "Hugo Duro",
     "Carlos Vicente",
 ]
