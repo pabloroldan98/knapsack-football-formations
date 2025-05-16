@@ -355,21 +355,21 @@ my_players_names = [
     "Mojica",
     "Zubeldia",
     "Jorge Sáenz",
+    "Fran García",
 
     "Jordán",
     "Isco",
-    "Raúl Moro",
-    "Ceballos",
     "Guridi",
-    "Brais Méndez",
     "Luis Milla",
     "Dani Olmo",
     "Samú Costa",
     "Tchouameni",
 
+    "Ayoze",
     "Kike García",
     "Hugo Duro",
     "Carlos Vicente",
+    "Lewandowski",
 ]
 
 # my_players_names = [
