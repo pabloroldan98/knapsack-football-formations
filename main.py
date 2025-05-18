@@ -358,6 +358,7 @@ my_players_names = [
     "Vivian",
     "Fran García",
     "Jorge Sáenz",
+    "Lejeune",
 
     "Isco",
     "Jordán",
@@ -367,11 +368,9 @@ my_players_names = [
     "Samú Costa",
     "Tchouameni",
     "Swedberg",
-    "Dani Olmo",
 
     "Ayoze",
     "Kike García",
-    "Hugo Duro",
     "Carlos Vicente",
     "Lewandowski",
 ]
