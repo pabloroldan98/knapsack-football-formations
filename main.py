@@ -349,21 +349,18 @@ print()
 my_players_names = [
     "Luiz Júnior",
 
-    "Foyth",
     "Ratiu",
     "Mingueza",
     "Fran García",
     "Jorge Sáenz",
     "Lejeune",
+    "Urko Gonzalez",
 
     "Isco",
-    "Guridi",
-    "Aleñá",
     "Tchouameni",
     "Pedro Díaz",
     "Cissé",
 
-    "Carlos Vicente",
     "Lewandowski",
 ]
 
