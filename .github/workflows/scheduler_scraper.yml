@@ -1,13 +1,13 @@
 name: Scheduler - Full Football Scraper
 
 on:
-#  schedule:
-#    - cron: '0 2 * * 0,1,3,4,5,6'            # Every day at 3/4 AM (Spanish time) except Tuesdays
-#    - cron: '0 2 * 1,2,8,9 2'                # Every Tuesday at 3/4 AM (Spanish time) in Jan, Feb, Aug, Sep
-#    - cron: '0 2 * 3,4,5,6,7,10,11,12 2'     # Every Tuesday at 3/4 AM (Spanish time) except Jan, Feb, Aug, Sep
-#    - cron: '0 7 * 4,5,6,7,8,9,10 *'         # This runs at 9 AM every day (Spanish summer time)
-#    - cron: '0 8 * 1,2,3,11,12 *'            # This runs at 9 AM every day (Spanish winter time)
-##    - cron: '0 2 * * *'                     # This runs at 4 AM every day (Spanish time)
+  schedule:
+    - cron: '0 2 * * 0,1,3,4,5,6'            # Every day at 3/4 AM (Spanish time) except Tuesdays
+    - cron: '0 2 * 1,2,8,9 2'                # Every Tuesday at 3/4 AM (Spanish time) in Jan, Feb, Aug, Sep
+    - cron: '0 2 * 3,4,5,6,7,10,11,12 2'     # Every Tuesday at 3/4 AM (Spanish time) except Jan, Feb, Aug, Sep
+    - cron: '0 7 * 4,5,6,7,8,9,10 *'         # This runs at 9 AM every day (Spanish summer time)
+    - cron: '0 8 * 1,2,3,11,12 *'            # This runs at 9 AM every day (Spanish winter time)
+#    - cron: '0 2 * * *'                     # This runs at 4 AM every day (Spanish time)
   workflow_dispatch: # Allows manual triggering
 
 jobs:
@@ -158,7 +158,7 @@ jobs:
 
   scrape_transfermarket_penalty_takers:
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # Set the job timeout to 60 minutes
+    timeout-minutes: 120  # Set the job timeout to 120 minutes
     if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
@@ -187,7 +187,7 @@ jobs:
 
   scrape_transfermarket_penalty_savers:
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # Set the job timeout to 60 minutes
+    timeout-minutes: 120  # Set the job timeout to 120 minutes
     if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
@@ -216,7 +216,7 @@ jobs:
 
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
-    timeout-minutes: 120  # Set the job timeout to 120 minutes
+    timeout-minutes: 180  # Set the job timeout to 180 minutes
 #    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == '2' && (github.event.schedule_month == '8' || github.event.schedule_month == '9' || github.event.schedule_month == '1' || github.event.schedule_month == '2'))
     if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 2 * 1,2,8,9 2')
     steps:

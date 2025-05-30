@@ -4,6 +4,7 @@ import os
 import shutil
 
 import requests
+import tls_requests
 import urllib3
 from bs4 import BeautifulSoup
 from unidecode import unidecode
@@ -120,10 +121,58 @@ def find_manual_similar_string(my_string):
         "Rdt": "De Tomás",
         "Sergi D.": "Sergi Domínguez",
 
+        "Khéphren Thuram": "Thuram-Ulien",
+        "Samuel Aghehowa": "Samu Omorodion",
+        "Stiven Barreiro": "Jaine Barreiro",
+        "Nene Dorgeles": "Dorgeles Nene",
+        "Kodjo Fo Doh Laba": "Kodjo Laba",
+        "Danny Namaso": "Danny Loader",
+        "Moussa Kounfolo Yeo": "Boiro",
+        "Jeremías Ledesma": "Conan Ledesma",
+        "Alejandro Romero": "Kaku",
+        "El Mehdi Benabid": "E. Benabid",
+        "Jeong-in Mun": "Jung-in Moon",
+        "Hamad Al Yami": "M. Al-Yami",
+        "Mostafa Shobeir": "Oufa Shobeir",
+        "Mohamed Sedki Debchi": "M. Debchi",
+        "Kouame Autonne Kouadio": "K. Kouadio",
+        "Amine Ben Hamida": "M. Ben Hamida",
+        "Ahmed Nabil Koka": "Ahmed Kouka",
+        "Daniel Aceves": "Alonso Aceves",
+        "Bandar Al Ahbabi": "Bandar Mohamed",
+        "Jonathan Bell": "Jon Bell",
+        "Jong-kyu Yun": "Jong-gyu Yoon",
+        "Ahmed Hashem": "Ahmed Reda",
+        "Kutlwano Letlhaku": "K. Lethlaku",
+        "Khalid Al Zaabi": "Khalid Butti",
+        "Mohamed Wael Derbali": "M. Derbali",
+        "David Seung Ho Yoo": "David Yoo",
+        "Jaeik Lee": "Jae-wook Lee",
+        "Mouad Aounzou": "Mouad Enzo",
+        "Pedro Jair Ramírez Orta": "Pedro Ramírez",
+
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
         "Czechia": "Czech Republic",
         "Turkey": "Türkiye",
+
+        "Man City": "Manchester City",
+        "Dortmund": "Borussia Dortmund",
+        "B. Dortmund": "Borussia Dortmund",
+        "Bayern": "Bayern Munich",
+        "Bayern München": "Bayern Munich",
+        "Atl. Madrid": "Atlético",
+        "Atletico": "Atlético",
+        "Paris Saint-Germain": "PSG",
+        "Paris SG": "PSG",
+        "Seattle Sounders": "Seattle",
+        "Salzburg": "RB Salzburg",
+        "Al-Hilal SFC": "Al-Hilal",
+        "Al Ahly SC": "Ahly SC",
+        "Ulsan HD FC": "Ulsan HD",
+        "Mamelodi Sundowns": "Sundowns",
+        "Wydad Casablanca": "Wydad AC",
+        "ES Tunis": "Esperance",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     return normalization_dict.get(my_string, my_string)
@@ -354,7 +403,8 @@ def get_working_proxy(
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # 1) Fetch and parse the raw proxy list
-    html = requests.get("https://free-proxy-list.net/", verify=False).text
+    # html = requests.get("https://free-proxy-list.net/", verify=False).text
+    html = tls_requests.get("https://free-proxy-list.net/", verify=False).text
     soup = BeautifulSoup(html, "html.parser")
     raw = soup.find("textarea", {"class": "form-control"}).get_text()
     lines = raw.splitlines()[2:]  # skip header lines
@@ -365,7 +415,8 @@ def get_working_proxy(
         if max_proxies and idx >= max_proxies:
             break
         try:
-            resp = requests.get(
+            # resp = requests.get(
+            resp = tls_requests.get(
                 target_url,
                 proxies={"https": proxy},
                 headers=headers or {},

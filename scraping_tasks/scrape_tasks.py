@@ -38,11 +38,11 @@ print("Scraping FUTBOLFANTASY...")
 
 try:
     prices, positions, forms, start_probabilities, price_trends = get_futbolfantasy_data(
-        price_file_name="futbolfantasy_laliga_players_prices",
-        positions_file_name="futbolfantasy_laliga_players_positions",
-        forms_file_name="futbolfantasy_laliga_players_forms",
-        start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
-        price_trends_file_name="futbolfantasy_laliga_players_price_trends",
+        price_file_name="futbolfantasy_mundialito_players_prices",
+        positions_file_name="futbolfantasy_mundialito_players_positions",
+        forms_file_name="futbolfantasy_mundialito_players_forms",
+        start_probability_file_name="futbolfantasy_mundialito_players_start_probabilities",
+        price_trends_file_name="futbolfantasy_mundialito_players_price_trends",
         force_scrape=True
     )
     print("Prices:")
@@ -72,7 +72,7 @@ print("##############################")
 print("Scraping FUTMONDO...")
 
 try:
-    players_positions_dict = get_players_positions_dict(file_name="futmondo_laliga_players_positions", force_scrape=True)
+    players_positions_dict = get_players_positions_dict(file_name="futmondo_mundialito_players_positions", force_scrape=True)
     # Print the result in a readable way
     for team, players in players_positions_dict.items():
         print(team, players)
@@ -88,7 +88,7 @@ print("##############################")
 print("Scraping TRANSFERMARKET (penalty TAKERS)...")
 
 try:
-    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
+    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_mundialito_penalty_takers", force_scrape=True)
     print(penalty_takers)
     for team, penalties in penalty_takers.items():
         print(team, penalties)
@@ -104,7 +104,7 @@ print("##############################")
 print("Scraping TRANSFERMARKET (penalty SAVERS)...")
 
 try:
-    penalty_savers = get_penalty_savers_dict(file_name="transfermarket_laliga_penalty_savers", force_scrape=True)
+    penalty_savers = get_penalty_savers_dict(file_name="transfermarket_mundialito_penalty_savers", force_scrape=True)
     print(penalty_savers)
     for team, penalties in penalty_savers.items():
         print(team, penalties)
@@ -122,7 +122,7 @@ print("Scraping BIWENGER...")
 try:
     biwenger_data = get_biwenger_data_dict(
         write_file=True,
-        file_name="biwenger_laliga_data",
+        file_name="biwenger_mundialito_data",
         force_scrape=True
     )
     print(biwenger_data)
@@ -140,8 +140,10 @@ print("Scraping ELO RATINGS...")
 try:
     league_elo_ratings_dict = get_teams_elos_dict(
         is_country=False,
+        country=None,
+        extra_teams=True,
         write_file=True,
-        file_name="elo_ratings_laliga_data",
+        file_name="elo_ratings_mundialito_data",
         force_scrape=True
     )
     country_elo_ratings_dict = get_teams_elos_dict(
@@ -170,7 +172,7 @@ if day_of_week == 1 and (month_of_year == 9 or month_of_year == 2 or month_of_ye
 
     try:
         players_team_history = get_players_team_history_dict(
-            file_name="transfermarket_laliga_team_history",
+            file_name="transfermarket_mundialito_team_history",
             use_country_as_team=False,
             force_scrape=True
         )
@@ -194,7 +196,7 @@ if day_of_week == 1:
 
     try:
         result = get_players_ratings_list(
-            file_name="sofascore_laliga_players_ratings",
+            file_name="sofascore_mundialito_players_ratings",
             backup_files=False,
             force_scrape=True
         )

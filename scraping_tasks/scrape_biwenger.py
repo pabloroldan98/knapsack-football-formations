@@ -39,7 +39,7 @@ print("Scraping BIWENGER...")
 try:
     biwenger_data = get_biwenger_data_dict(
         write_file=True,
-        file_name="biwenger_laliga_data",
+        file_name="biwenger_mundialito_data",
         force_scrape=True
     )
     print(biwenger_data)

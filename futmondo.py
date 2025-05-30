@@ -1,4 +1,5 @@
 import requests
+import tls_requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 import os
@@ -15,7 +16,8 @@ class FutmondoWebScraper:
         self.teams = {}
 
     def get_teams(self, url):
-        response = requests.get(url)
+        # response = requests.get(url)
+        response = tls_requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
 
         team_elements = soup.select('.teamCrests.blackBg .teamLink a')
@@ -28,7 +30,8 @@ class FutmondoWebScraper:
     def get_players(self):
         for team_name, team_data in self.teams.items():
             url = team_data['link']
-            response = requests.get(url)
+            # response = requests.get(url)
+            response = tls_requests.get(url)
             soup = BeautifulSoup(response.content, 'html.parser')
 
             player_elements = soup.select('#staticPlayers ul li')

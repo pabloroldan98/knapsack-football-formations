@@ -5,6 +5,8 @@ import json
 import requests
 from pprint import pprint
 
+import tls_requests
+
 from player import Player, get_position
 from elo_ratings import get_teams_elos_dict
 from team import Team
@@ -22,14 +24,16 @@ def get_biwenger_data_dict(
     data = None
     if force_scrape:
         try:
-            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
+            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
-            response = requests.get(all_data_url, headers=headers)
+            # response = requests.get(all_data_url, headers=headers)
+            response = tls_requests.get(all_data_url, headers=headers)
             data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
         except:
             pass
@@ -47,6 +51,7 @@ def get_biwenger_data_dict(
 def get_championship_data(
         forced_matches=[],
         is_country=False,
+        extra_teams=False,
         host_team=None,
         use_comunio_price=False,
         biwenger_file_name="biwenger_laliga_data",
@@ -58,7 +63,7 @@ def get_championship_data(
     if verbose:
         print("Loading teams data...")
         print()
-    championship_teams = get_teams_championship_data(data, is_country=is_country, host_team=host_team, forced_matches=forced_matches, file_name=elo_ratings_file_name)
+    championship_teams = get_teams_championship_data(data, is_country=is_country, extra_teams=extra_teams, host_team=host_team, forced_matches=forced_matches, file_name=elo_ratings_file_name)
     if verbose:
         print("Loading players data...")
         print()
@@ -70,10 +75,28 @@ def get_championship_data(
     return sorted_championship_teams, sorted_championship_players
 
 
-def get_teams_championship_data(data, is_country=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
+def get_teams_championship_data(data, is_country=False, extra_teams=True, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    teams_elos_dict = get_teams_elos_dict(is_country=is_country, file_name=file_name)
+    # __________________________________________________
+    # POR AHORA!!!!
+    championship_teams['773'] = {
+        'id': 773,
+        'name': 'León',
+        'nextGames': [{
+            'away': {'id': 773, 'score': None},
+            'date': 1750100400,
+            'home': {'id': 758, 'score': None},
+            'id': 45886,
+            'round': {'id': 4447}
+        }],
+        'slug': 'leon'
+    }
+    for info in championship_players.values():
+        if info.get('teamID') is None:
+            info['teamID'] = 773
+    # __________________________________________________
+    teams_elos_dict = get_teams_elos_dict(is_country=is_country, extra_teams=extra_teams, file_name=file_name)
     championship_teams_db = create_teams_list(
         championship_teams,
         championship_players,
@@ -118,7 +141,12 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
             team_elo = get_team_elo(team_name, teams_elos_dict)
 
             if host_team:
-                is_team_home = True if host_team == team_name else False
+                if isinstance(host_team, str):
+                    is_team_home = True if team_name == host_team else False
+                elif isinstance(host_team, list):
+                    is_team_home = True if team_name in host_team else False
+                else:
+                    is_team_home = False
 
             new_team = Team(
                 team_name,
@@ -237,12 +265,13 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
         if use_comunio_price:
             player_price = int(championship_player["price"] / 100000)
         else:
-            player_price = int(championship_player["fantasyPrice"] / 100000)
+            # player_price = int(championship_player["fantasyPrice"] / 100000)
+            player_price = int(championship_player["fantasyPrice"] / 1000000)
         player_status = championship_player["status"]
         player_standard_price = float(championship_player["price"])
         player_fantasy_price = float(championship_player["fantasyPrice"])
         player_price_trend = float(championship_player["priceIncrement"])
-        player_fitness = championship_player["fitness"]
+        player_fitness = championship_player.get("fitness", [])
 
         player_team_id = str(championship_player["teamID"])
         if player_team_id == "None":
@@ -267,7 +296,14 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
     return players_list
 
 
-# all_teams, all_players = get_championship_data(is_country=False)
+# all_teams, all_players = get_championship_data(
+#     is_country=False,
+#     extra_teams=True,
+#     host_team=["Inter Miami", "Seattle", ],
+#     use_comunio_price=False,
+#     biwenger_file_name="biwenger_mundialito_data",
+#     elo_ratings_file_name="elo_ratings_mundialito_data",
+# )
 #
 # for t in all_teams:
 #     print(t)

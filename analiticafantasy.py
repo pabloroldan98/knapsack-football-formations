@@ -9,7 +9,8 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 
 class AnaliticaFantasyScraper:
     def __init__(self):
-        self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
+        # self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
+        self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
         self.session = requests.Session()
         self.headers = {
             "User-Agent": (
@@ -167,7 +168,7 @@ def get_players_start_probabilities_dict_extra(
 
 # # Example usage:
 # data = get_analiticafantasy_data(
-#     start_probability_file_name="test_analiticafantasy_laliga_players_start_probabilities",
+#     start_probability_file_name="test_analiticafantasy_mundialito_players_start_probabilities",
 #     force_scrape=True
 # )
 #

@@ -51,6 +51,7 @@ def get_current_players(
         players_manual_boosts=[],
         forced_matches=[],
         is_country=False,
+        extra_teams=False,
         host_team=None,
         alt_positions=False,
         alt_prices=False,
@@ -76,7 +77,7 @@ def get_current_players(
         start_probability_file_name_extra="analiticafantasy_laliga_players_start_probabilities",
         debug=False
 ):
-    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, host_team=host_team, use_comunio_price=use_comunio_price, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, extra_teams=extra_teams, host_team=host_team, use_comunio_price=use_comunio_price, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
     if debug:
         print("000000")
 
@@ -204,16 +205,16 @@ print()
 
 
 current_players = get_current_players(
-    no_form=False,
+    no_form=True,
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
     alt_fixture_method=False,
-    alt_positions=True,
-    alt_prices=True,
-    alt_price_trends=True,
-    alt_forms=True,
-    add_start_probability=True,
+    alt_positions=False,
+    alt_prices=False,
+    alt_price_trends=False,
+    alt_forms=False,
+    add_start_probability=False,
     use_multiple_probabilities=True,
     no_penalty_takers_boost=False,
     no_penalty_savers_boost=False,
@@ -221,29 +222,30 @@ current_players = get_current_players(
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
-    use_comunio_price=True,
-    biwenger_file_name="biwenger_laliga_data",
-    elo_ratings_file_name="elo_ratings_laliga_data",
-    ratings_file_name="sofascore_laliga_players_ratings",
-    penalty_takers_file_name="transfermarket_laliga_penalty_takers",
-    penalty_saves_file_name="transfermarket_laliga_penalty_savers",
-    team_history_file_name="transfermarket_laliga_team_history",
-    # alt_positions_file_name="futmondo_laliga_players_positions",
-    alt_positions_file_name="futbolfantasy_laliga_players_positions",
-    alt_prices_file_name="futbolfantasy_laliga_players_prices",
-    alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
-    alt_forms_file_name="futbolfantasy_laliga_players_forms",
-    start_probability_file_name="futbolfantasy_laliga_players_start_probabilities",
-    start_probability_file_name_extra="analiticafantasy_laliga_players_start_probabilities",
+    use_comunio_price=False,
+    biwenger_file_name="biwenger_mundialito_data",
+    elo_ratings_file_name="elo_ratings_mundialito_data",
+    ratings_file_name="sofascore_mundialito_players_ratings",
+    penalty_takers_file_name="transfermarket_mundialito_penalty_takers",
+    penalty_saves_file_name="transfermarket_mundialito_penalty_savers",
+    team_history_file_name="transfermarket_mundialito_team_history",
+    # # alt_positions_file_name="futmondo_laliga_players_positions",
+    # alt_positions_file_name="futbolfantasy_mundialito_players_positions",
+    # alt_prices_file_name="futbolfantasy_mundialito_players_prices",
+    # alt_price_trends_file_name="futbolfantasy_mundialito_players_price_trends",
+    # alt_forms_file_name="futbolfantasy_mundialito_players_forms",
+    start_probability_file_name="futbolfantasy_mundialito_players_start_probabilities",
+    start_probability_file_name_extra="analiticafantasy_mundialito_players_start_probabilities",
     is_country=False,
-    # host_team="Germany",
+    extra_teams=True,
+    host_team=["Inter Miami", "Seattle", ],
     debug=False,
     # forced_matches=jornada_XX,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
     # team_history_file_name="transfermarket_copa_america_country_history",
-    # # alt_positions_file_name="futmondo_laliga_players_positions",
+    # # alt_positions_file_name="futmondo_mundialito_players_positions",
     # is_country=True,
     # host_team="US",
     # debug=False,
@@ -292,7 +294,9 @@ print("------------------------- PURGED PLAYERS -------------------------")
 
 worthy_players_og = worthy_players.copy()
 
-purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
+purged_players = worthy_players.copy()
+purged_players = purge_everything(worthy_players, probability_threshold=None, fixture_filter=False)
+# purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -315,14 +319,40 @@ print()
 
 # needed_purge = purged_players[:50]
 # needed_purge = worthy_players[:150]
-# needed_purge = [player for player in worthy_players if player.price > 7]
+needed_purge = [player for player in worthy_players if player.price > 7]
 # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
-needed_purge = worthy_players[:150]
+needed_purge = [player for player in needed_purge if player.team != "León"]
+needed_purge = needed_purge[:150]
+# needed_purge = worthy_players[:150]
 # needed_purge = worthy_players.copy()
 
 
 
 #
+# needed_purge = [player for player in needed_purge if player.name != "Bergström"]
+# needed_purge = [player for player in needed_purge if player.name != "Modric"]
+# needed_purge = [player for player in needed_purge if player.name != "Aarón Anselmino"]
+# needed_purge = [player for player in needed_purge if player.name != "Raffaele Di Gennaro"]
+# needed_purge = [player for player in needed_purge if player.name != "Alberto Costa"]
+# needed_purge = [player for player in needed_purge if player.name != "Arnau Tenas"]
+# needed_purge = [player for player in needed_purge if player.name != "Marcel Lotka"]
+# needed_purge = [player for player in needed_purge if player.name != "Samuel Soares"]
+# needed_purge = [player for player in needed_purge if player.name != "Silas Ostrzinski"]
+# needed_purge = [player for player in needed_purge if player.name != "Daniel Peretz"]
+# needed_purge = [player for player in needed_purge if player.name != "Josep Martínez"]
+# needed_purge = [player for player in needed_purge if player.name != "Matheus Cunha"]
+# needed_purge = [player for player in needed_purge if player.name != "Yann Sommer"]
+# needed_purge = [player for player in needed_purge if player.name != "Echeverri"]
+# needed_purge = [player for player in needed_purge if player.name != "Nico O'Reilly"]
+# needed_purge = [player for player in needed_purge if player.name != "S. Rodríguez"]
+# needed_purge = [player for player in needed_purge if player.name != "Courtois"]
+# needed_purge = [player for player in needed_purge if player.name != "Kristjan Asllani"]
+# needed_purge = [player for player in needed_purge if player.name != "Santiago Morales"]
+# needed_purge = [player for player in needed_purge if player.name != "McAtee"]
+# needed_purge = [player for player in needed_purge if player.name != "De Bruyne"]
+# needed_purge = [player for player in needed_purge if player.name != "J. Piquerez"]
+# needed_purge = [player for player in needed_purge if player.name != "Dayot Upamecano"]
+# needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
 # needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
 # needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
 # needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
@@ -335,7 +365,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 210, verbose=2)
+best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 
 
 
@@ -404,7 +434,7 @@ for player in purged_players:
 
 print()
 #
-best_full_teams(my_players_list, possible_formations, -1, verbose=1)
+# best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 
 
 

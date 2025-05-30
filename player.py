@@ -146,7 +146,9 @@ class Player:
             base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
         else:
             # capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
-            capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
+            # capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
+            capped_elo_dif = min(450.0, max(-450.0, self.next_match_elo_dif))
+            # capped_elo_dif = self.next_match_elo_dif
             # if self.position == "GK":
             #     capped_elo_dif = capped_elo_dif * 0.2
             # base_coef = capped_elo_dif * 1.5 / 10000 + 1
@@ -634,10 +636,8 @@ def set_players_sofascore_rating(
 
     team_rating_names_list = list(team_player_rating_dict.keys())
     for player in result_players:
-        if player.team == "Atlético":
-            closest_player_rating_team = "Atl. Madrid"
-        else:
-            closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
+        closest_player_rating_team = find_similar_string(player.team, team_rating_names_list, similarity_threshold=0)
+
         player_rating_names_list = list(team_player_rating_dict[closest_player_rating_team].keys())
         closest_player_rating_name = find_similar_string(player.name, player_rating_names_list, similarity_threshold=0.8, verbose=False)
         if closest_player_rating_name:

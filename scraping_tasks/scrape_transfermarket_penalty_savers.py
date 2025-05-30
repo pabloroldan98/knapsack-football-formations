@@ -38,7 +38,7 @@ print("Scraping TRANSFERMARKET (penalty SAVERS)...")
 
 try:
     goalkeepers_penalty_saves = get_penalty_savers_dict(
-        file_name="transfermarket_laliga_penalty_savers",
+        file_name="transfermarket_mundialito_penalty_savers",
         force_scrape=True
     )
 

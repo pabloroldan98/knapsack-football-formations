@@ -2,6 +2,7 @@
 
 import os
 import re
+from urllib.parse import urljoin
 
 import tls_requests
 import requests
@@ -92,49 +93,67 @@ def get_team_links_from_league(league_url):
     # teams_base_xpath = "//*[@data-testid='standings_row']"
     # team_name_xpath = teams_base_xpath + "/div/div[2]/div/div"
     # time.sleep(15)
+    # OLD General
+    # panels = soup.find_all("div", attrs={"data-panelid": "1"})
+    # team_links = []
+    # for panel in panels:
+    #     team_links.extend(
+    #         panel.find_all(
+    #             "a",
+    #             href=lambda u: u and u.startswith("/team/"),
+    #             recursive=True
+    #         )
+    #     )
+    # # if len(team_links) > 32:
+    # #     half_len = len(team_links) // 2
+    # #     team_links = team_links[:half_len]
+    #
+    # team_data = {}
+    # seen_urls = set()
+    # for idx, a in enumerate(team_links, start=1):
+    #     href = a["href"]
+    #     full_url = urljoin("https://www.sofascore.com", href)
+    #     if full_url in seen_urls:
+    #         continue
+    #     seen_urls.add(full_url)
+    #
+    #     team_name = href.split("/")[-2]
+    #     team_name = team_name.replace("-", " ").strip().title()
+    #
+    #     name_span = a.select_one("span")
+    #     if name_span:
+    #         team_name = name_span.get_text(strip=True)
+    #
+    #     team_data[str(idx)] = [team_name, full_url]
 
-    # Find all <a> tags with data-testid="standings_row"
-    rows = soup.find_all("a", attrs={"data-testid": "standings_row"})
-    # half_len = len(rows) // 2
-    # rows = rows[:half_len]
-    rows = [
-        row
-        for row in rows
-        if len(row.find_all("bdi")) <= 3
-    ]
-    # print(len(rows))
+    # General
+    script = soup.find("script", id="__NEXT_DATA__")
+    data = json.loads(script.string)
+
+    def find_teams(obj, out):
+        if isinstance(obj, dict):
+            if "team" in obj:
+                t = obj["team"]
+                if all(k in t for k in ("name", "slug", "id")):
+                    out.append(t)
+            for v in obj.values():
+                find_teams(v, out)
+        elif isinstance(obj, list):
+            for item in obj:
+                find_teams(item, out)
+
+    all_teams = []
+    find_teams(data, all_teams)
 
     team_data = {}
-    for i, row in enumerate(rows):
-        # if i < 15:
-        #     continue
-        link = row.get("href", "")
-        team_name = None
-        if link.startswith("/"):
-            link = "https://www.sofascore.com" + link
-            team_name = link.split("/")[-2]
-            team_name = team_name.replace("-", " ").strip().title()
+    base = "https://www.sofascore.com/team/football"
+    for idx, t in enumerate(all_teams):
+        name = t["name"]
+        slug = t["slug"]
+        tid = t["id"]
+        url = urljoin(base + "/", f"{slug}/{tid}")
+        team_data[str(idx)] = [name, url]
 
-        # grab the first <div> under the <a> (the “wrapper”)
-        wrapper = row.find("div", recursive=False)
-        if not wrapper:
-            if team_name:
-                team_data[str(i + 1)] = [team_name, link]
-            continue
-
-        # get its direct-child <div>s
-        cells = wrapper.find_all("div", recursive=False)
-        if len(cells) < 3:
-            if team_name:
-                team_data[str(i + 1)] = [team_name, link]
-            continue
-
-        # the 3rd cell is the team name – just take its text
-        team_name = cells[2].get_text(strip=True)
-
-        team_data[str(i+1)] = [team_name, link]
-        # break
-    team_data = fix_team_data(team_data)
     return team_data
 
 
@@ -240,10 +259,14 @@ def get_players_data(
 
     if not team_links:
         team_links = get_team_links_from_league(
-            "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+            "https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619",
+            # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
         )
+    # team_links = {
+    #     '0': ['León', 'https://www.sofascore.com/team/football/club-leon/36534'],
+    # }
 
     print()
     team_players_paths = dict()
@@ -400,7 +423,7 @@ def get_players_data(
 
     return teams_with_players_ratings
 
-# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#52376")
+# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619")
 # pprint(team_links)
 
 

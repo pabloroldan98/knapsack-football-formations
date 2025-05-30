@@ -1,6 +1,10 @@
+from pprint import pprint
+
 import requests
+import tls_requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import time
 import os
 import ast
 
@@ -16,23 +20,46 @@ class TransfermarktScraper:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
 
-    def fetch_page(self, url):
-        response = requests.get(url, headers=self.headers)
-        if response.status_code == 200:
-            return BeautifulSoup(response.content, 'html.parser')
-        else:
-            return None
+    def fetch_page(self, url, tries: int = 3, pause: float = 20.0):
+        """
+        Fetch a URL, retrying up to `tries` times if the status is not 200.
+        Sleeps `pause` seconds between attempts.
+        Returns a BeautifulSoup on success, or None if all attempts fail.
+        """
+        # response = requests.get(url, headers=self.headers)
+        for attempt in range(1, tries + 1):
+            try:
+                response = tls_requests.get(url, headers=self.headers)
+            except Exception as e:
+                # network-level error; count it as a failed attempt
+                print(f"Attempt {attempt}/{tries} failed with exception: {e!r} ({url})")
+            else:
+                if response.status_code == 200:
+                    return BeautifulSoup(response.content, 'html.parser')
+                else:
+                    print(f"Attempt {attempt}/{tries} returned status {response.status_code} ({url})")
+            if attempt < tries:
+                time.sleep(pause)
+        # all attempts exhausted
+        return None
 
     def get_team_links(self, url):
         soup = self.fetch_page(url)
         team_links = {}
         if soup:
-            teams = soup.select("#yw1 table tbody tr td a")
-            for team in teams:
-                link = team.get('href')
-                title = team.get('title')
-                if title and link:
-                    team_links[title] = link
+            idx = 1
+            while idx < 20:
+                block_id = f"yw{idx}"
+                selector = f"#{block_id} table tbody tr td a"
+                teams = soup.select(selector)
+                if not teams:
+                    break
+                for a in teams:
+                    title = a.get("title")
+                    href = a.get("href")
+                    if title and href and "verein" in href:
+                        team_links[title] = href
+                idx += 1
         return team_links
 
     def get_goalkeeper_links(self, url):
@@ -61,8 +88,15 @@ class TransfermarktScraper:
 
         team_player_links = {}
         for team_name, team_suffix in team_links.items():
+            # if team_name not in [
+            #     "Chelsea FC",
+            #     "CR Flamengo",
+            #     "CF Monterrey",
+            # ]:
+            #     continue
             print('Extracting goalkeeper links from %s ...' % team_name)
             team_players_url = f"{self.base_url}/{team_suffix.split('/')[1]}/startseite/verein/{team_suffix.split('/')[4]}/plus/0?saison_id={year}"
+            # team_players_url = f"{self.base_url}/{team_suffix.split('/')[1]}/kader/verein/{team_suffix.split('/')[4]}/saison_id/{year}/plus/1"
             team_player_links[team_name] = self.get_goalkeeper_links(team_players_url)
             # break
 
@@ -116,7 +150,8 @@ class TransfermarktScraper:
 
     def scrape(self):
         result = {}
-        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+        # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
         # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
         # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
         team_links = self.get_team_links(league_url)
@@ -163,7 +198,7 @@ def get_penalty_savers_dict(
 
 
 # goalkeepers_penalty_saves = get_penalty_savers_dict(
-#     file_name="transfermarket_laliga_penalty_savers",
+#     file_name="test_transfermarket_mundialito_penalty_savers",
 #     force_scrape=True
 # )
 #

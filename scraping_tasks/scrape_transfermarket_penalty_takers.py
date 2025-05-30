@@ -37,7 +37,7 @@ print("##############################")
 print("Scraping TRANSFERMARKET (penalty TAKERS)...")
 
 try:
-    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
+    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_mundialito_penalty_takers", force_scrape=True)
     print(penalty_takers)
     for team, penalties in penalty_takers.items():
         print(team, penalties)
