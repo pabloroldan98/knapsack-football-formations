@@ -238,7 +238,7 @@ current_players = get_current_players(
     start_probability_file_name_extra="analiticafantasy_mundialito_players_start_probabilities",
     is_country=False,
     extra_teams=True,
-    host_team=["Inter Miami", "Seattle", ],
+    host_team=["Inter Miami", "Seattle", "Los Ángeles FC", ],
     debug=False,
     # forced_matches=jornada_XX,
 )
