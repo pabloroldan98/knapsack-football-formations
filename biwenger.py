@@ -78,24 +78,7 @@ def get_championship_data(
 def get_teams_championship_data(data, is_country=False, extra_teams=True, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    # __________________________________________________
-    # POR AHORA!!!!
-    championship_teams['773'] = {
-        'id': 773,
-        'name': 'León',
-        'nextGames': [{
-            'away': {'id': 773, 'score': None},
-            'date': 1750100400,
-            'home': {'id': 758, 'score': None},
-            'id': 45886,
-            'round': {'id': 4447}
-        }],
-        'slug': 'leon'
-    }
-    for info in championship_players.values():
-        if info.get('teamID') is None:
-            info['teamID'] = 773
-    # __________________________________________________
+    
     teams_elos_dict = get_teams_elos_dict(is_country=is_country, extra_teams=extra_teams, file_name=file_name)
     championship_teams_db = create_teams_list(
         championship_teams,
