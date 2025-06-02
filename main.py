@@ -295,8 +295,8 @@ print("------------------------- PURGED PLAYERS -------------------------")
 worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
-# purged_players = purge_everything(worthy_players, probability_threshold=None, fixture_filter=False)
-purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
+purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
+purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -349,7 +349,7 @@ needed_purge = needed_purge[:150]
 # needed_purge = [player for player in needed_purge if player.name != "Santiago Morales"]
 # needed_purge = [player for player in needed_purge if player.name != "McAtee"]
 # needed_purge = [player for player in needed_purge if player.name != "De Bruyne"]
-# needed_purge = [player for player in needed_purge if player.name != "J. Piquerez"]
+# needed_purge = [player for player in needed_purge if player.name != "Piquerez"]
 # needed_purge = [player for player in needed_purge if player.name != "Dayot Upamecano"]
 # needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
 # needed_purge = [player for player in needed_purge if player.name != "XXXXXX"]
