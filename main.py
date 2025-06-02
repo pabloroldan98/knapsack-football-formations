@@ -321,7 +321,6 @@ print()
 # needed_purge = worthy_players[:150]
 needed_purge = [player for player in worthy_players if player.price > 7]
 # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
-needed_purge = [player for player in needed_purge if player.team != "León"]
 needed_purge = needed_purge[:150]
 # needed_purge = worthy_players[:150]
 # needed_purge = worthy_players.copy()
