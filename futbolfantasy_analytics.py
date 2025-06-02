@@ -93,13 +93,15 @@ class FutbolFantasyScraper:
         # self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
         self.fetch_page("https://www.futbolfantasy.com/mundial-clubes/clasificacion")
 
-        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class, "team")]')))
-        team_elements = team_elements[:20]
+        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class,"team")][td[contains(@class,"column left nombre")]]')))
+        # team_elements = team_elements[:20]
         team_links = {}
         for team_element in team_elements:
             team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
+            team_name = team_name.split("\\")[0]
             team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
             team_links[team_name] = team_link
+        team_links = {k.split("\n")[0]: v for k, v in team_links.items() if v != "https://www.futbolfantasy.com/"}
 
         probabilities_dict = {}
         for team_name, team_link in team_links.items():
@@ -116,7 +118,11 @@ class FutbolFantasyScraper:
             except:
                 pass
 
-            player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
+            player_elements = []
+            try:
+                player_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[contains(@class, "camiseta ")]')))
+            except TimeoutException:
+                pass
             team_probabilities = {}
             for player_element in player_elements:
                 player_name = None
@@ -144,7 +150,9 @@ class FutbolFantasyScraper:
                     player_name = find_manual_similar_string(player_name)
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
-            probabilities_dict[team_name] = team_probabilities
+
+            if team_probabilities:
+                probabilities_dict[team_name] = team_probabilities
 
         return probabilities_dict
 
@@ -205,7 +213,11 @@ class FutbolFantasyScraper:
                 team_divs = row.find_elements(By.XPATH, './div')
                 home_start = team_divs[0]
                 away_start = team_divs[1]
+            except TimeoutException:
+                home_start = None
+                away_start = None
 
+            try:
                 # 6) Grab the single suplentes-container, split its two inner divs into home_sup/away_sup
                 sup_container = self.wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, '.suplentes-container'))
@@ -214,13 +226,17 @@ class FutbolFantasyScraper:
                 child_divs = inner.find_elements(By.XPATH, './div')
                 home_sup = child_divs[0]
                 away_sup = child_divs[1]
-
-                teams_elements = {
-                    home_team_name: [home_start, home_sup],
-                    away_team_name: [away_start, away_sup],
-                }
             except TimeoutException:
-                # skip this match if anything timed out
+                home_sup = None
+                away_sup = None
+
+            teams_elements = {
+                home_team_name: [x for x in (home_start, home_sup) if x is not None],
+                away_team_name: [x for x in (away_start, away_sup) if x is not None],
+            }
+
+            if not any((home_start, home_sup, away_start, away_sup)):
+                # skip this match if all of them missing timed out
                 continue
 
             # 7) For each team, find all its camiseta elements and extract probabilities
@@ -228,9 +244,12 @@ class FutbolFantasyScraper:
                 try:
                     team_probabilities = {}
                     for container in containers:
+                        # Pre‐compute a flag: True if this is a “_start” container, False if it’s a “_sup” container
+                        is_start = container in (home_start, away_start)
                         # scoped wait for any camiseta under this container
                         player_elements = self.wait.until(
-                            lambda d: container.find_elements(By.XPATH, './/*[contains(@class,"camiseta ")]')
+                            # lambda d: container.find_elements(By.XPATH, './/*[contains(@class,"camiseta ")]')
+                            lambda d: container.find_elements(By.XPATH, './/*[contains(@class,"camiseta")]')
                         )
                         for player_element in player_elements:
                             player_name = None
@@ -251,8 +270,12 @@ class FutbolFantasyScraper:
                                     player_name = player_name.encode('latin1').decode('utf-8')
                                     player_name = player_name.title()
                             try:
-                                probability = player_element.get_attribute('data-probabilidad').strip()
-                            except AttributeError: # Error while getting probability
+                                # probability = player_element.get_attribute('data-probabilidad').strip()
+                                probability = player_element.get_attribute('data-probabilidad')
+                                if probability is None:
+                                    probability = "80%" if is_start else "20%"
+                                probability = probability.strip()
+                            except AttributeError:  # Error while getting probability
                                 continue
 
                             # Clean up name & percent
