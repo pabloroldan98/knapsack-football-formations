@@ -232,7 +232,7 @@ def purge_eliminated_players(players_list, qualified_teams):
 
 
 def purge_non_starting_players(players_list, probability_threshold=0.5):
-    if not all(player.start_probability == 0 for player in players_list):
+    if probability_threshold and not all(player.start_probability == 0 for player in players_list):
         result_players = [
             player for player in players_list
             if (player.start_probability >= probability_threshold)
