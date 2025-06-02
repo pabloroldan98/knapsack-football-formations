@@ -150,6 +150,8 @@ def find_manual_similar_string(my_string):
         "Jaeik Lee": "Jae-wook Lee",
         "Mouad Aounzou": "Mouad Enzo",
         "Pedro Jair Ramírez Orta": "Pedro Ramírez",
+        "Jang Si-young": "See-young Jang",
+        "Mohamed Rayane Hamrouni": "M. Hamrouni",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
@@ -173,6 +175,7 @@ def find_manual_similar_string(my_string):
         "Mamelodi Sundowns": "Sundowns",
         "Wydad Casablanca": "Wydad AC",
         "ES Tunis": "Esperance",
+        "Los Ángeles": "Los Ángeles FC",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     return normalization_dict.get(my_string, my_string)

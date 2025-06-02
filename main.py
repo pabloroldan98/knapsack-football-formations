@@ -214,8 +214,8 @@ current_players = get_current_players(
     alt_prices=False,
     alt_price_trends=False,
     alt_forms=False,
-    add_start_probability=False,
-    use_multiple_probabilities=True,
+    add_start_probability=True,
+    use_multiple_probabilities=False,
     no_penalty_takers_boost=False,
     no_penalty_savers_boost=False,
     no_team_status_nerf=False,
@@ -295,8 +295,8 @@ print("------------------------- PURGED PLAYERS -------------------------")
 worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
-purged_players = purge_everything(worthy_players, probability_threshold=None, fixture_filter=False)
-# purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
+# purged_players = purge_everything(worthy_players, probability_threshold=None, fixture_filter=False)
+purged_players = purge_everything(worthy_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 

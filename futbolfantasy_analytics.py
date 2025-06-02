@@ -99,6 +99,7 @@ class FutbolFantasyScraper:
         for team_element in team_elements:
             team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
             team_name = team_name.split("\\")[0]
+            team_name = find_manual_similar_string(team_name)
             team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
             team_links[team_name] = team_link
         team_links = {k.split("\n")[0]: v for k, v in team_links.items() if v != "https://www.futbolfantasy.com/"}
@@ -198,6 +199,7 @@ class FutbolFantasyScraper:
                 home_team_name = local_el.find_element(
                     By.XPATH, './/*[starts-with(@class,"nombre ")]'
                 ).text.strip()
+                home_team_name = find_manual_similar_string(home_team_name)
 
                 visit_el = self.wait.until(
                     EC.presence_of_element_located((By.XPATH, '//*[starts-with(@class,"equipo visitante ")]'))
@@ -205,6 +207,7 @@ class FutbolFantasyScraper:
                 away_team_name = visit_el.find_element(
                     By.XPATH, './/*[starts-with(@class,"nombre ")]'
                 ).text.strip()
+                away_team_name = find_manual_similar_string(away_team_name)
 
                 # 5) Grab the two halves (starters)
                 row = self.wait.until(
@@ -314,6 +317,7 @@ class FutbolFantasyScraper:
         for player_element in player_elements:
             name, price, position, team_id, form, price_trend = self.get_player_data(player_element)
             team_name = team_options.get(team_id)
+            team_name = find_manual_similar_string(team_name)
             position_name = positions_normalize.get(position)
             if team_name:
                 prices_dict[team_name][name] = price

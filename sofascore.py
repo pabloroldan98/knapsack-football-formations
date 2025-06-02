@@ -280,6 +280,7 @@ def get_players_data(
 
     for key, value in team_links.items():
         team_name = value[0]
+        team_name = find_manual_similar_string(team_name)
         team_url = value[1]
         player_paths_list = []
 
