@@ -55,10 +55,11 @@ class TransfermarktScraper:
                 if not teams:
                     break
                 for a in teams:
-                    title = a.get("title")
-                    href = a.get("href")
-                    if title and href and "verein" in href:
-                        team_links[title] = href
+                    team_name = a.get("title")
+                    team_name = find_manual_similar_string(team_name)
+                    team_link = a.get("href")
+                    if team_name and team_link and "verein" in team_link:
+                        team_links[team_name] = team_link
                 idx += 1
         return team_links
 
@@ -74,12 +75,13 @@ class TransfermarktScraper:
                 positions = soup.select("div.responsive-table div.grid-view table.items tbody tr td table.inline-table tr td")
             i = 0
             for player in players:
-                name = player.text.strip()
+                player_name = player.text.strip()
+                player_name = find_manual_similar_string(player_name)
                 position_text = positions[i * 3 + 2].text.strip()
                 url = player.get('href')
-                if name and url and position_text:
+                if player_name and url and position_text:
                     if "Goalkeeper" in position_text:
-                        player_links[name] = f"{self.base_url}{url}"
+                        player_links[player_name] = f"{self.base_url}{url}"
                 i = i + 1
         return player_links
 

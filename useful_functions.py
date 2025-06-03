@@ -123,6 +123,7 @@ def find_manual_similar_string(my_string):
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
+        "Samu Aghehowa": "Samu Omorodion",
         "Stiven Barreiro": "Jaine Barreiro",
         "Nene Dorgeles": "Dorgeles Nene",
         "Kodjo Fo Doh Laba": "Kodjo Laba",
@@ -152,6 +153,7 @@ def find_manual_similar_string(my_string):
         "Pedro Jair Ramírez Orta": "Pedro Ramírez",
         "Jang Si-young": "See-young Jang",
         "Mohamed Rayane Hamrouni": "M. Hamrouni",
+        "José Manuel López": "José López",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
@@ -159,6 +161,7 @@ def find_manual_similar_string(my_string):
         "Turkey": "Türkiye",
 
         "Man City": "Manchester City",
+        "Inter Milan": "Inter",
         "Dortmund": "Borussia Dortmund",
         "B. Dortmund": "Borussia Dortmund",
         "Bayern": "Bayern Munich",
@@ -171,11 +174,15 @@ def find_manual_similar_string(my_string):
         "Salzburg": "RB Salzburg",
         "Al-Hilal SFC": "Al-Hilal",
         "Al Ahly SC": "Ahly SC",
+        "Al Ahly FC": "Ahly SC",
         "Ulsan HD FC": "Ulsan HD",
         "Mamelodi Sundowns": "Sundowns",
         "Wydad Casablanca": "Wydad AC",
         "ES Tunis": "Esperance",
         "Los Ángeles": "Los Ángeles FC",
+        "Los Angeles FC": "Los Ángeles FC",
+        "Inter Miami CF": "Inter Miami",
+        "Urawa Red Diamonds": "Urawa Reds",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     return normalization_dict.get(my_string, my_string)

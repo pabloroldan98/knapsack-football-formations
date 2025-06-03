@@ -53,10 +53,11 @@ class TransfermarktScraper:
                 if not teams:
                     break
                 for a in teams:
-                    title = a.get("title")
-                    href = a.get("href")
-                    if title and href and "verein" in href:
-                        team_links[title] = href
+                    team_name = a.get("title")
+                    team_name = find_manual_similar_string(team_name)
+                    team_link = a.get("href")
+                    if team_name and team_link and "verein" in team_link:
+                        team_links[team_name] = team_link
                 idx += 1
         return team_links
 
