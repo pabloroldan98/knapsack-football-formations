@@ -25,6 +25,7 @@ def best_squads(players_list, formations, budget):
         for res_index in result_indexes:
             result.append(players_list[res_index])
 
+        print()
         print("With formation " + str(formation) + ": " + str(score))
         for best_player in result:
             print(best_player)
@@ -131,6 +132,7 @@ def best_teams(players_list, formations, budget):
         for res_index in result_indexes:
             result.append(players_list[res_index])
 
+        print()
         print("With formation " + str(formation) + ": " + str(score))
         for best_player in result:
             print(best_player)

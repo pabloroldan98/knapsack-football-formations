@@ -56,6 +56,7 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
 
 
 def print_best_full_teams(best_results_teams):
+    print()
     for best_result in best_results_teams:
         formation, score, result_players = best_result
         total_price = sum(player.price for player in result_players)
@@ -207,6 +208,7 @@ def best_transfers(past_team, players_list, n_transfers, formations=possible_for
 
 
 def print_transfers(transfers):
+    print()
     for best_result in transfers:
         formation, score, result_players, n_non_changed_players = best_result
         total_price = sum(player.price for player in result_players)
