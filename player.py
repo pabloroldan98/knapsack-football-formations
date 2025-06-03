@@ -406,6 +406,10 @@ def set_start_probabilities(players_list, players_start_probabilities_dict, play
     #     players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
     #     for start_probability_name in start_probability_names_list:
     #         closest_player_name = find_similar_string(start_probability_name, players_names_list, verbose=False)
+    #         print(closest_team_name)
+    #         print(start_probability_name)
+    #         print(closest_player_name)
+    #         print()
     #         if closest_player_name:
     #             for player in result_players:
     #                 if player.name == closest_player_name:
