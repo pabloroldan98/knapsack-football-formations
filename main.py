@@ -352,31 +352,20 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Batalla",
+    "Agustín Rossi",
 
-    "Ratiu",
-    "Mingueza",
-    "Fran García",
-    "Jorge Sáenz",
-    "Lejeune",
-    "Urko Gonzalez",
-    "Marcos Alonso",
-    "Valjent",
-    "Rosier",
+    "Alex Sandro",
+    "Otamendi",
+    "Young-gwon Kim",
 
-    "Tchouameni",
-    "Pedro Díaz",
-    "Cissé",
-    "Rubén García",
-    "Koke",
-    "Samu Lino",
-    "Terrats",
-    "Uche",
-    "Angel Ortiz",
+    "Kimmich",
+    "Emam Ashour",
+    "Darijan Bojanic",
+    "De Arrascaeta",
 
-    "Lewandowski",
-    "Cucho",
-    "Roberto Fernández",
+    "Messi",
+    "Harry Kane",
+    "Olise",
 ]
 
 # my_players_names = [
