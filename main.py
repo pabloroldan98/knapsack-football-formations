@@ -366,10 +366,6 @@ my_players_names = [
     "Messi",
     "Harry Kane",
     "Olise",
-
-
-    # "Óscar Ustari", #  for Agustín Rossi
-    # "Svensson", #  for Young-gwon Kim
 ]
 
 # my_players_names = [
