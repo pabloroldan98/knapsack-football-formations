@@ -188,7 +188,7 @@ def find_manual_similar_string(my_string):
         "Mamelodi Sundowns": "Sundowns",
         "Wydad Casablanca": "Wydad AC",
         "ES Tunis": "Esperance",
-        "Espérance": "Esperance",
+        "Espérance Tunis": "Esperance",
         "Los Ángeles": "Los Ángeles FC",
         "Los Angeles FC": "Los Ángeles FC",
         "Inter Miami CF": "Inter Miami",
