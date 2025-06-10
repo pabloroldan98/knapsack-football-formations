@@ -3,10 +3,12 @@ import pandas as pd
 import datetime
 from pprint import pprint
 
+import re
 import requests
 import tls_requests
 import urllib3
 from bs4 import BeautifulSoup
+from sklearn.linear_model import LinearRegression
 from matplotlib import pyplot as plt
 
 from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data
@@ -38,6 +40,217 @@ def get_teams_elos_dict(
         overwrite_dict_data(data, file_name)
 
     return data
+
+
+def get_besoccer_teams_elos():
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    # 1. Fetch the page
+    url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    }
+    # response = requests.get(league_url, headers=headers, verify=False)
+    response = tls_requests.get(url, headers=headers, verify=False)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 2. Extract all <td class="name"> elements,
+    #    find their <a data-cy="team"> child, and grab the span.team-name text + href
+    besoccer_teams = []
+    for td in soup.find_all('td', class_='name'):
+        a = td.find('a', attrs={'data-cy': 'team'})
+        if not a:
+            continue
+        # team name is inside the <span class="team-name">
+        name_span = a.find('span', class_='team-name')
+        team_name = name_span.get_text(strip=True) if name_span else None
+        url = a.get('href')
+        besoccer_teams.append({
+            'name': team_name,
+            'url': url
+        })
+
+    # 3. For each team, fetch its page and parse the ELO
+    for team in besoccer_teams:
+        team_url = team['url']
+        resp = tls_requests.get(team_url, headers=headers, verify=False)
+        team_soup = BeautifulSoup(resp.text, "html.parser")
+
+        # find the ELO container
+        elo_div = team_soup.find('div', class_='elo label-text')
+        elo = None
+        if elo_div:
+            span = elo_div.find('span')
+            if span:
+                # convert the string (e.g. "1234.56") to float
+                try:
+                    elo = float(span.get_text(strip=True))
+                except ValueError:
+                    elo = None
+        team['elo'] = elo
+
+    besoccer_elos_dict = {
+        team['name']: team['elo']
+        for team in sorted(
+            besoccer_teams,
+            key=lambda t: (t['elo'] is None, t['elo']),  # None’s go last
+            reverse=True
+        )
+    }
+
+    full_besoccer_teams_elos_dict = {
+        find_manual_similar_string(key): value for key, value in besoccer_elos_dict.items()
+    }
+
+    return full_besoccer_teams_elos_dict
+
+
+def get_footballdatabase_teams_elos():
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    # 1. Fetch the page
+    url = 'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-2025'
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    }
+    # response = requests.get(league_url, headers=headers, verify=False)
+    response = tls_requests.get(url, headers=headers, verify=False)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+
+    # 2. Find all <a> within any <table> whose href starts with '/clubs-ranking/'
+    pattern = re.compile(r"^/clubs-ranking/")
+    footballdatabase_teams = []
+    seen_urls = set()
+    for table in soup.find_all('table'):
+        for a in table.find_all('a', href=pattern):
+            link_text = a.get_text(strip=True)
+            href = a['href']
+            if href in seen_urls:
+                continue
+            seen_urls.add(href)
+            footballdatabase_teams.append({
+                'name': link_text,
+                'url': "https://footballdatabase.com" + href
+            })
+
+    # 3. For each team, fetch its page and parse the ELO
+    for team in footballdatabase_teams:
+        team_url = team['url']
+        resp = tls_requests.get(team_url, headers=headers, verify=False)
+        team_soup = BeautifulSoup(resp.text, "html.parser")
+
+        elo = None
+        # Try each table.table-hover until we successfully extract an ELO
+        for table in team_soup.find_all('table', class_='table table-hover'):
+            active_tr = table.find('tr', class_='active')
+            if not active_tr:
+                continue
+
+            tds = active_tr.find_all('td')
+            if not tds:
+                continue
+
+            elo_text = tds[-1].get_text(strip=True)
+            try:
+                elo = float(elo_text)
+            except ValueError:
+                # fallback: leave as raw text or None
+                elo = None
+            break  # stop after first successful parse
+
+        team['elo'] = elo
+
+    footballdatabase_elos_dict = {
+        team['name']: team['elo']
+        for team in sorted(
+            footballdatabase_teams,
+            key=lambda t: (t['elo'] is None, t['elo']),  # None’s go last
+            reverse=True
+        )
+    }
+
+    full_besoccer_teams_elos_dict = {
+        find_manual_similar_string(key): value for key, value in footballdatabase_elos_dict.items()
+    }
+
+    return full_besoccer_teams_elos_dict
+
+
+def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
+    # Combine into a single DataFrame
+    df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo], axis=1)
+
+    # ——————————————————————————
+    # 1) Fit the three regressions
+    # ——————————————————————————
+
+    # a) Full 2-predictor model
+    mask_full_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
+    X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo"]].values
+    y_full = df_elo.loc[mask_full_train, "teams_elo"].values
+    reg_full = LinearRegression().fit(X_full, y_full)
+
+    # b) BeSoccer-only model
+    mask_besoccer_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
+    X_besoccer = df_elo.loc[mask_besoccer_train, ["besoccer_elo"]].values
+    y_besoccer = df_elo.loc[mask_besoccer_train, "teams_elo"].values
+    reg_besoccer = LinearRegression().fit(X_besoccer, y_besoccer)
+
+    # c) FBDB-only model
+    mask_footballdb_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
+    X_footballdb = df_elo.loc[mask_footballdb_train, ["footballdb_elo"]].values
+    y_footballdb = df_elo.loc[mask_footballdb_train, "teams_elo"].values
+    reg_footballdb = LinearRegression().fit(X_footballdb, y_footballdb)
+
+    # ——————————————————————————
+    # 2) Predict into each “missing” scenario
+    # ——————————————————————————
+
+    # a) Both sources present
+    mask_full_pred = (
+            df_elo["teams_elo"].isna()
+            & df_elo[["besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
+    )
+    if mask_full_pred.any():
+        Xp_full = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo"]].values
+        df_elo.loc[mask_full_pred, "teams_elo"] = reg_full.predict(Xp_full)
+
+    # b) Only BeSoccer present
+    mask_besoccer_pred = (
+            df_elo["teams_elo"].isna()
+            & df_elo["besoccer_elo"].notna()
+            & df_elo["footballdb_elo"].isna()
+    )
+    if mask_besoccer_pred.any():
+        Xp_besoccer = df_elo.loc[mask_besoccer_pred, ["besoccer_elo"]].values
+        df_elo.loc[mask_besoccer_pred, "teams_elo"] = reg_besoccer.predict(Xp_besoccer)
+
+    # c) Only footballdatabase present
+    mask_footballdb_pred = (
+            df_elo["teams_elo"].isna()
+            & df_elo["footballdb_elo"].notna()
+            & df_elo["besoccer_elo"].isna()
+    )
+    if mask_footballdb_pred.any():
+        Xp_footballdb = df_elo.loc[mask_footballdb_pred, ["footballdb_elo"]].values
+        df_elo.loc[mask_footballdb_pred, "teams_elo"] = reg_footballdb.predict(Xp_footballdb)
+
+    # ——————————————————————————
+    # 3) Back to dict
+    # ——————————————————————————
+    full_teams_elos_dict = df_elo["teams_elo"].to_dict()
+
+    return full_teams_elos_dict
 
 
 def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
@@ -74,117 +287,43 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
 
         if extra_teams:
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
+            full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
 
-            # 1. Fetch the page
-            url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
-            headers = {
-                "User-Agent": (
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/91.0.4472.124 Safari/537.36"
-                )
-            }
-            # response = requests.get(league_url, headers=headers, verify=False)
-            response = tls_requests.get(url, headers=headers, verify=False)
-            html = response.text
-            soup = BeautifulSoup(html, "html.parser")
+            # Model
+            teams_elo = pd.Series(full_teams_elos_dict, name="teams_elo")
+            besoccer_elo = pd.Series(full_besoccer_teams_elos_dict, name="besoccer_elo")
+            footballdb_elo = pd.Series(full_footballdatabase_teams_elos_dict, name="footballdb_elo")
 
-            # 2. Extract all <td class="name"> elements,
-            #    find their <a data-cy="team"> child, and grab the span.team-name text + href
-            besoccer_teams = []
-            for td in soup.find_all('td', class_='name'):
-                a = td.find('a', attrs={'data-cy': 'team'})
-                if not a:
-                    continue
-                # team name is inside the <span class="team-name">
-                name_span = a.find('span', class_='team-name')
-                team_name = name_span.get_text(strip=True) if name_span else None
-                url = a.get('href')
-                besoccer_teams.append({
-                    'name': team_name,
-                    'url': url
-                })
+            full_teams_elos_dict = get_model_prediction(teams_elo, besoccer_elo, footballdb_elo)
 
-            # 3. For each team, fetch its page and parse the ELO
-            for team in besoccer_teams:
-                team_url = team['url']
-                resp = tls_requests.get(team_url, headers=headers, verify=False)
-                team_soup = BeautifulSoup(resp.text, "html.parser")
-
-                # find the ELO container
-                elo_div = team_soup.find('div', class_='elo label-text')
-                elo = None
-                if elo_div:
-                    span = elo_div.find('span')
-                    if span:
-                        # convert the string (e.g. "1234.56") to float
-                        try:
-                            elo = float(span.get_text(strip=True))
-                        except ValueError:
-                            elo = None
-                team['elo'] = elo
-
-            besoccer_elos_dict = {
-                team['name']: team['elo']
-                for team in sorted(
-                    besoccer_teams,
-                    key=lambda t: (t['elo'] is None, t['elo']),  # None’s go last
-                    reverse=True
-                )
-            }
-
-            full_besoccer_teams_elos_dict = {find_manual_similar_string(key): value for key, value in besoccer_elos_dict.items()}
-
-            # ─── Find common team names ──────────────────────────────────────────────────
-            common = set(full_teams_elos_dict) & set(full_besoccer_teams_elos_dict)
-
-            # ─── Build x = besoccer, y = full_teams ──────────────────────────────────────
-            x = np.array([full_besoccer_teams_elos_dict[t] for t in common])
-            y = np.array([full_teams_elos_dict[t] for t in common])
-
-            # ─── Fit polynomials y = f(x) of degree 1, 2, 3 ───────────────────────────────
-            coeffs1 = np.polyfit(x, y, 1)  # [m,     b]
-            coeffs2 = np.polyfit(x, y, 2)  # [a2,    a1,   a0]
-            coeffs3 = np.polyfit(x, y, 3)  # [a3,    a2,   a1,   a0]
-
-            # Wrap each in a callable poly1d
-            poly1 = np.poly1d(coeffs1)
-            poly2 = np.poly1d(coeffs2)
-            poly3 = np.poly1d(coeffs3)
-
-            # ─── Forward functions y = f(x) ──────────────────────────────────────────────
-            def y_from_x_deg1(x_val):
-                """Linear: y = m*x + b"""
-                return poly1(x_val)
-            def y_from_x_deg2(x_val):
-                """Quadratic: y = a2*x^2 + a1*x + a0"""
-                return poly2(x_val)
-            def y_from_x_deg3(x_val):
-                """Cubic: y = a3*x^3 + a2*x^2 + a1*x + a0"""
-                return poly3(x_val)
-
-            # ─── Build your new dicts: predicted full_teams ELO for every besoccer team ───
-            full_teams_elos_dict = {
-                team: (
-                    full_teams_elos_dict[team]  # if it was in common, keep the original
-                    if team in common
-                    else y_from_x_deg1(x_bes)  # otherwise predict via your linear fit
-                )
-                for team, x_bes in full_besoccer_teams_elos_dict.items()
-            }
+            # ─── Fit polynomials y = f(x) of degree 1 ───────────────────────────────
+            # x = np.array([full_besoccer_teams_elos_dict[t] for t in common])
+            # y = np.array([full_teams_elos_dict[t] for t in common])
+            # coeffs1 = np.polyfit(x, y, 1)  # [m,     b]
+            # poly1 = np.poly1d(coeffs1)
+            # def y_from_x_deg1(x_val):
+            #     """Linear: y = m*x + b"""
+            #     return poly1(x_val)
             # full_teams_elos_dict = {
-            #     team: y_from_x_deg2(x_bes)
-            #     for team, x_bes in full_besoccer_teams_elos_dict.items()
-            # }
-            # full_teams_elos_dict = {
-            #     team: y_from_x_deg3(x_bes)
+            #     team: (
+            #         full_teams_elos_dict[team]  # if it was in common, keep the original
+            #         if team in common
+            #         else y_from_x_deg1(x_bes)  # otherwise predict via your linear fit
+            #     )
             #     for team, x_bes in full_besoccer_teams_elos_dict.items()
             # }
 
     full_teams_elos_dict = dict(
         sorted(full_teams_elos_dict.items(), key=lambda kv: kv[1], reverse=True)
     )
+
+    # Compute the keys present in both source dicts
+    common_keys = set(full_besoccer_teams_elos_dict) & set(full_footballdatabase_teams_elos_dict)
+
+    # Filter full_teams_elos_dict in-place (or assign to a new variable)
+    full_teams_elos_dict = {k: v for k, v in full_teams_elos_dict.items() if k in common_keys}
+
     return full_teams_elos_dict
 
 
