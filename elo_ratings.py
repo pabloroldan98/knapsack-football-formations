@@ -189,61 +189,67 @@ def get_footballdatabase_teams_elos():
 def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
     # Combine into a single DataFrame
     df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo], axis=1)
+    df_elo.columns = ["teams_elo", "besoccer_elo", "footballdb_elo"]
 
     # ——————————————————————————
-    # 1) Fit the three regressions
+    # 1) Fit the three regressions (only if data is available)
     # ——————————————————————————
+
+    reg_full = reg_besoccer = reg_footballdb = None
 
     # a) Full 2-predictor model
     mask_full_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
-    X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo"]].values
-    y_full = df_elo.loc[mask_full_train, "teams_elo"].values
-    reg_full = LinearRegression().fit(X_full, y_full)
+    if mask_full_train.sum() > 0:
+        X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo"]].values
+        y_full = df_elo.loc[mask_full_train, "teams_elo"].values
+        reg_full = LinearRegression().fit(X_full, y_full)
 
     # b) BeSoccer-only model
     mask_besoccer_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
-    X_besoccer = df_elo.loc[mask_besoccer_train, ["besoccer_elo"]].values
-    y_besoccer = df_elo.loc[mask_besoccer_train, "teams_elo"].values
-    reg_besoccer = LinearRegression().fit(X_besoccer, y_besoccer)
+    if mask_besoccer_train.sum() > 0:
+        X_besoccer = df_elo.loc[mask_besoccer_train, ["besoccer_elo"]].values
+        y_besoccer = df_elo.loc[mask_besoccer_train, "teams_elo"].values
+        reg_besoccer = LinearRegression().fit(X_besoccer, y_besoccer)
 
     # c) FBDB-only model
     mask_footballdb_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
-    X_footballdb = df_elo.loc[mask_footballdb_train, ["footballdb_elo"]].values
-    y_footballdb = df_elo.loc[mask_footballdb_train, "teams_elo"].values
-    reg_footballdb = LinearRegression().fit(X_footballdb, y_footballdb)
+    if mask_footballdb_train.sum() > 0:
+        X_footballdb = df_elo.loc[mask_footballdb_train, ["footballdb_elo"]].values
+        y_footballdb = df_elo.loc[mask_footballdb_train, "teams_elo"].values
+        reg_footballdb = LinearRegression().fit(X_footballdb, y_footballdb)
 
     # ——————————————————————————
-    # 2) Predict into each “missing” scenario
+    # 2) Predict into each “missing” scenario (only if model exists)
     # ——————————————————————————
 
-    # a) Both sources present
-    mask_full_pred = (
+    if reg_full is not None:
+        mask_full_pred = (
             df_elo["teams_elo"].isna()
             & df_elo[["besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
-    )
-    if mask_full_pred.any():
-        Xp_full = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo"]].values
-        df_elo.loc[mask_full_pred, "teams_elo"] = reg_full.predict(Xp_full)
+        )
+        if mask_full_pred.any():
+            Xp_full = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo"]].values
+            df_elo.loc[mask_full_pred, "teams_elo"] = reg_full.predict(Xp_full)
 
-    # b) Only BeSoccer present
-    mask_besoccer_pred = (
+    if reg_besoccer is not None:
+        mask_besoccer_pred = (
             df_elo["teams_elo"].isna()
             & df_elo["besoccer_elo"].notna()
             & df_elo["footballdb_elo"].isna()
-    )
-    if mask_besoccer_pred.any():
-        Xp_besoccer = df_elo.loc[mask_besoccer_pred, ["besoccer_elo"]].values
-        df_elo.loc[mask_besoccer_pred, "teams_elo"] = reg_besoccer.predict(Xp_besoccer)
+        )
+        if mask_besoccer_pred.any():
+            Xp_besoccer = df_elo.loc[mask_besoccer_pred, ["besoccer_elo"]].values
+            df_elo.loc[mask_besoccer_pred, "teams_elo"] = reg_besoccer.predict(Xp_besoccer)
 
-    # c) Only footballdatabase present
-    mask_footballdb_pred = (
+    if reg_footballdb is not None:
+        mask_footballdb_pred = (
             df_elo["teams_elo"].isna()
             & df_elo["footballdb_elo"].notna()
             & df_elo["besoccer_elo"].isna()
-    )
-    if mask_footballdb_pred.any():
-        Xp_footballdb = df_elo.loc[mask_footballdb_pred, ["footballdb_elo"]].values
-        df_elo.loc[mask_footballdb_pred, "teams_elo"] = reg_footballdb.predict(Xp_footballdb)
+        )
+        if mask_footballdb_pred.any():
+            Xp_footballdb = df_elo.loc[mask_footballdb_pred, ["footballdb_elo"]].values
+            df_elo.loc[mask_footballdb_pred, "teams_elo"] = reg_footballdb.predict(Xp_footballdb)
 
     # ——————————————————————————
     # 3) Back to dict
@@ -289,6 +295,7 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         if extra_teams:
             full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
             full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
+            # full_footballdatabase_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
 
             # Model
             teams_elo = pd.Series(full_teams_elos_dict, name="teams_elo")
