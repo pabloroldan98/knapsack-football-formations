@@ -9,6 +9,9 @@ from unidecode import unidecode
 import os
 from pprint import pprint
 
+from analiticafantasy import get_players_start_probabilities_dict_analiticafantasy
+from futbolfantasy_analytics import get_players_start_probabilities_dict_futbolfantasy
+from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -41,7 +44,8 @@ class Player:
             is_playing_home: bool = False,
             form:  float = 0,
             fixture:  float = 0,
-            start_probability:  float = 0
+            start_probability:  float = 0,
+            start_probabilities: list = [],
     ):
         self.name = name
         self._position = position
@@ -68,6 +72,7 @@ class Player:
         self.form = form
         self.fixture = fixture
         self.start_probability = start_probability
+        self.start_probabilities = start_probabilities
 
     def __str__(self):
         return f"({self.name}, {self.position}, {self.team}, {self.price}, {self.value:.3f}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
@@ -396,65 +401,91 @@ def set_price_trends(players_list, players_price_trends_dict, players_standard_p
     return result_players
 
 
-def set_start_probabilities(players_list, players_start_probabilities_dict, players_start_probabilities_dict_extra=None, verbose=False):
+def get_players_start_probabilities_dict(
+        file_names=["futbolfantasy_start_probabilities", "analiticafantasy_probabilities", "jornadaperfecta_start_probabilities", ],
+        force_scrape=False
+):
+    players_start_probabilities_dict = {}
+    for file_name in file_names:
+        if "futbolfantasy" in file_name.lower():
+            try:
+                futbolfantasy_start_probabilities = get_players_start_probabilities_dict_futbolfantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_start_probabilities_dict["futbolfantasy"] = futbolfantasy_start_probabilities
+            except:
+                pass
+        elif "analiticafantasy" in file_name.lower():
+            try:
+                analiticafantasy_start_probabilities = get_players_start_probabilities_dict_analiticafantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_start_probabilities_dict["analiticafantasy"] = analiticafantasy_start_probabilities
+            except:
+                pass
+        elif "jornadaperfecta" in file_name.lower():
+            try:
+                jornadaperfecta_start_probabilities = get_players_start_probabilities_dict_jornadaperfecta(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_start_probabilities_dict["jornadaperfecta"] = jornadaperfecta_start_probabilities
+            except:
+                pass
+    return players_start_probabilities_dict
+
+
+def set_start_probabilities(players_list, full_players_start_probabilities_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
-    team_start_probability_names_list = list(players_start_probabilities_dict.keys())
 
-    # team_names_list = list(set(player.team for player in result_players))
-    # for team_name, start_probability_names_list in players_start_probabilities_dict.items():
-    #     closest_team_name = find_similar_string(team_name, team_names_list)
-    #     players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
-    #     for start_probability_name in start_probability_names_list:
-    #         closest_player_name = find_similar_string(start_probability_name, players_names_list, verbose=False)
-    #         print(closest_team_name)
-    #         print(start_probability_name)
-    #         print(closest_player_name)
-    #         print()
-    #         if closest_player_name:
-    #             for player in result_players:
-    #                 if player.name == closest_player_name:
-    #                     new_start_probability = players_start_probabilities_dict[team_name][start_probability_name]
-    #                     if verbose:
-    #                         if player.start_probability != new_start_probability:
-    #                             print(
-    #                                 f"{player.name}: {player.start_probability} --> {new_start_probability} ({closest_player_start_probability_name})")
-    #                     player.start_probability = new_start_probability
-    #         else:
-    #             print(f"{start_probability_name}")
+    for source, players_start_probabilities_dict in full_players_start_probabilities_dict.items():
 
-    for player in result_players:
-        closest_player_start_probability_team = find_similar_string(player.team, team_start_probability_names_list, similarity_threshold=0)
-        player_start_probability_names_list = list(players_start_probabilities_dict[closest_player_start_probability_team].keys())
-        closest_player_start_probability_name = find_similar_string(player.name, player_start_probability_names_list, verbose=False)
-        if closest_player_start_probability_name:
-            new_start_probability = players_start_probabilities_dict[closest_player_start_probability_team][closest_player_start_probability_name]
-            if verbose:
-                if player.start_probability != new_start_probability:
-                    print(f"{player.name}: {player.start_probability} --> {new_start_probability} ({closest_player_start_probability_name})")
-            player.start_probability = new_start_probability
-        # else:
-        #     print(f"{player.name} ({player.team})")
+        # team_names_list = list(set(player.team for player in result_players))
+        # for team_name, start_probability_names_list in players_start_probabilities_dict.items():
+        #     closest_team_name = find_similar_string(team_name, team_names_list)
+        #     players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        #     for start_probability_name in start_probability_names_list:
+        #         closest_player_name = find_similar_string(start_probability_name, players_names_list, verbose=False)
+        #         print(closest_team_name)
+        #         print(start_probability_name)
+        #         print(closest_player_name)
+        #         print()
+        #         if closest_player_name:
+        #             for player in result_players:
+        #                 if player.name == closest_player_name:
+        #                     new_start_probability = players_start_probabilities_dict[team_name][start_probability_name]
+        #                     if verbose:
+        #                         if player.start_probability != new_start_probability:
+        #                             print(
+        #                                 f"{player.name}: {player.start_probability} --> {new_start_probability} ({closest_player_start_probability_name})")
+        #                     player.start_probability = new_start_probability
+        #         # else:
+        #         #     print(f"{start_probability_name}")
 
-    if players_start_probabilities_dict_extra:
-        if verbose:
-            print()
-            print("-----> EXTRA <-----")
-
-        team_start_probability_names_list = list(players_start_probabilities_dict_extra.keys())
+        team_start_probability_names_list = list(players_start_probabilities_dict.keys())
 
         for player in result_players:
             closest_player_start_probability_team = find_similar_string(player.team, team_start_probability_names_list, similarity_threshold=0)
-            player_start_probability_names_list = list(players_start_probabilities_dict_extra[closest_player_start_probability_team].keys())
+            player_start_probability_names_list = list(players_start_probabilities_dict[closest_player_start_probability_team].keys())
             closest_player_start_probability_name = find_similar_string(player.name, player_start_probability_names_list, verbose=False)
             if closest_player_start_probability_name:
-                new_start_probability = round((player.start_probability + players_start_probabilities_dict_extra[closest_player_start_probability_team][closest_player_start_probability_name]) / 2, 4)
+                new_start_probability = players_start_probabilities_dict[closest_player_start_probability_team][closest_player_start_probability_name]
+                player_start_probabilities = player.start_probabilities.copy()
+                new_start_probabilities = player_start_probabilities + [new_start_probability]
                 if verbose:
                     if player.start_probability != new_start_probability:
-                        print(f"{player.name}: {player.start_probability} --> {new_start_probability} ({closest_player_start_probability_name})")
-                player.start_probability = new_start_probability
+                        print(f"{player.name}: {player.start_probabilities} --> {new_start_probabilities} ({closest_player_start_probability_name})")
+                # player.start_probability = new_start_probability
+                player.start_probabilities = new_start_probabilities
             # else:
-            #     print("#######################")
             #     print(f"{player.name} ({player.team})")
+
+    for player in result_players:
+        # valid = [p for p in player.start_probabilities if p is not None]
+        # player.start_probability = sum(valid) / len(valid) if valid else 0
+        player.start_probability = sum(player.start_probabilities) / len(player.start_probabilities) if player.start_probabilities else 0
 
     return result_players
 

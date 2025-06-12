@@ -32,9 +32,10 @@ def format_string(s):
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False):
     # Before anything, we check the manual checks
-    my_manual_string = find_manual_similar_string(my_string)
-    if my_manual_string != my_string: # If it found something
-        return my_manual_string
+    if not is_formatted:
+        my_manual_string = find_manual_similar_string(my_string)
+        if my_manual_string != my_string: # If it found something
+            return my_manual_string
     # First, check for '==' in the list
     if my_string in string_list:
         # if verbose:
@@ -161,6 +162,18 @@ def find_manual_similar_string(my_string):
         "Kim Young-Gwon": "Young-gwon Kim",
         "Jung Woo-Young": "Woo-young Jung",
         "Lee Chung-Yong": "Chung-yong Lee",
+        "Rodri Hernandez": "Rodrigo",
+        "Rodri Heráandez": "Rodrigo",
+        "R. Rabia": "Rami Rabia",
+        "Mohamed Ali Ben Romdhane": "M. Ben Romdhane",
+        "Álvaro Fernández": "Álvaro Carreras",
+        "Arnold": "Trent",
+        "Trent Alexander-Arnold": "Trent",
+        "B. Said": "Bechir Ben Said",
+        "W. Ali": "Wessam Abou Ali",
+        "K. Debes": "Karim El Debes",
+        "M. Aash": "Mostafa El Aash",
+        "D. Vega": "De la Vega",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",

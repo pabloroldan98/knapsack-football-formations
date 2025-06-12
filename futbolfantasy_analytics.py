@@ -415,7 +415,7 @@ def get_players_forms_dict(
     return result
 
 
-def get_players_start_probabilities_dict(
+def get_players_start_probabilities_dict_futbolfantasy(
         file_name="futbolfantasy_start_probabilities",
         force_scrape=False
 ):

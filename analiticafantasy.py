@@ -149,7 +149,7 @@ def get_analiticafantasy_data(
     return start_probabilities_data
 
 
-def get_players_start_probabilities_dict_extra(
+def get_players_start_probabilities_dict_analiticafantasy(
         file_name="analiticafantasy_start_probabilities",
         force_scrape=False
 ):
