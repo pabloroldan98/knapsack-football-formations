@@ -1,7 +1,9 @@
 import copy
 import gc
+import heapq
 import itertools
 import math
+from collections import defaultdict
 
 from MCKP import multipleChoiceKnapsack, knapsack_multichoice, \
     knapsack_multichoice_onepick
@@ -18,6 +20,72 @@ possible_formations = [
 ]
 
 
+def filter_players_knapsack(players_list, formation):
+    """
+    Filters players based on a formation and per-position max counts, keeping highest-value players per price bucket.
+
+    Args:
+        players_list: list of player objects with attributes .position, .price, .value
+        formation: sequence indicating formation counts
+            - If len==3: [DEF, MID, ATT] with GK fixed at 1
+            - If len==4: [GK, DEF, MID, ATT]
+            - Else: assume [DEF, MID1, ..., MIDk, ATT], GK=1, MID is sum of middle entries
+
+    Returns:
+        List of filtered players sorted by descending .value
+    """
+    result_players = copy.deepcopy(players_list)
+
+    if len(formation) == 3:
+        max_gk = 1
+        max_def = formation[0]
+        max_mid = formation[1]
+        max_att = formation[2]
+    elif len(formation) == 4:
+        max_gk = formation[0]
+        max_def = formation[1]
+        max_mid = formation[2]
+        max_att = formation[3]
+    else:
+        max_gk = 1
+        max_def = formation[0]
+        max_mid = sum(formation[1:-1])
+        max_att = formation[-1]
+
+    max_limits = {
+        "GK": max_gk,
+        "DEF": max_def,
+        "MID": max_mid,
+        "ATT": max_att
+    }
+
+    # Group players by (position, price)
+    buckets = defaultdict(lambda: defaultdict(list))
+    for p in result_players:
+        buckets[p.position][p.price].append(p)
+
+    # Filter each bucket by top N value
+    filtered_players = []
+    for position, price_dict in buckets.items():
+        limit = max_limits.get(position)
+        for price, group in price_dict.items():
+            if limit is None:
+                # No limit for this position, keep all
+                filtered_players.extend(group)
+            else:
+                # Keep up to `limit` players with highest .value
+                top_n = heapq.nlargest(limit, group, key=lambda pl: pl.value)
+                filtered_players.extend(top_n)
+
+    # Sort all by descending value
+    filtered_players.sort(key=lambda pl: pl.value, reverse=True)
+
+    # print(len(players_list))
+    # print(len(filtered_players))
+
+    return filtered_players
+
+
 def best_full_teams(players_list, formations=possible_formations, budget=300, verbose=1):
     super_verbose = bool(verbose-1)
     verbose = bool(verbose)
@@ -30,7 +98,10 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
     formation_score_players = []
 
     for formation in formations:
-        players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
+        filtered_players_list = filter_players_knapsack(players_list, formation)
+
+        # players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
+        players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
 
         score, comb_result_indexes = knapsack_multichoice_onepick(players_prices, players_values, budget, verbose=super_verbose)
 
@@ -41,7 +112,8 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
 
         result_players = []
         for res_index in result_indexes:
-            result_players.append(players_list[res_index])
+            # result_players.append(players_list[res_index])
+            result_players.append(filtered_players_list[res_index])
 
         formation_score_players.append((formation, score, result_players))
 
