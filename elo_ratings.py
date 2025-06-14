@@ -8,7 +8,6 @@ import requests
 import tls_requests
 import urllib3
 from bs4 import BeautifulSoup
-from sklearn.linear_model import LinearRegression
 from matplotlib import pyplot as plt
 
 from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data
@@ -195,6 +194,15 @@ def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
     # 1) Fit the three regressions (only if data is available)
     # ——————————————————————————
 
+    def fit_linear_regression(X, y):
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]  # Add intercept
+        theta = np.linalg.pinv(X_b.T @ X_b) @ X_b.T @ y
+        return theta
+
+    def predict(X, theta):
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]
+        return X_b @ theta
+
     reg_full = reg_besoccer = reg_footballdb = None
 
     # a) Full 2-predictor model
@@ -202,24 +210,24 @@ def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
     if mask_full_train.sum() > 0:
         X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo"]].values
         y_full = df_elo.loc[mask_full_train, "teams_elo"].values
-        reg_full = LinearRegression().fit(X_full, y_full)
+        reg_full = fit_linear_regression(X_full, y_full)
 
     # b) BeSoccer-only model
     mask_besoccer_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
     if mask_besoccer_train.sum() > 0:
         X_besoccer = df_elo.loc[mask_besoccer_train, ["besoccer_elo"]].values
         y_besoccer = df_elo.loc[mask_besoccer_train, "teams_elo"].values
-        reg_besoccer = LinearRegression().fit(X_besoccer, y_besoccer)
+        reg_besoccer = fit_linear_regression(X_besoccer, y_besoccer)
 
     # c) FBDB-only model
     mask_footballdb_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
     if mask_footballdb_train.sum() > 0:
         X_footballdb = df_elo.loc[mask_footballdb_train, ["footballdb_elo"]].values
         y_footballdb = df_elo.loc[mask_footballdb_train, "teams_elo"].values
-        reg_footballdb = LinearRegression().fit(X_footballdb, y_footballdb)
+        reg_footballdb = fit_linear_regression(X_footballdb, y_footballdb)
 
     # ——————————————————————————
-    # 2) Predict into each “missing” scenario (only if model exists)
+    # 2) Predict into each “missing” scenario
     # ——————————————————————————
 
     if reg_full is not None:
@@ -229,7 +237,7 @@ def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
         )
         if mask_full_pred.any():
             Xp_full = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo"]].values
-            df_elo.loc[mask_full_pred, "teams_elo"] = reg_full.predict(Xp_full)
+            df_elo.loc[mask_full_pred, "teams_elo"] = predict(Xp_full, reg_full)
 
     if reg_besoccer is not None:
         mask_besoccer_pred = (
@@ -239,7 +247,7 @@ def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
         )
         if mask_besoccer_pred.any():
             Xp_besoccer = df_elo.loc[mask_besoccer_pred, ["besoccer_elo"]].values
-            df_elo.loc[mask_besoccer_pred, "teams_elo"] = reg_besoccer.predict(Xp_besoccer)
+            df_elo.loc[mask_besoccer_pred, "teams_elo"] = predict(Xp_besoccer, reg_besoccer)
 
     if reg_footballdb is not None:
         mask_footballdb_pred = (
@@ -249,14 +257,12 @@ def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
         )
         if mask_footballdb_pred.any():
             Xp_footballdb = df_elo.loc[mask_footballdb_pred, ["footballdb_elo"]].values
-            df_elo.loc[mask_footballdb_pred, "teams_elo"] = reg_footballdb.predict(Xp_footballdb)
+            df_elo.loc[mask_footballdb_pred, "teams_elo"] = predict(Xp_footballdb, reg_footballdb)
 
     # ——————————————————————————
-    # 3) Back to dict
+    # 3) Return as dict
     # ——————————————————————————
-    full_teams_elos_dict = df_elo["teams_elo"].to_dict()
-
-    return full_teams_elos_dict
+    return df_elo["teams_elo"].to_dict()
 
 
 def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
@@ -335,5 +341,6 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
 
 
 # result = get_teams_elos(country=None, extra_teams=True)
+# pprint(result)
 # for team, elo in result.items():
 #     print(f"{team}: {elo}")
