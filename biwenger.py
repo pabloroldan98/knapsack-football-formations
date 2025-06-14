@@ -58,10 +58,10 @@ def get_championship_data(
         elo_ratings_file_name="elo_ratings_laliga_data",
         verbose=True
 ):
-    print()
-    print()
     data = get_biwenger_data_dict(file_name=biwenger_file_name)
 
+    print()
+    print()
     if verbose:
         print("Loading teams data...")
         print()
