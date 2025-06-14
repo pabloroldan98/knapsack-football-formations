@@ -58,6 +58,7 @@ def get_championship_data(
         elo_ratings_file_name="elo_ratings_laliga_data",
         verbose=True
 ):
+    print()
     data = get_biwenger_data_dict(file_name=biwenger_file_name)
 
     print()
