@@ -107,6 +107,7 @@ def get_current_players(
     if not no_penalty_takers_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalty_takers_file_name)
         partial_players_data = set_penalty_takers_boosts(partial_players_data, penalty_takers)
+        # for p in partial_players_data: p.penalty_boost /= 2
     if debug:
         print("555555")
     if not no_penalty_savers_boost:
@@ -296,7 +297,7 @@ worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
 purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
-purged_players = purge_everything(purged_players, probability_threshold=0.8, fixture_filter=True)
+purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -352,20 +353,20 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Agustín Rossi",
+    "Sommer",
 
-    "Alex Sandro",
+    "Hakimi",
     "Otamendi",
-    "Young-gwon Kim",
+    "Nuno Mendes",
 
     "Kimmich",
-    "Emam Ashour",
-    "Darijan Bojanic",
-    "De Arrascaeta",
+    "Kökçü",
+    "Malcom",
+    "Vitinha",
 
-    "Messi",
-    "Harry Kane",
     "Olise",
+    "Salem Al-Dawsari",
+    "Di María",
 ]
 
 # my_players_names = [
