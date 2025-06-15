@@ -185,7 +185,11 @@ def get_footballdatabase_teams_elos():
     return full_besoccer_teams_elos_dict
 
 
-def get_model_prediction(teams_elo, besoccer_elo, footballdb_elo):
+def get_model_prediction(teams_elos_dict, besoccer_teams_elos_dict, footballdatabase_teams_elos_dict):
+    teams_elo = pd.Series(teams_elos_dict, name="teams_elo")
+    besoccer_elo = pd.Series(besoccer_teams_elos_dict, name="besoccer_elo")
+    footballdb_elo = pd.Series(footballdatabase_teams_elos_dict, name="footballdb_elo")
+
     # Combine into a single DataFrame
     df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo], axis=1)
     df_elo.columns = ["teams_elo", "besoccer_elo", "footballdb_elo"]
@@ -301,14 +305,17 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         if extra_teams:
             full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
             full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
-            # full_footballdatabase_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
+            empty_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
 
             # Model
-            teams_elo = pd.Series(full_teams_elos_dict, name="teams_elo")
-            besoccer_elo = pd.Series(full_besoccer_teams_elos_dict, name="besoccer_elo")
-            footballdb_elo = pd.Series(full_footballdatabase_teams_elos_dict, name="footballdb_elo")
+            partial_teams_elos_dict_complete = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, full_footballdatabase_teams_elos_dict)
+            partial_teams_elos_dict_besoccer = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, empty_teams_elos_dict)
 
-            full_teams_elos_dict = get_model_prediction(teams_elo, besoccer_elo, footballdb_elo)
+            # full_teams_elos_dict = {
+            #     team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_besoccer[team]) / 2
+            #     for team in partial_teams_elos_dict_complete
+            # }
+            full_teams_elos_dict = partial_teams_elos_dict_complete.copy()
 
             # ─── Fit polynomials y = f(x) of degree 1 ───────────────────────────────
             # x = np.array([full_besoccer_teams_elos_dict[t] for t in common])
@@ -341,6 +348,9 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
 
 
 # result = get_teams_elos(country=None, extra_teams=True)
-# pprint(result)
-# for team, elo in result.items():
-#     print(f"{team}: {elo}")
+# # pprint(result)
+# items = list(result.items())
+# print("{")
+# for i, (team, elo) in enumerate(items):
+#     print(f'  "{team}": {elo}{"," if i < len(items) - 1 else ""}')
+# print("}")
