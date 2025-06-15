@@ -1,10 +1,19 @@
 import os
+
+import time
+import pytz
 import requests
 import urllib3
 from bs4 import BeautifulSoup
 import json
 
-from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string  # same as before
+from datetime import datetime, timezone
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+
+from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
+    create_driver  # same as before
 
 
 class JornadaPerfectaScraper:
@@ -13,6 +22,10 @@ class JornadaPerfectaScraper:
         # self.base_url = "https://www.jornadaperfecta.com/onces-posibles/"
         self.base_url = "https://www.jornadaperfecta.com/mundial-de-clubes/onces-posibles/"
         self.session = requests.Session()
+        self.driver = create_driver()
+        self.wait = WebDriverWait(self.driver, 15)
+        self.small_wait = WebDriverWait(self.driver, 5)
+        # Use this custom headers dict when making GET requests
         self.headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -22,18 +35,67 @@ class JornadaPerfectaScraper:
         }
 
     def fetch_page(self, url):
+        self.driver.get(url)
+
+    def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, timeout=15, verify=False)
+        response = self.session.get(url, headers=self.headers, verify=False)
         response.raise_for_status()
         return response.text
 
-    def get_match_links(self, html):
-        soup = BeautifulSoup(html, "html.parser")
+    def get_match_links(self):
+        # 1) load the page
+        self.fetch_page(self.base_url)
+
+        # 2) figure out which round to pick based on Europe/Madrid time
+        cet = pytz.timezone("Europe/Madrid")
+        now = datetime.now(cet)
+
+        # thresholds are (round_value, cutoff_datetime)
+        thresholds = [
+            ("1", datetime(2025, 6, 15, 2,  0, tzinfo=cet)),
+            ("2", datetime(2025, 6, 19, 18, 0, tzinfo=cet)),
+            ("3", datetime(2025, 6, 23, 21, 0, tzinfo=cet)),
+            ("4", datetime(2025, 6, 28, 18, 0, tzinfo=cet)),
+            ("5", datetime(2025, 7,  4, 21, 0, tzinfo=cet)),
+            ("6", datetime(2025, 7,  8, 21, 0, tzinfo=cet)),
+            ("7", datetime(2025, 7, 13, 21, 0, tzinfo=cet)),
+        ]
+
+        round_to_select = None
+        for val, cutoff in thresholds:
+            if now < cutoff:
+                round_to_select = val
+                break
+
+        # 3) if we found one, click the dropdown and select it
+        if round_to_select:
+            select_el = self.wait.until(
+                EC.element_to_be_clickable((By.ID, "roundSelect"))
+            )
+            select = Select(select_el)
+            select.select_by_value(round_to_select)
+
+            # wait for the new content to load (adjust timeout or condition as needed)
+            self.wait.until(
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "a.clean-link.match-link.current-round-content")
+                )
+            )
+        # else: no round selected, just use whatever initial page gave us
+
+        # 3) wait for the updated links to appear
+        link_els = self.wait.until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "a.clean-link.match-link.current-round-content")
+            )
+        )
+
+        # 4) extract hrefs, preserving HTML order and de-duplicating
         links = []
-        # for a_tag in soup.find_all("a", class_="clean-link match-link current-round-content", href=True):
-        for a_tag in soup.find_all(class_="clean-link match-link current-round-content", href=True):
-            full_url = a_tag["href"]
-            links.append(full_url)
+        for el in link_els:
+            href = el.get_attribute("href")
+            links.append(href)
         links = list(set(links))
         # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
         # links = sorted(
@@ -54,7 +116,7 @@ class JornadaPerfectaScraper:
             "Team B": { ... }
           }
         """
-        html = self.fetch_page(match_url)
+        html = self.fetch_response(match_url)
         soup = BeautifulSoup(html, "html.parser")
 
         lineup_data = {}
@@ -80,10 +142,11 @@ class JornadaPerfectaScraper:
                 # b) Starter probability
                 pct = performer.find(class_="percent-budget")
                 alternatives = performer.find_all(class_="alternative")
+                status = performer.find(class_="status")
                 if pct and pct.get_text(strip=True).isdigit():
                     starter_prob = float(pct.get_text(strip=True)) / 100.0
                 else:
-                    starter_prob = 0.7 if alternatives else 0.8
+                    starter_prob = 0.7 if alternatives or status else 0.8
 
                 players[starter_name] = starter_prob
 
@@ -111,8 +174,7 @@ class JornadaPerfectaScraper:
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
-        main_html = self.fetch_page(self.base_url)
-        match_links = self.get_match_links(main_html)
+        match_links = self.get_match_links()
 
         probabilities_dict = {}
         for url in match_links:
