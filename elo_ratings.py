@@ -311,11 +311,11 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
             partial_teams_elos_dict_complete = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, full_footballdatabase_teams_elos_dict)
             partial_teams_elos_dict_besoccer = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, empty_teams_elos_dict)
 
-            # full_teams_elos_dict = {
-            #     team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_besoccer[team]) / 2
-            #     for team in partial_teams_elos_dict_complete
-            # }
-            full_teams_elos_dict = partial_teams_elos_dict_complete.copy()
+            full_teams_elos_dict = {
+                team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_besoccer[team]) / 2
+                for team in partial_teams_elos_dict_complete
+            }
+            # full_teams_elos_dict = partial_teams_elos_dict_complete.copy()
 
             # ─── Fit polynomials y = f(x) of degree 1 ───────────────────────────────
             # x = np.array([full_besoccer_teams_elos_dict[t] for t in common])
