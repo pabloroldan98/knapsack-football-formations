@@ -1,4 +1,4 @@
-name: Main Manual Scraper - Fantasy Data (FutbolFantasy & AnaliticaFantasy)
+name: Main Manual Scraper - Fantasy Data (FutbolFantasy, AnaliticaFantasy & JornadaPerfecta)
 
 on:
   workflow_dispatch: # Allows manual triggering
@@ -28,6 +28,7 @@ jobs:
         run: |
           python -u ./scraping_tasks/scrape_futbolfantasy.py
           python -u ./scraping_tasks/scrape_analiticafantasy.py
+          python -u ./scraping_tasks/scrape_jornadaperfecta.py
 
       - name: Configure git
         run: |
