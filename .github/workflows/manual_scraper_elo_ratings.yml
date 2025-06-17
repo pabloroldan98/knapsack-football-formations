@@ -6,7 +6,7 @@ on:
 jobs:
   run-tasks:
     runs-on: ubuntu-latest
-    timeout-minutes: 10  # Set the job timeout to 10 minutes
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
 
     steps:
       - name: Checkout repository

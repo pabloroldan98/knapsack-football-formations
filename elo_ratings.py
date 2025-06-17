@@ -9,8 +9,12 @@ import tls_requests
 import urllib3
 from bs4 import BeautifulSoup
 from matplotlib import pyplot as plt
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
-from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data
+from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data, create_driver
 
 
 def get_teams_elos_dict(
@@ -185,21 +189,88 @@ def get_footballdatabase_teams_elos():
     return full_besoccer_teams_elos_dict
 
 
-def get_model_prediction(teams_elos_dict, besoccer_teams_elos_dict, footballdatabase_teams_elos_dict):
+def get_opta_teams_elos():
+    driver = create_driver()
+    wait = WebDriverWait(driver, 15)
+
+    # 1. Load the Opta Power Rankings page
+    driver.get("https://dataviz.theanalyst.com/opta-power-rankings/")
+    wait.until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "tr[class^='_data-table-row']")
+        )
+    )
+
+    opta_teams_elos = {}
+    clicks = 0
+
+    # 2. Paginate until we have 10 000 entries or 100 clicks
+    while len(opta_teams_elos) < 10_000 and clicks < 100:
+        # print(clicks)
+        # 2a. Grab all rows whose class starts with 'get_opta_opta_teams_elos'
+        rows = driver.find_elements(
+            By.CSS_SELECTOR, "tr[class^='_data-table-row']"
+        )
+        for row in rows:
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if len(cells) >= 3:
+                team_name = cells[1].text.strip().title()
+                team_name = find_manual_similar_string(team_name)
+                elo_text = cells[2].text.strip()
+                try:
+                    elo = float(elo_text)
+                except ValueError:
+                    elo = None
+                # dedupe by team_name
+                if team_name not in opta_teams_elos:
+                    opta_teams_elos[team_name] = elo
+
+        # 2b. Stop if target reached
+        if len(opta_teams_elos) >= 10_000:
+            break
+
+        # 2c. Click “>” to go to next page
+        try:
+            next_btn = wait.until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//button[@type='button' and normalize-space(.)='>']")
+                )
+            )
+            next_btn.click()
+            clicks += 1
+            # give JS a moment to re-render the table
+            time.sleep(1)
+        except Exception:
+            # no more pages or click failed
+            break
+
+    driver.quit()
+
+    full_opta_teams_elos = {
+        find_manual_similar_string(key): value for key, value in opta_teams_elos.items()
+    }
+
+    return full_opta_teams_elos
+
+
+def get_model_prediction(
+        teams_elos_dict,
+        besoccer_teams_elos_dict,
+        footballdatabase_teams_elos_dict,
+        opta_teams_elos_dict
+):
+    # Create Series for each source
     teams_elo = pd.Series(teams_elos_dict, name="teams_elo")
     besoccer_elo = pd.Series(besoccer_teams_elos_dict, name="besoccer_elo")
     footballdb_elo = pd.Series(footballdatabase_teams_elos_dict, name="footballdb_elo")
+    opta_elo = pd.Series(opta_teams_elos_dict, name="opta_elo")
 
     # Combine into a single DataFrame
-    df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo], axis=1)
-    df_elo.columns = ["teams_elo", "besoccer_elo", "footballdb_elo"]
+    df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo, opta_elo], axis=1)
 
-    # ——————————————————————————
-    # 1) Fit the three regressions (only if data is available)
-    # ——————————————————————————
-
+    # Helper functions for OLS
     def fit_linear_regression(X, y):
-        X_b = np.c_[np.ones((X.shape[0], 1)), X]  # Add intercept
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]  # add intercept
         theta = np.linalg.pinv(X_b.T @ X_b) @ X_b.T @ y
         return theta
 
@@ -207,65 +278,105 @@ def get_model_prediction(teams_elos_dict, besoccer_teams_elos_dict, footballdata
         X_b = np.c_[np.ones((X.shape[0], 1)), X]
         return X_b @ theta
 
-    reg_full = reg_besoccer = reg_footballdb = None
+    # Initialize models
+    reg_full = reg_bf = reg_bo = reg_fo = reg_b = reg_f = reg_o = None
 
-    # a) Full 2-predictor model
-    mask_full_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
+    # 1) Fit regressions if enough data
+    # a) Full 3-predictor model (besoccer + footballdb + opta)
+    mask_full_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
     if mask_full_train.sum() > 0:
-        X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo"]].values
+        X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo", "opta_elo"]].values
         y_full = df_elo.loc[mask_full_train, "teams_elo"].values
         reg_full = fit_linear_regression(X_full, y_full)
 
-    # b) BeSoccer-only model
-    mask_besoccer_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
-    if mask_besoccer_train.sum() > 0:
-        X_besoccer = df_elo.loc[mask_besoccer_train, ["besoccer_elo"]].values
-        y_besoccer = df_elo.loc[mask_besoccer_train, "teams_elo"].values
-        reg_besoccer = fit_linear_regression(X_besoccer, y_besoccer)
+    # b) Pairwise models
+    # besoccer + footballdb
+    mask_bf_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
+    if mask_bf_train.sum() > 0:
+        X_bf = df_elo.loc[mask_bf_train, ["besoccer_elo", "footballdb_elo"]].values
+        y_bf = df_elo.loc[mask_bf_train, "teams_elo"].values
+        reg_bf = fit_linear_regression(X_bf, y_bf)
 
-    # c) FBDB-only model
-    mask_footballdb_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
-    if mask_footballdb_train.sum() > 0:
-        X_footballdb = df_elo.loc[mask_footballdb_train, ["footballdb_elo"]].values
-        y_footballdb = df_elo.loc[mask_footballdb_train, "teams_elo"].values
-        reg_footballdb = fit_linear_regression(X_footballdb, y_footballdb)
+    # besoccer + opta
+    mask_bo_train = df_elo[["teams_elo", "besoccer_elo", "opta_elo"]].notna().all(axis=1)
+    if mask_bo_train.sum() > 0:
+        X_bo = df_elo.loc[mask_bo_train, ["besoccer_elo", "opta_elo"]].values
+        y_bo = df_elo.loc[mask_bo_train, "teams_elo"].values
+        reg_bo = fit_linear_regression(X_bo, y_bo)
 
-    # ——————————————————————————
-    # 2) Predict into each “missing” scenario
-    # ——————————————————————————
+    # footballdb + opta
+    mask_fo_train = df_elo[["teams_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
+    if mask_fo_train.sum() > 0:
+        X_fo = df_elo.loc[mask_fo_train, ["footballdb_elo", "opta_elo"]].values
+        y_fo = df_elo.loc[mask_fo_train, "teams_elo"].values
+        reg_fo = fit_linear_regression(X_fo, y_fo)
 
+    # c) Single-predictor models
+    # besoccer-only
+    mask_b_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
+    if mask_b_train.sum() > 0:
+        X_b = df_elo.loc[mask_b_train, ["besoccer_elo"]].values
+        y_b = df_elo.loc[mask_b_train, "teams_elo"].values
+        reg_b = fit_linear_regression(X_b, y_b)
+
+    # footballdb-only
+    mask_f_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
+    if mask_f_train.sum() > 0:
+        X_f = df_elo.loc[mask_f_train, ["footballdb_elo"]].values
+        y_f = df_elo.loc[mask_f_train, "teams_elo"].values
+        reg_f = fit_linear_regression(X_f, y_f)
+
+    # opta-only
+    mask_o_train = df_elo[["teams_elo", "opta_elo"]].notna().all(axis=1)
+    if mask_o_train.sum() > 0:
+        X_o = df_elo.loc[mask_o_train, ["opta_elo"]].values
+        y_o = df_elo.loc[mask_o_train, "teams_elo"].values
+        reg_o = fit_linear_regression(X_o, y_o)
+
+    # 2) Predict missing target values
+    # a) Full model
     if reg_full is not None:
-        mask_full_pred = (
-            df_elo["teams_elo"].isna()
-            & df_elo[["besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
-        )
+        mask_full_pred = df_elo["teams_elo"].isna() & df_elo[["besoccer_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
         if mask_full_pred.any():
-            Xp_full = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo"]].values
-            df_elo.loc[mask_full_pred, "teams_elo"] = predict(Xp_full, reg_full)
+            Xp = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo", "opta_elo"]].values
+            df_elo.loc[mask_full_pred, "teams_elo"] = predict(Xp, reg_full)
 
-    if reg_besoccer is not None:
-        mask_besoccer_pred = (
-            df_elo["teams_elo"].isna()
-            & df_elo["besoccer_elo"].notna()
-            & df_elo["footballdb_elo"].isna()
-        )
-        if mask_besoccer_pred.any():
-            Xp_besoccer = df_elo.loc[mask_besoccer_pred, ["besoccer_elo"]].values
-            df_elo.loc[mask_besoccer_pred, "teams_elo"] = predict(Xp_besoccer, reg_besoccer)
+    # b) Pairwise predictions
+    pairs = [
+        ("besoccer_elo", "footballdb_elo", reg_bf),
+        ("besoccer_elo", "opta_elo", reg_bo),
+        ("footballdb_elo", "opta_elo", reg_fo)
+    ]
+    for col1, col2, model in pairs:
+        if model is not None:
+            mask_pair = (
+                df_elo["teams_elo"].isna() &
+                df_elo[col1].notna() &
+                df_elo[col2].notna() &
+                df_elo[[c for c in ["besoccer_elo","footballdb_elo","opta_elo"] if c not in [col1,col2]]].isna().all(axis=1)
+            )
+            if mask_pair.any():
+                Xp = df_elo.loc[mask_pair, [col1, col2]].values
+                df_elo.loc[mask_pair, "teams_elo"] = predict(Xp, model)
 
-    if reg_footballdb is not None:
-        mask_footballdb_pred = (
-            df_elo["teams_elo"].isna()
-            & df_elo["footballdb_elo"].notna()
-            & df_elo["besoccer_elo"].isna()
-        )
-        if mask_footballdb_pred.any():
-            Xp_footballdb = df_elo.loc[mask_footballdb_pred, ["footballdb_elo"]].values
-            df_elo.loc[mask_footballdb_pred, "teams_elo"] = predict(Xp_footballdb, reg_footballdb)
+    # c) Single predictor predictions
+    singles = [
+        ("besoccer_elo", reg_b),
+        ("footballdb_elo", reg_f),
+        ("opta_elo", reg_o)
+    ]
+    for col, model in singles:
+        if model is not None:
+            mask_single = (
+                df_elo["teams_elo"].isna() &
+                df_elo[col].notna() &
+                df_elo[[c for c in ["besoccer_elo","footballdb_elo","opta_elo"] if c != col]].isna().all(axis=1)
+            )
+            if mask_single.any():
+                Xp = df_elo.loc[mask_single, [col]].values
+                df_elo.loc[mask_single, "teams_elo"] = predict(Xp, model)
 
-    # ——————————————————————————
-    # 3) Return as dict
-    # ——————————————————————————
+    # Return predictions as dict
     return df_elo["teams_elo"].to_dict()
 
 
@@ -305,14 +416,16 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         if extra_teams:
             full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
             full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
+            full_opta_teams_elos_dict = get_opta_teams_elos()
+            # pprint(full_opta_teams_elos_dict)
             empty_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
 
             # Model
-            partial_teams_elos_dict_complete = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, full_footballdatabase_teams_elos_dict)
-            partial_teams_elos_dict_besoccer = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, empty_teams_elos_dict)
+            partial_teams_elos_dict_complete = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, full_footballdatabase_teams_elos_dict, full_opta_teams_elos_dict)
+            partial_teams_elos_dict_no_footballdatabase = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, empty_teams_elos_dict, full_opta_teams_elos_dict)
 
             full_teams_elos_dict = {
-                team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_besoccer[team]) / 2
+                team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_no_footballdatabase[team]) / 2
                 for team in partial_teams_elos_dict_complete
             }
             # full_teams_elos_dict = partial_teams_elos_dict_complete.copy()
