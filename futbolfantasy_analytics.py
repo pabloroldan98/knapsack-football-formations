@@ -90,19 +90,32 @@ class FutbolFantasyScraper:
         return name, price, position, team_id, form, price_trend
 
     def scrape_teams_probabilities(self):
-        # self.fetch_page("https://www.futbolfantasy.com/laliga/clasificacion")
-        self.fetch_page("https://www.futbolfantasy.com/mundial-clubes/clasificacion")
+        # teams_list_url = "https://www.futbolfantasy.com/laliga/clasificacion"
+        teams_list_url = "https://www.futbolfantasy.com/mundial-clubes/clasificacion"
+        self.fetch_page(teams_list_url)
 
-        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class,"team")][td[contains(@class,"column left nombre")]]')))
-        # team_elements = team_elements[:20]
+        team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@href and @title]')))
+        pattern = re.compile(
+            r"^https://www\.futbolfantasy\.com/.*/equipos/[^/]+$"
+        )
         team_links = {}
         for team_element in team_elements:
-            team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
-            team_name = team_name.split("\\")[0]
+            team_link = team_element.get_attribute("href").strip()
+            team_name = team_element.get_attribute("title").strip()
             team_name = find_manual_similar_string(team_name)
-            team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
-            team_links[team_name] = team_link
-        team_links = {k.split("\n")[0]: v for k, v in team_links.items() if v != "https://www.futbolfantasy.com/"}
+            if team_name and team_link and pattern.match(team_link):
+                team_links[team_name] = team_link
+
+        # team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class,"team")][td[contains(@class,"column left nombre")]]')))
+        # # team_elements = team_elements[:20]
+        # team_links = {}
+        # for team_element in team_elements:
+        #     team_name = team_element.find_element(By.TAG_NAME, 'strong').text.strip()
+        #     team_name = team_name.split("\\")[0]
+        #     team_name = find_manual_similar_string(team_name)
+        #     team_link = team_element.find_element(By.TAG_NAME, 'a').get_attribute('href').strip()
+        #     team_links[team_name] = team_link
+        # team_links = {k.split("\n")[0]: v for k, v in team_links.items() if v != "https://www.futbolfantasy.com/"}
 
         probabilities_dict = {}
         for team_name, team_link in team_links.items():
