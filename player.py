@@ -148,22 +148,14 @@ class Player:
             form_coef = 1
 
         if alt_fixture_method:
-            capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
-            # if self.position == "GK":
-            #     capped_elo_dif = capped_elo_dif * 0.2
-            base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
-        else:
-            # capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
-            # capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
-            # capped_elo_dif = min(450.0, max(-450.0, self.next_match_elo_dif))
+            # capped_elo_dif = math.log(abs(self.next_match_elo_dif), 10) if self.next_match_elo_dif != 0 else 0
+            # # if self.position == "GK":
+            # #     capped_elo_dif = capped_elo_dif * 0.2
+            # base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
             capped_elo_dif = self.next_match_elo_dif
-            # if self.position == "GK":
-            #     capped_elo_dif = capped_elo_dif * 0.2
-            # base_coef = capped_elo_dif * 1.5 / 10000 + 1
-            # base_coef = capped_elo_dif * 1.15 / 10000 + 1
+            if self.position == "GK":
+                capped_elo_dif = capped_elo_dif * 0.2
 
-            # capped_elo_dif = np.sign(capped_elo_dif) * np.log1p(abs(capped_elo_dif/1000))
-            # base_coef = capped_elo_dif * 1.25 / 10 + 1
             capped_elo_dif = np.sign(capped_elo_dif) * 0.01 * (np.abs(capped_elo_dif) / 100.0) ** 0.8
             capped_elo_dif *= (
                 1.25
@@ -173,6 +165,16 @@ class Player:
                 else 1.00
             )
             base_coef = capped_elo_dif + 1
+        else:
+            # capped_elo_dif = min(250.0, max(-250.0, self.next_match_elo_dif))
+            # capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
+            # capped_elo_dif = min(450.0, max(-450.0, self.next_match_elo_dif))
+            capped_elo_dif = self.next_match_elo_dif
+            # if self.position == "GK":
+            #     capped_elo_dif = capped_elo_dif * 0.2
+
+            capped_elo_dif = np.sign(capped_elo_dif) * np.log1p(abs(capped_elo_dif/1000))
+            base_coef = capped_elo_dif * 1.25 / 10 + 1
         if no_fixtures:
             fixture_coef = 1
         else:
