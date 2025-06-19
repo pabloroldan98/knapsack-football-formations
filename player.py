@@ -141,7 +141,7 @@ class Player:
         else:
             # form_coef = ((self.price_trend / np.log1p(self.standard_price)) / 300000) * 1.75 * 0.9 + 1
             price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
-            prod_percent_price = price_trend_percent * self.standard_price
+            prod_percent_price = price_trend_percent * self.standard_price * 0.5
             form_coef = (np.log1p(np.log1p(np.abs(prod_percent_price / 1000000))) * np.sign(self.price_trend)) * 3 / 100 + 1
 
         if no_form:
