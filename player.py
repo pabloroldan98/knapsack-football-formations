@@ -170,8 +170,8 @@ class Player:
             # capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
             # capped_elo_dif = min(450.0, max(-450.0, self.next_match_elo_dif))
             capped_elo_dif = self.next_match_elo_dif
-            # if self.position == "GK":
-            #     capped_elo_dif = capped_elo_dif * 0.2
+            if self.position == "GK":
+                capped_elo_dif = capped_elo_dif * 0.2
 
             capped_elo_dif = np.sign(capped_elo_dif) * np.log1p(abs(capped_elo_dif/1000))
             base_coef = capped_elo_dif * 1.25 / 10 + 1
