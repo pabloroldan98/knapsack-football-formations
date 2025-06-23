@@ -175,6 +175,8 @@ def find_manual_similar_string(my_string):
         "M. Aash": "Mostafa El Aash",
         "D. Vega": "De la Vega",
         "Marwan Attia": "Ateya",
+        "Gonzalo Martinez": "Pity Martínez",
+        "Artem Smoliakov": "Smolyakov",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
