@@ -634,8 +634,8 @@ def set_players_elo_dif(players_list, teams_list):
 
     result_players = copy.deepcopy(players_list)
     clean_players = purge_no_team_players(result_players)
+    clean_players = purge_eliminated_players(clean_players, teams_list)
     clean_players = purge_no_opponent_players(clean_players, teams_dict)
-    # clean_players = purge_eliminated_players(clean_players, teams_list)
 
     # checked_teams = check_teams(clean_players, teams_list)
     # if len(checked_teams) != len(teams_list):
