@@ -353,16 +353,16 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Arnau Tenas",
+    "Courtois",
 
+    "Hakimi",
+    "Nuno Mendes",
     "Sergio Ramos",
-    "Huijsen",
     "Svensson",
 
     "Cole Palmer",
     "Carlos Palacios",
     "Battaglia",
-    "Malcom",
 
     "Messi",
     "Guirassy",
