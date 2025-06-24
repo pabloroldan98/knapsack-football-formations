@@ -258,6 +258,7 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
         player_fantasy_price = float(championship_player["fantasyPrice"])
         player_price_trend = float(championship_player["priceIncrement"])
         player_fitness = championship_player.get("fitness", [])
+        player_img_link = f"https://cdn.biwenger.com/i/p/{championship_player_id}.png"
 
         player_team_id = str(championship_player["teamID"])
         if player_team_id == "None":
@@ -276,7 +277,8 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
                 standard_price=player_standard_price,
                 fantasy_price=player_fantasy_price,
                 price_trend=player_price_trend,
-                fitness=player_fitness
+                fitness=player_fitness,
+                img_link=player_img_link
             )
             players_list.append(new_player)
     return players_list

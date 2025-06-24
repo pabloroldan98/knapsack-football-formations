@@ -46,6 +46,7 @@ class Player:
             fixture:  float = 0,
             start_probability:  float = 0,
             start_probabilities: list = [],
+            img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
     ):
         self.name = name
         self._position = position
@@ -73,6 +74,7 @@ class Player:
         self.fixture = fixture
         self.start_probability = start_probability
         self.start_probabilities = start_probabilities
+        self.img_link = img_link
 
     def __str__(self):
         return f"({self.name}, {self.position}, {self.team}, {self.price}, {self.value:.3f}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
