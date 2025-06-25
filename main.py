@@ -44,6 +44,7 @@ def get_current_players(
         no_home_boost=False,
         alt_fixture_method=False,
         no_penalty_takers_boost=False,
+        nerf_penalty_boost=False,
         no_penalty_savers_boost=False,
         no_team_history_boost=False,
         no_manual_boost=True,
@@ -107,7 +108,8 @@ def get_current_players(
     if not no_penalty_takers_boost:
         penalty_takers = get_penalty_takers_dict(file_name=penalty_takers_file_name)
         partial_players_data = set_penalty_takers_boosts(partial_players_data, penalty_takers)
-        # for p in partial_players_data: p.penalty_boost /= 2
+        if nerf_penalty_boost:
+            for p in partial_players_data: p.penalty_boost /= 5
     if debug:
         print("555555")
     if not no_penalty_savers_boost:
@@ -215,6 +217,7 @@ current_players = get_current_players(
     alt_forms=False,
     add_start_probability=True,
     no_penalty_takers_boost=False,
+    nerf_penalty_boost=True,
     no_penalty_savers_boost=False,
     no_team_status_nerf=False,
     no_manual_boost=True,
