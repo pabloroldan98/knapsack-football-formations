@@ -361,15 +361,15 @@ my_players_names = [
     "Hakimi",
     "Nuno Mendes",
     "Marquinhos",
+    "Svensson",
 
     "Fabián Ruiz",
     "Savarino",
-    "Julian Brandt",
-    "De Arrascaeta",
+    "Cole Palmer",
 
-    "Cherki",
     "Olise",
-    "Di María",
+    "Guirassy",
+    "Pio Esposito",
 ]
 
 # my_players_names = [
