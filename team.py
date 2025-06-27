@@ -18,7 +18,8 @@ class Team:
             num_injured: int = 0,
             num_doubt: int = 0,
             num_sanctioned: int = 0,
-            num_warned: int = 0
+            num_warned: int = 0,
+            img_link: str = "https://cdn.biwenger.com/i/t/XXXXX.png",
     ):
         self.name = name
         self.next_opponent = next_opponent
@@ -29,6 +30,7 @@ class Team:
         self.num_doubt = num_doubt
         self.num_sanctioned = num_sanctioned
         self.num_warned = num_warned
+        self.img_link = img_link
 
     def __str__(self):
         return f"({self.name}, {self.elo})"

@@ -134,6 +134,8 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 else:
                     is_team_home = False
 
+            team_img_link = f"https://cdn.biwenger.com/i/t/{championship_team_id}.png"
+
             new_team = Team(
                 team_name,
                 team_name_next_opponent,
@@ -143,7 +145,8 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 team_status_num["injured"],
                 team_status_num["doubt"],
                 team_status_num["sanctioned"],
-                team_status_num["warned"]
+                team_status_num["warned"],
+                team_img_link
             )
             teams_list.append(new_team)
 
