@@ -69,11 +69,12 @@ class JornadaPerfectaScraper:
                 break
 
         # 3) if we found one, click the dropdown and select it
-        if round_to_select:
-            select_el = self.wait.until(
-                EC.element_to_be_clickable((By.ID, "roundSelect"))
-            )
-            select = Select(select_el)
+        select_el = self.wait.until(
+            EC.element_to_be_clickable((By.ID, "roundSelect"))
+        )
+        select = Select(select_el)
+        available_values = [option.get_attribute("value") for option in select.options]
+        if round_to_select and round_to_select in available_values:
             select.select_by_value(round_to_select)
 
             # wait for the new content to load (adjust timeout or condition as needed)
