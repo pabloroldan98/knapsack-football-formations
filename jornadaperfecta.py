@@ -6,6 +6,7 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 import json
+import copy
 
 from datetime import datetime, timezone
 from selenium.webdriver.common.by import By
@@ -14,6 +15,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
     create_driver  # same as before
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
 class JornadaPerfectaScraper:
@@ -124,60 +127,96 @@ class JornadaPerfectaScraper:
 
         # 1) Loop over each team block
         for team_block in soup.find_all(class_="partido-posible-alineacion"):
-            # Extract and clean team name
-            full_text = team_block.get_text(separator=" ", strip=True)
-            # Assumes text starts with "Alineación Posible <TeamName>"
-            team_name = full_text.replace("Alineación Posible ", "").strip().title()
-            team_name = find_manual_similar_string(team_name)
+            try:
+                # Extract and clean team name
+                full_text = team_block.get_text(separator=" ", strip=True)
+                # Assumes text starts with "Alineación Posible <TeamName>"
+                team_name = full_text.replace("Alineación Posible ", "").strip().title()
+                team_name = find_manual_similar_string(team_name)
 
-            players = {}
-            # climb up two levels: h2 → div → div
-            team_container = team_block.parent.parent
-            # 2) For each performer (possible starter)
-            for performer in team_container.find_all(attrs={"itemprop": "performer"}):
-                # a) Starter name
-                name_tag = performer.find(attrs={"itemprop": "name"})
-                starter_name = name_tag.find("a").get_text(strip=True).strip().title()
-                starter_name = find_manual_similar_string(starter_name)
+                players = {}
+                # climb up two levels: h2 → div → div
+                team_container = team_block.parent.parent
+                # 2) For each performer (possible starter)
+                for performer in team_container.find_all(attrs={"itemprop": "performer"}):
+                    # a) Starter name
+                    name_tag = performer.find(attrs={"itemprop": "name"})
+                    starter_name = name_tag.find("a").get_text(strip=True).strip().title()
+                    starter_name = find_manual_similar_string(starter_name)
 
-                # b) Starter probability
-                pct = performer.find(class_="percent-budget")
-                alternatives = performer.find_all(class_="alternative")
-                status = performer.find(class_="status")
-                if pct and pct.get_text(strip=True).isdigit():
-                    starter_prob = float(pct.get_text(strip=True)) / 100.0
-                else:
-                    starter_prob = 0.7 if alternatives or status else 0.8
+                    # b) Starter probability
+                    pct = performer.find(class_="percent-budget")
+                    alternatives = performer.find_all(class_="alternative")
+                    status = performer.find(class_="status")
+                    if pct and pct.get_text(strip=True).isdigit():
+                        starter_prob = float(pct.get_text(strip=True)) / 100.0
+                    else:
+                        starter_prob = 0.7 if alternatives or status else 0.8
 
-                players[starter_name] = starter_prob
+                    players[starter_name] = starter_prob
 
-                # 3) Check for alternative inside this performer
-                for alt in alternatives:
-                    # e.g. "Player X 35%"
-                    alt_text = alt.get_text(strip=True)
-                    parts = alt_text.rsplit(" ", 1)
-                    alt_name = parts[0].strip().title()
-                    alt_name = find_manual_similar_string(alt_name)
-                    alt_pct = parts[1].rstrip("%")
-                    try:
-                        alt_prob = float(alt_pct) / 100.0
-                    except ValueError:
-                        alt_prob = 0.2
-                    players[alt_name] = alt_prob
+                    # 3) Check for alternative inside this performer
+                    for alt in alternatives:
+                        # e.g. "Player X 35%"
+                        alt_text = alt.get_text(strip=True)
+                        parts = alt_text.rsplit(" ", 1)
+                        alt_name = parts[0].strip().title()
+                        alt_name = find_manual_similar_string(alt_name)
+                        alt_pct = parts[1].rstrip("%")
+                        try:
+                            alt_prob = float(alt_pct) / 100.0
+                        except ValueError:
+                            alt_prob = 0.2
+                        players[alt_name] = alt_prob
 
-            lineup_data[team_name] = players
+                lineup_data[team_name] = players
+            except:
+                pass
 
         return lineup_data
 
-    def scrape_probabilities(self):
+    def scrape_teams_probabilities(self):
+        """
+        1) Grab the classification page and find all team links.
+        2) For each team link, parse the lineup data.
+        3) Merge them all into a single dictionary.
+        """
+        TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
+        html = self.fetch_response(TEAMS_PAGE)
+        soup = BeautifulSoup(html, "html.parser")
+
+        # 1) Find all <a> tags whose href begins with the team prefix
+        prefix = "https://www.jornadaperfecta.com/mundial-de-clubes/equipo/"
+        team_links = {
+            a["href"]
+            for a in soup.find_all("a", href=True)
+            if a["href"].startswith(prefix)
+        }
+
+        probabilities_dict = {}
+
+        for url in team_links:
+            match_data = self.parse_match_page(url)
+            # Merge match_data into probabilities_dict
+            for team_name, players in match_data.items():
+                if team_name not in probabilities_dict:
+                    probabilities_dict[team_name] = {}
+                for player_name, chance_val in players.items():
+                    probabilities_dict[team_name][player_name] = chance_val
+
+        return probabilities_dict
+
+    def scrape_matches_probabilities(self, probabilities_dict=None):
         """
         1) Grab the main page, find all partido links.
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
+        if not probabilities_dict:
+            probabilities_dict = {}
+
         match_links = self.get_match_links()
 
-        probabilities_dict = {}
         for url in match_links:
             match_data = self.parse_match_page(url)
             # Merge match_data into probabilities_dict
@@ -186,6 +225,19 @@ class JornadaPerfectaScraper:
                     probabilities_dict[team_name] = {}
                 for player_name, chance_val in players.items():
                     probabilities_dict[team_name][player_name] = chance_val
+
+        return probabilities_dict
+
+    def scrape_probabilities(self):
+        """
+        1) Get data from all teams
+        2) Get data from all matches
+        3) Merge them all into a single dictionary.
+        """
+
+        teams_probabilities_dict = self.scrape_teams_probabilities()
+        matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
+        probabilities_dict = copy.deepcopy(matches_probabilities_dict)
 
         return probabilities_dict
 
