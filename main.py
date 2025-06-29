@@ -356,19 +356,21 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Sommer",
+    "Robert Sánchez",
+    "Courtois",
 
-    "Hakimi",
-    "Nuno Mendes",
-    "Marquinhos",
-    "Svensson",
+    "Huijsen",
+    "Reece James",
+    "Cucurella",
+    "Fran García",
 
-    "Fabián Ruiz",
-    "Savarino",
     "Cole Palmer",
+    "Enzo Fernández",
+    "Matheus Nunes",
+    "O'Reilly",
 
-    "Olise",
-    "Guirassy",
+    "Cherki",
+    "Pedro Neto",
     "Pio Esposito",
 ]
 
