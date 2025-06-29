@@ -137,16 +137,16 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
             team_img_link = f"https://cdn.biwenger.com/i/t/{championship_team_id}.png"
 
             new_team = Team(
-                team_name,
-                team_name_next_opponent,
-                team_elo,
-                is_team_home,
-                team_status_num["ok"],
-                team_status_num["injured"],
-                team_status_num["doubt"],
-                team_status_num["sanctioned"],
-                team_status_num["warned"],
-                team_img_link
+                name=team_name,
+                next_opponent=team_name_next_opponent,
+                elo=team_elo,
+                is_home=is_team_home,
+                num_ok=team_status_num["ok"],
+                num_injured=team_status_num["injured"],
+                num_doubt=team_status_num["doubt"],
+                num_sanctioned=team_status_num["sanctioned"],
+                num_warned=team_status_num["warned"],
+                img_link=team_img_link
             )
             teams_list.append(new_team)
 
@@ -177,33 +177,47 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
 
             team_elo = get_team_elo(home_team, teams_elos_dict)
             is_team_home = True
+            if host_team:
+                if isinstance(host_team, str):
+                    is_team_home = True if team_name == host_team else False
+                elif isinstance(host_team, list):
+                    is_team_home = True if team_name in host_team else False
+                else:
+                    is_team_home = False
             team_status_num = teams_status_num_dict[home_team]
             new_team = Team(
-                home_team,
-                away_team,
-                team_elo,
-                is_team_home,
-                team_status_num["ok"],
-                team_status_num["injured"],
-                team_status_num["doubt"],
-                team_status_num["sanctioned"],
-                team_status_num["warned"]
+                name=home_team,
+                next_opponent=away_team,
+                elo=team_elo,
+                is_home=is_team_home,
+                num_ok=team_status_num["ok"],
+                num_injured=team_status_num["injured"],
+                num_doubt=team_status_num["doubt"],
+                num_sanctioned=team_status_num["sanctioned"],
+                num_warned=team_status_num["warned"]
             )
             teams_list.append(new_team)
 
             team_elo = get_team_elo(away_team, teams_elos_dict)
             is_team_home = False
+            if host_team:
+                if isinstance(host_team, str):
+                    is_team_home = True if team_name == host_team else False
+                elif isinstance(host_team, list):
+                    is_team_home = True if team_name in host_team else False
+                else:
+                    is_team_home = False
             team_status_num = teams_status_num_dict[away_team]
             new_team = Team(
-                away_team,
-                home_team,
-                team_elo,
-                is_team_home,
-                team_status_num["ok"],
-                team_status_num["injured"],
-                team_status_num["doubt"],
-                team_status_num["sanctioned"],
-                team_status_num["warned"]
+                name=away_team,
+                next_opponent=home_team,
+                elo=team_elo,
+                is_home=is_team_home,
+                num_ok=team_status_num["ok"],
+                num_injured=team_status_num["injured"],
+                num_doubt=team_status_num["doubt"],
+                num_sanctioned=team_status_num["sanctioned"],
+                num_warned=team_status_num["warned"]
             )
             teams_list.append(new_team)
 
