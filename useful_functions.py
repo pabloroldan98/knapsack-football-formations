@@ -177,6 +177,8 @@ def find_manual_similar_string(my_string):
         "Marwan Attia": "Ateya",
         "Gonzalo Martinez": "Pity Martínez",
         "Artem Smoliakov": "Smolyakov",
+        "Youssef Lekhedim": "Yusi Enríquez",
+        "Youssef Enríquez": "Yusi Enríquez",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
