@@ -184,7 +184,16 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                     is_team_home = True if team_name in host_team else False
                 else:
                     is_team_home = False
-            team_status_num = teams_status_num_dict[home_team]
+            try:
+                team_status_num = teams_status_num_dict[away_team]
+            except:
+                team_status_num = {
+                    "ok": 0,
+                    "injured": 0,
+                    "doubt": 0,
+                    "sanctioned": 0,
+                    "warned": 0,
+                }
             new_team = Team(
                 name=home_team,
                 next_opponent=away_team,
@@ -207,7 +216,16 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                     is_team_home = True if team_name in host_team else False
                 else:
                     is_team_home = False
-            team_status_num = teams_status_num_dict[away_team]
+            try:
+                team_status_num = teams_status_num_dict[away_team]
+            except:
+                team_status_num = {
+                    "ok": 0,
+                    "injured": 0,
+                    "doubt": 0,
+                    "sanctioned": 0,
+                    "warned": 0,
+                }
             new_team = Team(
                 name=away_team,
                 next_opponent=home_team,

@@ -144,7 +144,7 @@ def get_current_players(
         print("BBBBBB")
     if not no_team_history_boost:
         players_team_history = get_players_team_history_dict(file_name=team_history_file_name)
-        partial_players_data = set_team_history_boosts(partial_players_data, players_team_history, verbose=False)
+        partial_players_data = set_team_history_boosts(partial_players_data, players_team_history, forced_matches, verbose=False)
     if debug:
         print("CCCCCC")
     partial_players_data = set_players_sofascore_rating(partial_players_data, players_ratings_list)

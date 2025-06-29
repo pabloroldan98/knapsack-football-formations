@@ -1,6 +1,7 @@
 import ast
 import copy
 import csv
+import itertools
 import math
 import difflib
 
@@ -580,24 +581,26 @@ def calc_penalty_boost(players_penalties):
     return penalty_coef
 
 
-def get_biwinger_transfermarket_teams_dict(biwenger_team_names_list, transfermarket_team_names_list, file_name="biwinger_transfermarket_teams"):
+def get_biwenger_transfermarket_teams_dict(biwenger_team_names_list, transfermarket_team_names_list, extra_teams_list, file_name="biwenger_transfermarket_teams"):
     if os.path.isfile('./' + file_name + '.csv'):
         return read_dict_data(file_name)
-    result_biwinger_transfermarket_teams_dict = dict()
+    result_biwenger_transfermarket_teams_dict = dict()
 
-    for biwenger_team_name in biwenger_team_names_list:
+    full_biwenger_team_names_list = biwenger_team_names_list + extra_teams_list
+    for biwenger_team_name in full_biwenger_team_names_list:
         closest_transfermarket_team_name = find_similar_string(biwenger_team_name, transfermarket_team_names_list)
-        result_biwinger_transfermarket_teams_dict[biwenger_team_name] = closest_transfermarket_team_name
+        result_biwenger_transfermarket_teams_dict[biwenger_team_name] = closest_transfermarket_team_name
 
-    return result_biwinger_transfermarket_teams_dict
+    return result_biwenger_transfermarket_teams_dict
 
 
-def set_team_history_boosts(players_list, players_team_history_dict, verbose=False):
+def set_team_history_boosts(players_list, players_team_history_dict, extra_teams, verbose=False):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
-    penalty_team_names_list = list(players_team_history_dict.keys())
-    biwinger_transfermarket_teams_dict = get_biwinger_transfermarket_teams_dict(team_names_list, penalty_team_names_list) #, file_name="biwinger_transfermarket_laliga_teams")
+    transfermarket_team_names_list = list(players_team_history_dict.keys())
+    extra_teams_list = list(itertools.chain.from_iterable(extra_teams))
+    biwenger_transfermarket_teams_dict = get_biwenger_transfermarket_teams_dict(team_names_list, transfermarket_team_names_list, extra_teams_list) #, file_name="biwenger_transfermarket_laliga_teams")
 
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
@@ -607,7 +610,7 @@ def set_team_history_boosts(players_list, players_team_history_dict, verbose=Fal
             for player in result_players:
                 if player.name == closest_player_name:
                     player.team_history = player_team_history
-                    transfermarket_opponent_name = biwinger_transfermarket_teams_dict[player.opponent]
+                    transfermarket_opponent_name = biwenger_transfermarket_teams_dict[player.opponent]
                     player.team_history_boost = calc_team_history_boost(player_team_history, transfermarket_opponent_name)
                     if verbose:
                         if player.team_history_boost != 0:
