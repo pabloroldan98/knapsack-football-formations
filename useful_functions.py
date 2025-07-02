@@ -179,6 +179,10 @@ def find_manual_similar_string(my_string):
         "Artem Smoliakov": "Smolyakov",
         "Youssef Lekhedim": "Yusi Enríquez",
         "Youssef Enríquez": "Yusi Enríquez",
+        "Abdulaziz Hadhood": "Al-Hadhood",
+        "Saad Al Muthary": "Al-Mutairi",
+        "Saad Khalid Almuthary": "Al-Mutairi",
+        "Saad Al-Muthary": "Al-Mutairi",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "Bilbao": "Athletic",
