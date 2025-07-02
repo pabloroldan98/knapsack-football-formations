@@ -397,7 +397,8 @@ def get_players_data(
                     print(average_rating)
                     if player_name != "":
                         player_name = find_manual_similar_string(player_name)
-                        players_ratings[player_name] = average_rating
+                        # players_ratings[player_name] = average_rating
+                        players_ratings[player_name] = average_rating if average_rating != 0 else float(6.0)
                     break
                 except (CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
                     timeout_retries -= 1
