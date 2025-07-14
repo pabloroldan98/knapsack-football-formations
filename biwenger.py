@@ -79,7 +79,7 @@ def get_championship_data(
     return sorted_championship_teams, sorted_championship_players
 
 
-def get_teams_championship_data(data, is_country=False, extra_teams=True, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
+def get_teams_championship_data(data, is_country=False, extra_teams=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
     

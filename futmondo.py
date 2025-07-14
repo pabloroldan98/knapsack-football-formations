@@ -64,7 +64,7 @@ def get_position(futmondo_position):
     return position
 
 
-def get_players_positions_dict(
+def get_players_positions_dict_futmondo(
         write_file=True,
         file_name="futmondo_laliga_players_positions",
         force_scrape=False
@@ -86,7 +86,7 @@ def get_players_positions_dict(
     return team_players_positions_dict
 
 
-# players_positions_dict = get_players_positions_dict(file_name="futmondo_laliga_players_positions", force_scrape=True)
+# players_positions_dict = get_players_positions_dict_futmondo(file_name="futmondo_laliga_players_positions", force_scrape=True)
 #
 # # Print the result in a readable way
 # pprint(players_positions_dict)

@@ -377,7 +377,7 @@ def get_futbolfantasy_data(
     return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
 
-def get_players_prices_dict(
+def get_players_prices_dict_futbolfantasy(
         file_name="futbolfantasy_prices",
         force_scrape=False
 ):
@@ -394,7 +394,7 @@ def get_players_prices_dict(
     return result
 
 
-def get_players_positions_dict(
+def get_players_positions_dict_futbolfantasy(
         file_name="futbolfantasy_positions",
         force_scrape=False
 ):
@@ -411,7 +411,7 @@ def get_players_positions_dict(
     return result
 
 
-def get_players_forms_dict(
+def get_players_forms_dict_futbolfantasy(
         file_name="futbolfantasy_forms",
         force_scrape=False
 ):
@@ -445,7 +445,7 @@ def get_players_start_probabilities_dict_futbolfantasy(
     return result
 
 
-def get_players_price_trends_dict(
+def get_players_price_trends_dict_futbolfantasy(
         file_name="futbolfantasy_price_trends",
         force_scrape=False
 ):

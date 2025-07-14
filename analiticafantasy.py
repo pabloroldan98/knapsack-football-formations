@@ -278,7 +278,7 @@ def get_analiticafantasy_data(
     return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
 
-def get_players_prices_dict(
+def get_players_prices_dict_analiticafantasy(
         file_name="analiticafantasy_prices",
         force_scrape=False
 ):
@@ -295,7 +295,7 @@ def get_players_prices_dict(
     return result
 
 
-def get_players_positions_dict(
+def get_players_positions_dict_analiticafantasy(
         file_name="analiticafantasy_positions",
         force_scrape=False
 ):
@@ -312,7 +312,7 @@ def get_players_positions_dict(
     return result
 
 
-def get_players_forms_dict(
+def get_players_forms_dict_analiticafantasy(
         file_name="analiticafantasy_forms",
         force_scrape=False
 ):
@@ -329,7 +329,7 @@ def get_players_forms_dict(
     return result
 
 
-def get_players_start_probabilities_dict_futbolfantasy(
+def get_players_start_probabilities_dict_analiticafantasy(
         file_name="analiticafantasy_start_probabilities",
         force_scrape=False
 ):
@@ -346,7 +346,7 @@ def get_players_start_probabilities_dict_futbolfantasy(
     return result
 
 
-def get_players_price_trends_dict(
+def get_players_price_trends_dict_analiticafantasy(
         file_name="analiticafantasy_price_trends",
         force_scrape=False
 ):

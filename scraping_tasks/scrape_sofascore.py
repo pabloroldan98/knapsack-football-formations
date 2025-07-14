@@ -6,7 +6,7 @@ import pytz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from futbolfantasy_analytics import get_futbolfantasy_data
-from futmondo import get_players_positions_dict
+from futmondo import get_players_positions_dict_futmondo
 from sofascore import get_players_ratings_list
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict

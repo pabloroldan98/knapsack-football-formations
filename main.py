@@ -2,8 +2,8 @@
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 
 from biwenger import get_championship_data
-from futbolfantasy_analytics import get_players_prices_dict, get_players_forms_dict, \
-    get_players_price_trends_dict
+from futbolfantasy_analytics import get_players_prices_dict_futbolfantasy, get_players_positions_dict_futbolfantasy, \
+    get_players_forms_dict_futbolfantasy, get_players_price_trends_dict_futbolfantasy
 from group_knapsack import best_full_teams
 from player import set_players_value_to_last_fitness, set_manual_boosts, set_penalty_takers_boosts, \
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
@@ -15,7 +15,7 @@ from team import get_old_teams_data, set_team_status_nerf
 from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
-from futmondo import get_players_positions_dict
+from futmondo import get_players_positions_dict_futmondo
 from useful_functions import find_similar_string
 
 possible_formations = [
@@ -101,7 +101,8 @@ def get_current_players(
     if debug:
         print("333333")
     if alt_positions:
-        players_positions = get_players_positions_dict(file_name=alt_positions_file_name)
+        # players_positions = get_players_positions_dict_futmondo(file_name=alt_positions_file_name)
+        players_positions = get_players_positions_dict_futbolfantasy(file_name=alt_positions_file_name)
         partial_players_data = set_positions(partial_players_data, players_positions, verbose=False)
     if debug:
         print("444444")
@@ -118,15 +119,15 @@ def get_current_players(
     if debug:
         print("666666")
     if alt_prices:
-        players_prices = get_players_prices_dict(file_name=alt_prices_file_name)
+        players_prices = get_players_prices_dict_futbolfantasy(file_name=alt_prices_file_name)
         partial_players_data = set_prices(partial_players_data, players_prices, verbose=False)
     if debug:
         print("777777")
     if alt_price_trends:
-        players_price_trends = get_players_price_trends_dict(file_name=alt_price_trends_file_name)
+        players_price_trends = get_players_price_trends_dict_futbolfantasy(file_name=alt_price_trends_file_name)
         players_standard_prices=None
         if alt_prices:
-            players_standard_prices = get_players_prices_dict(file_name=alt_prices_file_name)
+            players_standard_prices = get_players_prices_dict_futbolfantasy(file_name=alt_prices_file_name)
         partial_players_data = set_price_trends(partial_players_data, players_price_trends, players_standard_prices, verbose=False)
     if debug:
         print("888888")
@@ -151,7 +152,7 @@ def get_current_players(
     if debug:
         print("DDDDDD")
     if alt_forms and not no_form:
-        players_form = get_players_forms_dict(file_name=alt_forms_file_name)
+        players_form = get_players_forms_dict_futbolfantasy(file_name=alt_forms_file_name)
         partial_players_data = set_forms(partial_players_data, players_form)
     if debug:
         print("EEEEEE")
