@@ -40,9 +40,9 @@ try:
     league_elo_ratings_dict = get_teams_elos_dict(
         is_country=False,
         country=None,
-        extra_teams=True,
+        extra_teams=False,
         write_file=True,
-        file_name="elo_ratings_mundialito_data",
+        file_name="elo_ratings_laliga_data",
         force_scrape=True
     )
     country_elo_ratings_dict = get_teams_elos_dict(

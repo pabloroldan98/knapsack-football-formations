@@ -21,8 +21,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 class FutbolFantasyScraper:
     def __init__(self):
-        # self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
-        self.base_url = 'https://www.futbolfantasy.com/analytics/biwenger/mercado'
+        self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
+        # self.base_url = 'https://www.futbolfantasy.com/analytics/biwenger/mercado'
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
@@ -90,8 +90,8 @@ class FutbolFantasyScraper:
         return name, price, position, team_id, form, price_trend
 
     def scrape_teams_probabilities(self):
-        # teams_list_url = "https://www.futbolfantasy.com/laliga/clasificacion"
-        teams_list_url = "https://www.futbolfantasy.com/mundial-clubes/clasificacion"
+        teams_list_url = "https://www.futbolfantasy.com/laliga/clasificacion"
+        # teams_list_url = "https://www.futbolfantasy.com/mundial-clubes/clasificacion"
         self.fetch_page(teams_list_url)
 
         team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@href and @title]')))
@@ -143,13 +143,13 @@ class FutbolFantasyScraper:
                 probability = "0%"
                 try:
                     player_name = player_element.find_element(
-                        # By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
-                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer mundial-clubes")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                        # By.XPATH, './/ancestor::*[contains(@class, "fotocontainer mundial-clubes")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                 except NoSuchElementException:  # Error while getting player_name
                     try:
                         player_name = player_element.find_element(
-                            # By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
-                            By.XPATH, './/*[@class="img   mundial-clubes "]').get_attribute('alt').strip()
+                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                            # By.XPATH, './/*[@class="img   mundial-clubes "]').get_attribute('alt').strip()
                     except NoSuchElementException:  # Error while getting player_name
                         player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
                         player_name = player_name.encode('latin1').decode('utf-8')
@@ -175,8 +175,8 @@ class FutbolFantasyScraper:
             probabilities_dict = {}
 
         # 1) Fetch the possible lineups page via requests and parse out match URLs
-        # html = self.fetch_response("https://www.futbolfantasy.com/laliga/posibles-alineaciones")
-        html = self.fetch_response("https://www.futbolfantasy.com/mundial-clubes/posibles-alineaciones")
+        html = self.fetch_response("https://www.futbolfantasy.com/laliga/posibles-alineaciones")
+        # html = self.fetch_response("https://www.futbolfantasy.com/mundial-clubes/posibles-alineaciones")
         soup = BeautifulSoup(html, 'html.parser')
         main = soup.find('main')
 
@@ -272,14 +272,14 @@ class FutbolFantasyScraper:
                             probability = "0%"
                             try:
                                 player_name = player_element.find_element(
-                                    # By.CSS_SELECTOR, 'div.fotocontainer.laliga'
-                                    By.CSS_SELECTOR, 'div.fotocontainer.mundial-clubes'
+                                    By.CSS_SELECTOR, 'div.fotocontainer.laliga'
+                                    # By.CSS_SELECTOR, 'div.fotocontainer.mundial-clubes'
                                 ).find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                             except NoSuchElementException:  # Error while getting player_name
                                 try:
                                     player_name = player_element.find_element(
-                                        # By.XPATH, './/*[contains(@class, "img") and contains(@class, "laliga")]'
-                                        By.XPATH, './/*[contains(@class, "img") and contains(@class, "mundial-clubes")]'
+                                        By.XPATH, './/*[contains(@class, "img") and contains(@class, "laliga")]'
+                                        # By.XPATH, './/*[contains(@class, "img") and contains(@class, "mundial-clubes")]'
                                     ).get_attribute('alt').strip()
                                 except NoSuchElementException:  # Error while getting player_name
                                     player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
@@ -463,11 +463,11 @@ def get_players_price_trends_dict(
 
 
 # prices, positions, forms, start_probabilities, price_trends = get_futbolfantasy_data(
-#     price_file_name="test_futbolfantasy_mundialito_players_prices",
-#     positions_file_name="test_futbolfantasy_mundialito_players_positions",
-#     forms_file_name="test_futbolfantasy_mundialito_players_forms",
-#     start_probability_file_name="test_futbolfantasy_mundialito_players_start_probabilities",
-#     price_trends_file_name="test_futbolfantasy_mundialito_players_price_trends",
+#     price_file_name="test_futbolfantasy_laliga_players_prices",
+#     positions_file_name="test_futbolfantasy_laliga_players_positions",
+#     forms_file_name="test_futbolfantasy_laliga_players_forms",
+#     start_probability_file_name="test_futbolfantasy_laliga_players_start_probabilities",
+#     price_trends_file_name="test_futbolfantasy_laliga_players_price_trends",
 #     force_scrape=True
 # )
 # print("Prices:")

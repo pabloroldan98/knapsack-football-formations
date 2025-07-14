@@ -24,8 +24,8 @@ def get_biwenger_data_dict(
     data = None
     if force_scrape:
         try:
-            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
-            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
+            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
@@ -47,6 +47,7 @@ def get_biwenger_data_dict(
         overwrite_dict_data(data, file_name)
 
     return data
+
 
 def get_championship_data(
         forced_matches=[],
@@ -317,6 +318,22 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
             )
             players_list.append(new_player)
     return players_list
+
+
+# all_teams, all_players = get_championship_data(
+#     is_country=False,
+#     extra_teams=False,
+#     use_comunio_price=False,
+#     biwenger_file_name="biwenger_laliga_data",
+#     elo_ratings_file_name="elo_ratings_laliga_data",
+# )
+#
+# for t in all_teams:
+#     print(t)
+#
+# for p in all_players:
+#     print(p)
+
 
 
 # all_teams, all_players = get_championship_data(

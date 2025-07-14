@@ -38,7 +38,7 @@ print("Scraping TRANSFERMARKET (team history)...")
 
 try:
     players_team_history = get_players_team_history_dict(
-        file_name="transfermarket_mundialito_team_history",
+        file_name="transfermarket_laliga_team_history",
         use_country_as_team=False,
         force_scrape=True
     )

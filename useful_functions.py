@@ -166,7 +166,7 @@ def find_manual_similar_string(my_string):
         "Rodri Heráandez": "Rodrigo",
         "R. Rabia": "Rami Rabia",
         "Mohamed Ali Ben Romdhane": "M. Ben Romdhane",
-        "Álvaro Fernández": "Álvaro Carreras",
+        # "Álvaro Fernández": "Álvaro Carreras",
         "Arnold": "Trent",
         "Trent Alexander-Arnold": "Trent",
         "B. Said": "Bechir Ben Said",
@@ -185,7 +185,18 @@ def find_manual_similar_string(my_string):
         "Saad Al-Muthary": "Al-Mutairi",
 
         "RCD Espanyol Barcelona": "Espanyol",
+        "RCD Espanyol": "Espanyol",
         "Bilbao": "Athletic",
+        "Athletic Bilbao": "Athletic",
+        "Bilbao": "Athletic",
+        "Celta Vigo": "Celta",
+        "Deportivo Alavés": "Alavés",
+        "Deportivo Alaves": "Alavés",
+        "Real Betis": "Betis",
+        "Oviedo": "Real Oviedo",
+        "Girona FC": "Girona",
+        "Levante UD": "Levante",
+
         "Czechia": "Czech Republic",
         "Turkey": "Türkiye",
 

@@ -140,8 +140,8 @@ class TransfermarktScraper:
 
     def scrape(self, use_country_as_team=False):
         result = {}
-        league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
-        # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        # league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
         # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
         # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
         team_links = self.get_team_links(league_url)
@@ -188,7 +188,7 @@ def get_players_team_history_dict(
 
 
 # players_team_history = get_players_team_history_dict(
-#     file_name="test_transfermarket_mundialito_team_history",
+#     file_name="test_transfermarket_laliga_team_history",
 #     use_country_as_team=False,
 #     force_scrape=True
 # )

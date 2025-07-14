@@ -40,7 +40,7 @@ print("Scraping JORNADAPERFECTA...")
 
 try:
     start_probabilities = get_jornadaperfecta_data(
-        start_probability_file_name="jornadaperfecta_mundialito_players_start_probabilities",
+        start_probability_file_name="jornadaperfecta_laliga_players_start_probabilities",
         force_scrape=True
     )
     print("\nStart Probabilities:")

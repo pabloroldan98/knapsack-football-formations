@@ -57,6 +57,8 @@ class TransfermarktScraper:
                 for a in teams:
                     team_name = a.get("title")
                     team_name = find_manual_similar_string(team_name)
+                    if team_name not in ["CA Osasuna", "Getafe CF", ]:
+                        continue
                     team_link = a.get("href")
                     if team_name and team_link and "verein" in team_link:
                         team_links[team_name] = team_link
@@ -152,8 +154,8 @@ class TransfermarktScraper:
 
     def scrape(self):
         result = {}
-        league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
-        # league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
+        # league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
         # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
         # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
         team_links = self.get_team_links(league_url)
@@ -200,7 +202,7 @@ def get_penalty_savers_dict(
 
 
 # goalkeepers_penalty_saves = get_penalty_savers_dict(
-#     file_name="test_transfermarket_mundialito_penalty_savers",
+#     file_name="test_transfermarket_laliga_penalty_savers",
 #     force_scrape=True
 # )
 #

@@ -39,7 +39,7 @@ print("Scraping ANALITICAFANTASY...")
 
 try:
     start_probabilities = get_analiticafantasy_data(
-        start_probability_file_name="analiticafantasy_mundialito_players_start_probabilities",
+        start_probability_file_name="analiticafantasy_laliga_players_start_probabilities",
         force_scrape=True
     )
     print("\nStart Probabilities:")

@@ -49,7 +49,8 @@ def get_besoccer_teams_elos():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # 1. Fetch the page
-    url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+    # url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+    url = 'https://es.besoccer.com/competicion/clasificacion/primera'
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -117,7 +118,9 @@ def get_footballdatabase_teams_elos():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # 1. Fetch the page
-    url = 'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-2025'
+    # url = 'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-2025'
+    # url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2024-2025'
+    url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2025-2026'
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -446,22 +449,31 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
             #     )
             #     for team, x_bes in full_besoccer_teams_elos_dict.items()
             # }
+            # Compute the keys present in both source dicts
+            common_keys = set(full_besoccer_teams_elos_dict) & set(full_footballdatabase_teams_elos_dict)
+            # Filter full_teams_elos_dict in-place (or assign to a new variable)
+            full_teams_elos_dict = {k: v for k, v in full_teams_elos_dict.items() if k in common_keys}
 
     full_teams_elos_dict = dict(
         sorted(full_teams_elos_dict.items(), key=lambda kv: kv[1], reverse=True)
     )
 
-    # Compute the keys present in both source dicts
-    common_keys = set(full_besoccer_teams_elos_dict) & set(full_footballdatabase_teams_elos_dict)
-
-    # Filter full_teams_elos_dict in-place (or assign to a new variable)
-    full_teams_elos_dict = {k: v for k, v in full_teams_elos_dict.items() if k in common_keys}
-
     return full_teams_elos_dict
 
 
-# result = get_teams_elos(country=None, extra_teams=True)
-# # pprint(result)
+# # # result = get_teams_elos(country=None, extra_teams=True)
+# # result = get_teams_elos(country=None, extra_teams=False)
+
+# result = get_teams_elos_dict(
+#     is_country=False,
+#     country="ESP",
+#     extra_teams=False,
+#     write_file=True,
+#     file_name="elo_ratings_laliga_data",
+#     force_scrape=True
+# )
+# pprint(result)
+#
 # items = list(result.items())
 # print("{")
 # for i, (team, elo) in enumerate(items):

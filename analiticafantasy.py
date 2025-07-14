@@ -9,8 +9,8 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 
 class AnaliticaFantasyScraper:
     def __init__(self):
-        # self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
-        self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
+        self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
+        # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
         self.session = requests.Session()
         self.headers = {
             "User-Agent": (
@@ -79,23 +79,23 @@ class AnaliticaFantasyScraper:
             data_obj
             .get("props", {})
             .get("pageProps", {})
-            .get("lineupsData", {})
+            # .get("lineupsData", {})
+            .get("lineupsResponse", {})
         )
 
-        # Safely extract home/away lineups
-        home_players = lineups_data.get("homeLineup", {}).get("players", [])
-        away_players = lineups_data.get("awayLineup", {}).get("players", [])
-        all_chance_players = home_players + away_players
-
         match_dict = {}
-        for chance_player in all_chance_players:
+
+        # Safely extract home/away lineups
+        home_team = lineups_data.get("h", {})
+        home_players = home_team.get("l", [])
+        for home_player in home_players:
             # Example: chance=40, team->"name"="Valencia", information->"name"="Diakhaby"
-            team_name = chance_player.get("team", {}).get("name", "").strip().title()
+            team_name = home_team.get("n", [])
             team_name = find_manual_similar_string(team_name)
-            player_name = chance_player.get("information", {}).get("name", "").strip().title()
+            player_name = home_player.get("n", {}).strip().title()
             player_name = find_manual_similar_string(player_name)
-            chance_int = chance_player.get("chance", 0)  # e.g. 40
-    
+            chance_int = home_player.get("c", 0)  # e.g. 40
+
             if team_name and player_name:
                 # Convert to fraction, e.g. 40 -> 0.40
                 chance_fraction = chance_int / 100.0
@@ -103,6 +103,45 @@ class AnaliticaFantasyScraper:
                 if team_name not in match_dict:
                     match_dict[team_name] = {}
                 match_dict[team_name][player_name] = chance_fraction
+
+        away_team = lineups_data.get("a", {})
+        away_players = away_team.get("l", [])
+        for away_player in away_players:
+            # Example: chance=40, team->"name"="Valencia", information->"name"="Diakhaby"
+            team_name = away_team.get("n", [])
+            team_name = find_manual_similar_string(team_name)
+            player_name = away_player.get("n", {}).strip().title()
+            player_name = find_manual_similar_string(player_name)
+            chance_int = away_player.get("c", 0)  # e.g. 40
+
+            if team_name and player_name:
+                # Convert to fraction, e.g. 40 -> 0.40
+                chance_fraction = chance_int / 100.0
+                # Insert into dictionary
+                if team_name not in match_dict:
+                    match_dict[team_name] = {}
+                match_dict[team_name][player_name] = chance_fraction
+
+        # home_players = lineups_data.get("homeLineup", {}).get("players", [])
+        # away_players = lineups_data.get("awayLineup", {}).get("players", [])
+        # all_chance_players = home_players + away_players
+        #
+        # match_dict = {}
+        # for chance_player in all_chance_players:
+        #     # Example: chance=40, team->"name"="Valencia", information->"name"="Diakhaby"
+        #     team_name = chance_player.get("team", {}).get("name", "").strip().title()
+        #     team_name = find_manual_similar_string(team_name)
+        #     player_name = chance_player.get("information", {}).get("name", "").strip().title()
+        #     player_name = find_manual_similar_string(player_name)
+        #     chance_int = chance_player.get("chance", 0)  # e.g. 40
+        #
+        #     if team_name and player_name:
+        #         # Convert to fraction, e.g. 40 -> 0.40
+        #         chance_fraction = chance_int / 100.0
+        #         # Insert into dictionary
+        #         if team_name not in match_dict:
+        #             match_dict[team_name] = {}
+        #         match_dict[team_name][player_name] = chance_fraction
 
         return match_dict
 
@@ -168,7 +207,7 @@ def get_players_start_probabilities_dict_analiticafantasy(
 
 # # Example usage:
 # data = get_analiticafantasy_data(
-#     start_probability_file_name="test_analiticafantasy_mundialito_players_start_probabilities",
+#     start_probability_file_name="test_analiticafantasy_laliga_players_start_probabilities",
 #     force_scrape=True
 # )
 #

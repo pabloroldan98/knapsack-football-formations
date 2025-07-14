@@ -259,7 +259,8 @@ def get_players_data(
 
     if not team_links:
         team_links = get_team_links_from_league(
-            "https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619",
+            # "https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619",
+            "https://www.sofascore.com/tournament/football/spain/laliga/8#id:77559",
             # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
             # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
             # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
@@ -295,7 +296,8 @@ def get_players_data(
         a_tags = soup.find_all("a", href=True)
         for a_tag in a_tags:
             href_val = a_tag["href"]
-            if href_val.startswith("/player/"):
+            # if href_val.startswith("/player/"):
+            if "/player/" in href_val:
                 # Construct absolute URL
                 full_url = "https://www.sofascore.com" + href_val
                 player_paths_list.append(full_url)
@@ -425,10 +427,11 @@ def get_players_data(
 
     return teams_with_players_ratings
 
-# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619")
+# # team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619")
+# team_links = get_team_links_from_league("https://www.sofascore.com/tournament/football/spain/laliga/8#id:77559")
 # pprint(team_links)
-
-
+#
+#
 # start_time = time.time()
 #
 # result = get_players_ratings_list(file_name="test", force_scrape=True)#, team_links=team_links)

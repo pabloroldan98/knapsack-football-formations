@@ -206,50 +206,49 @@ print()
 
 
 current_players = get_current_players(
-    no_form=True,
+    no_form=False,
     no_fixtures=False,
     no_home_boost=False,
     no_team_history_boost=False,
     alt_fixture_method=False,
-    alt_positions=False,
-    alt_prices=False,
-    alt_price_trends=False,
-    alt_forms=False,
+    alt_positions=True,
+    alt_prices=True,
+    alt_price_trends=True,
+    alt_forms=True,
     add_start_probability=True,
     no_penalty_takers_boost=False,
-    nerf_penalty_boost=True,
+    nerf_penalty_boost=False,
     no_penalty_savers_boost=False,
     no_team_status_nerf=False,
     no_manual_boost=True,
     use_old_players_data=False,
     use_old_teams_data=False,
     use_comunio_price=False,
-    biwenger_file_name="biwenger_mundialito_data",
-    elo_ratings_file_name="elo_ratings_mundialito_data",
-    ratings_file_name="sofascore_mundialito_players_ratings",
-    penalty_takers_file_name="transfermarket_mundialito_penalty_takers",
-    penalty_saves_file_name="transfermarket_mundialito_penalty_savers",
-    team_history_file_name="transfermarket_mundialito_team_history",
-    # # alt_positions_file_name="futmondo_laliga_players_positions",
-    # alt_positions_file_name="futbolfantasy_mundialito_players_positions",
-    # alt_prices_file_name="futbolfantasy_mundialito_players_prices",
-    # alt_price_trends_file_name="futbolfantasy_mundialito_players_price_trends",
-    # alt_forms_file_name="futbolfantasy_mundialito_players_forms",
+    biwenger_file_name="biwenger_laliga_data",
+    elo_ratings_file_name="elo_ratings_laliga_data",
+    ratings_file_name="sofascore_laliga_players_ratings",
+    penalty_takers_file_name="transfermarket_laliga_penalty_takers",
+    penalty_saves_file_name="transfermarket_laliga_penalty_savers",
+    team_history_file_name="transfermarket_laliga_team_history",
+    # alt_positions_file_name="futmondo_laliga_players_positions",
+    alt_positions_file_name="futbolfantasy_laliga_players_positions",
+    alt_prices_file_name="futbolfantasy_laliga_players_prices",
+    alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
+    alt_forms_file_name="futbolfantasy_laliga_players_forms",
     start_probability_file_names=[
-        "futbolfantasy_mundialito_players_start_probabilities",
-        "analiticafantasy_mundialito_players_start_probabilities",
-        "jornadaperfecta_mundialito_players_start_probabilities"
+        "futbolfantasy_laliga_players_start_probabilities",
+        "analiticafantasy_laliga_players_start_probabilities",
+        "jornadaperfecta_laliga_players_start_probabilities"
         ],
     is_country=False,
-    extra_teams=True,
-    host_team=["Inter Miami", "Seattle", "Los Ángeles FC", ],
+    extra_teams=False,
     debug=False,
     # forced_matches=jornada_XX,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
     # team_history_file_name="transfermarket_copa_america_country_history",
-    # # alt_positions_file_name="futmondo_mundialito_players_positions",
+    # # alt_positions_file_name="futmondo_laliga_players_positions",
     # is_country=True,
     # host_team="US",
     # debug=False,
@@ -299,7 +298,7 @@ print("------------------------- PURGED PLAYERS -------------------------")
 worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
-purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
+# purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
 purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
@@ -344,7 +343,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 300, verbose=2)
 
 
 

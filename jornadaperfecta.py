@@ -22,8 +22,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 class JornadaPerfectaScraper:
     def __init__(self):
         # self.base_url = "https://www.jornadaperfecta.com/la-liga/onces-posibles/"
-        # self.base_url = "https://www.jornadaperfecta.com/onces-posibles/"
-        self.base_url = "https://www.jornadaperfecta.com/mundial-de-clubes/onces-posibles/"
+        self.base_url = "https://www.jornadaperfecta.com/onces-posibles/"
+        # self.base_url = "https://www.jornadaperfecta.com/mundial-de-clubes/onces-posibles/"
         self.session = requests.Session()
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
@@ -50,43 +50,43 @@ class JornadaPerfectaScraper:
         # 1) load the page
         self.fetch_page(self.base_url)
 
-        # 2) figure out which round to pick based on Europe/Madrid time
-        cet = pytz.timezone("Europe/Madrid")
-        now = datetime.now(cet)
-
-        # thresholds are (round_value, cutoff_datetime)
-        thresholds = [
-            ("1", datetime(2025, 6, 15, 2,  0, tzinfo=cet)),
-            ("2", datetime(2025, 6, 19, 18, 0, tzinfo=cet)),
-            ("3", datetime(2025, 6, 23, 21, 0, tzinfo=cet)),
-            ("4", datetime(2025, 6, 28, 18, 0, tzinfo=cet)),
-            ("5", datetime(2025, 7,  4, 21, 0, tzinfo=cet)),
-            ("6", datetime(2025, 7,  8, 21, 0, tzinfo=cet)),
-            ("7", datetime(2025, 7, 13, 21, 0, tzinfo=cet)),
-        ]
-
-        round_to_select = None
-        for val, cutoff in thresholds:
-            if now < cutoff:
-                round_to_select = val
-                break
-
-        # 3) if we found one, click the dropdown and select it
-        select_el = self.wait.until(
-            EC.element_to_be_clickable((By.ID, "roundSelect"))
-        )
-        select = Select(select_el)
-        available_values = [option.get_attribute("value") for option in select.options]
-        if round_to_select and round_to_select in available_values:
-            select.select_by_value(round_to_select)
-
-            # wait for the new content to load (adjust timeout or condition as needed)
-            self.wait.until(
-                EC.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, "a.clean-link.match-link.current-round-content")
-                )
-            )
-        # else: no round selected, just use whatever initial page gave us
+        # # 2) figure out which round to pick based on Europe/Madrid time
+        # cet = pytz.timezone("Europe/Madrid")
+        # now = datetime.now(cet)
+        #
+        # # thresholds are (round_value, cutoff_datetime)
+        # thresholds = [
+        #     ("1", datetime(2025, 6, 15, 2,  0, tzinfo=cet)),
+        #     ("2", datetime(2025, 6, 19, 18, 0, tzinfo=cet)),
+        #     ("3", datetime(2025, 6, 23, 21, 0, tzinfo=cet)),
+        #     ("4", datetime(2025, 6, 28, 18, 0, tzinfo=cet)),
+        #     ("5", datetime(2025, 7,  4, 21, 0, tzinfo=cet)),
+        #     ("6", datetime(2025, 7,  8, 21, 0, tzinfo=cet)),
+        #     ("7", datetime(2025, 7, 13, 21, 0, tzinfo=cet)),
+        # ]
+        #
+        # round_to_select = None
+        # for val, cutoff in thresholds:
+        #     if now < cutoff:
+        #         round_to_select = val
+        #         break
+        #
+        # # 3) if we found one, click the dropdown and select it
+        # select_el = self.wait.until(
+        #     EC.element_to_be_clickable((By.ID, "roundSelect"))
+        # )
+        # select = Select(select_el)
+        # available_values = [option.get_attribute("value") for option in select.options]
+        # if round_to_select and round_to_select in available_values:
+        #     select.select_by_value(round_to_select)
+        #
+        #     # wait for the new content to load (adjust timeout or condition as needed)
+        #     self.wait.until(
+        #         EC.presence_of_all_elements_located(
+        #             (By.CSS_SELECTOR, "a.clean-link.match-link.current-round-content")
+        #         )
+        #     )
+        # # else: no round selected, just use whatever initial page gave us
 
         # 3) wait for the updated links to appear
         link_els = self.wait.until(
@@ -126,16 +126,19 @@ class JornadaPerfectaScraper:
         lineup_data = {}
 
         # 1) Loop over each team block
-        for team_block in soup.find_all(class_="partido-posible-alineacion"):
+        # for team_block in soup.find_all(class_="partido-posible-alineacion"):
+        for team_block in soup.find_all(class_="escudo-equipo-alineacion"):
             try:
-                # Extract and clean team name
-                full_text = team_block.get_text(separator=" ", strip=True)
-                # Assumes text starts with "Alineación Posible <TeamName>"
-                team_name = full_text.replace("Alineación Posible ", "").strip().title()
+                # # Extract and clean team name
+                # full_text = team_block.get_text(separator=" ", strip=True)
+                # # Assumes text starts with "Alineación Posible <TeamName>"
+                # team_name = full_text.replace("Alineación Posible ", "").strip().title()
+                img_tag = team_block.find("img")
+                team_name = img_tag["title"].strip().title() if img_tag and img_tag.has_attr("title") else None
                 team_name = find_manual_similar_string(team_name)
 
                 players = {}
-                # climb up two levels: h2 → div → div
+                # climb up two levels: div → div → div
                 team_container = team_block.parent.parent
                 # 2) For each performer (possible starter)
                 for performer in team_container.find_all(attrs={"itemprop": "performer"}):
@@ -181,12 +184,14 @@ class JornadaPerfectaScraper:
         2) For each team link, parse the lineup data.
         3) Merge them all into a single dictionary.
         """
-        TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
+        # TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
+        TEAMS_PAGE = "https://www.jornadaperfecta.com/clasificacion/"
         html = self.fetch_response(TEAMS_PAGE)
         soup = BeautifulSoup(html, "html.parser")
 
         # 1) Find all <a> tags whose href begins with the team prefix
-        prefix = "https://www.jornadaperfecta.com/mundial-de-clubes/equipo/"
+        # prefix = "https://www.jornadaperfecta.com/mundial-de-clubes/equipo/"
+        prefix = "https://www.jornadaperfecta.com/equipo/"
         team_links = {
             a["href"]
             for a in soup.find_all("a", href=True)
@@ -282,7 +287,8 @@ def get_players_start_probabilities_dict_jornadaperfecta(
 
 # # Example usage:
 # data = get_jornadaperfecta_data(
-#     start_probability_file_name="test_jornadaperfecta_mundialito_players_start_probabilities",
+#     # start_probability_file_name="test_jornadaperfecta_mundialito_players_start_probabilities",
+#     start_probability_file_name="test_jornadaperfecta_laliga_players_start_probabilities",
 #     force_scrape=True
 # )
 #

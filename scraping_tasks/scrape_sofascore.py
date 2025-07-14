@@ -38,7 +38,7 @@ print("Scraping SOFASCORE...")
 
 try:
     result = get_players_ratings_list(
-        file_name="sofascore_mundialito_players_ratings",
+        file_name="sofascore_laliga_players_ratings",
         backup_files=False,
         force_scrape=True
     )
