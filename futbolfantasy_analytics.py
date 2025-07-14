@@ -333,10 +333,10 @@ class FutbolFantasyScraper:
             team_name = find_manual_similar_string(team_name)
             position_name = positions_normalize.get(position)
             if team_name:
-                prices_dict[team_name][name] = price
+                prices_dict[team_name][name] = float(price)
                 positions_dict[team_name][name] = position_name
-                forms_dict[team_name][name] = form
-                price_trends_dict[team_name][name] = price_trend
+                forms_dict[team_name][name] = float(form)
+                price_trends_dict[team_name][name] = float(price_trend)
 
         teams_probabilities_dict = self.scrape_teams_probabilities()
         matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
