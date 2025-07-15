@@ -190,7 +190,6 @@ def find_manual_similar_string(my_string):
         "RCD Espanyol": "Espanyol",
         "Bilbao": "Athletic",
         "Athletic Bilbao": "Athletic",
-        "Bilbao": "Athletic",
         "Celta Vigo": "Celta",
         "Deportivo Alavés": "Alavés",
         "Deportivo Alaves": "Alavés",
@@ -198,6 +197,7 @@ def find_manual_similar_string(my_string):
         "Oviedo": "Real Oviedo",
         "Girona FC": "Girona",
         "Levante UD": "Levante",
+        "Sociedad": "Real Sociedad",
 
         "Czechia": "Czech Republic",
         "Turkey": "Türkiye",
