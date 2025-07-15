@@ -39,7 +39,8 @@ print("Scraping ELO RATINGS...")
 try:
     league_elo_ratings_dict = get_teams_elos_dict(
         is_country=False,
-        country=None,
+        # country=None,
+        country="ESP",
         extra_teams=False,
         write_file=True,
         file_name="elo_ratings_laliga_data",
