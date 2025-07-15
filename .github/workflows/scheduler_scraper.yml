@@ -102,7 +102,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
 #    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 7 * 4,5,6,7,8,9,10 *') || (github.event.schedule == '0 8 * 1,2,3,11,12 *')
-    if: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

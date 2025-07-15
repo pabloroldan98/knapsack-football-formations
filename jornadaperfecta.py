@@ -1,4 +1,5 @@
 import os
+import re
 
 import time
 import pytz
@@ -246,26 +247,227 @@ class JornadaPerfectaScraper:
 
         return probabilities_dict
 
+    def scrape_market(self):
+        self.fetch_page("https://www.jornadaperfecta.com/mercado/")
+
+        try:
+            # 1. Wait for the select element to be present
+            select_elem = self.wait.until(EC.presence_of_element_located((By.ID, "platformSelect")))
+            select = Select(select_elem)
+            # 2. Try to select "LaLiga Fantasy" by visible text
+            try:
+                select.select_by_visible_text("LaLiga Fantasy")
+            except:
+                # If not found, fallback to value=2
+                select.select_by_value("2")
+        except:
+            pass
+
+        # 3. Wait for the content to update (can wait for a known container of the market)
+        self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "script")))
+        # 4. Get updated HTML and return
+        html_page = self.driver.page_source
+        soup = BeautifulSoup(html_page, "html.parser")
+
+        script_tags = soup.find_all("script", {"type": "text/javascript"})
+        market_data = None
+        for script in script_tags:
+            if script.string and "marketCaching=" in script.string:
+                # Extract the JSON-like string
+                match = re.search(r"marketCaching\s*=\s*(\[\{.*?\}\]);", script.string, re.DOTALL)
+                if match:
+                    json_str = match.group(1)
+                    try:
+                        market_data = json.loads(json_str)
+                    except json.JSONDecodeError as e:
+                        print("JSON decode error:", e)
+                        return {}, {}, {}, {}
+                break
+        if not market_data:
+            return {}, {}, {}, {}
+
+        prices_dict = {}
+        positions_dict = {}
+        forms_dict = {}
+        price_trends_dict = {}
+
+        positions_normalize = {
+            "portero": "GK",
+            "defensa": "DEF",
+            "mediocentro": "MID",
+            "delantero": "ATT",
+        }
+
+        for player in market_data:
+            team_name = player.get("team")
+            team_name = team.strip().title() if team_name else team_name
+            team_name = find_manual_similar_string(team_name)
+            player_name = player.get("name").strip().title()
+            player_name = player_name.strip().title() if player_name else player_name
+            player_name = find_manual_similar_string(player_name)
+            price = player.get("price")
+            position = player.get("position")
+            position_name = positions_normalize.get(position)
+            price_trend = player.get("lastMarkets", {}).get("1")
+
+            # Ensure price and price_trend are numeric
+            try:
+                price = float(price) if price is not None else None
+                price_trend = float(price_trend) if price_trend is not None else None
+            except ValueError:
+                price = None
+                price_trend = None
+
+            # Initialize nested dicts if necessary
+            if team_name and player_name:
+                if team_name not in prices_dict:
+                    prices_dict[team_name] = {}
+                    positions_dict[team_name] = {}
+                    forms_dict[team_name] = {}
+                    price_trends_dict[team_name] = {}
+
+                # Assign values
+                prices_dict[team_name][player_name] = price
+                positions_dict[team_name][player_name] = position_name
+                price_trends_dict[team_name][player_name] = price_trend
+
+                # Compute form
+                if price and price_trend and price != price_trend:
+                    try:
+                        form = ((price / (price - price_trend)) - 1) * 100
+                    except ZeroDivisionError:
+                        form = None
+                else:
+                    form = None
+                forms_dict[team_name][player_name] = form
+
+        return prices_dict, positions_dict, forms_dict, price_trends_dict
+
+
+    def scrape(self):
+
+        prices_dict, positions_dict, forms_dict, price_trends_dict = self.scrape_market()
+        start_probabilities_data = self.scrape_probabilities()
+
+        return prices_dict, positions_dict, forms_dict, start_probabilities_data, price_trends_dict
+
 
 def get_jornadaperfecta_data(
+        price_file_name="jornadaperfecta_prices",
+        positions_file_name="jornadaperfecta_positions",
+        forms_file_name="jornadaperfecta_forms",
         start_probability_file_name="jornadaperfecta_start_probabilities",
+        price_trends_file_name="jornadaperfecta_price_trends",
         force_scrape=False
 ):
     # If not forced to scrape, attempt to read from local file
     if not force_scrape:
+        prices_data = read_dict_data(price_file_name)
+        positions_data = read_dict_data(positions_file_name)
+        forms_data = read_dict_data(forms_file_name)
         start_probabilities_data = read_dict_data(start_probability_file_name)
+        price_trends_data = read_dict_data(price_trends_file_name)
 
-        if start_probabilities_data:
-            return start_probabilities_data
+        if prices_data and positions_data and forms_data and start_probabilities_data and price_trends_data:
+            return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
     # Otherwise, scrape fresh data
     scraper = JornadaPerfectaScraper()
-    start_probabilities_data = scraper.scrape_probabilities()
+    prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
     # Save to file for next time
+    overwrite_dict_data(prices_data, price_file_name)
+    overwrite_dict_data(positions_data, positions_file_name)
+    overwrite_dict_data(forms_data, forms_file_name)
     overwrite_dict_data(start_probabilities_data, start_probability_file_name)
+    overwrite_dict_data(price_trends_data, price_trends_file_name)
 
-    return start_probabilities_data
+    return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
+
+
+def get_players_prices_dict_jornadaperfecta(
+        file_name="jornadaperfecta_prices",
+        force_scrape=False
+):
+    if not force_scrape:
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    scraper = JornadaPerfectaScraper()
+    result, _, _, _, _ = scraper.scrape()
+
+    overwrite_dict_data(result, file_name)
+
+    return result
+
+
+def get_players_positions_dict_jornadaperfecta(
+        file_name="jornadaperfecta_positions",
+        force_scrape=False
+):
+    if not force_scrape:
+        data = read_dict_data(file_name)
+        # if data:
+        return data
+
+    scraper = JornadaPerfectaScraper()
+    _, result, _, _, _ = scraper.scrape()
+
+    overwrite_dict_data(result, file_name)
+
+    return result
+
+
+def get_players_forms_dict_jornadaperfecta(
+        file_name="jornadaperfecta_forms",
+        force_scrape=False
+):
+    if not force_scrape:
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    scraper = JornadaPerfectaScraper()
+    _, _, result, _, _ = scraper.scrape()
+
+    overwrite_dict_data(result, file_name)
+
+    return result
+
+
+def get_players_start_probabilities_dict_jornadaperfecta(
+        file_name="jornadaperfecta_start_probabilities",
+        force_scrape=False
+):
+    if not force_scrape:
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    scraper = JornadaPerfectaScraper()
+    _, _, _, result, _ = scraper.scrape()
+
+    overwrite_dict_data(result, file_name)
+
+    return result
+
+
+def get_players_price_trends_dict_jornadaperfecta(
+        file_name="jornadaperfecta_price_trends",
+        force_scrape=False
+):
+    if not force_scrape:
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    scraper = JornadaPerfectaScraper()
+    _, _, _, _, result = scraper.scrape()
+
+    overwrite_dict_data(result, file_name)
+
+    return result
 
 
 def get_players_start_probabilities_dict_jornadaperfecta(
@@ -286,14 +488,27 @@ def get_players_start_probabilities_dict_jornadaperfecta(
 
 
 # # Example usage:
-# data = get_jornadaperfecta_data(
-#     # start_probability_file_name="test_jornadaperfecta_mundialito_players_start_probabilities",
+# prices, positions, forms, start_probabilities, price_trends = get_jornadaperfecta_data(
+#     price_file_name="test_jornadaperfecta_laliga_players_prices",
+#     positions_file_name="test_jornadaperfecta_laliga_players_positions",
+#     forms_file_name="test_jornadaperfecta_laliga_players_forms",
 #     start_probability_file_name="test_jornadaperfecta_laliga_players_start_probabilities",
+#     price_trends_file_name="test_jornadaperfecta_laliga_players_price_trends",
 #     force_scrape=True
 # )
 #
-# print("Probabilities:")
-# for team, players in data.items():
-#     print(f"Team: {team}")
-#     for player, chance in players.items():
-#         print(f"    {player}: {chance}")
+# print("Prices:")
+# for team, players in prices.items():
+#     print(team, players)
+# print("\nPositions:")
+# for team, players in positions.items():
+#     print(team, players)
+# print("\nForms:")
+# for team, players in forms.items():
+#     print(team, players)
+# print("\nStart Probabilities:")
+# for team, players in start_probabilities.items():
+#     print(team, players)
+# print("\nPrice Trends:")
+# for team, players in price_trends.items():
+#     print(team, players)
