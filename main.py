@@ -252,22 +252,22 @@ current_players = get_current_players(
         # "futmondo_laliga_players_positions",
         "analiticafantasy_laliga_players_positions",
         "futbolfantasy_laliga_players_positions",
-        # "jornadaperfecta_laliga_players_start_positions",
+        "jornadaperfecta_laliga_players_positions",
     ],
     alt_prices_file_names=[
         "analiticafantasy_laliga_players_prices",
         "futbolfantasy_laliga_players_prices",
-        # "jornadaperfecta_laliga_players_prices",
+        "jornadaperfecta_laliga_players_prices",
     ],
     alt_price_trends_file_names=[
         "analiticafantasy_laliga_players_price_trends",
         "futbolfantasy_laliga_players_price_trends",
-        # "jornadaperfecta_laliga_players_price_trends",
+        "jornadaperfecta_laliga_players_price_trends",
     ],
     alt_forms_file_names=[
         "analiticafantasy_laliga_players_forms",
         "futbolfantasy_laliga_players_forms",
-        # "jornadaperfecta_laliga_players_forms",
+        "jornadaperfecta_laliga_players_forms",
     ],
     start_probability_file_names=[
         "analiticafantasy_laliga_players_start_probabilities",

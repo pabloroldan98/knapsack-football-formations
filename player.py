@@ -17,7 +17,9 @@ from futbolfantasy_analytics import get_players_start_probabilities_dict_futbolf
     get_players_price_trends_dict_futbolfantasy, get_players_forms_dict_futbolfantasy, \
     get_players_prices_dict_futbolfantasy, get_players_positions_dict_futbolfantasy
 from futmondo import get_players_positions_dict_futmondo
-from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta
+from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta, \
+    get_players_positions_dict_jornadaperfecta, get_players_prices_dict_jornadaperfecta, \
+    get_players_price_trends_dict_jornadaperfecta, get_players_forms_dict_jornadaperfecta
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -386,15 +388,15 @@ def get_players_positions_dict(
                 players_dict["analiticafantasy"] = analiticafantasy_data
             except:
                 pass
-        # elif "jornadaperfecta" in file_name.lower():
-        #     try:
-        #         jornadaperfecta_data = get_players_positions_dict_jornadaperfecta(
-        #             file_name=file_name,
-        #             force_scrape=force_scrape,
-        #         )
-        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
-        #     except:
-        #         pass
+        elif "jornadaperfecta" in file_name.lower():
+            try:
+                jornadaperfecta_data = get_players_positions_dict_jornadaperfecta(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["jornadaperfecta"] = jornadaperfecta_data
+            except:
+                pass
         elif "futmondo" in file_name.lower():
             try:
                 futmondo_data = get_players_positions_dict_futmondo(
@@ -449,15 +451,15 @@ def get_players_prices_dict(
                 players_dict["analiticafantasy"] = analiticafantasy_data
             except:
                 pass
-        # elif "jornadaperfecta" in file_name.lower():
-        #     try:
-        #         jornadaperfecta_data = get_players_prices_dict_jornadaperfecta(
-        #             file_name=file_name,
-        #             force_scrape=force_scrape,
-        #         )
-        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
-        #     except:
-        #         pass
+        elif "jornadaperfecta" in file_name.lower():
+            try:
+                jornadaperfecta_data = get_players_prices_dict_jornadaperfecta(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["jornadaperfecta"] = jornadaperfecta_data
+            except:
+                pass
     return players_dict
 
 
@@ -504,15 +506,15 @@ def get_players_price_trends_dict(
                 players_dict["analiticafantasy"] = analiticafantasy_data
             except:
                 pass
-        # elif "jornadaperfecta" in file_name.lower():
-        #     try:
-        #         jornadaperfecta_data = get_players_price_trends_dict_jornadaperfecta(
-        #             file_name=file_name,
-        #             force_scrape=force_scrape,
-        #         )
-        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
-        #     except:
-        #         pass
+        elif "jornadaperfecta" in file_name.lower():
+            try:
+                jornadaperfecta_data = get_players_price_trends_dict_jornadaperfecta(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["jornadaperfecta"] = jornadaperfecta_data
+            except:
+                pass
     return players_dict
 
 
@@ -629,15 +631,15 @@ def get_players_forms_dict(
                 players_dict["analiticafantasy"] = analiticafantasy_data
             except:
                 pass
-        # elif "jornadaperfecta" in file_name.lower():
-        #     try:
-        #         jornadaperfecta_data = get_players_forms_dict_jornadaperfecta(
-        #             file_name=file_name,
-        #             force_scrape=force_scrape,
-        #         )
-        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
-        #     except:
-        #         pass
+        elif "jornadaperfecta" in file_name.lower():
+            try:
+                jornadaperfecta_data = get_players_forms_dict_jornadaperfecta(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["jornadaperfecta"] = jornadaperfecta_data
+            except:
+                pass
     return players_dict
 
 
