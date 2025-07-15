@@ -9,7 +9,8 @@ from player import set_players_value_to_last_fitness, set_manual_boosts, set_pen
     set_players_elo_dif, set_players_sofascore_rating, set_players_value, \
     set_positions, set_team_history_boosts, \
     purge_everything, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
-    set_price_trends, set_penalty_savers_boosts, get_players_start_probabilities_dict
+    set_price_trends, set_penalty_savers_boosts, get_players_start_probabilities_dict, get_players_prices_dict, \
+    get_players_price_trends_dict, get_players_forms_dict, get_players_positions_dict
 from sofascore import get_players_ratings_list
 from team import get_old_teams_data, set_team_status_nerf
 from transfermarket_penalty_savers import get_penalty_savers_dict
@@ -68,10 +69,27 @@ def get_current_players(
         penalty_takers_file_name="transfermarket_laliga_penalty_takers",
         penalty_saves_file_name="transfermarket_laliga_penalty_savers",
         team_history_file_name="transfermarket_laliga_team_history",
-        alt_positions_file_name="futmondo_laliga_players_positions",
-        alt_prices_file_name="futbolfantasy_laliga_players_prices",
-        alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
-        alt_forms_file_name="futbolfantasy_laliga_players_forms",
+        alt_positions_file_names=[
+            "futbolfantasy_laliga_players_positions",
+            "analiticafantasy_laliga_players_positions",
+            "jornadaperfecta_laliga_players_positions",
+            "futmondo_laliga_players_positions",
+        ],
+        alt_prices_file_names=[
+            "futbolfantasy_laliga_players_prices",
+            "analiticafantasy_laliga_players_prices",
+            "jornadaperfecta_laliga_players_prices",
+        ],
+        alt_price_trends_file_names=[
+            "futbolfantasy_laliga_players_price_trends",
+            "analiticafantasy_laliga_players_price_trends",
+            "jornadaperfecta_laliga_players_price_trends",
+        ],
+        alt_forms_file_names=[
+            "futbolfantasy_laliga_players_forms",
+            "analiticafantasy_laliga_players_forms",
+            "jornadaperfecta_laliga_players_forms",
+        ],
         start_probability_file_names=[
             "futbolfantasy_laliga_players_start_probabilities",
             "analiticafantasy_laliga_players_start_probabilities",
@@ -101,8 +119,7 @@ def get_current_players(
     if debug:
         print("333333")
     if alt_positions:
-        # players_positions = get_players_positions_dict_futmondo(file_name=alt_positions_file_name)
-        players_positions = get_players_positions_dict_futbolfantasy(file_name=alt_positions_file_name)
+        players_positions = get_players_positions_dict(file_names=alt_positions_file_names)
         partial_players_data = set_positions(partial_players_data, players_positions, verbose=False)
     if debug:
         print("444444")
@@ -119,15 +136,15 @@ def get_current_players(
     if debug:
         print("666666")
     if alt_prices:
-        players_prices = get_players_prices_dict_futbolfantasy(file_name=alt_prices_file_name)
+        players_prices = get_players_prices_dict(file_names=alt_prices_file_names)
         partial_players_data = set_prices(partial_players_data, players_prices, verbose=False)
     if debug:
         print("777777")
     if alt_price_trends:
-        players_price_trends = get_players_price_trends_dict_futbolfantasy(file_name=alt_price_trends_file_name)
+        players_price_trends = get_players_price_trends_dict(file_names=alt_price_trends_file_names)
         players_standard_prices=None
         if alt_prices:
-            players_standard_prices = get_players_prices_dict_futbolfantasy(file_name=alt_prices_file_name)
+            players_standard_prices = get_players_prices_dict(file_names=alt_prices_file_names)
         partial_players_data = set_price_trends(partial_players_data, players_price_trends, players_standard_prices, verbose=False)
     if debug:
         print("888888")
@@ -152,7 +169,7 @@ def get_current_players(
     if debug:
         print("DDDDDD")
     if alt_forms and not no_form:
-        players_form = get_players_forms_dict_futbolfantasy(file_name=alt_forms_file_name)
+        players_form = get_players_forms_dict(file_names=alt_forms_file_names)
         partial_players_data = set_forms(partial_players_data, players_form)
     if debug:
         print("EEEEEE")
@@ -231,16 +248,32 @@ current_players = get_current_players(
     penalty_takers_file_name="transfermarket_laliga_penalty_takers",
     penalty_saves_file_name="transfermarket_laliga_penalty_savers",
     team_history_file_name="transfermarket_laliga_team_history",
-    # alt_positions_file_name="futmondo_laliga_players_positions",
-    alt_positions_file_name="futbolfantasy_laliga_players_positions",
-    alt_prices_file_name="futbolfantasy_laliga_players_prices",
-    alt_price_trends_file_name="futbolfantasy_laliga_players_price_trends",
-    alt_forms_file_name="futbolfantasy_laliga_players_forms",
+    alt_positions_file_names=[
+        # "futmondo_laliga_players_positions",
+        "futbolfantasy_laliga_players_positions",
+        "analiticafantasy_laliga_players_positions",
+        # "jornadaperfecta_laliga_players_start_positions",
+    ],
+    alt_prices_file_names=[
+        "futbolfantasy_laliga_players_prices",
+        "analiticafantasy_laliga_players_prices",
+        # "jornadaperfecta_laliga_players_prices",
+    ],
+    alt_price_trends_file_names=[
+        "futbolfantasy_laliga_players_price_trends",
+        "analiticafantasy_laliga_players_price_trends",
+        # "jornadaperfecta_laliga_players_price_trends",
+    ],
+    alt_forms_file_names=[
+        "futbolfantasy_laliga_players_forms",
+        "analiticafantasy_laliga_players_forms",
+        # "jornadaperfecta_laliga_players_forms",
+    ],
     start_probability_file_names=[
         "futbolfantasy_laliga_players_start_probabilities",
         "analiticafantasy_laliga_players_start_probabilities",
-        "jornadaperfecta_laliga_players_start_probabilities"
-        ],
+        "jornadaperfecta_laliga_players_start_probabilities",
+    ],
     is_country=False,
     extra_teams=False,
     debug=False,

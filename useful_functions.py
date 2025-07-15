@@ -121,6 +121,8 @@ def find_manual_similar_string(my_string):
         "Adama": "Boiro",
         "Rdt": "De Tomás",
         "Sergi D.": "Sergi Domínguez",
+        "Franco": "Mastantuono",
+        "Franco Mastantuono": "Mastantuono",
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",

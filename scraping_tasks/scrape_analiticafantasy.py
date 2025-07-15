@@ -38,12 +38,28 @@ print("##############################")
 print("Scraping ANALITICAFANTASY...")
 
 try:
-    start_probabilities = get_analiticafantasy_data(
+    prices, positions, forms, start_probabilities, price_trends = get_analiticafantasy_data(
+        price_file_name="analiticafantasy_laliga_players_prices",
+        positions_file_name="analiticafantasy_laliga_players_positions",
+        forms_file_name="analiticafantasy_laliga_players_forms",
         start_probability_file_name="analiticafantasy_laliga_players_start_probabilities",
+        price_trends_file_name="analiticafantasy_laliga_players_price_trends",
         force_scrape=True
     )
+    print("Prices:")
+    for team, players in prices.items():
+        print(team, players)
+    print("\nPositions:")
+    for team, players in positions.items():
+        print(team, players)
+    print("\nForms:")
+    for team, players in forms.items():
+        print(team, players)
     print("\nStart Probabilities:")
     for team, players in start_probabilities.items():
+        print(team, players)
+    print("\nPrice Trends:")
+    for team, players in price_trends.items():
         print(team, players)
 except Exception as e:
     print(f"Error scraping ANALITICAFANTASY: {e}")

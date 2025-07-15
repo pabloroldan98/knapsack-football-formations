@@ -10,8 +10,13 @@ from unidecode import unidecode
 import os
 from pprint import pprint
 
-from analiticafantasy import get_players_start_probabilities_dict_analiticafantasy
-from futbolfantasy_analytics import get_players_start_probabilities_dict_futbolfantasy
+from analiticafantasy import get_players_start_probabilities_dict_analiticafantasy, \
+    get_players_price_trends_dict_analiticafantasy, get_players_forms_dict_analiticafantasy, \
+    get_players_prices_dict_analiticafantasy, get_players_positions_dict_analiticafantasy
+from futbolfantasy_analytics import get_players_start_probabilities_dict_futbolfantasy, \
+    get_players_price_trends_dict_futbolfantasy, get_players_forms_dict_futbolfantasy, \
+    get_players_prices_dict_futbolfantasy, get_players_positions_dict_futbolfantasy
+from futmondo import get_players_positions_dict_futmondo
 from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data
 
@@ -46,7 +51,6 @@ class Player:
             form:  float = 0,
             fixture:  float = 0,
             start_probability:  float = 0,
-            start_probabilities: list = [],
             img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
     ):
         self.name = name
@@ -74,7 +78,6 @@ class Player:
         self.form = form
         self.fixture = fixture
         self.start_probability = start_probability
-        self.start_probabilities = start_probabilities
         self.img_link = img_link
 
     def __str__(self):
@@ -196,7 +199,7 @@ class Player:
         predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
         return predicted_value
 
-    def set_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
+    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
         predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms)
         self.value = predicted_value
 
@@ -330,188 +333,328 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
-def set_positions(players_list, players_positions_dict, verbose=False):
+def get_team_players_dict(players_list, full_players_data_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
-    team_position_names_list = list(players_positions_dict.keys())
+
+    team_players_dict = {}
+    for player in result_players:
+        if player.team not in team_players_dict:
+            team_players_dict[player.team] = {}
+        team_players_dict[player.team][player.name] = []
+
+    for source, players_data_dict in full_players_data_dict.items():
+
+        team_data_names_list = list(players_data_dict.keys())
+
+        for player_team_name, players_in_team in team_players_dict.items():
+            closest_player_data_team = find_similar_string(player_team_name, team_data_names_list, similarity_threshold=0)
+            for player_name, player_data in players_in_team.items():
+                player_data_names_list = list(players_data_dict[closest_player_data_team].keys())
+                closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=False)
+                if closest_player_data_name:
+                    new_data = players_data_dict[closest_player_data_team][closest_player_data_name]
+                    old_player_data = player_data.copy()
+                    new_data = old_player_data + [new_data]
+                    if verbose:
+                        if old_player_data != new_data:
+                            print(f"{player_name}: {old_player_data} --> {new_data} ({closest_player_data_name})")
+                    team_players_dict[player_team_name][player_name] = new_data
+    return team_players_dict
+
+
+def get_players_positions_dict(
+        file_names=["futbolfantasy_positions", "analiticafantasy_positions", "jornadaperfecta_positions", ],
+        force_scrape=False
+):
+    players_dict = {}
+    for file_name in file_names:
+        if "futbolfantasy" in file_name.lower():
+            try:
+                futbolfantasy_data = get_players_positions_dict_futbolfantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["futbolfantasy"] = futbolfantasy_data
+            except:
+                pass
+        elif "analiticafantasy" in file_name.lower():
+            try:
+                analiticafantasy_data = get_players_positions_dict_analiticafantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["analiticafantasy"] = analiticafantasy_data
+            except:
+                pass
+        # elif "jornadaperfecta" in file_name.lower():
+        #     try:
+        #         jornadaperfecta_data = get_players_positions_dict_jornadaperfecta(
+        #             file_name=file_name,
+        #             force_scrape=force_scrape,
+        #         )
+        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
+        #     except:
+        #         pass
+        elif "futmondo" in file_name.lower():
+            try:
+                futmondo_data = get_players_positions_dict_futmondo(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["futmondo"] = futmondo_data
+            except:
+                pass
+    return players_dict
+
+
+def set_positions(players_list, full_players_positions_dict, verbose=False):
+    result_players = copy.deepcopy(players_list)
+
+    team_players_dict = get_team_players_dict(result_players, full_players_positions_dict, verbose)
 
     for player in result_players:
-        closest_player_position_team = find_similar_string(player.team, team_position_names_list, similarity_threshold=0)
-        player_position_names_list = list(players_positions_dict[closest_player_position_team].keys())
-        closest_player_position_name = find_similar_string(player.name, player_position_names_list)
-        if closest_player_position_name:
-            new_position = players_positions_dict[closest_player_position_team][closest_player_position_name]
+        positions = team_players_dict[player.team][player.name].copy()
+        valid_positions = [p for p in positions if p is not None]
+        new_position = valid_positions[0] if valid_positions else None
+        if new_position:
             if verbose:
                 if player.position != new_position:
-                    print(f"{player.name}: {player.position} --> {new_position}")
+                    print(f"{player.name}: {positions} --> {new_position}")
             player.position = new_position
-        # else:
-        #     print(f"{player.name}")
 
     return result_players
 
 
-def set_prices(players_list, players_prices_dict, verbose=False):
+def get_players_prices_dict(
+        file_names=["futbolfantasy_prices", "analiticafantasy_prices", "jornadaperfecta_prices", ],
+        force_scrape=False
+):
+    players_dict = {}
+    for file_name in file_names:
+        if "futbolfantasy" in file_name.lower():
+            try:
+                futbolfantasy_data = get_players_prices_dict_futbolfantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["futbolfantasy"] = futbolfantasy_data
+            except:
+                pass
+        elif "analiticafantasy" in file_name.lower():
+            try:
+                analiticafantasy_data = get_players_prices_dict_analiticafantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["analiticafantasy"] = analiticafantasy_data
+            except:
+                pass
+        # elif "jornadaperfecta" in file_name.lower():
+        #     try:
+        #         jornadaperfecta_data = get_players_prices_dict_jornadaperfecta(
+        #             file_name=file_name,
+        #             force_scrape=force_scrape,
+        #         )
+        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
+        #     except:
+        #         pass
+    return players_dict
+
+
+def set_prices(players_list, full_players_prices_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
-    team_price_names_list = list(players_prices_dict.keys())
+
+    team_players_dict = get_team_players_dict(result_players, full_players_prices_dict, verbose)
 
     for player in result_players:
-        closest_player_price_team = find_similar_string(player.team, team_price_names_list, similarity_threshold=0)
-        player_price_names_list = list(players_prices_dict[closest_player_price_team].keys())
-        closest_player_price_name = find_similar_string(player.name, player_price_names_list)
-        if closest_player_price_name:
-            new_price = players_prices_dict[closest_player_price_team][closest_player_price_name]
-            new_price = round(float(new_price))
-        else:
-            # print(player.name)
-            new_price = round(float(player.standard_price) * 5)
+        prices = team_players_dict[player.team][player.name].copy()
+        valid_prices = [p for p in prices if p is not None]
+        new_price = valid_prices[0] if valid_prices else round(float(player.standard_price) * 5)
         new_price = round(float(new_price) / 1000000)
-        if verbose:
-            if player.price != new_price:
-                print(f"{player.name}: {player.price} --> {new_price}")
-        player.price = new_price
+        if new_price:
+            if verbose:
+                if player.price != new_price:
+                    print(f"{player.name}: {prices} --> {new_price}")
+            player.price = new_price
 
     return result_players
 
 
-def set_price_trends(players_list, players_price_trends_dict, players_standard_prices_dict=None, verbose=False):
+def get_players_price_trends_dict(
+        file_names=["futbolfantasy_price_trends", "analiticafantasy_price_trends", "jornadaperfecta_price_trends", ],
+        force_scrape=False
+):
+    players_dict = {}
+    for file_name in file_names:
+        if "futbolfantasy" in file_name.lower():
+            try:
+                futbolfantasy_data = get_players_price_trends_dict_futbolfantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["futbolfantasy"] = futbolfantasy_data
+            except:
+                pass
+        elif "analiticafantasy" in file_name.lower():
+            try:
+                analiticafantasy_data = get_players_price_trends_dict_analiticafantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["analiticafantasy"] = analiticafantasy_data
+            except:
+                pass
+        # elif "jornadaperfecta" in file_name.lower():
+        #     try:
+        #         jornadaperfecta_data = get_players_price_trends_dict_jornadaperfecta(
+        #             file_name=file_name,
+        #             force_scrape=force_scrape,
+        #         )
+        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
+        #     except:
+        #         pass
+    return players_dict
+
+
+def set_price_trends(players_list, full_players_price_trends_dict, full_players_standard_prices_dict=None, verbose=False):
     result_players = copy.deepcopy(players_list)
-    team_price_trend_names_list = list(players_price_trends_dict.keys())
+
+    team_players_dict = get_team_players_dict(result_players, full_players_price_trends_dict, verbose)
 
     for player in result_players:
-        closest_player_price_trend_team = find_similar_string(player.team, team_price_trend_names_list, similarity_threshold=0)
-        player_price_trend_names_list = list(players_price_trends_dict[closest_player_price_trend_team].keys())
-        closest_player_price_trend_name = find_similar_string(player.name, player_price_trend_names_list)
-        if closest_player_price_trend_name:
-            new_price_trend = players_price_trends_dict[closest_player_price_trend_team][closest_player_price_trend_name]
-            new_price_trend = float(new_price_trend)
+        trends = team_players_dict[player.team][player.name].copy()
+        valid_trends = [p for p in trends if p is not None]
+        new_trend = valid_trends[0] if valid_trends else 0
+        if new_trend:
             if verbose:
-                if player.price_trend != new_price_trend:
-                    print(f"{player.name}: {player.price_trend} --> {new_price_trend}")
-            player.price_trend = new_price_trend
+                if player.price_trend != new_trend:
+                    print(f"{player.name}: {trends} --> {new_trend}")
+            player.price_trend = new_trend
 
 
-    if players_standard_prices_dict:
+    if full_players_standard_prices_dict:
         result_players = copy.deepcopy(result_players)
-        team_standard_price_names_list = list(players_standard_prices_dict.keys())
+
+        team_players_dict = get_team_players_dict(result_players, full_players_standard_prices_dict, verbose)
 
         for player in result_players:
-            closest_player_standard_price_team = find_similar_string(player.team, team_standard_price_names_list, similarity_threshold=0)
-            player_standard_price_names_list = list(players_standard_prices_dict[closest_player_standard_price_team].keys())
-            closest_player_standard_price_name = find_similar_string(player.name, player_standard_price_names_list)
-            if closest_player_standard_price_name:
-                new_standard_price = players_standard_prices_dict[closest_player_standard_price_team][closest_player_standard_price_name]
-                new_standard_price = float(new_standard_price)
+            std_prices = team_players_dict[player.team][player.name].copy()
+            valid_std_prices = [p for p in std_prices if p is not None]
+            new_std_price = valid_std_prices[0] if valid_std_prices else None
+            if new_std_price:
                 if verbose:
-                    if player.standard_price != new_standard_price:
-                        print(f"{player.name}: {player.standard_price} --> {new_standard_price}")
-                player.standard_price = new_standard_price
+                    if player.standard_price != new_std_price:
+                        print(f"{player.name}: {std_prices} --> {new_std_price}")
+                player.standard_price = new_std_price
+
 
     return result_players
 
 
 def get_players_start_probabilities_dict(
-        file_names=["futbolfantasy_start_probabilities", "analiticafantasy_probabilities", "jornadaperfecta_start_probabilities", ],
+        file_names=["futbolfantasy_start_probabilities", "analiticafantasy_start_probabilities", "jornadaperfecta_start_probabilities", ],
         force_scrape=False
 ):
-    players_start_probabilities_dict = {}
+    players_dict = {}
     for file_name in file_names:
         if "futbolfantasy" in file_name.lower():
             try:
-                futbolfantasy_start_probabilities = get_players_start_probabilities_dict_futbolfantasy(
+                futbolfantasy_data = get_players_start_probabilities_dict_futbolfantasy(
                     file_name=file_name,
                     force_scrape=force_scrape,
                 )
-                players_start_probabilities_dict["futbolfantasy"] = futbolfantasy_start_probabilities
+                players_dict["futbolfantasy"] = futbolfantasy_data
             except:
                 pass
         elif "analiticafantasy" in file_name.lower():
             try:
-                analiticafantasy_start_probabilities = get_players_start_probabilities_dict_analiticafantasy(
+                analiticafantasy_data = get_players_start_probabilities_dict_analiticafantasy(
                     file_name=file_name,
                     force_scrape=force_scrape,
                 )
-                players_start_probabilities_dict["analiticafantasy"] = analiticafantasy_start_probabilities
+                players_dict["analiticafantasy"] = analiticafantasy_data
             except:
                 pass
         elif "jornadaperfecta" in file_name.lower():
             try:
-                jornadaperfecta_start_probabilities = get_players_start_probabilities_dict_jornadaperfecta(
+                jornadaperfecta_data = get_players_start_probabilities_dict_jornadaperfecta(
                     file_name=file_name,
                     force_scrape=force_scrape,
                 )
-                players_start_probabilities_dict["jornadaperfecta"] = jornadaperfecta_start_probabilities
+                players_dict["jornadaperfecta"] = jornadaperfecta_data
             except:
                 pass
-    return players_start_probabilities_dict
+    return players_dict
 
 
 def set_start_probabilities(players_list, full_players_start_probabilities_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
 
-    for source, players_start_probabilities_dict in full_players_start_probabilities_dict.items():
-
-        # team_names_list = list(set(player.team for player in result_players))
-        # for team_name, start_probability_names_list in players_start_probabilities_dict.items():
-        #     closest_team_name = find_similar_string(team_name, team_names_list)
-        #     players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
-        #     for start_probability_name in start_probability_names_list:
-        #         closest_player_name = find_similar_string(start_probability_name, players_names_list, verbose=False)
-        #         print(closest_team_name)
-        #         print(start_probability_name)
-        #         print(closest_player_name)
-        #         print()
-        #         if closest_player_name:
-        #             for player in result_players:
-        #                 if player.name == closest_player_name:
-        #                     new_start_probability = players_start_probabilities_dict[team_name][start_probability_name]
-        #                     if verbose:
-        #                         if player.start_probability != new_start_probability:
-        #                             print(
-        #                                 f"{player.name}: {player.start_probability} --> {new_start_probability} ({closest_player_start_probability_name})")
-        #                     player.start_probability = new_start_probability
-        #         # else:
-        #         #     print(f"{start_probability_name}")
-
-        team_start_probability_names_list = list(players_start_probabilities_dict.keys())
-
-        for player in result_players:
-            closest_player_start_probability_team = find_similar_string(player.team, team_start_probability_names_list, similarity_threshold=0)
-            player_start_probability_names_list = list(players_start_probabilities_dict[closest_player_start_probability_team].keys())
-            closest_player_start_probability_name = find_similar_string(player.name, player_start_probability_names_list, verbose=False)
-            if closest_player_start_probability_name:
-                new_start_probability = players_start_probabilities_dict[closest_player_start_probability_team][closest_player_start_probability_name]
-                player_start_probabilities = player.start_probabilities.copy()
-                new_start_probabilities = player_start_probabilities + [new_start_probability]
-                if verbose:
-                    if player.start_probability != new_start_probability:
-                        print(f"{player.name}: {player.start_probabilities} --> {new_start_probabilities} ({closest_player_start_probability_name})")
-                # player.start_probability = new_start_probability
-                player.start_probabilities = new_start_probabilities
-            # else:
-            #     print(f"{player.name} ({player.team})")
+    team_players_dict = get_team_players_dict(result_players, full_players_start_probabilities_dict, verbose)
 
     for player in result_players:
-        # valid = [p for p in player.start_probabilities if p is not None]
-        # player.start_probability = sum(valid) / len(valid) if valid else 0
-        player.start_probability = sum(player.start_probabilities) / len(player.start_probabilities) if player.start_probabilities else 0
+        start_probabilities = team_players_dict[player.team][player.name].copy()
+        valid_probs = [p for p in start_probabilities if p is not None]
+        new_start_probability = round(sum(valid_probs) / len(valid_probs), 4) if valid_probs else 0
+        if new_start_probability:
+            if verbose:
+                if player.start_probability != new_start_probability:
+                    print(f"{player.name}: {start_probabilities} --> {new_start_probability}")
+            player.start_probability = new_start_probability
 
     return result_players
 
 
-def set_forms(players_list, players_forms_dict, verbose=False):
+def get_players_forms_dict(
+        file_names=["futbolfantasy_forms", "analiticafantasy_forms", "jornadaperfecta_forms", ],
+        force_scrape=False
+):
+    players_dict = {}
+    for file_name in file_names:
+        if "futbolfantasy" in file_name.lower():
+            try:
+                futbolfantasy_data = get_players_forms_dict_futbolfantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["futbolfantasy"] = futbolfantasy_data
+            except:
+                pass
+        elif "analiticafantasy" in file_name.lower():
+            try:
+                analiticafantasy_data = get_players_forms_dict_analiticafantasy(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["analiticafantasy"] = analiticafantasy_data
+            except:
+                pass
+        # elif "jornadaperfecta" in file_name.lower():
+        #     try:
+        #         jornadaperfecta_data = get_players_forms_dict_jornadaperfecta(
+        #             file_name=file_name,
+        #             force_scrape=force_scrape,
+        #         )
+        #         players_dict["jornadaperfecta"] = jornadaperfecta_data
+        #     except:
+        #         pass
+    return players_dict
+
+
+def set_forms(players_list, full_players_forms_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
-    team_form_names_list = list(players_forms_dict.keys())
+
+    team_players_dict = get_team_players_dict(result_players, full_players_forms_dict, verbose)
 
     for player in result_players:
-        closest_player_form_team = find_similar_string(player.team, team_form_names_list, similarity_threshold=0)
-        player_form_names_list = list(players_forms_dict[closest_player_form_team].keys())
-        closest_player_form_name = find_similar_string(player.name, player_form_names_list)
-        if closest_player_form_name:
-            new_form = players_forms_dict[closest_player_form_team][closest_player_form_name]
+        forms = team_players_dict[player.team][player.name].copy()
+        valid_forms = [p for p in forms if p is not None]
+        new_form = valid_forms[0] if valid_forms else None
+        if new_form:
             new_form = 1 + float(new_form)/100
             if verbose:
                 if player.form != new_form:
-                    print(f"{player.name}: {player.form} --> {new_form}")
+                    print(f"{player.name}: {forms} --> {new_form}")
             player.form = new_form
 
     return result_players
@@ -774,7 +917,7 @@ def set_players_sofascore_rating(
 def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
     result_players = copy.deepcopy(players_list)
     for player in result_players:
-        player.set_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
+        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
     return result_players
 
 
