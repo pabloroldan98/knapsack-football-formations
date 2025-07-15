@@ -333,7 +333,7 @@ worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
 # purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
-purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
+purged_players = purge_everything(purged_players, probability_threshold=0.75, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -377,7 +377,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 300, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 200, verbose=2)
 
 
 
@@ -389,20 +389,36 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Bono",
+    "Dituro",
+    "Joan García",
+    "Álvaro Valles",
 
-    "Cancelo",
+    "Iñigo Martínez",
+    "Marcos Alonso",
+    "Foyth",
+    "Vivian",
+    "Sergi Cardona",
+    "Mingueza",
+    "Ratiu",
     "Fran García",
-    "Al-Harbi",
 
-    "Cole Palmer",
-    "Enzo Fernández",
-    "Malcom",
-    "Milinković-Savić",
-    "Valverde",
+    "Sancet",
+    "Pedri",
+    "Arda Güler",
+    "Marcos Llorente",
+    "Arambarri",
+    "Rioja",
+    "Pablo Torre",
+    "Luis Milla",
 
-    "Pedro Neto",
-    "Germán Cano",
+    "Panichelli",
+    "Cucho",
+    "Carlos Álvarez",
+    "Muriqi",
+    "Oyarzabal",
+    "Carlos Vicente",
+    "Giuliano Simeone",
+    "Gonzalo García",
 ]
 
 # my_players_names = [
