@@ -6,7 +6,7 @@ st.title("Lista de Jugadores Actualizada")
 
 # Load players
 with st.spinner("Cargando jugadores..."):
-    players = get_current_players(
+    current_players = get_current_players(
         no_form=False,
         no_fixtures=False,
         no_home_boost=False,
@@ -60,9 +60,14 @@ with st.spinner("Cargando jugadores..."):
         extra_teams=False,
         debug=False,
     )
+    current_players = sorted(
+        current_players,
+        key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+        reverse=False
+    )
 
 # Display players
-st.subheader(f"{len(players)} jugadores encontrados")
+st.subheader(f"{len(current_players)} jugadores encontrados")
 
-for player in players:
-    st.text(str(player))  # uses your __str__ or __repr__
+for player in current_players:
+    st.text(str(current_players))  # uses your __str__ or __repr__
