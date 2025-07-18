@@ -70,4 +70,4 @@ with st.spinner("Cargando jugadores..."):
 st.subheader(f"{len(current_players)} jugadores encontrados")
 
 for player in current_players:
-    st.text(str(current_players))  # uses your __str__ or __repr__
+    st.text(str(player))  # uses your __str__ or __repr__
