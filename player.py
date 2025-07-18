@@ -221,7 +221,7 @@ def get_position(group):
 def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probability_threshold=0.5, fixture_filter=False):
     purged_players = purge_no_team_players(players_list)
     purged_players = purge_negative_values(purged_players)
-    if not probability_threshold or mega_purge:
+    if probability_threshold is None or mega_purge:
         purged_players = purge_injured_players(purged_players)
     purged_players = purge_non_starting_players(purged_players, probability_threshold)
     purged_players = purge_national_teams(purged_players, teams_to_purge)
