@@ -371,4 +371,95 @@ elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 pos
                 st.markdown("---")  # Separador entre formaciones
 
 elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
-    st.info("Funcionalidad próximamente disponible.")
+    st.header("Mejores 11s dentro de tu presupuesto")
+
+    with st.expander("Filtros adicionales"):
+        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
+        threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_budget")
+        threshold = threshold_slider / 100
+
+    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
+
+    budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
+    if is_biwenger:
+        st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
+
+    filtered_players = purge_everything(
+        current_players,
+        probability_threshold=threshold,
+        fixture_filter=use_fixture_filter
+    )
+
+    possible_formations = [
+        [3, 4, 3],
+        [3, 5, 2],
+        [4, 3, 3],
+        [4, 4, 2],
+        [4, 5, 1],
+        [5, 3, 2],
+        [5, 4, 1],
+    ]
+    if use_premium:
+        possible_formations += [
+            [3, 3, 4],
+            [3, 6, 1],
+            [4, 2, 4],
+            [4, 6, 0],
+            [5, 2, 3],
+        ]
+
+    if st.button("Calcular 11s", key="submit_budget_11") and filtered_players:
+        st.markdown("## Mejores combinaciones posibles dentro del presupuesto:")
+        worthy_players = sorted(
+            filtered_players,
+            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+            reverse=False
+        )
+        needed_purge = worthy_players[:150]
+        formation_score_players_by_score = best_full_teams(
+            needed_purge,
+            possible_formations,
+            budget,
+            verbose=2
+        )
+
+        valid_formations = [
+            (formation, round(score, 3), players)
+            for formation, score, players in formation_score_players_by_score
+            if score != -1
+        ]
+
+        for formation, score, players in valid_formations:
+            total_price = sum(player.price for player in players)
+            if is_biwenger:
+                show_price = total_price / 10
+                price_str = f"{show_price:.1f}M"
+            else:
+                price_str = f"{total_price:.0f}M"
+            st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price_str}")
+
+            lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
+            for player in players:
+                lines[player.position].append(player)
+
+            for position in ["ATT", "MID", "DEF", "GK"]:
+                if lines[position]:
+                    cols = st.columns(len(lines[position]), gap="small")
+                    for i, player in enumerate(lines[position]):
+                        with cols[i]:
+                            st.markdown(
+                                f"""
+                                <div style='text-align:center'>
+                                    <img src='{player.img_link}' width='70'><br>
+                                    {player.name} ({player.start_probability * 100:.0f}%)
+                                </div>
+                                """,
+                                unsafe_allow_html=True
+                            )
+
+            with st.expander("Ver todos los jugadores utilizados"):
+                for player in players:
+                    st.markdown(f"- {player}")
+
+            st.markdown("---")
+
