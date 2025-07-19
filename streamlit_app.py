@@ -14,9 +14,12 @@ st.markdown("# Selecciona funcionalidad")
 main_option = st.selectbox(
     label=" ",
     options=[
-        "Lista de jugadores",
-        "Mi mejor 11 posible",
-        "Mejores 11s con presupuesto"
+        # "Lista de jugadores",
+        # "Mi mejor 11 posible",
+        # "Mejores 11s con presupuesto",
+        "📋 Lista de jugadores",
+        "⚽ Mi mejor 11 posible",
+        "💰 Mejores 11s con presupuesto",
     ],
     index=0
 )
@@ -25,7 +28,7 @@ main_option = st.selectbox(
 st.sidebar.header("Opciones")
 app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=0)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
-sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido"], index=0)
+sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad"], index=0)
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
@@ -95,7 +98,7 @@ with st.spinner("Cargando jugadores..."):
     )
 
 # Si selecciona "Lista de jugadores"
-if main_option == "Lista de jugadores":
+if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
     st.header("Lista de Jugadores Actualizada")
     st.markdown(
         "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
@@ -140,6 +143,12 @@ if main_option == "Lista de jugadores":
             key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team),
             reverse=False
         )
+    elif sort_option == "Probabilidad":
+        current_players = sorted(
+            current_players,
+            key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team),
+            reverse=False
+        )
     else:  # Puntuación
         current_players = sorted(
             current_players,
@@ -154,8 +163,14 @@ if main_option == "Lista de jugadores":
         st.text(str(player))
 
 # Funcionalidades futuras
-elif main_option == "Mi mejor 11 posible":
+elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
     st.header("Selecciona Jugadores para tu 11 ideal")
+
+    current_players = sorted(
+        current_players,
+        key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team),
+        reverse=False
+    )
 
     # Estado persistente para la lista de jugadores seleccionados
     if "my_players_names" not in st.session_state:
@@ -194,6 +209,43 @@ elif main_option == "Mi mejor 11 posible":
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
             reverse=False
         )
+        # Ordenar jugadores
+        if sort_option == "Rentabilidad":
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (x.value - 7) / max(x.price, 1),
+                reverse=True
+            )
+        elif sort_option == "Precio":
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team),
+                reverse=False
+            )
+        elif sort_option == "Forma":
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team),
+                reverse=False
+            )
+        elif sort_option == "Partido":
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team),
+                reverse=False
+            )
+        elif sort_option == "Probabilidad":
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team),
+                reverse=False
+            )
+        else:  # Puntuación
+            my_players_list = sorted(
+                my_players_list,
+                key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+                reverse=False
+            )
         for i, p in enumerate(my_players_list):
             cols = st.columns([1, 4, 1, 1])
             with cols[0]:
@@ -320,5 +372,5 @@ elif main_option == "Mi mejor 11 posible":
 
                 st.markdown("---")  # Separador entre formaciones
 
-elif main_option == "Mejores 11s con presupuesto":
+elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
     st.info("Funcionalidad próximamente disponible.")
