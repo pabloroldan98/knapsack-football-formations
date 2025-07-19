@@ -164,6 +164,8 @@ elif main_option == "Mi mejor 11 posible":
         st.session_state.last_selected_name = None
     if "needs_reset" not in st.session_state:
         st.session_state.needs_reset = False
+    if "blinded_players" not in st.session_state:
+        st.session_state.blinded_players = set()
 
     # Búsqueda por autocompletado
     player_names = [p.name for p in current_players]
@@ -193,7 +195,7 @@ elif main_option == "Mi mejor 11 posible":
             reverse=False
         )
         for i, p in enumerate(my_players_list):
-            cols = st.columns([1, 4, 1])
+            cols = st.columns([1, 4, 1, 1])
             with cols[0]:
                 st.image(p.img_link, width=70)
             with cols[1]:
@@ -203,7 +205,26 @@ elif main_option == "Mi mejor 11 posible":
                 if st.button("❌", key=f"remove_{i}"):
                     my_players_list.remove(p)
                     st.session_state.my_players_names.remove(p.name)
+                    st.session_state.blinded_players.remove(p.name)
                     st.rerun()
+            with cols[3]:
+                # Texto y color del botón según si está blindado
+                is_blinded = p.name in st.session_state.blinded_players
+                blindar_label = "🔒 Blindado" if is_blinded else "Blindar"
+                # Usamos botón como toggle
+                if st.button(blindar_label, key=f"blindar_{i}"):
+                    if is_blinded:
+                        st.session_state.blinded_players.remove(p.name)
+                    else:
+                        st.session_state.blinded_players.add(p.name)
+                    st.rerun()
+
+            # Aplicar valores si está blindado
+            if p.name in st.session_state.blinded_players:
+                p.value = 1000
+                p.start_probability = 10
+                p.form = 10
+                p.fixture = 10
 
         # Filtros adicionales aplicados sobre `my_players_list`
         with st.expander("Filtros adicionales sobre tu lista"):
