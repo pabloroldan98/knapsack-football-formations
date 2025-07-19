@@ -257,13 +257,11 @@ elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 pos
                 if st.button("❌", key=f"remove_{i}"):
                     my_players_list.remove(p)
                     st.session_state.my_players_names.remove(p.name)
-                    st.session_state.blinded_players.remove(p.name)
+                    st.session_state.blinded_players.discard(p.name)
                     st.rerun()
             with cols[3]:
-                # Texto y color del botón según si está blindado
                 is_blinded = p.name in st.session_state.blinded_players
                 blindar_label = "🔒 Blindado" if is_blinded else "Blindar"
-                # Usamos botón como toggle
                 if st.button(blindar_label, key=f"blindar_{i}"):
                     if is_blinded:
                         st.session_state.blinded_players.remove(p.name)
