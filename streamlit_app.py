@@ -160,6 +160,8 @@ if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadore
     st.subheader(f"{len(current_players)} jugadores encontrados")
 
     for player in current_players:
+        if is_biwenger:
+            player.price = player.price / 10
         st.text(str(player))
 
 # Funcionalidades futuras
@@ -381,6 +383,7 @@ elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejore
     use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
     budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
+    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
     if is_biwenger:
         st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
@@ -431,12 +434,8 @@ elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejore
 
         for formation, score, players in valid_formations:
             total_price = sum(player.price for player in players)
-            if is_biwenger:
-                show_price = total_price / 10
-                price_str = f"{show_price:.1f}M"
-            else:
-                price_str = f"{total_price:.0f}M"
-            st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price_str}")
+            show_price = total_price / 10 if is_biwenger else total_price
+            st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {show_price}M")
 
             lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
             for player in players:

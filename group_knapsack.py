@@ -3,11 +3,12 @@ import gc
 import heapq
 import itertools
 import math
+import streamlit as st
 from collections import defaultdict
+from tqdm import tqdm
 
 from MCKP import multipleChoiceKnapsack, knapsack_multichoice, \
     knapsack_multichoice_onepick
-
 
 possible_formations = [
     [3, 4, 3],
@@ -18,6 +19,8 @@ possible_formations = [
     [5, 3, 2],
     [5, 4, 1],
 ]
+
+STREAMLIT_ACTIVE = st.runtime.exists()
 
 
 def filter_players_knapsack(players_list, formation):
@@ -95,15 +98,53 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
         for player in players_list:
             player.price = 0
 
-    formation_score_players = []
+    total_global_operations = 0
+    precomputed_ops = []
+    for formation in formations:
+        filtered_players_list = filter_players_knapsack(players_list, formation)
+        _, _, players_comb_indexes = players_preproc(filtered_players_list, formation)
+        ops = sum(len(group) for group in players_comb_indexes[1:])
+        total_global_operations += ops
+        precomputed_ops.append((formation, filtered_players_list, ops))
 
+    # Create the master progress bar
+    update_master = None
+    if STREAMLIT_ACTIVE:
+        progress_text = st.empty()
+        progress_bar = st.progress(0.0)
+        def make_update_master(total_ops):
+            completed = 0
+            last_percent = -1
+            def update(n):
+                nonlocal completed, last_percent
+                completed += n
+                percent = int((completed / total_ops) * 100)
+                # Only update the UI if we’ve crossed a new 1% threshold
+                if percent > last_percent:
+                    progress_bar.progress(completed / total_ops)
+                    # progress_text.text(f"Calculando mejores combinaciones: {completed} / {total_ops}")
+                    progress_text.text(f"Calculando mejores combinaciones: {percent} %")
+                    last_percent = percent
+            return update
+        update_master = make_update_master(total_global_operations)
+
+    # master_pbar = tqdm(total=total_global_operations, desc="Overall Progress", disable=verbose>=3)
+
+    formation_score_players = []
     for formation in formations:
         filtered_players_list = filter_players_knapsack(players_list, formation)
 
         # players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
         players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
 
-        score, comb_result_indexes = knapsack_multichoice_onepick(players_prices, players_values, budget, verbose=super_verbose)
+        score, comb_result_indexes = knapsack_multichoice_onepick(
+            players_prices,
+            players_values,
+            budget,
+            verbose=super_verbose,
+            # master_pbar=master_pbar,
+            update_master=update_master,
+        )
 
         result_indexes = []
         for comb_index in comb_result_indexes:
@@ -118,6 +159,7 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
         formation_score_players.append((formation, score, result_players))
 
         # print_best_full_teams(formation_score_players)
+    # master_pbar.close()
 
     formation_score_players_by_score = sorted(formation_score_players, key=lambda tup: tup[1], reverse=True)
 

@@ -160,7 +160,7 @@ def get_contrained_solution(scores, paths, count):
 # Original source: https://nickgavalas.com/solving-the-multiple-choice-knapsack-problem/
 # Translated by pabloroldan98
 
-def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False):
+def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False, update_master=None):
     if len(weights) == 0:
         return 0
 
@@ -190,8 +190,14 @@ def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False):
                         current_path[k].append((i, j))
                     # current_array[k] = max(current_array[k], last_array[k - weight[i][j]] + value[i][j])
             pbar.update(1) # Update progress after processing each weight
+            # if master_pbar:
+            #     master_pbar.update(1)
+            if update_master:
+                update_master(1)
         last_array = current_array
         last_path = current_path
+    pbar.close()
+
     solution, index_path = get_onepick_solution(last_array, last_path)
 
     return solution, index_path
