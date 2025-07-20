@@ -108,13 +108,39 @@ if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadore
     # Filtros adicionales
     with st.expander("Filtros adicionales"):
         use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
-        threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
-        threshold = threshold_slider / 100
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
+        # threshold = threshold_slider / 100
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100))
+        min_prob = min_prob_slider / 100
+        max_prob = max_prob_slider / 100
 
-        if use_fixture_filter != False or threshold_slider != 0:
+        # Filtro por precio
+        min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300))
+        if is_biwenger:
+            st.markdown(f"En Biwenger: **De {min_price / 10:.1f}M - a {max_price / 10:.1f}M**")
+
+        # Filtro por posición
+        st.markdown("**Filtrar por posición:**")
+        filter_gk = st.checkbox("Portero", value=True)
+        filter_def = st.checkbox("Defensa", value=True)
+        filter_mid = st.checkbox("Mediocentro", value=True)
+        filter_att = st.checkbox("Delantero", value=True)
+
+        # Aplicar filtros
+        current_players = [
+            p for p in current_players
+            if min_price <= p.price <= max_price and (
+                (filter_gk and p.position == "GK") or
+                (filter_def and p.position == "DEF") or
+                (filter_mid and p.position == "MID") or
+                (filter_att and p.position == "ATT")
+            ) and min_prob <= p.start_probability <= max_prob
+        ]
+
+        if use_fixture_filter != False or min_prob_slider != 0:
             current_players = purge_everything(
                 current_players,
-                probability_threshold=threshold,
+                probability_threshold=min_prob,
                 fixture_filter=use_fixture_filter
             )
 
@@ -281,14 +307,21 @@ elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 pos
         # Filtros adicionales aplicados sobre `my_players_list`
         with st.expander("Filtros adicionales sobre tu lista"):
             use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_my11") == "Sí"
-            threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_my11")
-            threshold = threshold_slider / 100
+            # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_my11")
+            # threshold = threshold_slider / 100
+            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key="threshold_my11")
+            min_prob = min_prob_slider / 100
+            max_prob = max_prob_slider / 100
 
             filtered_players = purge_everything(
                 my_players_list,
-                probability_threshold=threshold,
+                probability_threshold=min_prob,
                 fixture_filter=use_fixture_filter
             )
+            filtered_players = [
+                p for p in filtered_players
+                if min_prob <= p.start_probability <= max_prob
+            ]
     else:
         filtered_players = []
 
@@ -377,8 +410,11 @@ elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejore
 
     with st.expander("Filtros adicionales"):
         use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
-        threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_budget")
-        threshold = threshold_slider / 100
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_budget")
+        # threshold = threshold_slider / 100
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key="threshold_budget")
+        min_prob = min_prob_slider / 100
+        max_prob = max_prob_slider / 100
 
     use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
@@ -389,9 +425,13 @@ elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejore
 
     filtered_players = purge_everything(
         current_players,
-        probability_threshold=threshold,
+        probability_threshold=min_prob,
         fixture_filter=use_fixture_filter
     )
+    filtered_players = [
+        p for p in filtered_players
+        if min_prob <= p.start_probability <= max_prob
+    ]
 
     possible_formations = [
         [3, 4, 3],
