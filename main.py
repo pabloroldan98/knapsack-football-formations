@@ -450,8 +450,8 @@ for player in purged_players:
         # print(player)
 
 print()
-#
-best_full_teams(my_players_list, possible_formations, -1, verbose=1)
+
+# best_full_teams(my_players_list, possible_formations, -1, verbose=1)
 
 
 
