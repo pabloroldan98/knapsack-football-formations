@@ -109,7 +109,6 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
 
     # Create the master progress bar
     update_master = None
-    st.text(str(STREAMLIT_ACTIVE))
     if STREAMLIT_ACTIVE:
         progress_text = st.empty()
         progress_bar = st.progress(0.0)
