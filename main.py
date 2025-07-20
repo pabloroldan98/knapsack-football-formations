@@ -333,7 +333,7 @@ worthy_players_og = worthy_players.copy()
 
 purged_players = worthy_players.copy()
 # purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
-purged_players = purge_everything(purged_players, probability_threshold=0.75, fixture_filter=True)
+purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
 worthy_players = purged_players.copy()
 
 
@@ -377,7 +377,7 @@ needed_purge = worthy_players[:150]
 
 
 # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-# best_full_teams(needed_purge, possible_formations, 200, verbose=2)
+# best_full_teams(needed_purge, possible_formations, 200, speed_up=True, verbose=2)
 
 
 

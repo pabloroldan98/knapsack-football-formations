@@ -89,7 +89,7 @@ def filter_players_knapsack(players_list, formation):
     return filtered_players
 
 
-def best_full_teams(players_list, formations=possible_formations, budget=300, verbose=1):
+def best_full_teams(players_list, formations=possible_formations, budget=300, speed_up=True, verbose=1):
     super_verbose = bool(verbose-1)
     verbose = bool(verbose)
     # players_by_group = sorted(players_list, key=lambda x: x.get_group())
@@ -102,6 +102,11 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
     precomputed_ops = []
     for formation in formations:
         filtered_players_list = filter_players_knapsack(players_list, formation)
+        if speed_up:
+            if any(x >= 5 for x in formation):
+                filtered_players_list = filtered_players_list[:110]
+            if any(x >= 6 for x in formation):
+                filtered_players_list = filtered_players_list[:90]
         _, _, players_comb_indexes = players_preproc(filtered_players_list, formation)
         ops = sum(len(group) for group in players_comb_indexes[1:])
         total_global_operations += ops
@@ -133,6 +138,11 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, ve
     formation_score_players = []
     for formation in formations:
         filtered_players_list = filter_players_knapsack(players_list, formation)
+        if speed_up:
+            if any(x >= 5 for x in formation):
+                filtered_players_list = filtered_players_list[:110]
+            if any(x >= 6 for x in formation):
+                filtered_players_list = filtered_players_list[:90]
 
         # players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
         players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
