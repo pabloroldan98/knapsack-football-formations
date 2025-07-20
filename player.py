@@ -300,7 +300,8 @@ def purge_worse_value_players(players_list):
 
 def purge_bad_fixture_players_positions(players_list):
     result_players = copy.deepcopy(players_list)
-    result_players = [player for player in result_players if not ((player.position == "GK") and (player.fixture < 0.965))]
+    # result_players = [player for player in result_players if not ((player.position == "GK") and (player.fixture < 0.965))]
+    result_players = [player for player in result_players if not ((player.position == "GK") and (player.fixture < 0.9775))]
     result_players = [player for player in result_players if not ((player.position == "DEF") and (player.fixture < 0.985))]
     result_players = [player for player in result_players if not ((player.position == "MID") and (player.fixture < 0.97))]
     result_players = [player for player in result_players if not ((player.position == "ATT") and (player.fixture < 0.96))]
