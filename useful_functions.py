@@ -198,6 +198,7 @@ def find_manual_similar_string(my_string):
         "Athletic Bilbao": "Athletic",
         "Athletic Club": "Athletic",
         "Celta Vigo": "Celta",
+        "RC Celta de Vigo": "Celta",
         "Deportivo Alavés": "Alavés",
         "Deportivo Alaves": "Alavés",
         "Real Betis": "Betis",
