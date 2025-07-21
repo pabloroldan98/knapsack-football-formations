@@ -58,12 +58,15 @@ selected_num_jornadas = jornadas_map[selected_num_jornadas_label]
 if disable_multi_jornada:
     st.sidebar.markdown("<span style='color:gray'>Selecciona una jornada específica para usar varias jornadas.</span>", unsafe_allow_html=True)
 
+form_option = st.sidebar.radio("¿Ignorar estado de forma?", ["Sí", "No"], index=1)
+
 is_biwenger = app_option == "Biwenger"
 ignore_penalties = penalties_option == "No"
+ignore_form = form_option == "Sí"
 
 with st.spinner("Cargando jugadores..."):
     current_players = get_current_players(
-        no_form=False,
+        no_form=ignore_form,
         no_fixtures=False,
         no_home_boost=False,
         no_team_history_boost=False,
