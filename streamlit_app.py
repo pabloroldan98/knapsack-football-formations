@@ -266,7 +266,7 @@ with tabs[0]:
     st.header("Lista de Jugadores Actualizada")
     st.markdown(
         "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
-        "(form: coeficiente_forma, fixture: coeficiente_partido) --> Probabilidad de que juegue %_"
+        "(form: coeficiente_forma, fixture: coeficiente_partido) --> Probabilidad de ser titular %_"
     )
 
     # Filtros adicionales
