@@ -9,20 +9,26 @@ st.markdown(
     "By pabloroldan98"
 )
 
-# Selector de funcionalidad principal
-st.markdown("# Selecciona funcionalidad")
-main_option = st.selectbox(
-    label=" ",
-    options=[
-        # "Lista de jugadores",
-        # "Mi mejor 11 posible",
-        # "Mejores 11s con presupuesto",
-        "📋 Lista de jugadores",
-        "⚽ Mi mejor 11 posible",
-        "💰 Mejores 11s con presupuesto",
-    ],
-    index=0
-)
+tab_labels = [
+    "📋 Lista de jugadores",
+    "⚽ Mi mejor 11 posible",
+    "💰 Mejores 11s con presupuesto"
+]
+tabs = st.tabs(tab_labels)
+# # Selector de funcionalidad principal
+# st.markdown("# Selecciona funcionalidad")
+# main_option = st.selectbox(
+#     label=" ",
+#     options=[
+#         # "Lista de jugadores",
+#         # "Mi mejor 11 posible",
+#         # "Mejores 11s con presupuesto",
+#         "📋 Lista de jugadores",
+#         "⚽ Mi mejor 11 posible",
+#         "💰 Mejores 11s con presupuesto",
+#     ],
+#     index=0
+# )
 
 # Sidebar filters
 st.sidebar.header("Opciones")
@@ -252,7 +258,8 @@ with st.spinner("Cargando jugadores..."):
                             cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
 
 # Si selecciona "Lista de jugadores"
-if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
+# if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
+with tabs[0]:
     st.header("Lista de Jugadores Actualizada")
     st.markdown(
         "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
@@ -345,7 +352,8 @@ if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadore
         st.text(str(player))
 
 # Funcionalidades futuras
-elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
+# elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
+with tabs[1]:
     st.header("Selecciona Jugadores para tu 11 ideal")
 
     current_players = sorted(
@@ -559,7 +567,8 @@ elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 pos
 
                 st.markdown("---")  # Separador entre formaciones
 
-elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
+# elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
+with tabs[2]:
     st.header("Mejores 11s dentro de tu presupuesto")
 
     with st.expander("Filtros adicionales"):
