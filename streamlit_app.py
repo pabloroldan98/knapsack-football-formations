@@ -1,8 +1,104 @@
+import copy
 import streamlit as st
+from collections import Counter
 
 from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
 from useful_functions import read_dict_data
+
+def sort_players(players, sort_option):
+    if sort_option == "Rentabilidad":
+        return sorted(
+            players,
+            key=lambda x: (x.value - 7) / max(x.price, 1),
+            reverse=True
+        )
+    elif sort_option == "Precio":
+        return sorted(
+            players,
+            key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team)
+        )
+    elif sort_option == "Forma":
+        return sorted(
+            players,
+            key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team)
+        )
+    elif sort_option == "Partido":
+        return sorted(
+            players,
+            key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team)
+        )
+    elif sort_option == "Probabilidad":
+        return sorted(
+            players,
+            key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team)
+        )
+    else:  # Puntuación
+        return sorted(
+            players,
+            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team)
+        )
+
+def display_valid_formations(formation_score_players_by_score, current_players, blinded_players=None):
+    current_players_copy = copy.deepcopy(current_players)
+    if blinded_players is None:
+        blinded_players = set()
+
+    valid_formations = [
+        (formation, round(score, 3), players)
+        for formation, score, players in formation_score_players_by_score
+        if score != -1
+    ]
+
+    show_formations = []
+    for formation, score, players in valid_formations:
+        actual_players = [
+            next(cp for cp in current_players_copy if cp.name == p.name and cp.team == p.team)
+            for p in players
+        ]
+        names_result_players = {player.name for player in actual_players}
+        actual_formation = formation.copy()
+        actual_score = sum(player.value for player in current_players_copy if player.name in names_result_players)
+        # total_price = sum(player.price for player in players)
+        actual_price = sum(player.price for player in current_players_copy if player.name in names_result_players)
+        show_price = actual_price / 10 if is_biwenger else actual_price
+
+        show_formations.append((actual_formation, actual_score, actual_players, show_price))
+
+    for formation, score, players, price in show_formations:
+        st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price}M")
+
+        lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
+        for player in players:
+            lines[player.position].append(player)
+
+        for position in ["ATT", "MID", "DEF", "GK"]:
+            if lines[position]:
+                cols = st.columns(len(lines[position]), gap="small")
+                for i, player in enumerate(lines[position]):
+                    is_blinded = player.name in blinded_players
+                    player_display = f"{player.name} ({player.start_probability * 100:.0f}%)"
+                    player_display = f"{player_display} 🔒" if is_blinded else f"{player_display}"
+                    # border_style = "2px solid #1f77b4" if is_blinded else "none"
+
+                    with cols[i]:
+                                # <div style='text-align:center; border:{border_style}; border-radius:10px; padding:5px;'>
+                        st.markdown(
+                            f"""
+                                <div style='text-align:center'>
+                                    <img src='{player.img_link}' width='70'><br>
+                                    {player_display}
+                                </div>
+                                """,
+                            unsafe_allow_html=True
+                        )
+
+        with st.expander("Ver todos los jugadores utilizados"):
+            for player in players:
+                blinded_mark = " 🔒" if player.name in blinded_players else ""
+                st.markdown(f"- {player}{blinded_mark}")
+
+        st.markdown("---")
 
 st.title("Calculadora Fantasy")
 st.markdown(
@@ -309,47 +405,13 @@ with tabs[0]:
             )
 
     # Ordenar jugadores
-    if sort_option == "Rentabilidad":
-        current_players = sorted(
-            current_players,
-            key=lambda x: (x.value - 7) / max(x.price, 1),
-            reverse=True
-        )
-    elif sort_option == "Precio":
-        current_players = sorted(
-            current_players,
-            key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team),
-            reverse=False
-        )
-    elif sort_option == "Forma":
-        current_players = sorted(
-            current_players,
-            key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team),
-            reverse=False
-        )
-    elif sort_option == "Partido":
-        current_players = sorted(
-            current_players,
-            key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team),
-            reverse=False
-        )
-    elif sort_option == "Probabilidad":
-        current_players = sorted(
-            current_players,
-            key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team),
-            reverse=False
-        )
-    else:  # Puntuación
-        current_players = sorted(
-            current_players,
-            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
-            reverse=False
-        )
+    current_players = sort_players(current_players, sort_option)
 
     # Mostrar resultados
     st.subheader(f"{len(current_players)} jugadores encontrados")
 
-    for player in current_players:
+    show_players = copy.deepcopy(current_players)
+    for player in show_players:
         if is_biwenger:
             player.price = player.price / 10
         st.text(str(player))
@@ -367,7 +429,7 @@ with tabs[1]:
 
     # Estado persistente para la lista de jugadores seleccionados
     if "my_players_names" not in st.session_state:
-        st.session_state.my_players_names = []
+        st.session_state.my_players_names = set()
     if "last_selected_name" not in st.session_state:
         st.session_state.last_selected_name = None
     if "needs_reset" not in st.session_state:
@@ -388,11 +450,12 @@ with tabs[1]:
 
     if selected_name and st.session_state.last_selected_name != selected_name:
         if selected_name not in st.session_state.my_players_names:
-            st.session_state.my_players_names.append(selected_name)
+            st.session_state.my_players_names.add(selected_name)
             st.session_state.last_selected_name = selected_name
 
     # Reconstruir lista de objetos player
-    my_players_list = [p for p in current_players if p.name in st.session_state.my_players_names]
+    current_players_copy = copy.deepcopy(current_players)
+    my_players_list = [p for p in current_players_copy if p.name in st.session_state.my_players_names]
 
     # Mostrar jugadores seleccionados
     if my_players_list:
@@ -403,52 +466,19 @@ with tabs[1]:
             reverse=False
         )
         # Ordenar jugadores
-        if sort_option == "Rentabilidad":
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (x.value - 7) / max(x.price, 1),
-                reverse=True
-            )
-        elif sort_option == "Precio":
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team),
-                reverse=False
-            )
-        elif sort_option == "Forma":
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team),
-                reverse=False
-            )
-        elif sort_option == "Partido":
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team),
-                reverse=False
-            )
-        elif sort_option == "Probabilidad":
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team),
-                reverse=False
-            )
-        else:  # Puntuación
-            my_players_list = sorted(
-                my_players_list,
-                key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
-                reverse=False
-            )
-        for i, p in enumerate(my_players_list):
+        my_players_list = sort_players(my_players_list, sort_option)
+        my_players_list_show = copy.deepcopy(my_players_list)
+        for i, p in enumerate(my_players_list_show):
             cols = st.columns([1, 4, 1, 1])
             with cols[0]:
                 st.image(p.img_link, width=70)
             with cols[1]:
+                if is_biwenger:
+                    p.price = p.price / 10
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
                 st.markdown(f"{p}")
             with cols[2]:
                 if st.button("❌", key=f"remove_{i}"):
-                    my_players_list.remove(p)
                     st.session_state.my_players_names.remove(p.name)
                     st.session_state.blinded_players.discard(p.name)
                     st.rerun()
@@ -462,9 +492,10 @@ with tabs[1]:
                         st.session_state.blinded_players.add(p.name)
                     st.rerun()
 
+        for p in my_players_list:
             # Aplicar valores si está blindado
             if p.name in st.session_state.blinded_players:
-                p.value = 1000
+                p.value = max(1000, p.value * 1000)
                 p.start_probability = 10
                 p.form = 10
                 p.fixture = 10
@@ -485,7 +516,7 @@ with tabs[1]:
             )
             filtered_players = [
                 p for p in filtered_players
-                if min_prob <= p.start_probability <= max_prob
+                if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players
             ]
     else:
         filtered_players = []
@@ -513,62 +544,114 @@ with tabs[1]:
 
     # Botón para ejecutar selección final
     if st.button("Listo", key="submit_my_11") and filtered_players:
+        counts = Counter(player.position for player in filtered_players)
+        position_counts = {pos: counts.get(pos, 0) for pos in ["GK", "DEF", "MID", "ATT"]}
+        if use_premium:
+            if position_counts["GK"] < 1:
+                st.warning("Necesitas al menos 1 Portero.")
+            if position_counts["DEF"] < 3:
+                st.warning("Necesitas al menos 3 Defensas.")
+            if position_counts["MID"] < 2:
+                st.warning("Necesitas al menos 2 Mediocentros.")
+            if position_counts["ATT"] < 0:
+                st.warning("Necesitas al menos 0 Delanteros.")
+            if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 5 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 1:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 2:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 3:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 4:
+                st.warning("Necesitas 1 Defensa/Mediocentro más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 6 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 1 Defensa/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 4 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 1 Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 2:
+                st.warning("Necesitas 1 Mediocentro/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 5 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 1 Mediocentro/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
+                st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Mediocentro/Delantero más")
+            else:
+                if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 2 and position_counts["ATT"] >= 0:
+                    st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
+        else:
+            if position_counts["GK"] < 1:
+                st.warning("Necesitas al menos 1 Portero.")
+            if position_counts["DEF"] < 3:
+                st.warning("Necesitas al menos 3 Defensas.")
+            if position_counts["MID"] < 3:
+                st.warning("Necesitas al menos 3 Mediocentros.")
+            if position_counts["ATT"] < 1:
+                st.warning("Necesitas al menos 1 Delantero.")
+            if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
+                st.warning("Necesitas 1 Defensa/Mediocentro más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Defensa/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Mediocentro/Delantero más")
+            else:
+                if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 3 and position_counts["ATT"] >= 1:
+                    st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
         if len(filtered_players) < 11:
-            if 11 <= len(my_players_list):
+            if len(my_players_list) >= 11:
                 st.warning("Filtros demasiado exigentes, selecciona menos filtros.")
             else:
                 st.warning("Selecciona al menos 11 jugadores antes de continuar.")
         else:
             st.markdown("## Mejores combinaciones posibles:")
-            formation_score_players_by_score = best_full_teams(
+            worthy_players = sorted(
                 filtered_players,
+                key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+                reverse=False
+            )
+            formation_score_players_by_score = best_full_teams(
+                worthy_players,
                 possible_formations,
                 -1,
                 verbose=1
             )
             # print_best_full_teams(formation_score_players_by_score)
-            valid_formations = [
-                (formation, round(score, 3), players)
-                for formation, score, players in formation_score_players_by_score
-                if score != -1
-            ]
-
-            for formation, score, players in valid_formations:
-                st.markdown(f"### Formación {formation}: {score} puntos")
-
-                # Organizar jugadores por posición
-                lines = {
-                    "ATT": [],
-                    "MID": [],
-                    "DEF": [],
-                    "GK": [],
-                }
-
-                for player in players:
-                    lines[player.position].append(player)
-
-                # Mostrar jugadores en orden de líneas
-                for position in ["ATT", "MID", "DEF", "GK"]:
-                    if lines[position]:
-                        cols = st.columns(len(lines[position]), gap="small")
-                        for i, player in enumerate(lines[position]):
-                            with cols[i]:
-                                st.markdown(
-                                    f"""
-                                    <div style='text-align:center'>
-                                        <img src='{player.img_link}' width='70'><br>
-                                        {player.name} ({player.start_probability * 100:.0f}%)
-                                    </div>
-                                    """,
-                                    unsafe_allow_html=True
-                                )
-
-                # Mostrar lista textual expandible debajo
-                with st.expander("Ver todos los jugadores utilizados"):
-                    for player in players:
-                        st.markdown(f"- {player}")
-
-                st.markdown("---")  # Separador entre formaciones
+            display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players)
 
 # elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
 with tabs[2]:
@@ -581,6 +664,67 @@ with tabs[2]:
         min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key="threshold_budget")
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
+
+        current_players_copy = copy.deepcopy(current_players)
+        if "blinded_players_set" not in st.session_state:
+            st.session_state.blinded_players_set = set()
+        if "banned_players_set" not in st.session_state:
+            st.session_state.banned_players_set = set()
+
+        st.markdown("### 🔒 Jugadores blindados")
+        st.caption("Estos jugadores estarán **sí o sí** en todos los equipos calculados")
+        st.caption("_(siempre que entren dentro del presupuesto seleccionado)_")
+        blinded_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.blinded_players_set]
+        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, key="add_blindado")
+        if selected_blindado:
+            st.session_state.blinded_players_set.add(selected_blindado)
+            st.session_state.banned_players_set.discard(selected_blindado)
+            st.rerun()
+
+        blinded_players_list = [p for p in current_players_copy if p.name in st.session_state.blinded_players_set]
+        # Ordenar jugadores
+        blinded_players_list = sort_players(blinded_players_list, sort_option)
+        # Mostrar blindados actuales
+        for i, p in enumerate(blinded_players_list):
+            # cols = st.columns([1, 5, 1])
+            # with cols[0]:
+            #     st.image(p.img_link, width=60)
+            cols = st.columns([6, 1])
+            with cols[0]:
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {p.price}M💰 {p.value:.3f} pts --> {p.start_probability*100:.0f} %")
+                # st.markdown(f"- {p}")
+            with cols[1]:
+                if st.button("❌", key=f"remove_blindado_{i}"):
+                    st.session_state.blinded_players_set.remove(p.name)
+                    blinded_players_list.remove(p)
+                    st.rerun()
+
+        st.markdown("### 🚫 Jugadores baneados")
+        st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
+        banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
+        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, key="add_baneado")
+        if selected_baneado:
+            st.session_state.banned_players_set.add(selected_baneado)
+            st.session_state.blinded_players_set.discard(selected_baneado)
+            st.rerun()
+
+        banned_players_list = [p for p in current_players_copy if p.name in st.session_state.banned_players_set]
+        # Ordenar jugadores
+        banned_players_list = sort_players(banned_players_list, sort_option)
+        # Mostrar baneados actuales
+        for i, p in enumerate(banned_players_list):
+            # cols = st.columns([1, 5, 1])
+            # with cols[0]:
+            #     st.image(p.img_link, width=60)
+            cols = st.columns([6, 1])
+            with cols[0]:
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {p.price}M💰 {p.value:.3f} pts --> {p.start_probability*100:.0f} %")
+                # st.markdown(f"- {p}")
+            with cols[1]:
+                if st.button("❌", key=f"remove_baneado_{i}"):
+                    st.session_state.banned_players_set.remove(p.name)
+                    banned_players_list.remove(p)
+                    st.rerun()
 
     use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
@@ -596,8 +740,18 @@ with tabs[2]:
     )
     filtered_players = [
         p for p in filtered_players
-        if min_prob <= p.start_probability <= max_prob
+        if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players_set
     ]
+
+    for player in filtered_players:
+        if player.name in st.session_state.blinded_players_set:
+            player.value = max(1000, player.value*1000)
+            # player.price = 0
+            player.start_probability = 10
+            player.form = 10
+            player.fixture = 10
+        if player.name in st.session_state.banned_players_set:
+            filtered_players.remove(player)
 
     possible_formations = [
         [3, 4, 3],
@@ -632,39 +786,5 @@ with tabs[2]:
             verbose=2
         )
 
-        valid_formations = [
-            (formation, round(score, 3), players)
-            for formation, score, players in formation_score_players_by_score
-            if score != -1
-        ]
-
-        for formation, score, players in valid_formations:
-            total_price = sum(player.price for player in players)
-            show_price = total_price / 10 if is_biwenger else total_price
-            st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {show_price}M")
-
-            lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
-            for player in players:
-                lines[player.position].append(player)
-
-            for position in ["ATT", "MID", "DEF", "GK"]:
-                if lines[position]:
-                    cols = st.columns(len(lines[position]), gap="small")
-                    for i, player in enumerate(lines[position]):
-                        with cols[i]:
-                            st.markdown(
-                                f"""
-                                <div style='text-align:center'>
-                                    <img src='{player.img_link}' width='70'><br>
-                                    {player.name} ({player.start_probability * 100:.0f}%)
-                                </div>
-                                """,
-                                unsafe_allow_html=True
-                            )
-
-            with st.expander("Ver todos los jugadores utilizados"):
-                for player in players:
-                    st.markdown(f"- {player}")
-
-            st.markdown("---")
+        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
 
