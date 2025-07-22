@@ -378,7 +378,26 @@ with tabs[0]:
         use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
         # threshold = threshold_slider / 100
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100))
+
+        prob_key = "prob_threshold_playerslist"
+        # if prob_key in st.session_state:
+        #     min_val = st.session_state[prob_key][0]
+        #     st.session_state[prob_key] = (min_val, 100)
+        # else:
+        #     st.session_state[prob_key] = (0, 100)
+        # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+        max_prob_slider = 100
+            # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
+            # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
+        st.markdown(f"""
+            <style>
+            /* Ocultar el segundo handle (derecho) del slider */
+            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                display: none;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
@@ -511,9 +530,19 @@ with tabs[1]:
         # Filtros adicionales aplicados sobre `my_players_list`
         with st.expander("Filtros adicionales sobre tu lista"):
             use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_my11") == "Sí"
-            # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_my11")
+            # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_my11")
             # threshold = threshold_slider / 100
-            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key="threshold_my11")
+            prob_key = "prob_threshold_my11"
+            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+            max_prob_slider = 100
+            st.markdown(f"""
+                <style>
+                /* Ocultar el segundo handle (derecho) del slider */
+                div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                    display: none;
+                }}
+                </style>
+            """, unsafe_allow_html=True)
             min_prob = min_prob_slider / 100
             max_prob = max_prob_slider / 100
 
@@ -667,9 +696,19 @@ with tabs[2]:
 
     with st.expander("Filtros adicionales"):
         use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
-        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="threshold_budget")
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key="threshold_budget")
+        prob_key = "prob_threshold_budget"
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+        max_prob_slider = 100
+        st.markdown(f"""
+            <style>
+            /* Ocultar el segundo handle (derecho) del slider */
+            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                display: none;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
