@@ -2,8 +2,8 @@
 
 import os
 import re
+from collections import defaultdict
 from urllib.parse import urljoin
-
 import tls_requests
 import requests
 from bs4 import BeautifulSoup
@@ -157,7 +157,7 @@ def get_team_links_from_league(league_url):
     return team_data
 
 
-def get_player_average_rating(player_url):
+def get_player_average_rating_selenium(player_url):
     print("Fallback rating")
     driver = create_driver(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
@@ -165,6 +165,96 @@ def get_player_average_rating(player_url):
     average_rating = float(wait.until(EC.presence_of_element_located((By.XPATH, "//span[contains(text(), 'Average Sofascore Rating')]/..//..//span[@role='meter']"))).get_attribute('aria-valuenow'))
     average_rating = round(average_rating * 0.95, 4)
     driver.quit()
+    return average_rating
+
+
+def normalize_year(year_raw):
+    """
+    Normalizes year strings like:
+    - "2025" → "2025"
+    - "24/25" → "2025"
+    - "22/23" → "2023"
+    """
+    if not year_raw:
+        return None
+    if "/" in year_raw:
+        last_part = year_raw.split("/")[-1]
+        return f"20{last_part}"
+    return year_raw
+
+
+def get_player_last_year_rating(player_url):
+    """
+    Given a SofaScore player URL like:
+        https://www.sofascore.com/player/unai-marrero/1094782
+        get https://www.sofascore.com/api/v1/player/1094782/statistics/match-type/overall
+    This function:
+      1) Extracts the player_id (e.g. 1094782)
+      2) Fetches the player's 'statistics/seasons' data
+      3) Takes the totalRating and countRating of each seasson, does the sum and gets the average
+      4) Return latest year
+    """
+    print("Fallback rating")
+    # time.sleep(5)
+
+    # 1) Extract the player ID from the URL via regex or string split
+    match = re.search(r"/player/[^/]+/(\d+)$", player_url)
+    if not match:
+        print(f"Could not extract player_id from URL: {player_url}")
+        return None
+    player_id = match.group(1)
+
+    # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/match-type/overall
+    seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/match-type/overall"
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    }
+    # resp = requests.get(seasons_url, headers=headers, verify=False)
+    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    if resp.status_code != 200:
+        # Raise your custom exception if HTTP status is not 200
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
+    data = resp.json()
+
+    # Step 1: Safely get seasons
+    seasons = data.get("seasons", [])
+
+    # Step 2: Aggregate totalRating and countRating per year
+    ratings_by_year = defaultdict(lambda: {"total": 0.0, "count": 0})
+
+    for season in seasons:
+        statistics = season.get("statistics", {})
+        year_raw = season.get("year")
+        year = normalize_year(year_raw)
+
+        total_rating = statistics.get("totalRating")
+        count_rating = statistics.get("countRating")
+
+        if total_rating is not None and count_rating:
+            ratings_by_year[year]["total"] += total_rating
+            ratings_by_year[year]["count"] += count_rating
+
+    # Step 3: Compute average per year
+    average_ratings = {
+        year: vals["total"] / vals["count"]
+        for year, vals in ratings_by_year.items()
+        if vals["count"] > 0
+    }
+
+    # Step 4: Return latest year with its average
+    if average_ratings:
+        latest_year = sorted(average_ratings.keys(), reverse=True)[0]
+        rating = average_ratings[latest_year]
+        # print(f"Latest year: {latest_year} | Average Rating: {rating:.2f}")
+    else:
+        print("No valid rating data found.")
+
+    average_rating = float(rating)
+    average_rating = round(average_rating * 0.95, 4)
     return average_rating
 
 
@@ -243,6 +333,88 @@ def get_player_statistics_rating(player_url):
     average_rating = float(rating)
     average_rating = round(average_rating * 0.95, 4)
     return average_rating
+
+
+def get_player_average_rating(player_url):
+    """
+    Given a SofaScore player URL like:
+        https://www.sofascore.com/player/unai-marrero/1094782
+        get https://www.sofascore.com/api/v1/player/1094782/last-year-summary
+    This function:
+      1) Extracts the player_id (e.g. 1094782)
+      2) Fetches the player's 'last-year-summary' data
+      3) Calculates average rating based on event type summary
+    """
+    # 1) Extract the player ID from the URL via regex or string split
+    match = re.search(r"/player/[^/]+/(\d+)$", player_url)
+    if not match:
+        print(f"Could not extract player_id from URL: {player_url}")
+        return None
+    player_id = match.group(1)
+
+    # 2) Fetch seasons info: /api/v1/player/{player_id}/last-year-summary
+    seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/last-year-summary"
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    }
+    # resp = requests.get(seasons_url, headers=headers, verify=False)
+    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    if resp.status_code != 200:
+        # Raise your custom exception if HTTP status is not 200
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
+    data = resp.json()
+
+    # Safely get the list of events from the summary
+    summary = data.get("summary", [])
+
+    # Extract float values where type == "event", using safe .get() access
+    event_values = [
+        float(item.get("value"))
+        for item in summary
+        if item.get("type") == "event" and item.get("value") is not None
+    ]
+
+    # Calculate average safely
+    rating = sum(event_values) / len(event_values) if event_values else None
+
+    average_rating = float(rating)
+    average_rating = round(average_rating, 2)
+    return average_rating
+
+
+def get_player_page_average_rating(player_url):
+    """
+    Given a SofaScore player URL like:
+        https://www.sofascore.com/player/unai-marrero/1094782
+    This function:
+      1) Try to find the <span role="meter" aria-valuenow="..."> (Summary last 12 months).
+    """
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    }
+    # resp = requests.get(p, headers=headers, verify=False)
+    resp = tls_requests.get(player_url, headers=headers, verify=False)
+    if resp.status_code != 200:
+        # Raise your custom exception if HTTP status is not 200
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
+
+    sp = BeautifulSoup(resp.text, "html.parser")
+
+    # Attempt #1: "Summary (last 12 months)"
+    rating_span = sp.find("span", {"role": "meter"})
+    if rating_span and rating_span.has_attr("aria-valuenow"):
+        average_rating = float(rating_span["aria-valuenow"])
+        return average_rating
+
+    return None
 
 
 def get_players_data(
@@ -330,30 +502,36 @@ def get_players_data(
                        apply *0.95.
                     """
                     average_rating = float(6.0)
-                    # resp = requests.get(p, headers=headers, verify=False)
-                    resp = tls_requests.get(p, headers=headers, verify=False)
-                    if resp.status_code != 200:
-                        # Raise your custom exception if HTTP status is not 200
-                        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
-
-                    sp = BeautifulSoup(resp.text, "html.parser")
 
                     # Attempt #1: "Summary (last 12 months)"
-                    rating_span = sp.find("span", {"role": "meter"})
-                    if rating_span and rating_span.has_attr("aria-valuenow"):
-                        try:
-                            average_rating = float(rating_span["aria-valuenow"])
-                            return average_rating
-                        except:
-                            pass
-
-                    # Attempt #2: "Average Sofascore Rating" fallback
-                    # Find the rating of the last tournament
                     try:
-                        average_rating = get_player_statistics_rating(p)
-                        # average_rating = get_player_average_rating(p)
+                        average_rating = float(get_player_page_average_rating(p))
+                        return average_rating
                     except:
                         pass
+
+                    # Attempt #2: "last-year-summary" via api
+                    try:
+                        average_rating = float(get_player_average_rating(p))
+                        return average_rating
+                    except:
+                        pass
+
+                    # Attempt #3: "Average Sofascore Rating" fallback
+                    # Find the rating of the last year he played
+                    try:
+                        average_rating = float(get_player_last_year_rating(p))
+                        return average_rating
+                    except:
+                        pass
+
+                    # # Attempt #4: "Average Sofascore Rating" fallback
+                    # # Find the rating of the last tournament
+                    # try:
+                    #     average_rating = float(get_player_statistics_rating(p))
+                    #     # average_rating = get_player_average_rating_selenium(p)
+                    # except:
+                    #     pass
 
                     return average_rating  # If all fails, return 6.0
 
