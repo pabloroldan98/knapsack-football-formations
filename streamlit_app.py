@@ -66,7 +66,15 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         show_formations.append((actual_formation, actual_score, actual_players, show_price))
 
     for formation, score, players, price in show_formations:
+        player_names = {p.name for p in players}
+        missing_blinded = blinded_players - player_names
+        missing_ordered = [cp.name for cp in current_players_copy if cp.name in missing_blinded]
+
         st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price}M")
+        if missing_ordered:
+            # st.warning(f"No se pudo incluir a: {', '.join(missing_ordered)} con el presupuesto dado")
+            for missing_player in missing_ordered:
+                st.warning(f"No se pudo incluir a: **{missing_player}** con el presupuesto dado")
 
         lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
         for player in players:
@@ -691,7 +699,10 @@ with tabs[2]:
             #     st.image(p.img_link, width=60)
             cols = st.columns([6, 1])
             with cols[0]:
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {p.price}M💰 {p.value:.3f} pts --> {p.start_probability*100:.0f} %")
+                show_price = p.price
+                if is_biwenger:
+                    show_price = show_price / 10
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
             with cols[1]:
                 if st.button("❌", key=f"remove_blindado_{i}"):
@@ -718,7 +729,10 @@ with tabs[2]:
             #     st.image(p.img_link, width=60)
             cols = st.columns([6, 1])
             with cols[0]:
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {p.price}M💰 {p.value:.3f} pts --> {p.start_probability*100:.0f} %")
+                show_price = p.price
+                if is_biwenger:
+                    show_price = show_price / 10
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
             with cols[1]:
                 if st.button("❌", key=f"remove_baneado_{i}"):
@@ -726,12 +740,19 @@ with tabs[2]:
                     banned_players_list.remove(p)
                     st.rerun()
 
+        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
+        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
+
     use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
-    budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
-    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
     if is_biwenger:
-        st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
+        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=20.0, step=0.1, key="budget_cap", format="%.1f")
+        budget = int(budget * 10)
+    else:
+        budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
+    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
+    # if is_biwenger:
+    #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
     filtered_players = purge_everything(
         current_players,
@@ -778,12 +799,13 @@ with tabs[2]:
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
             reverse=False
         )
-        needed_purge = worthy_players[:150]
+        needed_purge = worthy_players[:200]
         formation_score_players_by_score = best_full_teams(
             needed_purge,
             possible_formations,
             budget,
-            verbose=2
+            verbose=2,
+            speed_up=not use_slow_calc,
         )
 
         display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
