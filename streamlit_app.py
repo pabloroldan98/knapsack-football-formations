@@ -447,6 +447,7 @@ with tabs[0]:
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
 with tabs[1]:
     st.header("Selecciona Jugadores para tu 11 ideal")
+    st.caption("Añade a todos los jugadores de tu equipo para calcular tu 11 ideal")
 
     current_players = sorted(
         current_players,
@@ -487,6 +488,7 @@ with tabs[1]:
     # Mostrar jugadores seleccionados
     if my_players_list:
         st.markdown("### Jugadores seleccionados:")
+        st.caption("_Nota: 'Blindar' jugadores obliga a que estén **sí o sí** en todos los equipos calculados_")
         my_players_list = sorted(
             my_players_list,
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
@@ -594,28 +596,6 @@ with tabs[1]:
                 st.warning("Necesitas al menos 0 Delanteros.")
             if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
                 st.warning("Necesitas 5 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 1:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 2:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 3:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 2 Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 4:
                 st.warning("Necesitas 1 Defensa/Mediocentro más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 6 and position_counts["ATT"] == 0:
@@ -626,20 +606,42 @@ with tabs[1]:
                 st.warning("Necesitas 1 Mediocentro/Delantero más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 5 and position_counts["ATT"] == 0:
                 st.warning("Necesitas 1 Mediocentro/Delantero más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
                 st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 1 Mediocentro/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 3:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 2:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 1:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 3 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
+                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
             else:
                 if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 2 and position_counts["ATT"] >= 0:
                     st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
@@ -654,18 +656,18 @@ with tabs[1]:
                 st.warning("Necesitas al menos 1 Delantero.")
             if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+            if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
+                st.warning("Necesitas 1 Defensa/Mediocentro más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Defensa/Delantero más")
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
+                st.warning("Necesitas 1 Mediocentro/Delantero más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
                 st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
-                st.warning("Necesitas 1 Defensa/Mediocentro más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Defensa/Delantero más")
-            elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Mediocentro/Delantero más")
             else:
                 if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 3 and position_counts["ATT"] >= 1:
                     st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
