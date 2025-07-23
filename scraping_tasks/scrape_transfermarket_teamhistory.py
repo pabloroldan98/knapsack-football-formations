@@ -42,6 +42,7 @@ try:
         use_country_as_team=False,
         force_scrape=True
     )
+    print()
     print(players_team_history)
     for team, players in players_team_history.items():
         print()
