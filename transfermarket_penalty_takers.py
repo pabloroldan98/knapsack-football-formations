@@ -42,7 +42,7 @@ class TransfermarktScraper:
         return None
 
     def get_team_links(self, url):
-        soup = self.fetch_page(url)
+        soup = self.fetch_page(url, pause=60.0)
         team_links = {}
         if soup:
             idx = 1

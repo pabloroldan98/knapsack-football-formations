@@ -62,7 +62,7 @@ class TransfermarktScraper:
         return team_links
 
     def get_player_links(self, url):
-        soup = self.fetch_page(url)
+        soup = self.fetch_page(url, pause=60.0)
         player_links = {}
         if soup:
             players = soup.select("#yw1 table tbody tr td.posrela a")
