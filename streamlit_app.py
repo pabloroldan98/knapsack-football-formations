@@ -6,6 +6,14 @@ from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
 from useful_functions import read_dict_data
 
+
+st.set_page_config(
+    page_title="Calculadora Fantasy",      # Título de la pestaña del navegador
+    page_icon="logo.png",                  # Ruta relativa a tu imagen
+    layout="centered",                     # 'wide' o 'centered'
+    initial_sidebar_state="auto"           # 'expanded', 'collapsed', o 'auto'
+)
+
 def sort_players(players, sort_option):
     if sort_option == "Rentabilidad":
         return sorted(
@@ -114,7 +122,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
 
         st.markdown("---")
 
-st.title("Calculadora Fantasy")
+st.title("Calculadora Fantasy 🤖")
 st.markdown(
     "By pabloroldan98"
 )
@@ -796,7 +804,7 @@ with tabs[2]:
     use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
     if is_biwenger:
-        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=20.0, step=0.1, key="budget_cap", format="%.1f")
+        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
         budget = int(budget * 10)
     else:
         budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
