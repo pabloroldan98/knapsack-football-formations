@@ -33,6 +33,12 @@ def sort_players(players, sort_option):
             players,
             key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team)
         )
+    elif sort_option == "Posición":
+        position_priority = {"GK": 0, "DEF": 1, "MID": 2, "ATT": 3}
+        return sorted(
+            players,
+            key=lambda x: (position_priority.get(x.position, 99), -x.value, -x.form, -x.fixture, x.price, x.team)
+        )
     else:  # Puntuación
         return sorted(
             players,
@@ -138,7 +144,7 @@ tabs = st.tabs(tab_labels)
 st.sidebar.header("Opciones")
 app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
-sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad"], index=0)
+sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
@@ -402,9 +408,12 @@ with tabs[0]:
         max_prob = max_prob_slider / 100
 
         # Filtro por precio
-        min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300))
         if is_biwenger:
-            st.markdown(f"En Biwenger: **De {min_price / 10:.1f}M - a {max_price / 10:.1f}M**")
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
+            min_price = int(min_price * 10)
+            max_price = int(max_price * 10)
+        else:
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
 
         # Filtro por posición
         st.markdown("**Filtrar por posición:**")
