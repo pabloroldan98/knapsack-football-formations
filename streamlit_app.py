@@ -123,11 +123,11 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         st.markdown("---")
 
 hide_streamlit_style = """
-    <style>
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-    </style>
-"""
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.title("Calculadora Fantasy 🤖")
