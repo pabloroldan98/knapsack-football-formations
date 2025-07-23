@@ -336,7 +336,7 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
-def get_team_players_dict(players_list, full_players_data_dict, verbose=False):
+def get_team_players_dict(players_list, full_players_data_dict, verbose=False): #, flag=False):
     result_players = copy.deepcopy(players_list)
 
     team_players_dict = {}
@@ -353,6 +353,8 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False):
             closest_player_data_team = find_similar_string(player_team_name, team_data_names_list, similarity_threshold=0)
             for player_name, player_data in players_in_team.items():
                 player_data_names_list = list(players_data_dict[closest_player_data_team].keys())
+                # if source == "jornadaperfecta" and flag:
+                #     closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=True)
                 closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=False)
                 if closest_player_data_name:
                     new_data = players_data_dict[closest_player_data_team][closest_player_data_name]
@@ -593,7 +595,7 @@ def get_players_start_probabilities_dict(
 def set_start_probabilities(players_list, full_players_start_probabilities_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
 
-    team_players_dict = get_team_players_dict(result_players, full_players_start_probabilities_dict, verbose)
+    team_players_dict = get_team_players_dict(result_players, full_players_start_probabilities_dict, verbose) #, True)
 
     for player in result_players:
         start_probabilities = team_players_dict[player.team][player.name].copy()

@@ -31,6 +31,8 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False):
+    if my_string in ["Álvaro Carreras", "Álvaro Fernández", ]:
+        similarity_threshold = 0.6
     # Before anything, we check the manual checks
     if not is_formatted:
         my_manual_string = find_manual_similar_string(my_string)
@@ -128,8 +130,18 @@ def find_manual_similar_string(my_string):
         "Unai Elguezabal": "Elgezabal",
         "Unai Eguíluz": "Egiluz",
         "Abdel Rahim": "Alhassane",
+        "H. Hassan": "Alhassane",
+        "Rahim": "Alhassane",
         "Pathé Ismaël Ciss": "Pathé Ciss",
         "John Nwankwo": "John Donald",
+        "Nicolás Fernández Mercau": "Nico Fernández",
+        "Carlos Protesoni": "Benavidez",
+        "Protesoni": "Benavidez",
+        "E. Etoo": "Etienne Eto'o",
+        "Yeremi": "Yéremy Pino",
+        "Yeremy": "Yéremy Pino",
+        "Yéremi": "Yéremy Pino",
+        "Yéremy": "Yéremy Pino",
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",

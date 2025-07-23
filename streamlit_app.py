@@ -136,7 +136,7 @@ tabs = st.tabs(tab_labels)
 
 # Sidebar filters
 st.sidebar.header("Opciones")
-app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=0)
+app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
 sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad"], index=0)
 
