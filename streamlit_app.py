@@ -131,7 +131,8 @@ st.markdown(
 tab_labels = [
     "📋 Lista de jugadores",
     "⚽ Mi mejor 11 posible",
-    "💰 Mejores 11s con presupuesto"
+    "💰 Mejores 11s con presupuesto",
+    "📈 Analizar mi mercado"
 ]
 tabs = st.tabs(tab_labels)
 # # Selector de funcionalidad principal
@@ -432,7 +433,7 @@ with tabs[0]:
         filter_att = st.checkbox("Delantero", value=True)
 
         # Aplicar filtros
-        current_players = [
+        current_players_filtered = [
             p for p in current_players
             if min_price <= p.price <= max_price and (
                 (filter_gk and p.position == "GK") or
@@ -443,19 +444,23 @@ with tabs[0]:
         ]
 
         if use_fixture_filter != False or min_prob_slider != 0:
-            current_players = purge_everything(
-                current_players,
+            current_players_filtered = purge_everything(
+                current_players_filtered,
                 probability_threshold=min_prob,
                 fixture_filter=use_fixture_filter
             )
 
     # Ordenar jugadores
-    current_players = sort_players(current_players, sort_option)
+    current_players_filtered = sort_players(current_players_filtered, sort_option)
 
     # Mostrar resultados
-    st.subheader(f"{len(current_players)} jugadores encontrados")
+    num_jugadores = len(current_players_filtered)
+    jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
+    st.subheader(
+        f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
+    )
 
-    show_players = copy.deepcopy(current_players)
+    show_players = copy.deepcopy(current_players_filtered)
     for player in show_players:
         if is_biwenger:
             player.price = player.price / 10
@@ -507,11 +512,6 @@ with tabs[1]:
     if my_players_list:
         st.markdown("### Jugadores seleccionados:")
         st.caption("_Nota: 'Blindar' jugadores obliga a que estén **sí o sí** en todos los equipos calculados_")
-        my_players_list = sorted(
-            my_players_list,
-            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
-            reverse=False
-        )
         # Ordenar jugadores
         my_players_list = sort_players(my_players_list, sort_option)
         my_players_list_show = copy.deepcopy(my_players_list)
@@ -813,17 +813,17 @@ with tabs[2]:
     # if is_biwenger:
     #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
-    filtered_players = purge_everything(
+    my_filtered_players = purge_everything(
         current_players,
         probability_threshold=min_prob,
         fixture_filter=use_fixture_filter
     )
-    filtered_players = [
-        p for p in filtered_players
+    my_filtered_players = [
+        p for p in my_filtered_players
         if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players_set
     ]
 
-    for player in filtered_players:
+    for player in my_filtered_players:
         if player.name in st.session_state.blinded_players_set:
             player.value = max(1000, player.value*1000)
             # player.price = 0
@@ -831,7 +831,7 @@ with tabs[2]:
             player.form = 10
             player.fixture = 10
         if player.name in st.session_state.banned_players_set:
-            filtered_players.remove(player)
+            my_filtered_players.remove(player)
 
     possible_formations = [
         [3, 4, 3],
@@ -851,10 +851,10 @@ with tabs[2]:
             [5, 2, 3],
         ]
 
-    if st.button("Calcular 11s", key="submit_budget_11") and filtered_players:
+    if st.button("Calcular 11s", key="submit_budget_11") and my_filtered_players:
         st.markdown("## Mejores combinaciones posibles dentro del presupuesto:")
         worthy_players = sorted(
-            filtered_players,
+            my_filtered_players,
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
             reverse=False
         )
@@ -868,4 +868,128 @@ with tabs[2]:
         )
 
         display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
+
+with tabs[3]:
+    st.header("Selecciona los Jugadores de tu mercado")
+    st.caption("Selecciona los Jugadores que han salido en tu mercado para compararlos entre ellos")
+
+    current_players = sorted(
+        current_players,
+        key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team),
+        reverse=False
+    )
+
+    # Estado persistente para la lista de jugadores seleccionados
+    if "my_players_names_set" not in st.session_state:
+        st.session_state.my_players_names_set = set()
+    if "last_selected_name_string" not in st.session_state:
+        st.session_state.last_selected_name_string = None
+    if "is_needs_reset" not in st.session_state:
+        st.session_state.is_needs_reset = False
+
+    # Búsqueda por autocompletado
+    player_names = [p.name for p in current_players]
+    if st.session_state.is_needs_reset:
+        st.session_state.busca_mercado = ""
+        st.session_state.last_selected_name_string = None
+        st.session_state.is_needs_reset = False
+        # st.rerun()
+    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, key="busca_mercado")
+    if st.session_state.last_selected_name_string == selected_name:
+        st.session_state.is_needs_reset = True
+
+    if selected_name and st.session_state.last_selected_name_string != selected_name:
+        if selected_name not in st.session_state.my_players_names_set:
+            st.session_state.my_players_names_set.add(selected_name)
+            st.session_state.last_selected_name_string = selected_name
+
+    # Reconstruir lista de objetos player
+    current_players_copy = copy.deepcopy(current_players)
+    my_market_players_list = [p for p in current_players_copy if p.name in st.session_state.my_players_names_set]
+
+    # Mostrar jugadores seleccionados
+    if my_market_players_list:
+        # Filtros adicionales aplicados sobre `my_market_players_list`
+        with st.expander("Filtros adicionales sobre tu lista"):
+            use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0, key="fixture_filter") == "Sí"
+            prob_key = "prob_threshold_marketplayerslist"
+            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+            max_prob_slider = 100
+            st.markdown(f"""
+                <style>
+                /* Ocultar el segundo handle (derecho) del slider */
+                div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                    display: none;
+                }}
+                </style>
+            """, unsafe_allow_html=True)
+            min_prob = min_prob_slider / 100
+            max_prob = max_prob_slider / 100
+
+            # Filtro por precio
+            if is_biwenger:
+                min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio_market", format="%.1f")
+                min_price = int(min_price * 10)
+                max_price = int(max_price * 10)
+            else:
+                min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio_market", format="%.0f")
+
+            # Filtro por posición
+            st.markdown("**Filtrar por posición:**")
+            filter_gk = st.checkbox("Portero", value=True, key="filter_gk")
+            filter_def = st.checkbox("Defensa", value=True, key="filter_def")
+            filter_mid = st.checkbox("Mediocentro", value=True, key="filter_mid")
+            filter_att = st.checkbox("Delantero", value=True, key="filter_att")
+
+            # Aplicar filtros
+            my_market_filtered_players_list = [
+                p for p in my_market_players_list
+                if min_price <= p.price <= max_price and (
+                        (filter_gk and p.position == "GK") or
+                        (filter_def and p.position == "DEF") or
+                        (filter_mid and p.position == "MID") or
+                        (filter_att and p.position == "ATT")
+                ) and min_prob <= p.start_probability <= max_prob
+            ]
+
+            if use_fixture_filter != False or min_prob_slider != 0:
+                my_market_filtered_players_list = purge_everything(
+                    my_market_filtered_players_list,
+                    probability_threshold=min_prob,
+                    fixture_filter=use_fixture_filter
+                )
+            num_filtrados = len(my_market_players_list) - len(my_market_filtered_players_list)
+
+        # Mostrar resultados
+        num_jugadores = len(my_market_filtered_players_list)
+        jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
+        filtrado_texto = "filtrado" if num_filtrados == 1 else "filtrados"
+        st.subheader(
+            f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "") + f" _({num_filtrados} {filtrado_texto})_"
+        )
+        st.caption("_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_")
+
+        # Ordenar jugadores
+        my_market_filtered_players_list = sort_players(my_market_filtered_players_list, sort_option)
+        my_market_filtered_players_list_show = copy.deepcopy(my_market_filtered_players_list)
+        for i, p in enumerate(my_market_filtered_players_list_show):
+            cols = st.columns([6, 1])
+            # with cols[0]:
+            #     st.image(p.img_link, width=60)
+            with cols[0]:
+                if is_biwenger:
+                    p.price = p.price / 10
+                # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
+                st.markdown(f"{p}")
+            with cols[1]:
+                if st.button("❌", key=f"market_remove_{i}"):
+                    st.session_state.my_players_names_set.remove(p.name)
+                    st.session_state.blinded_players.discard(p.name)
+                    st.rerun()
+        # for player in my_market_filtered_players_list_show:
+        #     if is_biwenger:
+        #         player.price = player.price / 10
+        #     st.text(str(player))
+    else:
+        my_market_filtered_players_list = []
 
