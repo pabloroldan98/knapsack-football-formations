@@ -44,7 +44,7 @@ def get_biwenger_data_dict(
 
     if write_file:
         # write_dict_data(data, file_name)
-        overwrite_dict_data(data, file_name)
+        overwrite_dict_data(data, file_name, ignore_old_data=True)
 
     return data
 

@@ -379,7 +379,7 @@ def get_jornadaperfecta_data(
     overwrite_dict_data(prices_data, price_file_name)
     overwrite_dict_data(positions_data, positions_file_name)
     overwrite_dict_data(forms_data, forms_file_name)
-    overwrite_dict_data(start_probabilities_data, start_probability_file_name)
+    overwrite_dict_data(start_probabilities_data, start_probability_file_name, ignore_old_data=True)
     overwrite_dict_data(price_trends_data, price_trends_file_name)
 
     return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
@@ -448,7 +448,7 @@ def get_players_start_probabilities_dict_jornadaperfecta(
     scraper = JornadaPerfectaScraper()
     _, _, _, result, _ = scraper.scrape()
 
-    overwrite_dict_data(result, file_name)
+    overwrite_dict_data(result, file_name, ignore_old_data=True)
 
     return result
 
@@ -470,7 +470,7 @@ def get_players_price_trends_dict_jornadaperfecta(
     return result
 
 
-def get_players_start_probabilities_dict_jornadaperfecta(
+def get_players_start_probabilities_dict_jornadaperfecta_old(
         file_name="jornadaperfecta_start_probabilities",
         force_scrape=False
 ):
@@ -482,7 +482,7 @@ def get_players_start_probabilities_dict_jornadaperfecta(
     scraper = JornadaPerfectaScraper()
     result = scraper.scrape_probabilities()
 
-    overwrite_dict_data(result, file_name)
+    overwrite_dict_data(result, file_name, ignore_old_data=True)
 
     return result
 
