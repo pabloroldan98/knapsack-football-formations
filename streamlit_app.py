@@ -14,6 +14,23 @@ st.set_page_config(
     initial_sidebar_state="auto"           # 'expanded', 'collapsed', o 'auto'
 )
 
+st.markdown(
+    """
+    <div style="
+        position: sticky;
+        top: 35px;
+        width: 100%;
+        z-index: 1000;
+        text-align: right;
+        padding-right: 50px;
+        background: transparent;
+    ">
+        <img src="https://calculadorafantasy.com/logo.png" style="height:40px;">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 def sort_players(players, sort_option):
     if sort_option == "Rentabilidad":
         return sorted(
