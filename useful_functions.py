@@ -362,7 +362,8 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10, f
     return teams_data
 
 
-def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, ignore_old_data=False, file_type="json"):
+# def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, ignore_old_data=False, file_type="json"):
+def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old_data=False, file_type="json"):
     file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
     file_path_old = os.path.join(ROOT_DIR, 'json_files', f"{file_name}_OLD.json")
     if file_type and isinstance(file_type, str):
