@@ -25,7 +25,7 @@ st.markdown(
         padding-right: 50px;
         background: transparent;
     ">
-        <img src="https://calculadorafantasy.com/logo.png" style="height:40px;">
+        <img src="https://www.calculadorafantasy.com/logo.png" style="height:40px;">
     </div>
     """,
     unsafe_allow_html=True
