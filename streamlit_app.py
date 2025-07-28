@@ -397,6 +397,8 @@ with st.spinner("Cargando jugadores..."):
                             cp.form = (cp.form + fp.form + dp.form) / 3
                             cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
 
+    current_team_list = sorted(set(player.team for player in current_players))
+
 # Si selecciona "Lista de jugadores"
 # if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
 with tabs[0]:
@@ -449,6 +451,8 @@ with tabs[0]:
         filter_mid = st.checkbox("Mediocentro", value=True)
         filter_att = st.checkbox("Delantero", value=True)
 
+        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos")
+
         # Aplicar filtros
         current_players_filtered = [
             p for p in current_players
@@ -457,7 +461,9 @@ with tabs[0]:
                 (filter_def and p.position == "DEF") or
                 (filter_mid and p.position == "MID") or
                 (filter_att and p.position == "ATT")
-            ) and min_prob <= p.start_probability <= max_prob
+            ) and min_prob <= p.start_probability <= max_prob and (
+                not filter_teams or p.team in filter_teams
+            )
         ]
 
         if use_fixture_filter != False or min_prob_slider != 0:
@@ -958,6 +964,8 @@ with tabs[3]:
             filter_mid = st.checkbox("Mediocentro", value=True, key="filter_mid")
             filter_att = st.checkbox("Delantero", value=True, key="filter_att")
 
+            filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos", key="multichoice_teams")
+
             # Aplicar filtros
             my_market_filtered_players_list = [
                 p for p in my_market_players_list
@@ -966,7 +974,9 @@ with tabs[3]:
                         (filter_def and p.position == "DEF") or
                         (filter_mid and p.position == "MID") or
                         (filter_att and p.position == "ATT")
-                ) and min_prob <= p.start_probability <= max_prob
+                ) and min_prob <= p.start_probability <= max_prob and (
+                    not filter_teams or p.team in filter_teams
+                )
             ]
 
             if use_fixture_filter != False or min_prob_slider != 0:
