@@ -142,6 +142,7 @@ def find_manual_similar_string(my_string):
         "Yeremy": "Yéremy Pino",
         "Yéremi": "Yéremy Pino",
         "Yéremy": "Yéremy Pino",
+        "Haissem Hassan": "Hassan",
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
