@@ -143,8 +143,11 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
 
 st.title("Calculadora Fantasy 🤖")
 st.markdown(
-    "By pabloroldan98"
+    "By pabloroldan98 (Twitch: DonRoda)"
 )
+st.markdown("📩 **Contacto:** [pablo.roldan.peigneux@gmail.com](mailto:pablo.roldan.peigneux@gmail.com)")
+
+st.markdown("---")
 
 tab_labels = [
     "📋 Lista de jugadores",
