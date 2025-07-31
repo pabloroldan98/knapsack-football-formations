@@ -33,7 +33,7 @@ st.markdown(
 
 def sort_players(players, sort_option):
     if sort_option == "Rentabilidad":
-        min_price = min(p.price for p in players if p.price > 0)
+        min_price = min((p.price for p in players if p.price > 0), default=1)
         return sorted(
             players,
             key=lambda x: (x.value - 7) / max(x.price, min_price),
@@ -170,7 +170,7 @@ tabs = st.tabs(tab_labels)
 
 # Sidebar filters
 st.sidebar.header("Opciones")
-app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
+app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=0)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
 sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
 
