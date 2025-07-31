@@ -33,9 +33,10 @@ st.markdown(
 
 def sort_players(players, sort_option):
     if sort_option == "Rentabilidad":
+        min_price = min(p.price for p in players if p.price > 0)
         return sorted(
             players,
-            key=lambda x: (x.value - 7) / max(x.price, 1),
+            key=lambda x: (x.value - 7) / max(x.price, min_price),
             reverse=True
         )
     elif sort_option == "Precio":
