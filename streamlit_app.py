@@ -150,9 +150,9 @@ st.markdown("📩 **Contacto:** [pablo.roldan.peigneux@gmail.com](mailto:pablo.r
 st.markdown("---")
 
 tab_labels = [
-    "📋 Lista de jugadores",
-    "⚽ Mi mejor 11 posible",
     "💰 Mejores 11s con presupuesto",
+    "⚽ Mi mejor 11 posible",
+    "📋 Lista de jugadores",
     "📈 Analizar mi mercado"
 ]
 tabs = st.tabs(tab_labels)
@@ -403,32 +403,17 @@ with st.spinner("Cargando jugadores..."):
 
     current_team_list = sorted(set(player.team for player in current_players))
 
-# Si selecciona "Lista de jugadores"
-# if main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
+# if main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
 with tabs[0]:
-    st.header("Lista de Jugadores Actualizada")
-    st.markdown(
-        "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
-        "(form: coeficiente_forma, fixture: coeficiente_partido) --> Probabilidad de ser titular %_"
-    )
+    st.header("Mejores 11s dentro de tu presupuesto")
 
-    # Filtros adicionales
     with st.expander("Filtros adicionales"):
-        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
-        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
+        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100
-
-        prob_key = "prob_threshold_playerslist"
-        # if prob_key in st.session_state:
-        #     min_val = st.session_state[prob_key][0]
-        #     st.session_state[prob_key] = (min_val, 100)
-        # else:
-        #     st.session_state[prob_key] = (0, 100)
-        # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+        prob_key = "prob_threshold_budget"
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
         max_prob_slider = 100
-            # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
-            # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
         st.markdown(f"""
             <style>
             /* Ocultar el segundo handle (derecho) del slider */
@@ -440,58 +425,142 @@ with tabs[0]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        # Filtro por precio
-        if is_biwenger:
-            min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
-            min_price = int(min_price * 10)
-            max_price = int(max_price * 10)
-        else:
-            min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
+        current_players_copy = copy.deepcopy(current_players)
+        if "blinded_players_set" not in st.session_state:
+            st.session_state.blinded_players_set = set()
+        if "banned_players_set" not in st.session_state:
+            st.session_state.banned_players_set = set()
 
-        # Filtro por posición
-        st.markdown("**Filtrar por posición:**")
-        filter_gk = st.checkbox("Portero", value=True)
-        filter_def = st.checkbox("Defensa", value=True)
-        filter_mid = st.checkbox("Mediocentro", value=True)
-        filter_att = st.checkbox("Delantero", value=True)
+        st.markdown("### 🔒 Jugadores blindados")
+        st.caption("Estos jugadores estarán **sí o sí** en todos los equipos calculados")
+        st.caption("_(siempre que entren dentro del presupuesto seleccionado)_")
+        blinded_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.blinded_players_set]
+        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, key="add_blindado")
+        if selected_blindado:
+            st.session_state.blinded_players_set.add(selected_blindado)
+            st.session_state.banned_players_set.discard(selected_blindado)
+            st.rerun()
 
-        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos")
+        blinded_players_list = [p for p in current_players_copy if p.name in st.session_state.blinded_players_set]
+        # Ordenar jugadores
+        blinded_players_list = sort_players(blinded_players_list, sort_option)
+        # Mostrar blindados actuales
+        for i, p in enumerate(blinded_players_list):
+            # cols = st.columns([1, 5, 1])
+            # with cols[0]:
+            #     st.image(p.img_link, width=60)
+            cols = st.columns([6, 1])
+            with cols[0]:
+                show_price = p.price
+                if is_biwenger:
+                    show_price = show_price / 10
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
+                # st.markdown(f"- {p}")
+            with cols[1]:
+                if st.button("❌", key=f"remove_blindado_{i}"):
+                    st.session_state.blinded_players_set.remove(p.name)
+                    blinded_players_list.remove(p)
+                    st.rerun()
 
-        # Aplicar filtros
-        current_players_filtered = [
-            p for p in current_players
-            if min_price <= p.price <= max_price and (
-                (filter_gk and p.position == "GK") or
-                (filter_def and p.position == "DEF") or
-                (filter_mid and p.position == "MID") or
-                (filter_att and p.position == "ATT")
-            ) and min_prob <= p.start_probability <= max_prob and (
-                not filter_teams or p.team in filter_teams
-            )
+        st.markdown("### 🚫 Jugadores baneados")
+        st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
+        banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
+        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, key="add_baneado")
+        if selected_baneado:
+            st.session_state.banned_players_set.add(selected_baneado)
+            st.session_state.blinded_players_set.discard(selected_baneado)
+            st.rerun()
+
+        banned_players_list = [p for p in current_players_copy if p.name in st.session_state.banned_players_set]
+        # Ordenar jugadores
+        banned_players_list = sort_players(banned_players_list, sort_option)
+        # Mostrar baneados actuales
+        for i, p in enumerate(banned_players_list):
+            # cols = st.columns([1, 5, 1])
+            # with cols[0]:
+            #     st.image(p.img_link, width=60)
+            cols = st.columns([6, 1])
+            with cols[0]:
+                show_price = p.price
+                if is_biwenger:
+                    show_price = show_price / 10
+                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
+                # st.markdown(f"- {p}")
+            with cols[1]:
+                if st.button("❌", key=f"remove_baneado_{i}"):
+                    st.session_state.banned_players_set.remove(p.name)
+                    banned_players_list.remove(p)
+                    st.rerun()
+
+        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
+        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
+
+    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
+
+    if is_biwenger:
+        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
+        budget = int(budget * 10)
+    else:
+        budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
+    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
+    # if is_biwenger:
+    #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
+
+    my_filtered_players = purge_everything(
+        current_players,
+        probability_threshold=min_prob,
+        fixture_filter=use_fixture_filter
+    )
+    my_filtered_players = [
+        p for p in my_filtered_players
+        if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players_set
+    ]
+
+    for player in my_filtered_players:
+        if player.name in st.session_state.blinded_players_set:
+            player.value = max(1000, player.value*1000)
+            # player.price = 0
+            player.start_probability = 10
+            player.form = 10
+            player.fixture = 10
+        if player.name in st.session_state.banned_players_set:
+            my_filtered_players.remove(player)
+
+    possible_formations = [
+        [3, 4, 3],
+        [3, 5, 2],
+        [4, 3, 3],
+        [4, 4, 2],
+        [4, 5, 1],
+        [5, 3, 2],
+        [5, 4, 1],
+    ]
+    if use_premium:
+        possible_formations += [
+            [3, 3, 4],
+            [3, 6, 1],
+            [4, 2, 4],
+            [4, 6, 0],
+            [5, 2, 3],
         ]
 
-        if use_fixture_filter != False or min_prob_slider != 0:
-            current_players_filtered = purge_everything(
-                current_players_filtered,
-                probability_threshold=min_prob,
-                fixture_filter=use_fixture_filter
-            )
+    if st.button("Calcular 11s", key="submit_budget_11") and my_filtered_players:
+        st.markdown("## Mejores combinaciones posibles dentro del presupuesto:")
+        worthy_players = sorted(
+            my_filtered_players,
+            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+            reverse=False
+        )
+        needed_purge = worthy_players[:200]
+        formation_score_players_by_score = best_full_teams(
+            needed_purge,
+            possible_formations,
+            budget,
+            verbose=2,
+            speed_up=not use_slow_calc,
+        )
 
-    # Ordenar jugadores
-    current_players_filtered = sort_players(current_players_filtered, sort_option)
-
-    # Mostrar resultados
-    num_jugadores = len(current_players_filtered)
-    jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
-    st.subheader(
-        f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
-    )
-
-    show_players = copy.deepcopy(current_players_filtered)
-    for player in show_players:
-        if is_biwenger:
-            player.price = player.price / 10
-        st.text(str(player))
+        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
 
 # Funcionalidades futuras
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
@@ -737,17 +806,32 @@ with tabs[1]:
             # print_best_full_teams(formation_score_players_by_score)
             display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players)
 
-# elif main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
+# Si selecciona "Lista de jugadores"
+# ekif main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
 with tabs[2]:
-    st.header("Mejores 11s dentro de tu presupuesto")
+    st.header("Lista de Jugadores Actualizada")
+    st.markdown(
+        "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
+        "(form: coeficiente_forma, fixture: coeficiente_partido) --> Probabilidad de ser titular %_"
+    )
 
+    # Filtros adicionales
     with st.expander("Filtros adicionales"):
-        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
-        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
+        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
         # threshold = threshold_slider / 100
-        prob_key = "prob_threshold_budget"
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+
+        prob_key = "prob_threshold_playerslist"
+        # if prob_key in st.session_state:
+        #     min_val = st.session_state[prob_key][0]
+        #     st.session_state[prob_key] = (min_val, 100)
+        # else:
+        #     st.session_state[prob_key] = (0, 100)
+        # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
         max_prob_slider = 100
+            # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
+            # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
         st.markdown(f"""
             <style>
             /* Ocultar el segundo handle (derecho) del slider */
@@ -759,146 +843,63 @@ with tabs[2]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        current_players_copy = copy.deepcopy(current_players)
-        if "blinded_players_set" not in st.session_state:
-            st.session_state.blinded_players_set = set()
-        if "banned_players_set" not in st.session_state:
-            st.session_state.banned_players_set = set()
+        # Filtro por precio
+        if is_biwenger:
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
+            min_price = int(min_price * 10)
+            max_price = int(max_price * 10)
+        else:
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
 
-        st.markdown("### 🔒 Jugadores blindados")
-        st.caption("Estos jugadores estarán **sí o sí** en todos los equipos calculados")
-        st.caption("_(siempre que entren dentro del presupuesto seleccionado)_")
-        blinded_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.blinded_players_set]
-        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, key="add_blindado")
-        if selected_blindado:
-            st.session_state.blinded_players_set.add(selected_blindado)
-            st.session_state.banned_players_set.discard(selected_blindado)
-            st.rerun()
+        # Filtro por posición
+        st.markdown("**Filtrar por posición:**")
+        filter_gk = st.checkbox("Portero", value=True)
+        filter_def = st.checkbox("Defensa", value=True)
+        filter_mid = st.checkbox("Mediocentro", value=True)
+        filter_att = st.checkbox("Delantero", value=True)
 
-        blinded_players_list = [p for p in current_players_copy if p.name in st.session_state.blinded_players_set]
-        # Ordenar jugadores
-        blinded_players_list = sort_players(blinded_players_list, sort_option)
-        # Mostrar blindados actuales
-        for i, p in enumerate(blinded_players_list):
-            # cols = st.columns([1, 5, 1])
-            # with cols[0]:
-            #     st.image(p.img_link, width=60)
-            cols = st.columns([6, 1])
-            with cols[0]:
-                show_price = p.price
-                if is_biwenger:
-                    show_price = show_price / 10
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
-                # st.markdown(f"- {p}")
-            with cols[1]:
-                if st.button("❌", key=f"remove_blindado_{i}"):
-                    st.session_state.blinded_players_set.remove(p.name)
-                    blinded_players_list.remove(p)
-                    st.rerun()
+        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos")
 
-        st.markdown("### 🚫 Jugadores baneados")
-        st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
-        banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
-        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, key="add_baneado")
-        if selected_baneado:
-            st.session_state.banned_players_set.add(selected_baneado)
-            st.session_state.blinded_players_set.discard(selected_baneado)
-            st.rerun()
-
-        banned_players_list = [p for p in current_players_copy if p.name in st.session_state.banned_players_set]
-        # Ordenar jugadores
-        banned_players_list = sort_players(banned_players_list, sort_option)
-        # Mostrar baneados actuales
-        for i, p in enumerate(banned_players_list):
-            # cols = st.columns([1, 5, 1])
-            # with cols[0]:
-            #     st.image(p.img_link, width=60)
-            cols = st.columns([6, 1])
-            with cols[0]:
-                show_price = p.price
-                if is_biwenger:
-                    show_price = show_price / 10
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
-                # st.markdown(f"- {p}")
-            with cols[1]:
-                if st.button("❌", key=f"remove_baneado_{i}"):
-                    st.session_state.banned_players_set.remove(p.name)
-                    banned_players_list.remove(p)
-                    st.rerun()
-
-        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
-        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
-
-    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
-
-    if is_biwenger:
-        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
-        budget = int(budget * 10)
-    else:
-        budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
-    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
-    # if is_biwenger:
-    #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
-
-    my_filtered_players = purge_everything(
-        current_players,
-        probability_threshold=min_prob,
-        fixture_filter=use_fixture_filter
-    )
-    my_filtered_players = [
-        p for p in my_filtered_players
-        if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players_set
-    ]
-
-    for player in my_filtered_players:
-        if player.name in st.session_state.blinded_players_set:
-            player.value = max(1000, player.value*1000)
-            # player.price = 0
-            player.start_probability = 10
-            player.form = 10
-            player.fixture = 10
-        if player.name in st.session_state.banned_players_set:
-            my_filtered_players.remove(player)
-
-    possible_formations = [
-        [3, 4, 3],
-        [3, 5, 2],
-        [4, 3, 3],
-        [4, 4, 2],
-        [4, 5, 1],
-        [5, 3, 2],
-        [5, 4, 1],
-    ]
-    if use_premium:
-        possible_formations += [
-            [3, 3, 4],
-            [3, 6, 1],
-            [4, 2, 4],
-            [4, 6, 0],
-            [5, 2, 3],
+        # Aplicar filtros
+        current_players_filtered = [
+            p for p in current_players
+            if min_price <= p.price <= max_price and (
+                (filter_gk and p.position == "GK") or
+                (filter_def and p.position == "DEF") or
+                (filter_mid and p.position == "MID") or
+                (filter_att and p.position == "ATT")
+            ) and min_prob <= p.start_probability <= max_prob and (
+                not filter_teams or p.team in filter_teams
+            )
         ]
 
-    if st.button("Calcular 11s", key="submit_budget_11") and my_filtered_players:
-        st.markdown("## Mejores combinaciones posibles dentro del presupuesto:")
-        worthy_players = sorted(
-            my_filtered_players,
-            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
-            reverse=False
-        )
-        needed_purge = worthy_players[:200]
-        formation_score_players_by_score = best_full_teams(
-            needed_purge,
-            possible_formations,
-            budget,
-            verbose=2,
-            speed_up=not use_slow_calc,
-        )
+        if use_fixture_filter != False or min_prob_slider != 0:
+            current_players_filtered = purge_everything(
+                current_players_filtered,
+                probability_threshold=min_prob,
+                fixture_filter=use_fixture_filter
+            )
 
-        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
+    # Ordenar jugadores
+    current_players_filtered = sort_players(current_players_filtered, sort_option)
+
+    # Mostrar resultados
+    num_jugadores = len(current_players_filtered)
+    jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
+    st.subheader(
+        f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
+    )
+
+    show_players = copy.deepcopy(current_players_filtered)
+    for player in show_players:
+        if is_biwenger:
+            player.price = player.price / 10
+        st.text(str(player))
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
     st.caption("Selecciona los Jugadores que han salido en tu mercado para compararlos entre ellos")
+    st.caption("_Nota: es lo mismo que la 'Lista de jugadores', pero seleccionando solo a los jugadores que quieres ver_")
 
     current_players = sorted(
         current_players,
