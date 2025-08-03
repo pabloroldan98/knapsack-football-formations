@@ -287,10 +287,10 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
         player_name = championship_player["name"]
         player_position_group = championship_player["position"]
         if use_comunio_price:
-            player_price = int(championship_player["price"] / 100000)
+            player_price = int(round(championship_player["price"] / 100_000))
         else:
-            # player_price = int(championship_player["fantasyPrice"] / 100000)
-            player_price = int(championship_player["fantasyPrice"] / 1000000)
+            # player_price = int(round(championship_player["fantasyPrice"] / 100_000))
+            player_price = int(round(championship_player["fantasyPrice"] / 1_000_000))
         player_status_group = championship_player["status"]
         player_standard_price = float(championship_player["price"])
         player_fantasy_price = float(championship_player["fantasyPrice"])

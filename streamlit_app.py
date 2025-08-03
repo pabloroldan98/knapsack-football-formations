@@ -8,8 +8,9 @@ from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
 from useful_functions import read_dict_data
 
-# Dummy line to force Streamlit to track the json_files directory
+# Dummy lines to force Streamlit to track the json_files and csv_files directories
 _ = os.listdir("json_files")
+_ = os.listdir("csv_files")
 
 
 st.set_page_config(

@@ -1,3 +1,7 @@
+import json
+from dataclasses import asdict
+from pprint import pprint
+
 import requests
 import tls_requests
 from datetime import datetime
@@ -12,6 +16,42 @@ from useful_functions import find_similar_string, read_dict_data, overwrite_dict
 PLAYERS_URL = "https://api-fantasy.llt-services.com/api/v4/players?x-lang=es"
 # PLAYERS_URL = "https://api-fantasy.llt-services.com/api/v3/players?x-lang=es"
 MARKET_VALUE_URL = "https://api-fantasy.llt-services.com/api/v3/player/{player_id}/market-value?x-lang=es"
+
+
+def get_laligafantasy_data(
+        write_file=False,
+        file_name="laligafantasy_laliga_data",
+        force_scrape=False
+):
+    data = None
+    json_data = {}
+    if force_scrape:
+        try:
+            data = create_players_list()
+            json_data = [
+                {k[1:] if k.startswith("_") else k: v for k, v in obj.__dict__.items()}
+                for obj in data
+            ]
+        except:
+            pass
+    if not data: # if force_scrape failed or not force_scrape
+        json_data = read_dict_data(file_name)
+        data = [Player(**d) for d in json_data]
+        if data:
+            for player_data in data:
+                player_data.price = int(round(player_data.price / 1_000_000))
+                player_data.price_trend = int(round(player_data.price_trend / 1_000_000))
+            return data
+
+    if write_file:
+        # write_dict_data(json_data, file_name)
+        overwrite_dict_data(json_data, file_name, ignore_old_data=True)
+
+    for player_data in data:
+        player_data.price = int(round(player_data.price / 1_000_000))
+        player_data.price_trend = int(round(player_data.price_trend / 1_000_000))
+
+    return data
 
 def fetch_json(url):
     """
@@ -39,7 +79,7 @@ def get_player_market_history(player_id):
     url = MARKET_VALUE_URL.format(player_id=player_id)
     return fetch_json(url)
 
-def get_price_and_trend(player_id, in_millions=True):
+def get_price_and_trend(player_id):
     """
     Fetch the latest market value and compute trend (difference between last two entries).
     Returns (price, price_trend).
@@ -57,11 +97,9 @@ def get_price_and_trend(player_id, in_millions=True):
         previous = sorted_hist[-2]['marketValue']
         trend = latest - previous
 
-    if in_millions:
-        return int(latest / 1_000_000), int(trend / 1_000_000)
     return latest, trend
 
-def create_players_list(use_millions=True):
+def create_players_list():
     """
     Build and return a list of Player objects with up-to-date price and trend.
     """
@@ -79,7 +117,7 @@ def create_players_list(use_millions=True):
         status = get_status(status_id)
         img_link = raw.get('images', {}).get('transparent', {}).get('256x256')
 
-        price, trend = get_price_and_trend(pid, in_millions=use_millions)
+        price, trend = get_price_and_trend(pid)
 
         if pos_id != "5":
             player = Player(
@@ -101,7 +139,11 @@ def create_players_list(use_millions=True):
     return players
 
 
-# all_players = create_players_list()
+# data = get_laligafantasy_data(force_scrape=True, file_name="test_laligafantasy_laliga_data", write_file=True)
+# for d in data:
+#     print(d)
+
+# all_players = get_laligafantasy_data()
 # current_players = sorted(
 #     all_players,
 #     key=lambda x: (-x.value, -x.form, -x.fixture, -x.price, x.team, x.name),
