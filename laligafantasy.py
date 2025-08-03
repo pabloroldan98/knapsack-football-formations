@@ -130,7 +130,7 @@ def create_players_list():
                 standard_price=price,
                 # fantasy_price=price,
                 price_trend=trend,
-                form= 1 + trend / price if price else 1,
+                form=1+trend/price if price else 1,
                 fitness=[],
                 img_link=img_link
             )
