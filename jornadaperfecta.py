@@ -300,7 +300,7 @@ class JornadaPerfectaScraper:
 
         for player in market_data:
             team_name = player.get("team")
-            team_name = team.strip().title() if team_name else team_name
+            team_name = team_name.strip().title() if team_name else team_name
             team_name = find_manual_similar_string(team_name)
             player_name = player.get("name").strip().title()
             player_name = player_name.strip().title() if player_name else player_name
