@@ -1,5 +1,6 @@
 import os
 import copy
+from unidecode import unidecode
 import streamlit as st
 from collections import Counter
 
@@ -144,6 +145,10 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
 
         st.markdown("---")
 
+# Función para normalizar nombres
+def normalize_name(name):
+    return unidecode(name).strip()
+
 
 st.title("Calculadora Fantasy 🤖")
 st.markdown(
@@ -185,7 +190,7 @@ sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad"
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
 display_to_key = {key.replace("_", " ").strip().title(): key for key in jornadas_dict}
 display_options = ["Siguiente partido"] + list(display_to_key.keys())
-selected_display_jornada = st.sidebar.selectbox("Jornada", options=display_options, index=0)
+selected_display_jornada = st.sidebar.selectbox("Jornada", options=display_options, format_func=lambda x: normalize_name(x), index=0)
 selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
 jornadas_map = {
     "Una jornada (solo la jornada elegida)": 1,
@@ -196,6 +201,7 @@ disable_multi_jornada = selected_display_jornada == "Siguiente partido"
 selected_num_jornadas_label = st.sidebar.selectbox(
     "Cuántas jornadas tener en cuenta",
     options=list(jornadas_map.keys()),
+    format_func=lambda x: normalize_name(x),
     index=0,
     disabled=disable_multi_jornada
 )
@@ -439,7 +445,7 @@ with tabs[0]:
         st.caption("Estos jugadores estarán **sí o sí** en todos los equipos calculados")
         st.caption("_(siempre que entren dentro del presupuesto seleccionado)_")
         blinded_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.blinded_players_set]
-        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, key="add_blindado")
+        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, format_func=lambda x: normalize_name(x), key="add_blindado")
         if selected_blindado:
             st.session_state.blinded_players_set.add(selected_blindado)
             st.session_state.banned_players_set.discard(selected_blindado)
@@ -469,7 +475,7 @@ with tabs[0]:
         st.markdown("### 🚫 Jugadores baneados")
         st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
         banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
-        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, key="add_baneado")
+        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, format_func=lambda x: normalize_name(x), key="add_baneado")
         if selected_baneado:
             st.session_state.banned_players_set.add(selected_baneado)
             st.session_state.blinded_players_set.discard(selected_baneado)
@@ -587,7 +593,7 @@ with tabs[1]:
     # Búsqueda por autocompletado
     # player_names = [p.name for p in current_players]
     player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names]
-    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, key="busca_jugador")
+    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_jugador")
     if selected_name not in st.session_state.my_players_names:
         st.session_state.my_players_names.add(selected_name)
         st.rerun()
@@ -850,7 +856,7 @@ with tabs[2]:
         filter_mid = st.checkbox("Mediocentro", value=True)
         filter_att = st.checkbox("Delantero", value=True)
 
-        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos")
+        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos")
 
         # Aplicar filtros
         current_players_filtered = [
@@ -906,7 +912,7 @@ with tabs[3]:
     # Búsqueda por autocompletado
     # player_names = [p.name for p in current_players]
     player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names_set]
-    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, key="busca_mercado")
+    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_mercado")
     if selected_name not in st.session_state.my_players_names_set:
         st.session_state.my_players_names_set.add(selected_name)
         st.rerun()
@@ -949,7 +955,7 @@ with tabs[3]:
             filter_mid = st.checkbox("Mediocentro", value=True, key="filter_mid")
             filter_att = st.checkbox("Delantero", value=True, key="filter_att")
 
-            filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, placeholder="Selecciona uno o varios equipos", key="multichoice_teams")
+            filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos", key="multichoice_teams")
 
             # Aplicar filtros
             my_market_filtered_players_list = [
