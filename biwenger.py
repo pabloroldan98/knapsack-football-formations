@@ -315,6 +315,7 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
                 standard_price=player_standard_price,
                 fantasy_price=player_fantasy_price,
                 price_trend=player_price_trend,
+                form= 1 + player_price_trend / 10_000_000,
                 fitness=player_fitness,
                 img_link=player_img_link
             )
