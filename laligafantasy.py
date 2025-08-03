@@ -2,6 +2,8 @@ import requests
 import tls_requests
 from datetime import datetime
 from tqdm import tqdm
+import urllib3
+from urllib3.exceptions import ReadTimeoutError
 
 from player import Player, get_position, get_status  # assumes existing Player class and get_position utility
 from useful_functions import find_similar_string, read_dict_data, overwrite_dict_data
@@ -15,10 +17,11 @@ def fetch_json(url):
     """
     Fetch JSON data from URL.
     """
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
-    # resp = requests.get(url, headers=headers)
+    # resp = requests.get(url, headers=headers, verify=False)
     resp = tls_requests.get(url, headers=headers, verify=False)
     resp.raise_for_status()
     return resp.json()
@@ -106,9 +109,3 @@ def create_players_list(use_millions=True):
 # )
 # for p in current_players:
 #     print(p)
-#
-# # Extract and display all distinct statuses
-# statuses = sorted({p.status for p in all_players})
-# print('Statuses found:')
-# for status in statuses:
-#     print(f'- {status}')

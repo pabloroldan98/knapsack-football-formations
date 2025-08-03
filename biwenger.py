@@ -5,6 +5,8 @@ import json
 import requests
 from pprint import pprint
 import tls_requests
+import urllib3
+from urllib3.exceptions import ReadTimeoutError
 
 from player import Player, get_position, get_status
 from elo_ratings import get_teams_elos_dict
@@ -19,6 +21,8 @@ def get_biwenger_data_dict(
         file_name="biwenger_laliga_data",
         force_scrape=True
 ):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     data = None
     if force_scrape:
         try:
@@ -30,8 +34,8 @@ def get_biwenger_data_dict(
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
-            # response = requests.get(all_data_url, headers=headers)
-            response = tls_requests.get(all_data_url, headers=headers)
+            # response = requests.get(all_data_url, headers=headers, verify=False)
+            response = tls_requests.get(all_data_url, headers=headers, verify=False)
             data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
         except:
             pass

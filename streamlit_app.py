@@ -581,28 +581,16 @@ with tabs[1]:
     # Estado persistente para la lista de jugadores seleccionados
     if "my_players_names" not in st.session_state:
         st.session_state.my_players_names = set()
-    if "last_selected_name" not in st.session_state:
-        st.session_state.last_selected_name = None
-    if "needs_reset" not in st.session_state:
-        st.session_state.needs_reset = False
     if "blinded_players" not in st.session_state:
         st.session_state.blinded_players = set()
 
     # Búsqueda por autocompletado
-    player_names = [p.name for p in current_players]
-    if st.session_state.needs_reset:
-        st.session_state.busca_jugador = ""
-        st.session_state.last_selected_name = None
-        st.session_state.needs_reset = False
-        # st.rerun()
+    # player_names = [p.name for p in current_players]
+    player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names]
     selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, key="busca_jugador")
-    if st.session_state.last_selected_name == selected_name:
-        st.session_state.needs_reset = True
-
-    if selected_name and st.session_state.last_selected_name != selected_name:
-        if selected_name not in st.session_state.my_players_names:
-            st.session_state.my_players_names.add(selected_name)
-            st.session_state.last_selected_name = selected_name
+    if selected_name not in st.session_state.my_players_names:
+        st.session_state.my_players_names.add(selected_name)
+        st.rerun()
 
     # Reconstruir lista de objetos player
     current_players_copy = copy.deepcopy(current_players)
@@ -914,26 +902,14 @@ with tabs[3]:
     # Estado persistente para la lista de jugadores seleccionados
     if "my_players_names_set" not in st.session_state:
         st.session_state.my_players_names_set = set()
-    if "last_selected_name_string" not in st.session_state:
-        st.session_state.last_selected_name_string = None
-    if "is_needs_reset" not in st.session_state:
-        st.session_state.is_needs_reset = False
 
     # Búsqueda por autocompletado
-    player_names = [p.name for p in current_players]
-    if st.session_state.is_needs_reset:
-        st.session_state.busca_mercado = ""
-        st.session_state.last_selected_name_string = None
-        st.session_state.is_needs_reset = False
-        # st.rerun()
+    # player_names = [p.name for p in current_players]
+    player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names_set]
     selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, key="busca_mercado")
-    if st.session_state.last_selected_name_string == selected_name:
-        st.session_state.is_needs_reset = True
-
-    if selected_name and st.session_state.last_selected_name_string != selected_name:
-        if selected_name not in st.session_state.my_players_names_set:
-            st.session_state.my_players_names_set.add(selected_name)
-            st.session_state.last_selected_name_string = selected_name
+    if selected_name not in st.session_state.my_players_names_set:
+        st.session_state.my_players_names_set.add(selected_name)
+        st.rerun()
 
     # Reconstruir lista de objetos player
     current_players_copy = copy.deepcopy(current_players)
