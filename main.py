@@ -389,36 +389,36 @@ print()
 print("------------------------- YOUR TEAM -------------------------")
 print()
 my_players_names = [
-    "Dituro",
-    "Joan García",
-    "Álvaro Valles",
-
-    "Iñigo Martínez",
-    "Marcos Alonso",
-    "Foyth",
-    "Vivian",
-    "Sergi Cardona",
-    "Mingueza",
-    "Ratiu",
-    "Fran García",
-
-    "Sancet",
-    "Pedri",
-    "Arda Güler",
-    "Marcos Llorente",
-    "Arambarri",
-    "Rioja",
-    "Pablo Torre",
-    "Luis Milla",
-
-    "Panichelli",
-    "Cucho",
-    "Carlos Álvarez",
-    "Muriqi",
-    "Oyarzabal",
-    "Carlos Vicente",
-    "Giuliano Simeone",
-    "Gonzalo García",
+    # "Dituro",
+    # "Joan García",
+    # "Álvaro Valles",
+    #
+    # "Iñigo Martínez",
+    # "Marcos Alonso",
+    # "Foyth",
+    # "Vivian",
+    # "Sergi Cardona",
+    # "Mingueza",
+    # "Ratiu",
+    # "Fran García",
+    #
+    # "Sancet",
+    # "Pedri",
+    # "Arda Güler",
+    # "Marcos Llorente",
+    # "Arambarri",
+    # "Rioja",
+    # "Pablo Torre",
+    # "Luis Milla",
+    #
+    # "Panichelli",
+    # "Cucho",
+    # "Carlos Álvarez",
+    # "Muriqi",
+    # "Oyarzabal",
+    # "Carlos Vicente",
+    # "Giuliano Simeone",
+    # "Gonzalo García",
 ]
 
 # my_players_names = [

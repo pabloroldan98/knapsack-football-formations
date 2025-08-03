@@ -1,3 +1,4 @@
+import os
 import copy
 import streamlit as st
 from collections import Counter
@@ -5,6 +6,9 @@ from collections import Counter
 from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
 from useful_functions import read_dict_data
+
+# Dummy line to force Streamlit to track the json_files directory
+_ = os.listdir("json_files")
 
 
 st.set_page_config(

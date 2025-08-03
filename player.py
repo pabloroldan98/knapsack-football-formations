@@ -207,15 +207,33 @@ class Player:
 
 
 def get_position(group):
-    if group == 1:
+    if group == 1 or group == "1":
         position = "GK"
-    elif group == 2:
+    elif group == 2 or group == "2":
         position = "DEF"
-    elif group == 3:
+    elif group == 3 or group == "3":
         position = "MID"
+    elif group == 4 or group == "4":
+        position = "ATT"
     else:
         position = "ATT"
     return position
+
+
+def get_status(group):
+    if group == "doubt" or group == "doubtful":
+        status = "doubt"
+    elif group == "injured" or group == "injured":
+        status = "injured"
+    elif group == "ok" or group == "ok":
+        status = "ok"
+    elif group == "sanctioned" or group == "suspended":
+        status = "sanctioned"
+    elif group == "unknown" or group == "out_of_league":
+        status = "unknown"
+    else:
+        status = "unknown"
+    return status
 
 
 def purge_everything(players_list, teams_to_purge=[], mega_purge=False, probability_threshold=0.5, fixture_filter=False):

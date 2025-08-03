@@ -4,13 +4,11 @@ import re
 import json
 import requests
 from pprint import pprint
-
 import tls_requests
 
-from player import Player, get_position
+from player import Player, get_position, get_status
 from elo_ratings import get_teams_elos_dict
 from team import Team
-
 from useful_functions import find_similar_string, read_dict_data, overwrite_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -283,13 +281,13 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
 
         # pprint(championship_player)
         player_name = championship_player["name"]
-        player_group = championship_player["position"]
+        player_position_group = championship_player["position"]
         if use_comunio_price:
             player_price = int(championship_player["price"] / 100000)
         else:
             # player_price = int(championship_player["fantasyPrice"] / 100000)
             player_price = int(championship_player["fantasyPrice"] / 1000000)
-        player_status = championship_player["status"]
+        player_status_group = championship_player["status"]
         player_standard_price = float(championship_player["price"])
         player_fantasy_price = float(championship_player["fantasyPrice"])
         player_price_trend = float(championship_player["priceIncrement"])
@@ -302,14 +300,14 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
         else:
             player_team = championship_teams[player_team_id]["name"]
 
-        if player_group != 5:
+        if player_position_group != 5:
             new_player = Player(
                 name=player_name,
-                position=get_position(player_group),
+                position=get_position(player_position_group),
                 price=player_price,
                 value=0,
                 team=player_team,
-                status=player_status,
+                status=get_status(player_status_group),
                 standard_price=player_standard_price,
                 fantasy_price=player_fantasy_price,
                 price_trend=player_price_trend,
