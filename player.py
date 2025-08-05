@@ -430,6 +430,84 @@ def get_players_positions_dict(
     return players_dict
 
 
+def set_players_database(players_list, new_players_list, verbose=False):
+    original_players = copy.deepcopy(players_list)
+    result_players = copy.deepcopy(new_players_list)
+
+    players_to_remove = set()
+
+    team_names = list(set(p.team for p in original_players))
+    # closest_players_names = [p.name for p in original_players]
+    # new_players_names = [p.name for p in result_players]
+    for player in result_players:
+        player_needs_removal = True
+        closest_team = find_similar_string(player.team, team_names)
+
+        # Get LaLigaFantasy players in the closest team
+        closest_team_players = [p for p in original_players if p.team == closest_team]
+        closest_team_players_names = [p.name for p in closest_team_players]
+
+        closest_name = find_similar_string(player.name, closest_team_players_names, fallback_none=True, verbose=False)
+
+        if closest_name:
+            # En este caso actualizas con los datos de LaLigaFantasy
+            # original_player = next((p for p in closest_team_players if p.name == closest_name), None)
+            original_player = next((p for p in original_players if p.name == closest_name), None)
+            if original_player:
+                player_needs_removal = False
+                if verbose:
+                    if player.name != closest_name:
+                        print(f"{player.name} --> {closest_name}")
+                player.name = original_player.name
+                player.team = original_player.team
+                player.fantasy_price = original_player.fantasy_price
+
+        ## DABA FALLO PORQUE HAY NOMBRES COMO WILLIAM, O NICO, QUE NO LOS PONE CON QUIEN DEBERÍA
+        # else:
+        #     # Reviso que no vaya a ser que esté en otro equipo
+        #     closest_name = find_similar_string(player.name, closest_players_names, similarity_threshold=1, verbose=False)
+        #     if closest_name and closest_name not in new_players_names:
+        #         player_needs_removal = False
+        #         original_player = next((p for p in original_players if p.name == closest_name), None)
+        #         if original_player:
+        #             if verbose:
+        #                 if player.name != closest_name:
+        #                     print(f"{player.name} --> {closest_name}")
+        #             player.name = original_player.name
+        #             player.team = original_player.team
+        #             player.fantasy_price = original_player.fantasy_price
+
+        if player_needs_removal:
+            # Este es el caso en el que está en LaLigaFantasy y no en Biwenger, o que no lo haya cogido bien
+            if verbose:
+                print(f"{player.name} --> REMOVED ({player.status})")
+            players_to_remove.add((player.name, player.team))
+            # result_players.remove(player)
+            # if player.status != "unknown":
+            #     print(player)
+
+    result_players = [
+        player for player in result_players
+        if (player.name, player.team) not in players_to_remove
+    ]
+
+    return result_players
+
+    team_players_dict = get_team_players_dict(result_players, full_players_positions_dict, verbose)
+
+    for player in result_players:
+        positions = team_players_dict[player.team][player.name].copy()
+        valid_positions = [p for p in positions if p is not None]
+        new_position = valid_positions[0] if valid_positions else None
+        if new_position:
+            if verbose:
+                if player.position != new_position:
+                    print(f"{player.name}: {positions} --> {new_position}")
+            player.position = new_position
+
+    return result_players
+
+
 def set_positions(players_list, full_players_positions_dict, verbose=False):
     result_players = copy.deepcopy(players_list)
 

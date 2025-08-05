@@ -30,13 +30,13 @@ def format_string(s):
     return s
 
 
-def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False):
+def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
     if my_string in ["Álvaro Carreras", "Álvaro Fernández", ]:
         similarity_threshold = 0.6
     # Before anything, we check the manual checks
     if not is_formatted:
-        my_manual_string = find_manual_similar_string(my_string)
-        if my_manual_string != my_string: # If it found something
+        my_manual_string = find_manual_similar_string(my_string, fallback_none=fallback_none)
+        if (not fallback_none and my_manual_string != my_string) or (fallback_none and my_manual_string is not None): # If it found something
             return my_manual_string
     # First, check for '==' in the list
     if my_string in string_list:
@@ -87,7 +87,7 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
     return None
 
 
-def find_manual_similar_string(my_string):
+def find_manual_similar_string(my_string, fallback_none=False):
     normalization_dict = {
         "Alfonso Espino": "Pacha Espino",
         "Abderrahman Rebbach": "Abde Rebbach",
@@ -156,12 +156,14 @@ def find_manual_similar_string(my_string):
         "Williot": "Swedberg",
         "Aarón": "Escandell",
         "Aitor Fdez": "Aitor Fernández",
-        # "Mouriño": "Santiago Mouriño",
+        "Mouriño": "Santiago Mouriño",
         "Unai G.": "Unai Gómez",
         "Maroan": "Sannadi",
         "Carlos M.": "Carlos Martín",
         "Mourad": "El Ghezouani",
         "Rubén S.": "Rubén Sánchez",
+        "Areso": "Areso",
+        "Olasagasti": "Olasagasti",
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
@@ -292,7 +294,11 @@ def find_manual_similar_string(my_string):
         "CF Pachuca": "Pachuca",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
-    return normalization_dict.get(my_string, my_string)
+    fallback = my_string
+    if fallback_none:
+        # otherwise, return None
+        fallback = None
+    return normalization_dict.get(my_string, fallback)
 
 
 def find_string_positions(string_list, target_string):
