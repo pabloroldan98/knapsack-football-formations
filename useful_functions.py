@@ -401,12 +401,12 @@ def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old
         if not is_valid_league_dict(dict_data) or ignore_valid_file:
             if os.path.exists(file_path):
                 if os.path.exists(file_path_old):
-                    dict_data = correct_teams_with_old_data(dict_data, file_name + "_OLD", file_type=file_type)
+                    dict_data = correct_teams_with_old_data(dict_data, file_name, file_type=file_type)
         # If data is valid now, we use old data that we missed
         if is_valid_league_dict(dict_data) or ignore_valid_file:
             if os.path.exists(file_path):
                 if os.path.exists(file_path_old):
-                    dict_data = add_old_data_to_teams(dict_data, file_name + "_OLD", file_type=file_type)
+                    dict_data = add_old_data_to_teams(dict_data, file_name, file_type=file_type)
     # If data is valid again, we overwrite
     if is_valid_league_dict(dict_data) or ignore_valid_file:
         # Check if the file exists and delete it

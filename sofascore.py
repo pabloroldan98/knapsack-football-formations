@@ -404,7 +404,7 @@ def get_player_page_average_rating(player_url):
     resp = tls_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
-        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
 
     sp = BeautifulSoup(resp.text, "html.parser")
 
