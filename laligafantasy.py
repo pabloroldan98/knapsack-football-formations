@@ -40,7 +40,6 @@ def get_laligafantasy_data(
         if data:
             for player_data in data:
                 player_data.price = int(round(player_data.price / 1_000_000))
-                player_data.price_trend = int(round(player_data.price_trend / 1_000_000))
             return data
 
     if write_file:
@@ -49,7 +48,6 @@ def get_laligafantasy_data(
 
     for player_data in data:
         player_data.price = int(round(player_data.price / 1_000_000))
-        player_data.price_trend = int(round(player_data.price_trend / 1_000_000))
 
     return data
 

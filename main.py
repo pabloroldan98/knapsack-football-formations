@@ -352,10 +352,10 @@ purged_players = purge_everything(purged_players, probability_threshold=0.65, fi
 worthy_players = purged_players.copy()
 
 
-print()
-for player in worthy_players:
-    print(player)
-print()
+# print()
+# for player in worthy_players:
+#     print(player)
+# print()
 
 # purged_players = worthy_players.copy()
 # worthy_players = purged_players.copy()
