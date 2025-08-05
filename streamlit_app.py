@@ -148,7 +148,14 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
 
 # Función para normalizar nombres
 def normalize_name(name):
-    return unidecode(name).strip()
+    # return unidecode(name).strip()
+    # Paso 1: Proteger las ñ y Ñ temporalmente
+    name = name.replace("ñ", "___ENYE___").replace("Ñ", "___ENYE_UPPER___")
+    # Paso 2: Aplicar unidecode para quitar tildes y otros caracteres especiales
+    normalized = unidecode(name)
+    # Paso 3: Restaurar ñ y Ñ
+    normalized = normalized.replace("___ENYE___", "ñ").replace("___ENYE_UPPER___", "Ñ")
+    return normalized.strip()
 
 
 st.title("Calculadora Fantasy 🤖")
