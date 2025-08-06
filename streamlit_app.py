@@ -1132,9 +1132,9 @@ with tabs[3]:
 
 st.markdown("---")
 
-st.markdown(
-    "By pabloroldan98 (Twitch: DonRoda)"
-)
-st.markdown("📩 Contacto: [pablo.roldan.peigneux@gmail.com](mailto:pablo.roldan.peigneux@gmail.com)")
+# st.markdown(
+#     "By pabloroldan98 (Twitch: DonRoda)"
+# )
+st.markdown("📩 Contacto: [calculadora.fantasy@gmail.com](mailto:calculadora.fantasy@gmail.com)")
 
 # Auto-update trigger: Wed Aug  6 07:26:22 UTC 2025
