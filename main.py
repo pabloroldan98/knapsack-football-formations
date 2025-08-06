@@ -1,5 +1,6 @@
 # from pympler.tracker import SummaryTracker
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
+import time
 
 from biwenger import get_championship_data
 from futbolfantasy_analytics import get_players_prices_dict_futbolfantasy, get_players_positions_dict_futbolfantasy, \
@@ -11,7 +12,8 @@ from player import set_players_value_to_last_fitness, set_manual_boosts, set_pen
     set_positions, set_team_history_boosts, \
     purge_everything, get_old_players_data, set_prices, set_forms, set_start_probabilities, \
     set_price_trends, set_penalty_savers_boosts, get_players_start_probabilities_dict, get_players_prices_dict, \
-    get_players_price_trends_dict, get_players_forms_dict, get_players_positions_dict, set_players_database
+    get_players_price_trends_dict, get_players_forms_dict, get_players_positions_dict, set_players_database, \
+    get_arrows_data
 from sofascore import get_players_ratings_list
 from team import get_old_teams_data, set_team_status_nerf
 from transfermarket_penalty_savers import get_penalty_savers_dict
@@ -45,6 +47,7 @@ def get_current_players(
         no_fixtures=False,
         no_home_boost=False,
         alt_fixture_method=False,
+        skip_arrows=False,
         no_penalty_takers_boost=False,
         nerf_penalty_boost=False,
         no_penalty_savers_boost=False,
@@ -185,8 +188,14 @@ def get_current_players(
     if debug:
         print("FFFFFF")
 
+    # start = time.time()
+    arrows_data = None
+    if not skip_arrows:
+        arrows_data = get_arrows_data(file_name="arrows_data")
+    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, use_laligafantasy_data, skip_arrows, arrows_data)
+    # end = time.time()
+    # print(f"Execution time: {end - start:.2f} seconds")
     # full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
-    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, use_laligafantasy_data)
     if debug:
         print("GGGGGG")
 
@@ -242,6 +251,7 @@ current_players = get_current_players(
     no_home_boost=False,
     no_team_history_boost=False,
     alt_fixture_method=False,
+    skip_arrows=True,
     use_laligafantasy_data=True,
     alt_positions=False,
     alt_prices=False,

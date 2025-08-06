@@ -1,11 +1,13 @@
 import ast
+import base64
 import copy
 import csv
+import io
 import itertools
-import math
-import difflib
-
 import numpy as np
+from PIL import Image
+from matplotlib import pyplot as plt
+from tqdm import tqdm
 from unidecode import unidecode
 import os
 from pprint import pprint
@@ -20,7 +22,8 @@ from futmondo import get_players_positions_dict_futmondo
 from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta, \
     get_players_positions_dict_jornadaperfecta, get_players_prices_dict_jornadaperfecta, \
     get_players_price_trends_dict_jornadaperfecta, get_players_forms_dict_jornadaperfecta
-from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data
+from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data, \
+    overwrite_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -52,6 +55,8 @@ class Player:
             is_playing_home: bool = False,
             form:  float = 0,
             fixture:  float = 0,
+            form_arrow = None,
+            fixture_arrow = None,
             start_probability:  float = 0,
             img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
     ):
@@ -79,6 +84,8 @@ class Player:
         self.is_playing_home = is_playing_home
         self.form = form
         self.fixture = fixture
+        self.form_arrow = form_arrow
+        self.fixture_arrow = fixture_arrow
         self.start_probability = start_probability
         self.img_link = img_link
 
@@ -139,7 +146,7 @@ class Player:
         else:
             return False
 
-    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
         if alt_forms:
             # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
             # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
@@ -198,11 +205,15 @@ class Player:
         self.form = form_coef
         self.fixture = fixture_coef
 
+        if not skip_arrows:
+            self.form_arrow = get_arrow_image(form_coef, arrows_data)
+            self.fixture_arrow = get_arrow_image(fixture_coef, arrows_data)
+
         predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
         return predicted_value
 
-    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
-        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms)
+    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, skip_arrows=skip_arrows, arrows_data=arrows_data)
         self.value = predicted_value
 
 
@@ -342,6 +353,118 @@ def fill_with_team_players(my_team, players_list):
     result_players = result_players + past_players
     return result_players
 
+def get_arrow_properties(value, min_value=0.96, max_value=1.05):
+    # Compute angle (symmetric around 1)
+    if value >= max_value:
+        angle = 90
+    elif value <= min_value:
+        angle = -90
+    elif value > 1:
+        angle = (value - 1) / (max_value - 1) * 90
+    elif value < 1:
+        angle = (value - 1) / (1 - min_value) * 90
+    else:
+        angle = 0
+
+    # Compute color
+    if value >= max_value:
+        color = (0, 1, 0)
+    elif value <= min_value:
+        color = (1, 0, 0)
+    elif value == 1:
+        color = (1, 1, 0)
+    elif value < 1:
+        ratio = (value - min_value) / (1 - min_value)
+        color = (1, ratio, 0)
+    else:
+        ratio = (value - 1) / (max_value - 1)
+        color = (1 - ratio, 1, 0)
+
+    return angle, color
+
+def get_arrow_image(value, arrows_data=None, min_value=0.96, max_value=1.05, size=0.6):
+    rounded_value = str(round(value, 4))  # reduce number of unique values
+    if arrows_data and rounded_value in arrows_data.keys():
+        return io.BytesIO(base64.b64decode(arrows_data[rounded_value]))
+
+    angle, color = get_arrow_properties(value, min_value, max_value)
+    radians = np.deg2rad(angle)
+
+    dx = size * np.cos(radians)
+    dy = size * np.sin(radians)
+
+    fig, ax = plt.subplots(figsize=(1, 1))
+    start_x = -dx / 2
+    start_y = -dy / 2
+
+    ax.arrow(
+        start_x, start_y, dx, dy,
+        width=0.1,
+        head_width=0.25,
+        head_length=0.2,
+        fc=color,
+        ec='#1c1f26',
+        lw=1.5,
+        length_includes_head=True
+    )
+
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    # Save figure to buffer (without bbox_inches='tight')
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', transparent=True, pad_inches=0)
+    plt.close(fig)
+    buf.seek(0)
+
+    # Load and crop with PIL
+    image = Image.open(buf).convert("RGBA")
+    bbox = image.getbbox()  # Gets bounding box of non-transparent content
+    cropped_image = image.crop(bbox)
+
+    # Make it square by adding padding
+    width, height = cropped_image.size
+    max_side = max(width, height)
+
+    square_image = Image.new("RGBA", (max_side, max_side), (255, 255, 255, 0))  # transparent background
+    paste_x = (max_side - width) // 2
+    paste_y = (max_side - height) // 2
+    square_image.paste(cropped_image, (paste_x, paste_y))
+
+    cropped_buf = io.BytesIO()
+    square_image.save(cropped_buf, format='PNG')
+    cropped_buf.seek(0)
+
+    return cropped_buf
+
+def get_arrows_data(
+        write_file=False,
+        file_name="arrows_data",
+        force_scrape=False
+):
+    data = None
+    if force_scrape:
+        try:
+            data = {}
+            for i in tqdm(range(9000, 11001)):  # 0.900 to 1.100 inclusive
+                value = round(i / 10000, 4)
+                arrow_img = get_arrow_image(value)
+                data[str(value)] = base64.b64encode(arrow_img.getvalue()).decode()
+        except:
+            pass
+    if not data: # if force_scrape failed or not force_scrape
+        data = read_dict_data(file_name)
+        if data:
+            return data
+
+    if write_file:
+        # write_dict_data(data, file_name)
+        overwrite_dict_data(data, file_name, ignore_valid_file=True, ignore_old_data=True)
+
+    return data
+# get_arrows_data(True, "arrows_data", True)
 
 def set_manual_boosts(players_list, manual_boosts):
     result_players = copy.deepcopy(players_list)
@@ -461,6 +584,7 @@ def set_players_database(players_list, new_players_list, verbose=False):
                 player.name = original_player.name
                 player.team = original_player.team
                 player.fantasy_price = original_player.fantasy_price
+                player.img_link = original_player.img_link
 
         ## DABA FALLO PORQUE HAY NOMBRES COMO WILLIAM, O NICO, QUE NO LOS PONE CON QUIEN DEBERÍA
         # else:
@@ -1015,10 +1139,10 @@ def set_players_sofascore_rating(
     return result_players
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
     result_players = copy.deepcopy(players_list)
     for player in result_players:
-        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
+        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, skip_arrows, arrows_data)
     return result_players
 
 

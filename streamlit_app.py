@@ -1,5 +1,9 @@
 import os
 import copy
+from io import BytesIO
+
+import requests
+from PIL import Image
 from unidecode import unidecode
 import streamlit as st
 from collections import Counter
@@ -132,7 +136,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                         st.markdown(
                             f"""
                                 <div style='text-align:center'>
-                                    <img src='{player.img_link}' width='70'><br>
+                                    <img src='{player.img_link}' height='70'><br>
                                     {player_display}
                                 </div>
                                 """,
@@ -141,8 +145,11 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
 
         with st.expander("Ver todos los jugadores utilizados"):
             for player in players:
-                blinded_mark = " 🔒" if player.name in blinded_players else ""
-                st.markdown(f"- {player}{blinded_mark}")
+                blinded_mark = "🔒" if player.name in blinded_players else ""
+                # st.markdown(f"- {player} {blinded_mark}")
+                player.name = blinded_mark + player.name
+                # player.name = player.name + blinded_mark
+                print_player(player, small_size=1)
 
         st.markdown("---")
 
@@ -157,12 +164,91 @@ def normalize_name(name):
     normalized = normalized.replace("___ENYE___", "ñ").replace("___ENYE_UPPER___", "Ñ")
     return normalized.strip()
 
+def print_player(player, small_size=0):
+    if small_size==0:
+        player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
+        player_cols[0].markdown(
+            f"- **{player.name}** ({player.position}, {player.team}): {player.price}M - **{player.value:.3f} pts**"
+        )
+        player_cols[1].caption("Forma:")
+        player_cols[2].image(player.form_arrow, output_format="PNG", width=24) #, use_container_width=True)
+        player_cols[3].caption("Partido:")
+        player_cols[4].image(player.fixture_arrow, output_format="PNG", width=24) #, use_container_width=True)
+        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+    elif small_size==1:
+        player_cols = st.columns([12, 2.7, 1.5, 3, 1.5, 5])  # Adjust width ratio if needed
+        player_cols[0].markdown(
+            f"""
+                - **{player.name}** ({player.position}, {player.team}):  
+                {player.price}M - **{player.value:.3f} pts**
+            """
+        )
+        player_cols[1].markdown("")
+        player_cols[1].caption("Forma:")
+        player_cols[2].markdown("")
+        player_cols[2].image(player.form_arrow, output_format="PNG", width=24)
+        player_cols[3].markdown("")
+        player_cols[3].caption("Partido:")
+        player_cols[4].markdown("")
+        player_cols[4].image(player.fixture_arrow, output_format="PNG", width=24)
+        player_cols[5].markdown("")
+        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+    elif small_size==2:
+        player_cols = st.columns([5, 12, 5, 5, 5])  # Adjust width ratio if needed
+        # player_cols[0].image(player.img_link, width=70)
+        player_cols[0].markdown(
+            f"<img src='{player.img_link}' height='{70}' style='object-fit: contain;'>",
+            unsafe_allow_html=True
+        )
+        player_cols[1].markdown("")
+        player_cols[1].markdown(
+            f"""
+                **{player.name}** ({player.position}, {player.team}):  
+                {player.price}M - **{player.value:.3f} pts**
+            """
+        )
+        player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
+        player_cols[2].caption("Forma")
+        player_cols[3].image(player.fixture_arrow, output_format="PNG", width=30)#, caption="Partido", use_container_width=True)
+        player_cols[3].caption("Partido")
+        player_cols[4].markdown(
+            f"""
+                Titular:  
+                **{player.start_probability*100:.0f} %**
+            """
+        )
+    elif small_size==3:
+        player_cols = st.columns([7, 15, 5, 5])  # Adjust width ratio if needed
+        # player_cols[0].image(player.img_link, width=70)
+        player_cols[0].markdown(
+            f"<img src='{player.img_link}' height='{70}' style='object-fit: contain;'>",
+            unsafe_allow_html=True
+        )
+        player_cols[0].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+        player_cols[1].markdown("")
+        player_cols[1].markdown(
+            f"""
+                **{player.name}** ({player.position}, {player.team}):  
+                {player.price}M - **{player.value:.3f} pts**
+            """
+        )
+        player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
+        player_cols[2].caption("Forma")
+        player_cols[3].image(player.fixture_arrow, output_format="PNG", width=30)#, caption="Partido", use_container_width=True)
+        player_cols[3].caption("Partido")
+    else:
+        player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
+        player_cols[0].markdown(
+            f"- **{player.name}** ({player.position}, {player.team}): {player.price}M - **{player.value:.3f} pts**"
+        )
+        player_cols[1].markdown("Forma:")
+        player_cols[2].image(player.form_arrow, output_format="PNG") #, use_container_width=True)
+        player_cols[3].markdown("Partido:")
+        player_cols[4].image(player.fixture_arrow, output_format="PNG") #, use_container_width=True)
+        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+
 
 st.title("Calculadora Fantasy 🤖")
-st.markdown(
-    "By pabloroldan98 (Twitch: DonRoda)"
-)
-st.markdown("📩 **Contacto:** [pablo.roldan.peigneux@gmail.com](mailto:pablo.roldan.peigneux@gmail.com)")
 
 st.markdown("---")
 
@@ -230,6 +316,7 @@ with st.spinner("Cargando jugadores..."):
         no_home_boost=False,
         no_team_history_boost=False,
         alt_fixture_method=False,
+        skip_arrows=False,
         use_laligafantasy_data=not is_biwenger,
         # alt_positions=not is_biwenger,
         # alt_prices=not is_biwenger,
@@ -427,6 +514,16 @@ with st.spinner("Cargando jugadores..."):
 
     current_team_list = sorted(set(player.team for player in current_players))
 
+
+st.markdown(f"""
+    <style>
+    /* Ocultar el botón de fullscreen de todas las st.image */
+    div[data-testid="stElementToolbar"] {{
+        display: none;
+    }}
+    </style>
+""", unsafe_allow_html=True)
+
 # if main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
 with tabs[0]:
     st.header("Mejores 11s dentro de tu presupuesto")
@@ -473,13 +570,14 @@ with tabs[0]:
             # cols = st.columns([1, 5, 1])
             # with cols[0]:
             #     st.image(p.img_link, width=60)
-            cols = st.columns([6, 1])
+            cols = st.columns([9, 1])
             with cols[0]:
                 show_price = p.price
                 if is_biwenger:
                     show_price = show_price / 10
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
+                # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
+                print_player(p, small_size=3)
             with cols[1]:
                 if st.button("❌", key=f"remove_blindado_{i}"):
                     st.session_state.blinded_players_set.remove(p.name)
@@ -503,13 +601,14 @@ with tabs[0]:
             # cols = st.columns([1, 5, 1])
             # with cols[0]:
             #     st.image(p.img_link, width=60)
-            cols = st.columns([6, 1])
+            cols = st.columns([9, 1])
             with cols[0]:
                 show_price = p.price
                 if is_biwenger:
                     show_price = show_price / 10
-                st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
+                # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
+                print_player(p, small_size=1)
             with cols[1]:
                 if st.button("❌", key=f"remove_baneado_{i}"):
                     st.session_state.banned_players_set.remove(p.name)
@@ -542,8 +641,8 @@ with tabs[0]:
 
     for player in my_filtered_players:
         if player.name in st.session_state.blinded_players_set:
-            player.value = max(1000, player.value*1000)
             # player.price = 0
+            player.value = max(1000, player.value*1000)
             player.start_probability = 10
             player.form = 10
             player.fixture = 10
@@ -624,20 +723,21 @@ with tabs[1]:
         my_players_list = sort_players(my_players_list, sort_option)
         my_players_list_show = copy.deepcopy(my_players_list)
         for i, p in enumerate(my_players_list_show):
-            cols = st.columns([1, 4, 1, 1])
+            cols = st.columns([8, 1, 2])
+            # with cols[0]:
+            #     st.image(p.img_link, width=70)
             with cols[0]:
-                st.image(p.img_link, width=70)
-            with cols[1]:
                 if is_biwenger:
                     p.price = p.price / 10
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
-                st.markdown(f"{p}")
-            with cols[2]:
+                # st.markdown(f"{p}")
+                print_player(p, small_size=3)
+            with cols[1]:
                 if st.button("❌", key=f"remove_{i}"):
                     st.session_state.my_players_names.remove(p.name)
                     st.session_state.blinded_players.discard(p.name)
                     st.rerun()
-            with cols[3]:
+            with cols[2]:
                 is_blinded = p.name in st.session_state.blinded_players
                 blindar_label = "🔒 Blindado" if is_blinded else "Blindar"
                 if st.button(blindar_label, key=f"blindar_{i}"):
@@ -768,9 +868,9 @@ with tabs[1]:
                 st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
                 st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
-            else:
-                if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 2 and position_counts["ATT"] >= 0:
-                    st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
+            # else:
+            #     if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 2 and position_counts["ATT"] >= 0:
+            #         st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
         else:
             if position_counts["GK"] < 1:
                 st.warning("Necesitas al menos 1 Portero.")
@@ -782,7 +882,7 @@ with tabs[1]:
                 st.warning("Necesitas al menos 1 Delantero.")
             if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
-            if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
+            elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
                 st.warning("Necesitas 1 Defensa/Mediocentro más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 1 Defensa/Delantero más")
@@ -794,9 +894,9 @@ with tabs[1]:
                 st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
                 st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
-            else:
-                if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 3 and position_counts["ATT"] >= 1:
-                    st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
+            # else:
+            #     if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 3 and position_counts["ATT"] >= 1:
+            #         st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
         if len(filtered_players) < 11:
             if len(my_players_list) >= 11:
                 st.warning("Filtros demasiado exigentes, selecciona menos filtros.")
@@ -823,8 +923,10 @@ with tabs[1]:
 with tabs[2]:
     st.header("Lista de Jugadores Actualizada")
     st.markdown(
-        "_Ejemplo: (Jugador, Posición, Equipo, Precio, Puntuación, Estado) - "
-        "(form: coeficiente_forma, fixture: coeficiente_partido) --> Probabilidad de ser titular %_"
+        """
+            _· **Jugador** (Posición, Equipo): Precio - **Puntuación**_  
+            _(Forma: estado de forma, Partido: complejidad del partido, Titular: probabilidad de ser titular %)_
+        """
     )
 
     # Filtros adicionales
@@ -906,7 +1008,8 @@ with tabs[2]:
     for player in show_players:
         if is_biwenger:
             player.price = player.price / 10
-        st.text(str(player))
+        # st.text(str(player))
+        print_player(player)
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
@@ -1005,14 +1108,15 @@ with tabs[3]:
         my_market_filtered_players_list = sort_players(my_market_filtered_players_list, sort_option)
         my_market_filtered_players_list_show = copy.deepcopy(my_market_filtered_players_list)
         for i, p in enumerate(my_market_filtered_players_list_show):
-            cols = st.columns([6, 1])
+            cols = st.columns([9, 1])
             # with cols[0]:
             #     st.image(p.img_link, width=60)
             with cols[0]:
                 if is_biwenger:
                     p.price = p.price / 10
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
-                st.markdown(f"{p}")
+                # st.markdown(f"{p}")
+                print_player(p, small_size=1)
             with cols[1]:
                 if st.button("❌", key=f"market_remove_{i}"):
                     st.session_state.my_players_names_set.remove(p.name)
@@ -1024,5 +1128,13 @@ with tabs[3]:
         #     st.text(str(player))
     else:
         my_market_filtered_players_list = []
+
+
+st.markdown("---")
+
+st.markdown(
+    "By pabloroldan98 (Twitch: DonRoda)"
+)
+st.markdown("📩 Contacto: [pablo.roldan.peigneux@gmail.com](mailto:pablo.roldan.peigneux@gmail.com)")
 
 # Auto-update trigger: Wed Aug  6 07:26:22 UTC 2025
