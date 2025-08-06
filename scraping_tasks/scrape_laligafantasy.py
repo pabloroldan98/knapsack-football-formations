@@ -43,7 +43,9 @@ try:
         file_name="laligafantasy_laliga_data",
         force_scrape=True
     )
-    print(laligafantasy_data)
+    print()
+    for player in laligafantasy_data:
+        print(player)
 except Exception as e:
     print(f"Error scraping LaLigaFantasy: {e}")
     print(f"Exception type: {type(e).__name__}")
