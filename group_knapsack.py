@@ -106,7 +106,8 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
             if any(x >= 4 for x in formation):
                 filtered_players_list = filtered_players_list[:150]
             if any(x >= 5 for x in formation):
-                filtered_players_list = filtered_players_list[:110]
+                # filtered_players_list = filtered_players_list[:110]
+                filtered_players_list = filtered_players_list[:100]
             if any(x >= 6 for x in formation):
                 filtered_players_list = filtered_players_list[:90]
         _, _, players_comb_indexes = players_preproc(filtered_players_list, formation)
@@ -144,7 +145,8 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
             if any(x >= 4 for x in formation):
                 filtered_players_list = filtered_players_list[:150]
             if any(x >= 5 for x in formation):
-                filtered_players_list = filtered_players_list[:110]
+                # filtered_players_list = filtered_players_list[:110]
+                filtered_players_list = filtered_players_list[:100]
             if any(x >= 6 for x in formation):
                 filtered_players_list = filtered_players_list[:90]
 
