@@ -630,13 +630,16 @@ with tabs[0]:
     #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
     my_filtered_players = purge_everything(
-        current_players,
+        current_players_copy,
         probability_threshold=min_prob,
         fixture_filter=use_fixture_filter
     )
+    my_filtered_players_names = [p.name for p in my_filtered_players]
     my_filtered_players = [
-        p for p in my_filtered_players
-        if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players_set
+        p for p in current_players_copy
+        if (p.name in my_filtered_players_names and min_prob <= p.start_probability <= max_prob) or (
+                p.name in st.session_state.blinded_players_set
+        )
     ]
 
     for player in my_filtered_players:
@@ -779,9 +782,12 @@ with tabs[1]:
                 probability_threshold=min_prob,
                 fixture_filter=use_fixture_filter
             )
+            filtered_players_names = [p.name for p in filtered_players]
             filtered_players = [
-                p for p in filtered_players
-                if min_prob <= p.start_probability <= max_prob or p.name in st.session_state.blinded_players
+                p for p in my_players_list
+                if (p.name in filtered_players_names and min_prob <= p.start_probability <= max_prob) or (
+                        p.name in st.session_state.blinded_players
+                )
             ]
     else:
         filtered_players = []
