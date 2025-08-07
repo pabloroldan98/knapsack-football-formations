@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora Fantasy</title>
-<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
   <meta name="theme-color" content="#0e1117">
   <meta name="msapplication-navbutton-color" content="#0e1117">
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -11,16 +10,12 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
-<!--  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266"-->
-<!--     crossorigin="anonymous"></script>-->
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-QXF4YKPSMD');
   </script>
   <style>
@@ -34,55 +29,180 @@
       width: 100%;
       height: 100%;
       background: rgb(14, 17, 23);
-      color: rgb(14, 17, 23);
-      overflow: hidden;
-      color-scheme: dark;
-      -webkit-text-size-adjust: none;
-    }
-
-    body {
-      position: relative;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .wrapper {
+      width: 100%;
+      height: 100%;
       position: relative;
+    }
+
+    /* LANDING */
+    .landing {
+      position: absolute;
+      min-height: 100vh;
       width: 100%;
       height: 100%;
       background: rgb(14, 17, 23);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      transition: opacity 0.4s ease;
+      padding: 2rem;
+      text-align: center;
     }
 
-    .hidetop, .hideleft, .hideright,
-    .hidetopleft, .hidetopright, .hidefooter {
-      position: absolute;
-      background: rgb(14, 17, 23);
-      z-index: 2;
+    .landing.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
-
-    .hidetop     { width: 100%; height: 5px; left: 0; top: 0; }
-    .hideleft    { width: 5px; height: 100%; left: 0; top: 0; }
-    .hideright   { width: 5px; height: 100%; right: 0; top: 0; }
-    .hidetopleft { width: 10px; height: 10px; left: 0; top: 0; }
-    .hidetopright{ width: 10px; height: 10px; right: 0; top: 0; }
-    .hidefooter  { width: 100%; height: 40px; left: 0; bottom: 0; }
 
     .logo {
-      position: fixed;
-      top: 35px;
-      right: 50px;
-      z-index: 10;
+      position: absolute;
+      top: 20px;
+      right: 30px;
     }
 
     .logo img {
-      height: 40px;
+      height: 50px;
     }
 
+    h1 {
+      position: absolute;
+      top: 2rem;
+      font-size: 2rem;
+      margin-bottom: 0;
+    }
+
+    h4 {
+      position: absolute;
+      top: 5.2rem;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2rem;
+    }
+
+    .enter-button {
+      position: absolute;
+      top: 7rem;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      background: rgb(255, 76, 76);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .enter-button:hover {
+      background: rgb(200, 50, 50);
+    }
+
+    .slide {
+      position: absolute;
+      top: 13rem;
+      max-width: 500px;
+      margin-top: 2rem;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .slide h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .slide img {
+      margin-top: 1rem;
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .slide img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(255, 76, 76, 0.8);
+    }
+
+    .slider-controls {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .slider-button {
+      background: rgba(255, 76, 76, 0.7);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .slider-button:hover {
+      background: rgba(255, 76, 76, 1);
+    }
+
+    .slide-content {
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    .slide-content.fade-out {
+      opacity: 0;
+    }
+
+    .slide-content.fade-in {
+      opacity: 1;
+    }
+
+    footer {
+      position: absolute;
+      top: 55rem;
+      height: 60px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      padding-bottom: 30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* IFRAME */
     .iframe-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100dvh;
-      background: rgb(14, 17, 23); /* Fallback color */
+      background: rgb(14, 17, 23);
+      z-index: 1;
     }
 
     iframe {
@@ -100,23 +220,121 @@
 </head>
 <body>
   <div class="wrapper">
-<!--    <div class="logo">-->
-<!--      <img src="logo.png" alt="Logo Calculadora Fantasy">-->
-<!--    </div>-->
-<!--    <div class="hidetop"></div>-->
-<!--    <div class="hideleft"></div>-->
-<!--    <div class="hideright"></div>-->
-<!--    <div class="hidetopleft"></div>-->
-<!--    <div class="hidetopright"></div>-->
-<!--    <div class="hidefooter"></div>-->
+    <!-- LANDING -->
+    <div class="landing" id="landing">
+      <!-- LOGO -->
+      <div class="logo">
+        <img src="logo.png" alt="Logo Calculadora Fantasy">
+      </div>
+      <h1>Bienvenido a la Calculadora Fantasy</h1>
+      <h4>Con soporte para: LaLiga Fantasy & Biwenger</h4>
+      <button class="enter-button" onclick="enterApp()">Entrar</button>
 
+      <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
+        <div class="slide-content" id="slideContent">
+          <!-- Contenido inicial se carga con JS -->
+        </div>
+        <!-- se rellena con JS -->
+        <div class="slider-controls">
+          <button class="slider-button" onclick="prevSlide()">&#10094;</button>
+          <button class="slider-button" onclick="nextSlide()">&#10095;</button>
+        </div>
+      </div>
+
+      <footer>
+        📩 Contacto: <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
+      </footer>
+    </div>
+
+    <!-- APP -->
     <div class="iframe-container">
       <iframe
+        id="appFrame"
         src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
         allowfullscreen
         onload="this.classList.add('loaded')">
       </iframe>
     </div>
   </div>
+
+  <script>
+    const slides = [
+      {
+        title: "💰 Mejores 11s con presupuesto",
+        desc: "Calcula la mejor alineación posible según tu presupuesto disponible.",
+        img: "img/presupuesto.png"
+      },
+      {
+        title: "⚽ Mi mejor 11 posible",
+        desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.",
+        img: "img/once.png"
+      },
+      {
+        title: "📋 Lista de jugadores",
+        desc: "Consulta estadísticas, precios y puntuaciones esperadas de todos los jugadores.",
+        img: "img/lista.png"
+      },
+      {
+        title: "📈 Analizar mi mercado",
+        desc: "Selecciona varios jugadores para compararlos entre ellos.",
+        img: "img/mercado.png"
+      }
+    ];
+
+    let currentSlide = 0;
+    let intervalId;
+    const slideContainer = document.getElementById('slide');
+
+    function renderSlide(index) {
+      const slide = slides[index];
+      const content = document.getElementById('slideContent');
+
+      // Fade out
+      content.classList.remove('fade-in');
+      content.classList.add('fade-out');
+
+      // Espera a que termine el fade-out antes de cambiar contenido
+      setTimeout(() => {
+        content.innerHTML = `
+          <h2>${slide.title}</h2>
+          <p>${slide.desc}</p>
+          <img src="${slide.img}" alt="${slide.title}">
+        `;
+
+        // Fade in
+        content.classList.remove('fade-out');
+        content.classList.add('fade-in');
+      }, 300); // Duración del fade-out (debe coincidir con CSS)
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      renderSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      renderSlide(currentSlide);
+    }
+
+    function startSlider() {
+      renderSlide(currentSlide);
+      intervalId = setInterval(nextSlide, 6000); // 6 segundos
+    }
+
+    function pauseSlider() {
+      clearInterval(intervalId);
+    }
+
+    function resumeSlider() {
+      intervalId = setInterval(nextSlide, 6000);
+    }
+
+    function enterApp() {
+      document.getElementById('landing').classList.add('hidden');
+    }
+
+    startSlider();
+  </script>
 </body>
 </html>

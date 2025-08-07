@@ -539,7 +539,7 @@ with tabs[0]:
     st.header("Mejores 11s dentro de tu presupuesto")
 
     with st.expander("Filtros adicionales"):
-        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_budget") == "Sí"
+        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_budget") == "Sí"
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100
         prob_key = "prob_threshold_budget"
@@ -702,7 +702,7 @@ with tabs[0]:
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
 with tabs[1]:
     st.header("Selecciona Jugadores para tu 11 ideal")
-    st.caption("Añade a todos los jugadores de tu equipo para calcular tu 11 ideal")
+    st.caption("Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal")
 
     current_players = sorted(
         current_players,
@@ -770,7 +770,7 @@ with tabs[1]:
 
         # Filtros adicionales aplicados sobre `my_players_list`
         with st.expander("Filtros adicionales sobre tu lista"):
-            use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=1, key="fixture_filter_my11") == "Sí"
+            use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_my11") == "Sí"
             # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_my11")
             # threshold = threshold_slider / 100
             prob_key = "prob_threshold_my11"
@@ -1116,7 +1116,7 @@ with tabs[3]:
         jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
         filtrado_texto = "filtrado" if num_filtrados == 1 else "filtrados"
         st.subheader(
-            f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "") + f" _({num_filtrados} {filtrado_texto})_"
+            f"{num_jugadores} {jugador_texto} seleccionado" + ("s" if num_jugadores != 1 else "") + f" _({num_filtrados} {filtrado_texto})_"
         )
         st.caption("_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_")
 
