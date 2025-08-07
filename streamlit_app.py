@@ -81,10 +81,14 @@ def sort_players(players, sort_option):
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team)
         )
 
-def display_valid_formations(formation_score_players_by_score, current_players, blinded_players=None):
+def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None):
     current_players_copy = copy.deepcopy(current_players)
-    if blinded_players is None:
-        blinded_players = set()
+    if blinded_players_names is None:
+        blinded_players_names = set()
+    blinded_players = [cp for cp in current_players_copy if cp.name in blinded_players_names]
+    blinded_lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
+    for blinded_player in blinded_players:
+        blinded_lines[blinded_player.position].append(blinded_player)
 
     valid_formations = [
         (formation, round(score, 3), players)
@@ -108,25 +112,30 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         show_formations.append((actual_formation, actual_score, actual_players, show_price))
 
     for formation, score, players, price in show_formations:
+        lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
+        for player in players:
+            lines[player.position].append(player)
+
         player_names = {p.name for p in players}
-        missing_blinded = blinded_players - player_names
-        missing_ordered = [cp.name for cp in current_players_copy if cp.name in missing_blinded]
+        missing_blinded = blinded_players_names - player_names
+        missing_ordered = [cp for cp in current_players_copy if cp.name in missing_blinded]
 
         st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price}M")
         if missing_ordered:
             # st.warning(f"No se pudo incluir a: {', '.join(missing_ordered)} con el presupuesto dado")
             for missing_player in missing_ordered:
-                st.warning(f"No se pudo incluir a: **{missing_player}** con el presupuesto dado")
-
-        lines = {"ATT": [], "MID": [], "DEF": [], "GK": []}
-        for player in players:
-            lines[player.position].append(player)
+                motivo = ""
+                if len(blinded_lines[missing_player.position]) > len(lines[missing_player.position]):
+                    motivo = " porque los otros jugadores blindados en esa posición son mejores"
+                else:
+                    motivo = " con el presupuesto dado"
+                st.warning(f"No se pudo incluir a: **{missing_player.name}**{motivo}")
 
         for position in ["ATT", "MID", "DEF", "GK"]:
             if lines[position]:
                 cols = st.columns(len(lines[position]), gap="small")
                 for i, player in enumerate(lines[position]):
-                    is_blinded = player.name in blinded_players
+                    is_blinded = player.name in blinded_players_names
                     player_display = f"{player.name} ({player.start_probability * 100:.0f}%)"
                     player_display = f"{player_display} 🔒" if is_blinded else f"{player_display}"
                     # border_style = "2px solid #1f77b4" if is_blinded else "none"
@@ -144,8 +153,9 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                         )
 
         with st.expander("Ver todos los jugadores utilizados"):
-            for player in players:
-                blinded_mark = "🔒" if player.name in blinded_players else ""
+            players_show = copy.deepcopy(players)
+            for player in players_show:
+                blinded_mark = "🔒" if player.name in blinded_players_names else ""
                 # st.markdown(f"- {player} {blinded_mark}")
                 player.name = blinded_mark + player.name
                 # player.name = player.name + blinded_mark
@@ -276,7 +286,7 @@ tabs = st.tabs(tab_labels)
 
 # Sidebar filters
 st.sidebar.header("Opciones")
-app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=0)
+app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
 sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
 
