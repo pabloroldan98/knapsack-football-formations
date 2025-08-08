@@ -26,6 +26,16 @@ st.set_page_config(
 
 st.markdown(
     """
+    <style>
+        div[data-testid="stConnectionStatus"] {
+           display: none !important;
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
     <div style="
         position: sticky;
         top: 35px;
