@@ -14,7 +14,7 @@ from useful_functions import find_similar_string, read_dict_data, overwrite_dict
 
 # Base URLs
 PLAYERS_URL = "https://api-fantasy.llt-services.com/api/v4/players?x-lang=es"
-# PLAYERS_URL = "https://api-fantasy.llt-services.com/api/v3/players?x-lang=es"
+PLAYERS_URL_MARKET = "https://api-fantasy.llt-services.com/api/v3/players?x-lang=es"
 MARKET_VALUE_URL = "https://api-fantasy.llt-services.com/api/v3/player/{player_id}/market-value?x-lang=es"
 
 
@@ -64,11 +64,11 @@ def fetch_json(url):
     resp.raise_for_status()
     return resp.json()
 
-def get_all_players():
+def get_all_players(players_url):
     """
     Returns the raw list of all players from the LLT Fantasy API.
     """
-    return fetch_json(PLAYERS_URL)
+    return fetch_json(players_url)
 
 def get_player_market_history(player_id):
     """
@@ -77,7 +77,7 @@ def get_player_market_history(player_id):
     url = MARKET_VALUE_URL.format(player_id=player_id)
     return fetch_json(url)
 
-def get_price_and_trend(player_id):
+def get_price_and_trend(player_id, market_price=None):
     """
     Fetch the latest market value and compute trend (difference between last two entries).
     Returns (price, price_trend).
@@ -95,14 +95,24 @@ def get_price_and_trend(player_id):
         previous = sorted_hist[-2]['marketValue']
         trend = latest - previous
 
+    if market_price and market_price != latest:
+        # Then market_price is the actual latest because PLAYERS_URL_MARKET updates faster than get_player_market_history
+        trend = market_price - latest
+        latest = market_price
+
     return latest, trend
 
 def create_players_list():
     """
     Build and return a list of Player objects with up-to-date price and trend.
     """
-    raw_players = get_all_players()
+    raw_players = get_all_players(PLAYERS_URL)
+    raw_players_with_market = get_all_players(PLAYERS_URL_MARKET)
     players = []
+
+    market_players_dict = {}
+    for raw_market in raw_players_with_market:
+        market_players_dict[raw_market.get('id')] = int(raw_market.get('marketValue'))
 
     for raw in tqdm(raw_players, desc='Procesando jugadores', unit='jugador'):
         pid = raw.get('id')
@@ -115,7 +125,8 @@ def create_players_list():
         status = get_status(status_id)
         img_link = raw.get('images', {}).get('transparent', {}).get('256x256')
 
-        price, trend = get_price_and_trend(pid)
+        market_price = market_players_dict.get(pid, None)
+        price, trend = get_price_and_trend(pid, market_price)
 
         if pos_id != "5":
             player = Player(

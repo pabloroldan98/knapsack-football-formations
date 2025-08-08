@@ -7,8 +7,8 @@ on:
     - cron: '0 4 * 3,4,5,6,7,10,11,12 2'     # Every Tuesday at 5/6 AM (Spanish time) except Jan, Feb, Aug, Sep
     - cron: '0 7 * 4,5,6,7,8,9,10 *'         # This runs at 9 AM every day (Spanish summer time)
     - cron: '0 8 * 1,2,3,11,12 *'            # This runs at 9 AM every day (Spanish winter time)
-    - cron: '0 23 * 4,5,6,7,8,9,10 *'        # This runs at 1:00 every day (Spanish summer time)
-    - cron: '0 0 * 1,2,3,11,12 *'           # This runs at 1:00 every day (Spanish winter time)
+    - cron: '0 22 * 4,5,6,7,8,9,10 *'        # This runs at 00:00 every day (Spanish summer time)
+    - cron: '0 23 * 1,2,3,11,12 *'           # This runs at 00:00 every day (Spanish winter time)
 #    - cron: '0 2 * * *'                     # This runs at 3/4 AM every day (Spanish time)
   workflow_dispatch: # Allows manual triggering
 
