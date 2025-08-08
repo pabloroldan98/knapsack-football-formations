@@ -1153,4 +1153,4 @@ st.markdown("---")
 # )
 st.markdown("📩 Contacto: [calculadora.fantasy@gmail.com](mailto:calculadora.fantasy@gmail.com)")
 
-# Auto-update trigger: Fri Aug  8 03:49:45 UTC 2025
+# Auto-update trigger: Fri Aug  8 07:25:59 UTC 2025
