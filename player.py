@@ -55,8 +55,8 @@ class Player:
             is_playing_home: bool = False,
             form:  float = 0,
             fixture:  float = 0,
-            form_arrow = None,
-            fixture_arrow = None,
+            form_arrow: str = "https://www.calculadorafantasy.com/img/arrows/10000.png",
+            fixture_arrow: str = "https://www.calculadorafantasy.com/img/arrows/10000.png",
             start_probability:  float = 0,
             img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
     ):
@@ -206,8 +206,8 @@ class Player:
         self.fixture = fixture_coef
 
         if not skip_arrows:
-            self.form_arrow = get_arrow_image(form_coef, arrows_data)
-            self.fixture_arrow = get_arrow_image(fixture_coef, arrows_data)
+            self.form_arrow = get_arrow_image(form_coef, arrows_data, avoid_png=True)
+            self.fixture_arrow = get_arrow_image(fixture_coef, arrows_data, avoid_png=True)
 
         predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
         return predicted_value
