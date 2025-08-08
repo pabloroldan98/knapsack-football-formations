@@ -348,6 +348,8 @@
     }
 
     function enterApp() {
+<!--      document.getElementById('landing').classList.add('hidden');-->
+<!--    }-->
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('landing').classList.add('hidden');
 
@@ -361,7 +363,7 @@
       } else {
         // Online: clean URL works fine
         // path = `app/?src=${encodeURIComponent(mode)}`;
-        path = `app`;
+        path = `app/`;
       }
 
       const target = new URL(path, window.location.href);
