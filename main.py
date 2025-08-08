@@ -245,6 +245,9 @@ print()
 # current_players = get_current_players()
 
 
+# jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+# jornada_selected = jornadas_dict["jornada_XX"]
+
 current_players = get_current_players(
     no_form=False,
     no_fixtures=False,
@@ -302,7 +305,7 @@ current_players = get_current_players(
     is_country=False,
     extra_teams=False,
     debug=False,
-    # forced_matches=jornada_XX,
+    # forced_matches=jornada_selected,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
@@ -752,14 +755,16 @@ prices = [player.price for player in worthy_players]
 # for team, avg in sorted_team_avg:
 #     print(f"{team}: {avg:.2f}")
 # # Partidos
-# jornada_XX =
+#
+# jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+# jornada = jornadas_dict["jornada_XX"]
 # # Convertimos a dict para acceso rápido
 # team_avg_dict = dict(sorted_team_avg)
 # print(team_avg_dict)
 #
 # # Usamos el diccionario team_avg creado antes
 # diffs = []
-# for local, visitante in jornada_XX:
+# for local, visitante in jornada:
 #     diff = team_avg_dict[local] - team_avg_dict[visitante]
 #     diffs.append((local, visitante, diff))
 #
