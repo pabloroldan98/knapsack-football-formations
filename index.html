@@ -259,15 +259,19 @@
       </footer>
     </div>
 
-    <!-- APP -->
-    <div class="iframe-container">
-      <iframe
-        id="appFrame"
-        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
-        allowfullscreen
-        onload="this.classList.add('loaded')">
-      </iframe>
+    <!-- APP loader -->
+    <div id="loading" class="loading-overlay">
+      <div class="spinner"></div> Cargando jugadores…
     </div>
+<!--    &lt;!&ndash; APP &ndash;&gt;-->
+<!--    <div class="iframe-container">-->
+<!--      <iframe-->
+<!--        id="appFrame"-->
+<!--        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"-->
+<!--        allowfullscreen-->
+<!--        onload="this.classList.add('loaded')">-->
+<!--      </iframe>-->
+<!--    </div>-->
   </div>
 
   <script>
@@ -344,7 +348,28 @@
     }
 
     function enterApp() {
+      document.getElementById('loading').style.display = 'flex';
       document.getElementById('landing').classList.add('hidden');
+
+      const mode = "landing";
+      let path;
+
+      if (window.location.protocol === "file:") {
+        // Local: must specify index.html explicitly
+        // path = `home/index.html?src=${encodeURIComponent(mode)}`;
+        path = `home/index.html`;
+      } else {
+        // Online: clean URL works fine
+        // path = `home/?src=${encodeURIComponent(mode)}`;
+        path = `home/`;
+      }
+
+      const target = new URL(path, window.location.href);
+      console.log("Redirecting to:", target.toString());
+
+      setTimeout(() => {
+        window.location.href = target.toString();
+      }, 200);
     }
 
     startSlider();
