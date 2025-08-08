@@ -356,12 +356,12 @@
 
       if (window.location.protocol === "file:") {
         // Local: must specify index.html explicitly
-        // path = `home/index.html?src=${encodeURIComponent(mode)}`;
-        path = `home/index.html`;
+        // path = `app/index.html?src=${encodeURIComponent(mode)}`;
+        path = `app/index.html`;
       } else {
         // Online: clean URL works fine
-        // path = `home/?src=${encodeURIComponent(mode)}`;
-        path = `home/`;
+        // path = `app/?src=${encodeURIComponent(mode)}`;
+        path = `app`;
       }
 
       const target = new URL(path, window.location.href);
