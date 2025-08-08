@@ -147,7 +147,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                 for i, player in enumerate(lines[position]):
                     is_blinded = player.name in blinded_players_names
                     player_display = f"{player.name} ({player.start_probability * 100:.0f}%)"
-                    player_display = f"{player_display} 🔒" if is_blinded else f"{player_display}"
+                    player_display = f"🔒 {player_display}" if is_blinded else f"{player_display}"
                     # border_style = "2px solid #1f77b4" if is_blinded else "none"
 
                     with cols[i]:
@@ -165,7 +165,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         with st.expander("Ver todos los jugadores utilizados"):
             players_show = copy.deepcopy(players)
             for player in players_show:
-                blinded_mark = "🔒" if player.name in blinded_players_names else ""
+                blinded_mark = "🔒 " if player.name in blinded_players_names else ""
                 # st.markdown(f"- {player} {blinded_mark}")
                 player.name = blinded_mark + player.name
                 # player.name = player.name + blinded_mark
