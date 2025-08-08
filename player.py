@@ -382,10 +382,16 @@ def get_arrow_properties(value, min_value=0.96, max_value=1.05):
 
     return angle, color
 
-def get_arrow_image(value, arrows_data=None, min_value=0.96, max_value=1.05, size=0.6):
+def get_arrow_image(value, arrows_data=None, min_value=0.96, max_value=1.05, size=0.6, avoid_png=False):
     rounded_value = str(round(value, 4))  # reduce number of unique values
     if arrows_data and rounded_value in arrows_data.keys():
-        return io.BytesIO(base64.b64decode(arrows_data[rounded_value]))
+        # return io.BytesIO(base64.b64decode(arrows_data[rounded_value]))
+        return arrows_data[rounded_value]
+    if avoid_png:
+        if arrows_data and "1.0" in arrows_data.keys():
+            return arrows_data["1.0"]
+        else:
+            return "./img/arrows/0.png"
 
     angle, color = get_arrow_properties(value, min_value, max_value)
     radians = np.deg2rad(angle)
@@ -433,11 +439,16 @@ def get_arrow_image(value, arrows_data=None, min_value=0.96, max_value=1.05, siz
     paste_y = (max_side - height) // 2
     square_image.paste(cropped_image, (paste_x, paste_y))
 
-    cropped_buf = io.BytesIO()
-    square_image.save(cropped_buf, format='PNG')
-    cropped_buf.seek(0)
+    # cropped_buf = io.BytesIO()
+    # square_image.save(cropped_buf, format='PNG')
+    # cropped_buf.seek(0)
+    #
+    # return cropped_buf
 
-    return cropped_buf
+    return square_image
+
+def idx_from_value(v):  # integer name avoids float formatting headaches
+    return int(round(v * 10000))
 
 def get_arrows_data(
         write_file=False,
@@ -447,11 +458,17 @@ def get_arrows_data(
     data = None
     if force_scrape:
         try:
+            arrows_img_dir = "img/arrows"
+            os.makedirs(arrows_img_dir, exist_ok=True)
             data = {}
-            for i in tqdm(range(9000, 11001)):  # 0.900 to 1.100 inclusive
-                value = round(i / 10000, 4)
-                arrow_img = get_arrow_image(value)
-                data[str(value)] = base64.b64encode(arrow_img.getvalue()).decode()
+            for idx in tqdm(range(9000, 11001)):  # 0.900 to 1.100 inclusive
+                value = round(idx / 10000, 4)
+                # arrow_img = get_arrow_image(value)
+                # data[str(value)] = base64.b64encode(arrow_img.getvalue()).decode()
+                png = get_arrow_image(value)
+                png.save(os.path.join(arrows_img_dir, f"{idx}.png"), format="PNG", optimize=True)
+                # data[str(value)] = f"https://www.calculadorafantasy.com/img/arrows/{idx}.png"
+                data[str(value)] = f"./img/arrows/{idx}.png"
         except:
             pass
     if not data: # if force_scrape failed or not force_scrape
