@@ -12,6 +12,8 @@
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>
+  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -216,6 +218,18 @@
     iframe.loaded {
       opacity: 1;
     }
+
+  .loading-overlay {
+    position: fixed; inset: 0;
+    background: rgba(14,17,23,.95);
+    display: none; align-items: center; justify-content: center;
+    z-index: 9999; color: #fff; font-size: 1.1rem;
+  }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid #555; border-top-color: #ff4c4c;
+    border-radius: 50%; animation: spin 0.9s linear infinite; margin-right: 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -246,14 +260,9 @@
       </footer>
     </div>
 
-    <!-- APP -->
-    <div class="iframe-container">
-      <iframe
-        id="appFrame"
-        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
-        allowfullscreen
-        onload="this.classList.add('loaded')">
-      </iframe>
+    <!-- APP loader -->
+    <div id="loading" class="loading-overlay">
+      <div class="spinner"></div> Cargando jugadores…
     </div>
   </div>
 
@@ -331,7 +340,18 @@
     }
 
     function enterApp() {
+      // Show loading overlay immediately for snappy feedback
+      document.getElementById('loading').style.display = 'flex';
+      // Optional: fade landing out
       document.getElementById('landing').classList.add('hidden');
+
+      // Small delay (100–300ms) so the user sees the loader, then navigate
+      setTimeout(() => {
+        window.location.href = 'https://www.calculadorafantasy.com/home/
+        // window.location.href = 'https://calculadorafantasy.streamlit.app/~/+/?embed=true';
+        // If you’re using a project subpath on GitHub Pages, use the full URL:
+        // window.location.href = 'https://www.calculadorafantasy.com/home/';
+      }, 200);
     }
 
     startSlider();

@@ -949,96 +949,96 @@ with tabs[1]:
 
 # Si selecciona "Lista de jugadores"
 # ekif main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
-# with tabs[2]:
-#     st.header("Lista de Jugadores Actualizada")
-#     st.markdown(
-#         """
-#             _· **Jugador** (Posición, Equipo): Precio - **Puntuación**_
-#             _(Forma: estado de forma, Partido: complejidad del partido, Titular: probabilidad de ser titular %)_
-#         """
-#     )
-#
-#     # Filtros adicionales
-#     with st.expander("Filtros adicionales"):
-#         use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
-#         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
-#         # threshold = threshold_slider / 100
-#
-#         prob_key = "prob_threshold_playerslist"
-#         # if prob_key in st.session_state:
-#         #     min_val = st.session_state[prob_key][0]
-#         #     st.session_state[prob_key] = (min_val, 100)
-#         # else:
-#         #     st.session_state[prob_key] = (0, 100)
-#         # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
-#         min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
-#         max_prob_slider = 100
-#             # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
-#             # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
-#         st.markdown(f"""
-#             <style>
-#             /* Ocultar el segundo handle (derecho) del slider */
-#             div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
-#                 display: none;
-#             }}
-#             </style>
-#         """, unsafe_allow_html=True)
-#         min_prob = min_prob_slider / 100
-#         max_prob = max_prob_slider / 100
-#
-#         # Filtro por precio
-#         if is_biwenger:
-#             min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
-#             min_price = int(min_price * 10)
-#             max_price = int(max_price * 10)
-#         else:
-#             min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
-#
-#         # Filtro por posición
-#         st.markdown("**Filtrar por posición:**")
-#         filter_gk = st.checkbox("Portero", value=True)
-#         filter_def = st.checkbox("Defensa", value=True)
-#         filter_mid = st.checkbox("Mediocentro", value=True)
-#         filter_att = st.checkbox("Delantero", value=True)
-#
-#         filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos")
-#
-#         # Aplicar filtros
-#         current_players_filtered = [
-#             p for p in current_players
-#             if min_price <= p.price <= max_price and (
-#                 (filter_gk and p.position == "GK") or
-#                 (filter_def and p.position == "DEF") or
-#                 (filter_mid and p.position == "MID") or
-#                 (filter_att and p.position == "ATT")
-#             ) and min_prob <= p.start_probability <= max_prob and (
-#                 not filter_teams or p.team in filter_teams
-#             )
-#         ]
-#
-#         if use_fixture_filter != False or min_prob_slider != 0:
-#             current_players_filtered = purge_everything(
-#                 current_players_filtered,
-#                 probability_threshold=min_prob,
-#                 fixture_filter=use_fixture_filter
-#             )
-#
-#     # Ordenar jugadores
-#     current_players_filtered = sort_players(current_players_filtered, sort_option)
-#
-#     # Mostrar resultados
-#     num_jugadores = len(current_players_filtered)
-#     jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
-#     st.subheader(
-#         f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
-#     )
-#
-#     show_players = copy.deepcopy(current_players_filtered)
-#     for player in show_players:
-#         if is_biwenger:
-#             player.price = player.price / 10
-#         # st.text(str(player))
-#         print_player(player)
+with tabs[2]:
+    st.header("Lista de Jugadores Actualizada")
+    st.markdown(
+        """
+            _· **Jugador** (Posición, Equipo): Precio - **Puntuación**_  
+            _(Forma: estado de forma, Partido: complejidad del partido, Titular: probabilidad de ser titular %)_
+        """
+    )
+
+    # Filtros adicionales
+    with st.expander("Filtros adicionales"):
+        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
+        # threshold = threshold_slider / 100
+
+        prob_key = "prob_threshold_playerslist"
+        # if prob_key in st.session_state:
+        #     min_val = st.session_state[prob_key][0]
+        #     st.session_state[prob_key] = (min_val, 100)
+        # else:
+        #     st.session_state[prob_key] = (0, 100)
+        # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+        max_prob_slider = 100
+            # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
+            # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
+        st.markdown(f"""
+            <style>
+            /* Ocultar el segundo handle (derecho) del slider */
+            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                display: none;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+        min_prob = min_prob_slider / 100
+        max_prob = max_prob_slider / 100
+
+        # Filtro por precio
+        if is_biwenger:
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
+            min_price = int(min_price * 10)
+            max_price = int(max_price * 10)
+        else:
+            min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
+
+        # Filtro por posición
+        st.markdown("**Filtrar por posición:**")
+        filter_gk = st.checkbox("Portero", value=True)
+        filter_def = st.checkbox("Defensa", value=True)
+        filter_mid = st.checkbox("Mediocentro", value=True)
+        filter_att = st.checkbox("Delantero", value=True)
+
+        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos")
+
+        # Aplicar filtros
+        current_players_filtered = [
+            p for p in current_players
+            if min_price <= p.price <= max_price and (
+                (filter_gk and p.position == "GK") or
+                (filter_def and p.position == "DEF") or
+                (filter_mid and p.position == "MID") or
+                (filter_att and p.position == "ATT")
+            ) and min_prob <= p.start_probability <= max_prob and (
+                not filter_teams or p.team in filter_teams
+            )
+        ]
+
+        if use_fixture_filter != False or min_prob_slider != 0:
+            current_players_filtered = purge_everything(
+                current_players_filtered,
+                probability_threshold=min_prob,
+                fixture_filter=use_fixture_filter
+            )
+
+    # Ordenar jugadores
+    current_players_filtered = sort_players(current_players_filtered, sort_option)
+
+    # Mostrar resultados
+    num_jugadores = len(current_players_filtered)
+    jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
+    st.subheader(
+        f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
+    )
+
+    show_players = copy.deepcopy(current_players_filtered)
+    for player in show_players:
+        if is_biwenger:
+            player.price = player.price / 10
+        # st.text(str(player))
+        print_player(player)
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")

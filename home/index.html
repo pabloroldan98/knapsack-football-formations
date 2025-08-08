@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Fantasy</title>
+  <meta name="theme-color" content="#0e1117">
+  <meta name="msapplication-navbutton-color" content="#0e1117">
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="#0e1117">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
+  <meta name="google-adsense-account" content="ca-pub-7891666149137266">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>
+  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-QXF4YKPSMD');
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: rgb(14, 17, 23);
+      color: rgb(14, 17, 23);
+      overflow: hidden;
+      color-scheme: dark;
+      -webkit-text-size-adjust: none;
+    }
+
+    body {
+      position: relative;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: rgb(14, 17, 23);
+    }
+
+    .hidetop, .hideleft, .hideright,
+    .hidetopleft, .hidetopright, .hidefooter {
+      position: absolute;
+      background: rgb(14, 17, 23);
+      z-index: 2;
+    }
+
+    .hidetop     { width: 100%; height: 5px; left: 0; top: 0; }
+    .hideleft    { width: 5px; height: 100%; left: 0; top: 0; }
+    .hideright   { width: 5px; height: 100%; right: 0; top: 0; }
+    .hidetopleft { width: 10px; height: 10px; left: 0; top: 0; }
+    .hidetopright{ width: 10px; height: 10px; right: 0; top: 0; }
+    .hidefooter  { width: 100%; height: 40px; left: 0; bottom: 0; }
+
+    .logo {
+      position: fixed;
+      top: 35px;
+      right: 50px;
+      z-index: 10;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .iframe-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      background: rgb(14, 17, 23); /* Fallback color */
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    iframe.loaded {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="iframe-container">
+      <iframe
+        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
+        allowfullscreen
+        onload="this.classList.add('loaded')">
+      </iframe>
+    </div>
+  </div>
+</body>
+</html>
