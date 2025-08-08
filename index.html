@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
   <script>
@@ -35,6 +35,13 @@
       color: white;
       overflow-x: hidden;
       overflow-y: auto;
+    }
+
+    /* Only zoom for desktop screens */
+    @media (min-width: 1024px) {
+      html, body {
+        zoom: 1.3;
+      }
     }
 
     .wrapper {
@@ -85,6 +92,7 @@
     h4 {
       position: static;
       top: 10rem;
+      padding: 5px;
       font-size: 1.05rem;
       font-weight: 400;
       color: rgba(255, 255, 255, 0.7);
@@ -103,7 +111,7 @@
       cursor: pointer;
       transition: background 0.3s ease;
       margin-bottom: 2rem;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
     }
 
     .enter-button:hover {
@@ -129,7 +137,7 @@
     }
 
     .slide img {
-      margin-top: 1rem;
+      margin-top: 3rem;
       max-width: 100%;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.4);
@@ -241,7 +249,7 @@
       </div>
       <h1>Bienvenido a la Calculadora Fantasy</h1>
       <h4>Con soporte para: LaLiga Fantasy & Biwenger</h4>
-      <button class="enter-button" onclick="enterApp()">Entrar</button>
+      <button class="enter-button" onclick="enterApp()">Empezar a calcular</button>
 
       <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
         <div class="slide-content" id="slideContent">
