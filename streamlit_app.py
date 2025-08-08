@@ -548,24 +548,7 @@ st.markdown(f"""
 with tabs[0]:
     st.header("Mejores 11s dentro de tu presupuesto")
 
-    with st.expander("Filtros adicionales"):
-        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_budget") == "Sí"
-        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
-        # threshold = threshold_slider / 100
-        prob_key = "prob_threshold_budget"
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
-        max_prob_slider = 100
-        st.markdown(f"""
-            <style>
-            /* Ocultar el segundo handle (derecho) del slider */
-            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
-                display: none;
-            }}
-            </style>
-        """, unsafe_allow_html=True)
-        min_prob = min_prob_slider / 100
-        max_prob = max_prob_slider / 100
-
+    with st.expander("Blindar o Excluir jugadores"):
         current_players_copy = copy.deepcopy(current_players)
         if "blinded_players_set" not in st.session_state:
             st.session_state.blinded_players_set = set()
@@ -604,10 +587,10 @@ with tabs[0]:
                     blinded_players_list.remove(p)
                     st.rerun()
 
-        st.markdown("### 🚫 Jugadores baneados")
+        st.markdown("### 🚫 Jugadores excluidos")
         st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
         banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
-        selected_baneado = st.selectbox("Añadir jugador baneado", options=[""] + banned_candidates, format_func=lambda x: normalize_name(x), key="add_baneado")
+        selected_baneado = st.selectbox("Añadir jugador excluido", options=[""] + banned_candidates, format_func=lambda x: normalize_name(x), key="add_baneado")
         if selected_baneado:
             st.session_state.banned_players_set.add(selected_baneado)
             st.session_state.blinded_players_set.discard(selected_baneado)
@@ -635,11 +618,6 @@ with tabs[0]:
                     banned_players_list.remove(p)
                     st.rerun()
 
-        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
-        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
-
-    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
-
     if is_biwenger:
         budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
         budget = int(budget * 10)
@@ -648,6 +626,31 @@ with tabs[0]:
     st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
     # if is_biwenger:
     #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
+
+    with st.expander("**Filtros adicionales**", expanded=True):
+        use_fixture_filter = st.radio(
+            "Excluir jugadores con partidos difíciles", ["No", "Sí"], index=0 if is_biwenger else 1,key="fixture_filter_budget"
+        ) == "Sí"
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
+        # threshold = threshold_slider / 100
+        prob_key = "prob_threshold_budget"
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+        max_prob_slider = 100
+        st.markdown(f"""
+            <style>
+            /* Ocultar el segundo handle (derecho) del slider */
+            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                display: none;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+        min_prob = min_prob_slider / 100
+        max_prob = max_prob_slider / 100
+
+        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
+        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
+
+    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
 
     my_filtered_players = purge_everything(
         current_players_copy,
@@ -778,39 +781,39 @@ with tabs[1]:
                 p.form = 10
                 p.fixture = 10
 
-        # Filtros adicionales aplicados sobre `my_players_list`
-        with st.expander("Filtros adicionales sobre tu lista"):
-            use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_my11") == "Sí"
-            # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_my11")
-            # threshold = threshold_slider / 100
-            prob_key = "prob_threshold_my11"
-            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
-            max_prob_slider = 100
-            st.markdown(f"""
-                <style>
-                /* Ocultar el segundo handle (derecho) del slider */
-                div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
-                    display: none;
-                }}
-                </style>
-            """, unsafe_allow_html=True)
-            min_prob = min_prob_slider / 100
-            max_prob = max_prob_slider / 100
+    # Filtros adicionales aplicados sobre `my_players_list`
+    with st.expander("**Filtros adicionales sobre tu lista**", expanded=True if my_players_list else 0):
+        use_fixture_filter = st.radio(
+            "Excluir jugadores con partidos difíciles", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_my11"
+        ) == "Sí"
+        # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_my11")
+        # threshold = threshold_slider / 100
+        prob_key = "prob_threshold_my11"
+        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+        max_prob_slider = 100
+        st.markdown(f"""
+            <style>
+            /* Ocultar el segundo handle (derecho) del slider */
+            div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
+                display: none;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+        min_prob = min_prob_slider / 100
+        max_prob = max_prob_slider / 100
 
-            filtered_players = purge_everything(
-                my_players_list,
-                probability_threshold=min_prob,
-                fixture_filter=use_fixture_filter
+        filtered_players = purge_everything(
+            my_players_list,
+            probability_threshold=min_prob,
+            fixture_filter=use_fixture_filter
+        )
+        filtered_players_names = [p.name for p in filtered_players]
+        filtered_players = [
+            p for p in my_players_list
+            if (p.name in filtered_players_names and min_prob <= p.start_probability <= max_prob) or (
+                    p.name in st.session_state.blinded_players
             )
-            filtered_players_names = [p.name for p in filtered_players]
-            filtered_players = [
-                p for p in my_players_list
-                if (p.name in filtered_players_names and min_prob <= p.start_probability <= max_prob) or (
-                        p.name in st.session_state.blinded_players
-                )
-            ]
-    else:
-        filtered_players = []
+        ]
 
     # Checkbox para formaciones premium
     use_premium = st.checkbox("Formaciones Premium", value=False)
