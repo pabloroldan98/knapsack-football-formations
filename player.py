@@ -55,8 +55,8 @@ class Player:
             is_playing_home: bool = False,
             form:  float = 0,
             fixture:  float = 0,
-            form_arrow: str = "https://www.calculadorafantasy.com/img/arrows/10000.png",
-            fixture_arrow: str = "https://www.calculadorafantasy.com/img/arrows/10000.png",
+            form_arrow: str = "https://www.calculadorafantasy.com/img/arrows/0.png",
+            fixture_arrow: str = "https://www.calculadorafantasy.com/img/arrows/0.png",
             start_probability:  float = 0,
             img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
     ):
