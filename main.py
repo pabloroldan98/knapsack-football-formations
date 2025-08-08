@@ -723,3 +723,46 @@ prices = [player.price for player in worthy_players]
 #         similar_player = find_similar_string(player, other_players, similarity_threshold=0.7, verbose=False)
 #         if similar_player and similar_player != player:
 #             print(f"Similar names found: '{player}' and '{similar_player}' in team '{team}'.")
+
+# ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
+#
+# print()
+# print()
+# print("__________________________________________")
+# print()
+# purged_players = purge_everything(purged_players, probability_threshold=0.35, fixture_filter=True)
+# worthy_players = purged_players.copy()
+# from collections import defaultdict
+#
+# # Diccionario para acumular sumas y conteos por equipo
+# team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
+#
+# for player in worthy_players:
+#     team_stats[player.team]["sum"] += player.sofascore_rating * player.team_elo / 10_000
+#     team_stats[player.team]["count"] += 1
+#
+# # Calcular medias y ordenarlas
+# sorted_team_avg = sorted(
+#     ((team, stats["sum"] / stats["count"]) for team, stats in team_stats.items()),
+#     key=lambda x: x[1],
+#     reverse=True
+# )
+#
+# # Imprimir
+# for team, avg in sorted_team_avg:
+#     print(f"{team}: {avg:.2f}")
+# # Partidos
+# jornada_XX =
+# # Convertimos a dict para acceso rápido
+# team_avg_dict = dict(sorted_team_avg)
+# print(team_avg_dict)
+#
+# # Usamos el diccionario team_avg creado antes
+# diffs = []
+# for local, visitante in jornada_XX:
+#     diff = team_avg_dict[local] - team_avg_dict[visitante]
+#     diffs.append((local, visitante, diff))
+#
+# # Imprimir
+# for local, visitante, diff in diffs:
+#     print(f"{local} vs {visitante}: {diff:.4f}")
