@@ -46,18 +46,18 @@
 
     /* LANDING */
     .landing {
-      position: absolute;
-      min-height: 100vh;
+      position: relative;
+      min-height: 140svh;
       width: 100%;
       height: 100%;
       background: rgb(14, 17, 23);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       z-index: 3;
       transition: opacity 0.4s ease;
-      padding: 2rem;
+      padding: 6rem 1rem 4rem;
       text-align: center;
     }
 
@@ -77,15 +77,15 @@
     }
 
     h1 {
-      position: absolute;
-      top: 6rem;
+      position: static;
+      top: 7rem;
       font-size: 2rem;
       margin-bottom: 0;
     }
 
     h4 {
-      position: absolute;
-      top: 9rem;
+      position: static;
+      top: 10rem;
       font-size: 1.05rem;
       font-weight: 400;
       color: rgba(255, 255, 255, 0.7);
@@ -93,8 +93,8 @@
     }
 
     .enter-button {
-      position: absolute;
-      top: 11rem;
+      position: static;
+      top: 12rem;
       padding: 12px 24px;
       font-size: 1.1rem;
       background: rgb(255, 76, 76);
@@ -112,8 +112,8 @@
     }
 
     .slide {
-      position: absolute;
-      top: 17rem;
+      position: static;
+      top: 18rem;
       max-width: 600px;
       margin-top: 2rem;
       animation: fadeIn 0.5s ease;
@@ -143,8 +143,8 @@
     }
 
     .slider-controls {
-      position: absolute;
-      top: 50%;
+      position: relative;
+      top: -50%;
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -181,7 +181,7 @@
 
     footer {
       position: absolute;
-      top: 63rem;
+      bottom: 2rem;
       width: 100%;
       display: flex;
       align-items: center;
