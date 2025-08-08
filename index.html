@@ -11,6 +11,7 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
   <script>
@@ -348,8 +349,8 @@
     }
 
     function enterApp() {
-<!--      document.getElementById('landing').classList.add('hidden');-->
-<!--    }-->
+      // document.getElementById('landing').classList.add('hidden');
+      // }
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('landing').classList.add('hidden');
 
@@ -372,10 +373,21 @@
       setTimeout(() => {
         window.location.href = target.toString();
       }, 200);
-      document.getElementById('loading').style.display = 'none';
     }
 
     startSlider();
+
+    window.addEventListener('pageshow', (e) => {
+      const fromHistory = e.persisted ||
+        (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
+
+      if (fromHistory) {
+        const loading = document.getElementById('loading');
+        const landing = document.getElementById('landing');
+        loading.style.display = 'none';
+        landing.classList.remove('hidden');
+      }
+    });
   </script>
 </body>
 </html>
