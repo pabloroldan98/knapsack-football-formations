@@ -21,7 +21,7 @@ st.set_page_config(
     page_title="Calculadora Fantasy",      # Título de la pestaña del navegador
     page_icon="logo.png",                  # Ruta relativa a tu imagen
     layout="centered",                     # 'wide' o 'centered'
-    initial_sidebar_state="auto"           # 'expanded', 'collapsed', o 'auto'
+    initial_sidebar_state="expanded"       # 'expanded', 'collapsed', o 'auto'
 )
 
 st.markdown(
