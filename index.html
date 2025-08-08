@@ -12,8 +12,6 @@
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
-  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>
-  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -260,9 +258,14 @@
       </footer>
     </div>
 
-    <!-- APP loader -->
-    <div id="loading" class="loading-overlay">
-      <div class="spinner"></div> Cargando jugadores…
+    <!-- APP -->
+    <div class="iframe-container">
+      <iframe
+        id="appFrame"
+        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
+        allowfullscreen
+        onload="this.classList.add('loaded')">
+      </iframe>
     </div>
   </div>
 
@@ -340,18 +343,7 @@
     }
 
     function enterApp() {
-      // Show loading overlay immediately for snappy feedback
-      document.getElementById('loading').style.display = 'flex';
-      // Optional: fade landing out
       document.getElementById('landing').classList.add('hidden');
-
-      // Small delay (100–300ms) so the user sees the loader, then navigate
-      setTimeout(() => {
-        window.location.href = 'https://www.calculadorafantasy.com/home/
-        // window.location.href = 'https://calculadorafantasy.streamlit.app/~/+/?embed=true';
-        // If you’re using a project subpath on GitHub Pages, use the full URL:
-        // window.location.href = 'https://www.calculadorafantasy.com/home/';
-      }, 200);
     }
 
     startSlider();
