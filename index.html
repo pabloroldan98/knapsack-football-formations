@@ -11,6 +11,7 @@
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
   <script>
@@ -372,6 +373,7 @@
       setTimeout(() => {
         window.location.href = target.toString();
       }, 200);
+      document.getElementById('loading').style.display = 'none';
     }
 
     startSlider();
