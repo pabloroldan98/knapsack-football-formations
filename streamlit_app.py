@@ -91,7 +91,7 @@ def sort_players(players, sort_option):
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team)
         )
 
-def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None):
+def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None, is_biwenger=False):
     current_players_copy = copy.deepcopy(current_players)
     if blinded_players_names is None:
         blinded_players_names = set()
@@ -169,7 +169,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                 # st.markdown(f"- {player} {blinded_mark}")
                 player.name = blinded_mark + player.name
                 # player.name = player.name + blinded_mark
-                print_player(player, small_size=1)
+                print_player(player, small_size=1, is_biwenger=is_biwenger)
 
         st.markdown("---")
 
@@ -184,11 +184,13 @@ def normalize_name(name):
     normalized = normalized.replace("___ENYE___", "ñ").replace("___ENYE_UPPER___", "Ñ")
     return normalized.strip()
 
-def print_player(player, small_size=0):
+def print_player(player, small_size=0, is_biwenger=False):
+    if is_biwenger:
+        show_price = player.price / 10
     if small_size==0:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
-            f"- **{player.name}** ({player.position}, {player.team}): {player.price}M - **{player.value:.3f} pts**"
+            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
         )
         player_cols[1].caption("Forma:")
         player_cols[2].image(player.form_arrow, output_format="PNG", width=24) #, use_container_width=True)
@@ -200,7 +202,7 @@ def print_player(player, small_size=0):
         player_cols[0].markdown(
             f"""
                 - **{player.name}** ({player.position}, {player.team}):  
-                {player.price}M - **{player.value:.3f} pts**
+                {show_price}M - **{player.value:.3f} pts**
             """
         )
         player_cols[1].markdown("")
@@ -224,7 +226,7 @@ def print_player(player, small_size=0):
         player_cols[1].markdown(
             f"""
                 **{player.name}** ({player.position}, {player.team}):  
-                {player.price}M - **{player.value:.3f} pts**
+                {show_price}M - **{player.value:.3f} pts**
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
@@ -249,7 +251,7 @@ def print_player(player, small_size=0):
         player_cols[1].markdown(
             f"""
                 **{player.name}** ({player.position}, {player.team}):  
-                {player.price}M - **{player.value:.3f} pts**
+                {show_price}M - **{player.value:.3f} pts**
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
@@ -259,7 +261,7 @@ def print_player(player, small_size=0):
     else:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
-            f"- **{player.name}** ({player.position}, {player.team}): {player.price}M - **{player.value:.3f} pts**"
+            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
         )
         player_cols[1].markdown("Forma:")
         player_cols[2].image(player.form_arrow, output_format="PNG") #, use_container_width=True)
@@ -575,12 +577,9 @@ with tabs[0]:
             #     st.image(p.img_link, width=60)
             cols = st.columns([9, 1])
             with cols[0]:
-                show_price = p.price
-                if is_biwenger:
-                    show_price = show_price / 10
                 # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
-                print_player(p, small_size=3)
+                print_player(p, small_size=3, is_biwenger=is_biwenger)
             with cols[1]:
                 if st.button("❌", key=f"remove_blindado_{i}"):
                     st.session_state.blinded_players_set.remove(p.name)
@@ -606,12 +605,9 @@ with tabs[0]:
             #     st.image(p.img_link, width=60)
             cols = st.columns([9, 1])
             with cols[0]:
-                show_price = p.price
-                if is_biwenger:
-                    show_price = show_price / 10
                 # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
-                print_player(p, small_size=1)
+                print_player(p, small_size=1, is_biwenger=is_biwenger)
             with cols[1]:
                 if st.button("❌", key=f"remove_baneado_{i}"):
                     st.session_state.banned_players_set.remove(p.name)
@@ -709,7 +705,7 @@ with tabs[0]:
             speed_up=not use_slow_calc,
         )
 
-        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set)
+        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set, is_biwenger)
 
 # Funcionalidades futuras
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
@@ -753,11 +749,9 @@ with tabs[1]:
             # with cols[0]:
             #     st.image(p.img_link, width=70)
             with cols[0]:
-                if is_biwenger:
-                    p.price = p.price / 10
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
                 # st.markdown(f"{p}")
-                print_player(p, small_size=3)
+                print_player(p, small_size=3, is_biwenger=is_biwenger)
             with cols[1]:
                 if st.button("❌", key=f"remove_{i}"):
                     st.session_state.my_players_names.remove(p.name)
@@ -945,7 +939,7 @@ with tabs[1]:
                 verbose=1
             )
             # print_best_full_teams(formation_score_players_by_score)
-            display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players)
+            display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players, is_biwenger)
 
 # Si selecciona "Lista de jugadores"
 # ekif main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
@@ -1035,10 +1029,8 @@ with tabs[2]:
 
     show_players = copy.deepcopy(current_players_filtered)
     for player in show_players:
-        if is_biwenger:
-            player.price = player.price / 10
         # st.text(str(player))
-        print_player(player)
+        print_player(player, small_size=0, is_biwenger=is_biwenger)
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
@@ -1141,11 +1133,9 @@ with tabs[3]:
             # with cols[0]:
             #     st.image(p.img_link, width=60)
             with cols[0]:
-                if is_biwenger:
-                    p.price = p.price / 10
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
                 # st.markdown(f"{p}")
-                print_player(p, small_size=1)
+                print_player(p, small_size=1, is_biwenger=is_biwenger)
             with cols[1]:
                 if st.button("❌", key=f"market_remove_{i}"):
                     st.session_state.my_players_names_set.remove(p.name)
