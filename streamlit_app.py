@@ -585,6 +585,9 @@ with tabs[0]:
                     st.session_state.blinded_players_set.remove(p.name)
                     blinded_players_list.remove(p)
                     st.rerun()
+        if blinded_players_list:
+            total_price = sum(p.price / 10 if is_biwenger else p.price for p in blinded_players_list)
+            st.caption(f"Precio total de jugadores blindados: **{total_price}M**")
 
         st.markdown("### 🚫 Jugadores excluidos")
         st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
