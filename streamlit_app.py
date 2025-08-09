@@ -659,8 +659,9 @@ with tabs[0]:
     my_filtered_players_names = [p.name for p in my_filtered_players]
     my_filtered_players = [
         p for p in current_players_copy
-        if (p.name in my_filtered_players_names and min_prob <= p.start_probability <= max_prob) or (
-                p.name in st.session_state.blinded_players_set
+        if p.name not in st.session_state.banned_players_set and (
+                (p.name in my_filtered_players_names and min_prob <= p.start_probability <= max_prob)
+                or p.name in st.session_state.blinded_players_set
         )
     ]
 
@@ -671,8 +672,6 @@ with tabs[0]:
             player.start_probability = 10
             player.form = 10
             player.fixture = 10
-        if player.name in st.session_state.banned_players_set:
-            my_filtered_players.remove(player)
 
     possible_formations = [
         [3, 4, 3],
