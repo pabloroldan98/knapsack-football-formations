@@ -728,17 +728,17 @@ prices = [player.price for player in worthy_players]
 #             print(f"Similar names found: '{player}' and '{similar_player}' in team '{team}'.")
 
 # ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
-# from collections import defaultdict
 #
+# from collections import defaultdict
 # print()
 # print()
 # print("__________________________________________")
 # print()
 # purged_players = purge_everything(purged_players, probability_threshold=0.35, fixture_filter=True)
 # worthy_players = purged_players.copy()
-# # for p in current_players:
-# #     if p.status == "injured":
-# #         worthy_players.append(p)
+# for p in current_players:
+#     if p.status == "injured" or p.status == "sanctioned":
+#         worthy_players.append(p)
 #
 # # Diccionario para acumular sumas y conteos por equipo
 # team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
@@ -755,14 +755,15 @@ prices = [player.price for player in worthy_players]
 # )
 #
 # # Imprimir
-# for team, avg in sorted_team_avg:
+# # Convertimos a dict para acceso rápido
+# team_avg_dict = dict(sorted_team_avg)
+# for team, avg in team_avg_dict.items():
+#     avg = (avg - 1) * 10
 #     print(f"{team}: {avg:.4f}")
 # # Partidos
 #
 # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
 # jornada = jornadas_dict["jornada_XX"]
-# # Convertimos a dict para acceso rápido
-# team_avg_dict = dict(sorted_team_avg)
 # print(team_avg_dict)
 #
 # # Usamos el diccionario team_avg creado antes
