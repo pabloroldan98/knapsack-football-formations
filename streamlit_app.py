@@ -185,8 +185,7 @@ def normalize_name(name):
     return normalized.strip()
 
 def print_player(player, small_size=0, is_biwenger=False):
-    if is_biwenger:
-        show_price = player.price / 10
+    show_price = player.price / 10 if is_biwenger else player.price
     if small_size==0:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
