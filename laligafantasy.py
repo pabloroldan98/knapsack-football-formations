@@ -128,7 +128,7 @@ def create_players_list():
         market_price = market_players_dict.get(pid, None)
         price, trend = get_price_and_trend(pid, market_price)
 
-        if pos_id != "5":
+        if pos_id != "5" and status_id != "out_of_league":
             player = Player(
                 name=name,
                 position=position,
@@ -149,7 +149,7 @@ def create_players_list():
     return players
 
 
-# data = get_laligafantasy_data(force_scrape=True, file_name="test_laligafantasy_laliga_data", write_file=True)
+# data = get_laligafantasy_data(force_scrape=True, file_name="laligafantasy_laliga_data_test", write_file=True)
 # for d in data:
 #     print(d)
 
