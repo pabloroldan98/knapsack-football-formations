@@ -265,8 +265,23 @@
       </div>
 
       <footer>
-        <p>📩 Contacto: <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
+        <p>
+          📩 Contacto: <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a> |
+          <a href="#" onclick="openPrivacy()" style="color: rgba(255,255,255,0.7);">Política de Privacidad</a>
+        </p>
       </footer>
+
+      <div id="privacyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; padding:2rem; overflow:auto;">
+        <div style="max-width:800px; margin:auto; background:#1e1e1e; padding:2rem; border-radius:8px;">
+          <h2>Política de Privacidad</h2>
+          <p>En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
+             Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
+          <p>Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
+             <a href="mailto:calculadora.fantasy@gmail.com" style="color:rgb(255,76,76);">calculadora.fantasy@gmail.com</a>.
+          </p>
+          <button onclick="closePrivacy()" style="margin-top:1rem; padding:10px 20px; background:rgb(255, 76, 76); border:none; border-radius:6px; color:white; cursor:pointer;">Cerrar</button>
+        </div>
+      </div>
     </div>
 
     <!-- APP loader -->
@@ -397,6 +412,13 @@
         landing.classList.remove('hidden');
       }
     });
+
+    function openPrivacy() {
+      document.getElementById('privacyModal').style.display = 'block';
+    }
+    function closePrivacy() {
+      document.getElementById('privacyModal').style.display = 'none';
+    }
   </script>
 </body>
 </html>
