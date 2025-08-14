@@ -332,7 +332,7 @@ current_players = get_current_players(
 # value_ranks_dict = percentile_ranks_dict(values)
 # price_ranks_dict = percentile_ranks_dict(prices)
 # min_price = min((p.price for p in current_players if p.price > 0), default=1)
-# min_price_percentile = percentile_rank(prices, min_price)
+# min_price_percentile = price_ranks_dict.get(0.0, percentile_rank(prices, min_price))
 #
 # current_players = sorted(
 #     current_players,
