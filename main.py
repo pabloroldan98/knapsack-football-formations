@@ -20,7 +20,7 @@ from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
 from futmondo import get_players_positions_dict_futmondo
-from useful_functions import find_similar_string
+from useful_functions import find_similar_string, percentile_ranks_dict, percentile_rank
 
 possible_formations = [
     # [2, 2, 2],
@@ -327,13 +327,32 @@ current_players = get_current_players(
 #             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
 
 
+values = [p.value for p in current_players]
+prices = [p.price for p in current_players]
+value_ranks_dict = percentile_ranks_dict(values)
+price_ranks_dict = percentile_ranks_dict(prices)
+min_price = min((p.price for p in current_players if p.price > 0), default=1)
+min_price_percentile = percentile_rank(prices, min_price)
+
 # current_players = sorted(current_players, key=lambda x: (x.value-7)/max(x.price, 1), reverse=True)
+# current_players = sorted(
+#     current_players,
+#     key=lambda x: (
+#         value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
+#         value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile)
+#     ),
+#     reverse=True
+# )
 current_players = sorted(
     current_players,
     key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
     reverse=False
 )
 
+
+
+# for player in current_players:
+#     player.value = percentile_rank(values, player.value) * player.start_probability / max(percentile_rank(prices, player.price), min_price_percentile)
 
 worthy_players = current_players.copy()
 

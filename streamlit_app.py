@@ -10,7 +10,7 @@ from collections import Counter
 
 from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
-from useful_functions import read_dict_data
+from useful_functions import read_dict_data, percentile_ranks_dict, percentile_rank
 
 # Dummy lines to force Streamlit to track the json_files and csv_files directories
 _ = os.listdir("json_files")
@@ -53,10 +53,18 @@ st.markdown(
 
 def sort_players(players, sort_option):
     if sort_option == "Rentabilidad":
+        values = [p.value for p in players]
+        prices = [p.price for p in players]
+        value_ranks_dict = percentile_ranks_dict(values)
+        price_ranks_dict = percentile_ranks_dict(prices)
         min_price = min((p.price for p in players if p.price > 0), default=1)
+        min_price_percentile = percentile_rank(prices, min_price)
         return sorted(
             players,
-            key=lambda x: (x.value - 7) / max(x.price, min_price),
+            key=lambda x: (
+                value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
+                value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile)
+            ),
             reverse=True
         )
     elif sort_option == "Precio":
@@ -300,6 +308,8 @@ st.sidebar.header("Opciones")
 app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
 sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
+if sort_option == "Rentabilidad":
+    st.toast("Ordenados de mejor a peor 'chollo'")
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")

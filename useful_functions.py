@@ -15,6 +15,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import concurrent.futures
 import stopit
+import numpy as np
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -586,3 +587,20 @@ def run_with_timeout(timeout, task):
     #     except concurrent.futures.TimeoutError:
     #         print("Timeout occurred during task execution.")
     #         raise CustomTimeoutException("The task took too long and was stopped.")
+
+
+
+def percentile_ranks_dict(array):
+    """
+    Returns a dict {value: percentile_rank} where percentile_rank is in [0, 1].
+    All duplicate values share the same rank.
+    """
+    arr = np.array(array)
+    return {x: np.sum(arr <= x) / len(arr) for x in np.unique(arr)}
+
+
+# Instead of computing percentiles manually, we can normalize directly to 0-1
+def percentile_rank(array, score):
+    if not array:  # empty list
+        return 0.0
+    return np.sum(np.array(array) <= score) / len(array)
