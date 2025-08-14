@@ -327,14 +327,13 @@ current_players = get_current_players(
 #             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
 
 
-values = [p.value for p in current_players]
-prices = [p.price for p in current_players]
-value_ranks_dict = percentile_ranks_dict(values)
-price_ranks_dict = percentile_ranks_dict(prices)
-min_price = min((p.price for p in current_players if p.price > 0), default=1)
-min_price_percentile = percentile_rank(prices, min_price)
-
-# current_players = sorted(current_players, key=lambda x: (x.value-7)/max(x.price, 1), reverse=True)
+# values = [p.value for p in current_players]
+# prices = [p.price for p in current_players]
+# value_ranks_dict = percentile_ranks_dict(values)
+# price_ranks_dict = percentile_ranks_dict(prices)
+# min_price = min((p.price for p in current_players if p.price > 0), default=1)
+# min_price_percentile = percentile_rank(prices, min_price)
+#
 # current_players = sorted(
 #     current_players,
 #     key=lambda x: (
