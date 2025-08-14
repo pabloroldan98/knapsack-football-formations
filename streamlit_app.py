@@ -335,7 +335,7 @@ ignore_fixtures = fixtures_option == "Sí"
 with st.spinner("Cargando jugadores..."):
     current_players = get_current_players(
         no_form=ignore_form,
-        no_fixtures=fixtures_option,
+        no_fixtures=ignore_fixtures,
         no_home_boost=False,
         no_team_history_boost=False,
         alt_fixture_method=False,
@@ -405,7 +405,7 @@ with st.spinner("Cargando jugadores..."):
             with st.spinner("Cargando jugadores siguiente jornada..."):
                 future_players = get_current_players(
                     no_form=True,
-                    no_fixtures=fixtures_option,
+                    no_fixtures=ignore_fixtures,
                     no_home_boost=False,
                     no_team_history_boost=False,
                     alt_fixture_method=False,
@@ -464,7 +464,7 @@ with st.spinner("Cargando jugadores..."):
             with st.spinner("Cargando jugadores siguientes jornadas..."):
                 distant_players = get_current_players(
                     no_form=True,
-                    no_fixtures=fixtures_option,
+                    no_fixtures=ignore_fixtures,
                     no_home_boost=False,
                     no_team_history_boost=False,
                     alt_fixture_method=False,
