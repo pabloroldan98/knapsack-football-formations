@@ -8,6 +8,7 @@ from unidecode import unidecode
 import streamlit as st
 from collections import Counter
 
+from biwenger import get_next_jornada
 from group_knapsack import print_best_full_teams, best_full_teams
 from main import get_current_players, purge_everything
 from useful_functions import read_dict_data, percentile_ranks_dict, percentile_rank
@@ -316,7 +317,8 @@ jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
 display_to_key = {key.replace("_", " ").strip().title(): key for key in jornadas_dict}
 display_options = ["Siguiente partido"] + list(display_to_key.keys())
 selected_display_jornada = st.sidebar.selectbox("Jornada", options=display_options, format_func=lambda x: normalize_name(x), index=0)
-selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
+# selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
+selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
 jornadas_map = {
     "Una jornada (solo la jornada elegida)": 1,
     "Dos jornadas (jornada elegida +1)": 2,
