@@ -2,7 +2,7 @@
 # Look at: https://stackoverflow.com/questions/74503207/knapsack-with-specific-amount-of-items-from-different-groups
 import time
 
-from biwenger import get_championship_data
+from biwenger import get_championship_data, get_next_jornada
 from futbolfantasy_analytics import get_players_prices_dict_futbolfantasy, get_players_positions_dict_futbolfantasy, \
     get_players_forms_dict_futbolfantasy, get_players_price_trends_dict_futbolfantasy
 from group_knapsack import best_full_teams
@@ -20,7 +20,7 @@ from transfermarket_penalty_savers import get_penalty_savers_dict
 from transfermarket_penalty_takers import get_penalty_takers_dict
 from transfermarket_team_history import get_players_team_history_dict
 from futmondo import get_players_positions_dict_futmondo
-from useful_functions import find_similar_string, percentile_ranks_dict, percentile_rank
+from useful_functions import find_similar_string, percentile_ranks_dict, percentile_rank, read_dict_data
 
 possible_formations = [
     # [2, 2, 2],
@@ -245,7 +245,8 @@ print()
 # current_players = get_current_players()
 
 
-# jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+jornada_selected = jornadas_dict.get(get_next_jornada(), [])
 # jornada_selected = jornadas_dict["jornada_XX"]
 
 current_players = get_current_players(
@@ -305,7 +306,7 @@ current_players = get_current_players(
     is_country=False,
     extra_teams=False,
     debug=False,
-    # forced_matches=jornada_selected,
+    forced_matches=jornada_selected,
 )
     # ratings_file_name = "sofascore_copa_america_players_ratings",
     # penalty_takers_file_name="transfermarket_copa_america_penalty_takers",
