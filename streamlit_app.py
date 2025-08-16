@@ -52,7 +52,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-def sort_players(players, sort_option):
+def sort_players(players, sort_option, use_start_probability=True):
     if sort_option == "Rentabilidad":
         values = [p.value for p in players]
         prices = [p.price for p in players]
@@ -60,44 +60,53 @@ def sort_players(players, sort_option):
         price_ranks_dict = percentile_ranks_dict(prices)
         min_price = min((p.price for p in players if p.price > 0), default=1)
         min_price_percentile = price_ranks_dict.get(0.0, percentile_rank(prices, min_price))
-        return sorted(
-            players,
-            key=lambda x: (
-                value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
-                value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile)
-            ),
-            reverse=True
-        )
+        if use_start_probability:
+            return sorted(
+                players,
+                key=lambda x: (
+                    -value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
+                    -value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile),
+                    -x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team, x.name
+                )
+            )
+        else:
+            return sorted(
+                players,
+                key=lambda x: (
+                    -value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile),
+                    x.start_probability, x.value, x.form, x.fixture, x.price, x.team, x.name
+                )
+            )
     elif sort_option == "Precio":
         return sorted(
             players,
-            key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team)
+            key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team, x.name)
         )
     elif sort_option == "Forma":
         return sorted(
             players,
-            key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team)
+            key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team, x.name)
         )
     elif sort_option == "Partido":
         return sorted(
             players,
-            key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team)
+            key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team, x.name)
         )
     elif sort_option == "Probabilidad":
         return sorted(
             players,
-            key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team)
+            key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
     elif sort_option == "Posición":
         position_priority = {"GK": 0, "DEF": 1, "MID": 2, "ATT": 3}
         return sorted(
             players,
-            key=lambda x: (position_priority.get(x.position, 99), -x.value, -x.form, -x.fixture, x.price, x.team)
+            key=lambda x: (position_priority.get(x.position, 99), -x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
     else:  # Puntuación
         return sorted(
             players,
-            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team)
+            key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
 
 def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None, is_biwenger=False):
@@ -309,8 +318,19 @@ st.sidebar.header("Opciones")
 app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
 penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
 sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
+disable_rentabilidad = sort_option != "Rentabilidad"
+# if disable_rentabilidad:
+#     st.sidebar.markdown("<span style='color:gray'>Ordena por 'Rentabilidad' para activar esta opción.</span>", unsafe_allow_html=True)
+selected_use_start_probability = st.sidebar.radio(
+    "Utilizar '% Titular' cuando se Ordena por **Rentabilidad**",
+    options=["Sí", "No"],
+    index=0,
+    disabled=disable_rentabilidad
+)
+use_start_probability = selected_use_start_probability == "Sí"
 if sort_option == "Rentabilidad":
     st.toast("Ordenados de mejor a peor 'chollo'")
+    # use_start_probability = st.sidebar.radio("Utilizar '% Titular' cuando se Ordena por **Rentabilidad**", ["Sí", "No"], index=0)
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
@@ -582,7 +602,7 @@ with tabs[0]:
 
         blinded_players_list = [p for p in current_players_copy if p.name in st.session_state.blinded_players_set]
         # Ordenar jugadores
-        blinded_players_list = sort_players(blinded_players_list, sort_option)
+        blinded_players_list = sort_players(blinded_players_list, sort_option, use_start_probability)
         # Mostrar blindados actuales
         for i, p in enumerate(blinded_players_list):
             # cols = st.columns([1, 5, 1])
@@ -613,7 +633,7 @@ with tabs[0]:
 
         banned_players_list = [p for p in current_players_copy if p.name in st.session_state.banned_players_set]
         # Ordenar jugadores
-        banned_players_list = sort_players(banned_players_list, sort_option)
+        banned_players_list = sort_players(banned_players_list, sort_option, use_start_probability)
         # Mostrar baneados actuales
         for i, p in enumerate(banned_players_list):
             # cols = st.columns([1, 5, 1])
@@ -757,7 +777,7 @@ with tabs[1]:
         st.markdown("### Jugadores seleccionados:")
         st.caption("_Nota: 'Blindar' jugadores obliga a que estén **sí o sí** en todos los equipos calculados_")
         # Ordenar jugadores
-        my_players_list = sort_players(my_players_list, sort_option)
+        my_players_list = sort_players(my_players_list, sort_option, use_start_probability)
         my_players_list_show = copy.deepcopy(my_players_list)
         for i, p in enumerate(my_players_list_show):
             cols = st.columns([8, 1, 2])
@@ -1033,7 +1053,7 @@ with tabs[2]:
             )
 
     # Ordenar jugadores
-    current_players_filtered = sort_players(current_players_filtered, sort_option)
+    current_players_filtered = sort_players(current_players_filtered, sort_option, use_start_probability)
 
     # Mostrar resultados
     num_jugadores = len(current_players_filtered)
@@ -1141,7 +1161,7 @@ with tabs[3]:
         st.caption("_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_")
 
         # Ordenar jugadores
-        my_market_filtered_players_list = sort_players(my_market_filtered_players_list, sort_option)
+        my_market_filtered_players_list = sort_players(my_market_filtered_players_list, sort_option, use_start_probability)
         my_market_filtered_players_list_show = copy.deepcopy(my_market_filtered_players_list)
         for i, p in enumerate(my_market_filtered_players_list_show):
             cols = st.columns([9, 1])

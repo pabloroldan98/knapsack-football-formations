@@ -338,14 +338,14 @@ current_players = get_current_players(
 # current_players = sorted(
 #     current_players,
 #     key=lambda x: (
-#         value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
-#         value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile)
-#     ),
-#     reverse=True
+#         -value_ranks_dict[x.value] * x.start_probability / max(price_ranks_dict[x.price], min_price_percentile),
+#         -value_ranks_dict[x.value] / max(price_ranks_dict[x.price], min_price_percentile),
+#         -x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team, x.name
+#     )
 # )
 current_players = sorted(
     current_players,
-    key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
+    key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team, x.name),
     reverse=False
 )
 
