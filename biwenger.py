@@ -324,7 +324,7 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
 
 
 def get_next_jornada():
-    all_teams, _ = get_championship_data()
+    all_teams, _ = get_championship_data(verbose=False)
     jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
 
     next_jornadas = []
