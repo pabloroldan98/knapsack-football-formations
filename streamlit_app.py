@@ -1,8 +1,10 @@
 import os
 import copy
+import json
 from io import BytesIO
 
 import streamlit as st
+import streamlit.components.v1 as components
 import requests
 from PIL import Image
 from unidecode import unidecode
@@ -285,6 +287,79 @@ def print_player(player, small_size=0, is_biwenger=False):
         player_cols[3].markdown("Partido:")
         player_cols[4].image(player.fixture_arrow, output_format="PNG") #, use_container_width=True)
         player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+
+def copy_to_clipboard_button(
+    text: str,
+    label: str = "📋 Copiar",
+    key: str = "copy",
+    hover_color: str = "#FF4C4C",
+    height: int = 56,
+    width_px: int | None = None,
+):
+    color = hover_color or st.get_option("theme.primaryColor") or "#FF4C4C"  # “rojo Streamlit”
+    safe_text = json.dumps(text)
+    btn_id = f"copyBtn-{key}"
+    status_id = f"copyStatus-{key}"
+    width_style = f"width:{width_px}px;" if width_px else ""
+
+    components.html(
+        f"""
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <div style="display:inline-flex;align-items:center;gap:8px;">
+          <button id="{btn_id}"
+            style="padding:8px 14px;border-radius:10px;border:1px solid #444;
+                   background:#111;color:#fff;cursor:pointer;
+                   transition:background .15s ease,border-color .15s ease,transform .06s ease; {width_style}">
+            {label}
+          </button>
+          <span id="{status_id}" style="font:14px/1.2 sans-serif;"></span>
+        </div>
+        <style>
+          #{btn_id} {{
+            padding:8px 14px; border-radius:10px; border:1px solid #444;
+            background:#111; color:#fff; cursor:pointer;
+            transition:background .15s ease, border-color .15s ease, transform .06s ease;
+            {width_style}
+          }}
+          #{btn_id}:hover {{
+            background:{color};
+            border-color:{color};
+          }}
+          #{btn_id}:active {{ transform: scale(0.98); }}
+          #{btn_id}:focus-visible {{ outline: 2px solid {color}; outline-offset:2px; }}
+          /* Touch devices don't have hover; give a visual on tap */
+          @media (pointer:coarse) {{
+            #{btn_id}:active {{ background:{color}; border-color:{color}; }}
+          }}
+          .status {{ margin-left:8px; font:14px/1.2 sans-serif; }}
+        </style>
+        <script>
+          const text = {safe_text};
+          function legacyCopy(t){{
+            const ta=document.createElement('textarea');
+            ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+            document.body.appendChild(ta); ta.focus(); ta.select();
+            let ok=false; try{{ ok=document.execCommand('copy'); }}catch(e){{}}
+            document.body.removeChild(ta); return ok;
+          }}
+          const btn=document.getElementById("{btn_id}");
+          const statusEl=document.getElementById("{status_id}");
+          btn.onclick = async () => {{
+            try {{
+              await navigator.clipboard.writeText(text);
+              statusEl.textContent="✅ Copiado";
+            }} catch(e) {{
+              const ok=legacyCopy(text);
+              statusEl.textContent = ok ? "✅ Copiado" : "❌ No se pudo copiar";
+            }}
+            const old=btn.textContent;
+            btn.textContent="✅ Copiado";
+            setTimeout(()=>{{ btn.textContent=old; statusEl.textContent=""; }}, 1200);
+          }};
+        </script>
+        """,
+        height=height,
+    )
 
 
 st.title("Calculadora Fantasy 🤖")
@@ -1068,9 +1143,62 @@ with tabs[2]:
         print_player(player, small_size=0, is_biwenger=is_biwenger)
 
     copiable_text = "\n".join(f"- {p.name}" for p in show_players)
-    # st.button("Copiar jugadores", on_click=on_copy_click, args=(copiable_text,), key="copy_players_button", icon="📋")
-    # copiable_full_text = "\n".join(f"- {p}" for p in show_players)
-    # st.button("Copiar jugadores (datos completos)", on_click=on_copy_click, args=(copiable_full_text,), key="copy_full_players_button", icon="📋")
+    copiable_full_text = "\n".join(f"- {p}" for p in show_players)
+
+    cols = st.columns([5, 10, 1, ])
+    with cols[0]:
+        copy_to_clipboard_button(copiable_text, label="📋 Copiar jugadores", key="players", )
+    with cols[1]:
+        copy_to_clipboard_button(copiable_full_text, label="📋 Copiar jugadores (datos completos)", key="players_full", )
+
+    # # --- Botones de copiar en el cliente (con fallback para iOS) ---
+    # components.html(
+    #     f"""
+    #     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    #     <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    #       <button id="copyNames" style="padding:8px 14px; border-radius:10px; border:1px solid #444; background:#111; color:#fff; cursor:pointer;">📋 Copiar jugadores</button>
+    #       <button id="copyFull"  style="padding:8px 14px; border-radius:10px; border:1px solid #444; background:#111; color:#fff; cursor:pointer;">📋 Copiar jugadores (datos completos)</button>
+    #       <span id="copyStatus" style="margin-left:6px; font:14px sans-serif;"></span>
+    #     </div>
+    #     <script>
+    #       const namesText = {json.dumps(copiable_text)};
+    #       const fullText  = {json.dumps(copiable_full_text)};
+    #       const statusEl  = document.getElementById("copyStatus");
+    #
+    #       function legacyCopy(t) {{
+    #         const ta = document.createElement('textarea');
+    #         ta.value = t;
+    #         ta.setAttribute('readonly', '');
+    #         ta.style.position = 'fixed';
+    #         ta.style.opacity = '0';
+    #         document.body.appendChild(ta);
+    #         ta.focus();
+    #         ta.select();
+    #         let ok = false;
+    #         try {{ ok = document.execCommand('copy'); }} catch (e) {{}}
+    #         document.body.removeChild(ta);
+    #         return ok;
+    #       }}
+    #
+    #       async function copyWithFallback(text, btn) {{
+    #         try {{
+    #           await navigator.clipboard.writeText(text);
+    #           statusEl.textContent = "✅ Copiado";
+    #         }} catch (e) {{
+    #           const ok = legacyCopy(text);
+    #           statusEl.textContent = ok ? "✅ Copiado" : "❌ No se pudo copiar";
+    #         }}
+    #         const old = btn.textContent;
+    #         btn.textContent = "✅ Copiado";
+    #         setTimeout(() => {{ btn.textContent = old; statusEl.textContent = ""; }}, 1200);
+    #       }}
+    #
+    #       document.getElementById("copyNames").onclick = (ev) => copyWithFallback(namesText, ev.target);
+    #       document.getElementById("copyFull").onclick  = (ev) => copyWithFallback(fullText,  ev.target);
+    #     </script>
+    #     """,
+    #     height=70,
+    # )
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
