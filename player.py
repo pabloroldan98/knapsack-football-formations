@@ -843,6 +843,8 @@ def set_start_probabilities(players_list, full_players_start_probabilities_dict,
         start_probabilities = team_players_dict[player.team][player.name].copy()
         valid_probs = [p for p in start_probabilities if p is not None]
         new_start_probability = round(sum(valid_probs) / len(valid_probs), 4) if valid_probs else 0
+        # if player.status == "sanctioned":
+        #     new_start_probability = 0
         if new_start_probability:
             if verbose:
                 if player.start_probability != new_start_probability:
