@@ -1,6 +1,7 @@
 import os
 import copy
 import json
+import html
 from io import BytesIO
 
 import streamlit as st
@@ -292,28 +293,43 @@ def copy_to_clipboard_button(
     text: str,
     label: str = "📋 Copiar",
     key: str = "copy",
-    hover_color: str = "#FF4C4C",
+    hover_color: str | None = None,
+    # hover_color: str | None = "#FF4C4C",
     height: int = 56,
     width_px: int | None = None,
 ):
-    color = hover_color or st.get_option("theme.primaryColor") or "#FF4C4C"  # “rojo Streamlit”
     safe_text = json.dumps(text)
+    safe_label = html.escape(label)
     btn_id = f"copyBtn-{key}"
     status_id = f"copyStatus-{key}"
     width_style = f"width:{width_px}px;" if width_px else ""
 
+    # Build hover CSS depending on hover_color
+    if hover_color is None:
+        # No hover/tap color at all
+        hover_css = ""
+    else:
+        # Normalize color: if "", use theme; if "FF4C4C" add "#"
+        color = hover_color or (st.get_option("theme.primaryColor") or "#FF4C4C")
+        color = color.strip()
+        if not color.startswith("#") and not color.startswith("rgb"):
+            color = "#" + color
+
+        hover_css = f"""
+          #{btn_id}:hover {{
+            background:{color};
+            border-color:{color};
+          }}
+          #{btn_id}:focus-visible {{ outline: 2px solid {color}; outline-offset:2px; }}
+          /* touch devices don't have hover; give a tap visual */
+          @media (pointer:coarse) {{
+            #{btn_id}:active {{ background:{color}; border-color:{color}; }}
+          }}
+        """
+
     components.html(
         f"""
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <div style="display:inline-flex;align-items:center;gap:8px;">
-          <button id="{btn_id}"
-            style="padding:8px 14px;border-radius:10px;border:1px solid #444;
-                   background:#111;color:#fff;cursor:pointer;
-                   transition:background .15s ease,border-color .15s ease,transform .06s ease; {width_style}">
-            {label}
-          </button>
-          <span id="{status_id}" style="font:14px/1.2 sans-serif;"></span>
-        </div>
         <style>
           #{btn_id} {{
             padding:8px 14px; border-radius:10px; border:1px solid #444;
@@ -321,20 +337,19 @@ def copy_to_clipboard_button(
             transition:background .15s ease, border-color .15s ease, transform .06s ease;
             {width_style}
           }}
-          #{btn_id}:hover {{
-            background:{color};
-            border-color:{color};
-          }}
           #{btn_id}:active {{ transform: scale(0.98); }}
-          #{btn_id}:focus-visible {{ outline: 2px solid {color}; outline-offset:2px; }}
-          /* Touch devices don't have hover; give a visual on tap */
-          @media (pointer:coarse) {{
-            #{btn_id}:active {{ background:{color}; border-color:{color}; }}
-          }}
           .status {{ margin-left:8px; font:14px/1.2 sans-serif; }}
+          {hover_css}
         </style>
+
+        <div style="display:inline-flex;align-items:center;gap:8px;">
+          <button id="{btn_id}" type="button">{safe_label}</button>
+          <span id="{status_id}" class="status"></span>
+        </div>
+
         <script>
           const text = {safe_text};
+
           function legacyCopy(t){{
             const ta=document.createElement('textarea');
             ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
@@ -342,9 +357,10 @@ def copy_to_clipboard_button(
             let ok=false; try{{ ok=document.execCommand('copy'); }}catch(e){{}}
             document.body.removeChild(ta); return ok;
           }}
+
           const btn=document.getElementById("{btn_id}");
           const statusEl=document.getElementById("{status_id}");
-          btn.onclick = async () => {{
+          btn.addEventListener('click', async () => {{
             try {{
               await navigator.clipboard.writeText(text);
               statusEl.textContent="✅ Copiado";
@@ -355,7 +371,7 @@ def copy_to_clipboard_button(
             const old=btn.textContent;
             btn.textContent="✅ Copiado";
             setTimeout(()=>{{ btn.textContent=old; statusEl.textContent=""; }}, 1200);
-          }};
+          }});
         </script>
         """,
         height=height,
