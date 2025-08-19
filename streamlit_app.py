@@ -1,7 +1,6 @@
 import os
 import copy
 from io import BytesIO
-import clipboard
 
 import streamlit as st
 import requests
@@ -287,9 +286,6 @@ def print_player(player, small_size=0, is_biwenger=False):
         player_cols[4].image(player.fixture_arrow, output_format="PNG") #, use_container_width=True)
         player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
 
-def on_copy_click(text):
-    clipboard.copy(text)
-    st.toast("✅ Lista copiada al portapapeles")
 
 st.title("Calculadora Fantasy 🤖")
 
@@ -1072,9 +1068,9 @@ with tabs[2]:
         print_player(player, small_size=0, is_biwenger=is_biwenger)
 
     copiable_text = "\n".join(f"- {p.name}" for p in show_players)
-    st.button("Copiar jugadores", on_click=on_copy_click, args=(copiable_text,), key="copy_players_button", icon="📋")
-    copiable_full_text = "\n".join(f"- {p}" for p in show_players)
-    st.button("Copiar jugadores (datos completos)", on_click=on_copy_click, args=(copiable_full_text,), key="copy_full_players_button", icon="📋")
+    # st.button("Copiar jugadores", on_click=on_copy_click, args=(copiable_text,), key="copy_players_button", icon="📋")
+    # copiable_full_text = "\n".join(f"- {p}" for p in show_players)
+    # st.button("Copiar jugadores (datos completos)", on_click=on_copy_click, args=(copiable_full_text,), key="copy_full_players_button", icon="📋")
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
