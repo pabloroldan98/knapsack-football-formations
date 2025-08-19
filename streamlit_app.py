@@ -2,10 +2,11 @@ import os
 import copy
 from io import BytesIO
 
+import streamlit as st
+from st_copy_to_clipboard import st_copy_to_clipboard
 import requests
 from PIL import Image
 from unidecode import unidecode
-import streamlit as st
 from collections import Counter
 
 from group_knapsack import print_best_full_teams, best_full_teams
@@ -1066,6 +1067,11 @@ with tabs[2]:
     for player in show_players:
         # st.text(str(player))
         print_player(player, small_size=0, is_biwenger=is_biwenger)
+
+    copiable_text = "\n".join(f"- {p.name}" for p in show_players)
+    st_copy_to_clipboard(copiable_text)#, before_copy_label="Copiar jugadores")
+    # copiable_full_text = "\n".join(f"{p}" for p in show_players)
+    # st_copy_to_clipboard(copiable_full_text, before_copy_label="Copiar jugadores (datos completos)")
 
 with tabs[3]:
     st.header("Selecciona los Jugadores de tu mercado")
