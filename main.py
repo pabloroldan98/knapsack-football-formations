@@ -755,7 +755,7 @@ if __name__ == "__main__":
     # print()
     # print("__________________________________________")
     # print()
-    # purged_players = purge_everything(purged_players, probability_threshold=0.35, fixture_filter=True)
+    # purged_players = purge_everything(worthy_players_og, probability_threshold=0.35, fixture_filter=False)
     # worthy_players = purged_players.copy()
     # for p in current_players:
     #     if p.status == "injured" or p.status == "sanctioned":
@@ -784,7 +784,8 @@ if __name__ == "__main__":
     # # Partidos
     #
     # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-    # jornada = jornadas_dict["jornada_XX"]
+    # jornada = jornadas_dict.get(get_next_jornada(), [])
+    # # jornada = jornadas_dict["jornada_XX"]
     # print(team_avg_dict)
     #
     # # Usamos el diccionario team_avg creado antes
