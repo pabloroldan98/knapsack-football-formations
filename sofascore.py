@@ -503,12 +503,12 @@ def get_players_data(
                     """
                     average_rating = float(6.0)
 
-                    # Attempt #1: "Summary (last 12 months)"
-                    try:
-                        average_rating = float(get_player_page_average_rating(p))
-                        return average_rating
-                    except:
-                        pass
+                    # # Attempt #1: "Summary (last 12 months)"
+                    # try:
+                    #     average_rating = float(get_player_page_average_rating(p))
+                    #     return average_rating
+                    # except:
+                    #     pass
 
                     # Attempt #2: "last-year-summary" via api
                     try:
