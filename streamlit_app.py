@@ -63,6 +63,8 @@ I18N = {
     # App
     "app.title": {"es": "Calculadora Fantasy 🤖", "en": "Fantasy Calculator 🤖"},
     "app.hero_logo_alt": {"es": "Logo Calculadora", "en": "Calculator Logo"},
+    "app.laligafantasy": {"es": "LaLiga Fantasy", "en": "LaLiga Fantasy"},
+    "app.biwenger": {"es": "Biwenger", "en": "Biwenger"},
 
     # Tabs
     "tab.best11_budget": {"es": "💰 Mejores 11s con presupuesto", "en": "💰 Best XIs by budget"},
@@ -82,7 +84,7 @@ I18N = {
     "sort.price": {"es": "Precio", "en": "Price"},
     "sort.form": {"es": "Forma", "en": "Form"},
     "sort.fixture": {"es": "Partido", "en": "Fixture"},
-    "sort.startprob": {"es": "Probabilidad", "en": "Start probability"},
+    "sort.startprobability": {"es": "Probabilidad", "en": "Start probability"},
     "sort.position": {"es": "Posición", "en": "Position"},
     "sb.use_start_prob_with_value": {
         "es": "Utilizar '% Titular' cuando se Ordena por **Rentabilidad**",
@@ -212,6 +214,20 @@ I18N = {
     "loader.players": {"es": "Cargando jugadores...", "en": "Loading players..."},
     "loader.future_players": {"es": "Cargando jugadores siguiente jornada...", "en": "Loading next weekday players..."},
     "loader.distant_players": {"es": "Cargando jugadores siguientes jornadas...", "en": "Loading next weekdays players..."},
+
+    # Warnings
+    "warning.need": {"es": "Necesitas", "en": "You need"},
+    "warning.at_least": {"es": "al menos", "en": "at least"},
+    "warning.gk": {"es": "Portero", "en": "Goalkeeper"},
+    "warning.gks": {"es": "Porteros", "en": "Goalkeepers"},
+    "warning.def": {"es": "Defensa", "en": "Defender"},
+    "warning.defs": {"es": "Defensas", "en": "Defenders"},
+    "warning.mid": {"es": "Mediocentro", "en": "Midfielder"},
+    "warning.mids": {"es": "Mediocentros", "en": "Midfielders"},
+    "warning.att": {"es": "Delantero", "en": "Forward"},
+    "warning.atts": {"es": "Delanteros", "en": "Forwards"},
+    "warning.mas": {"es": " más", "en": ""},
+    "warning.more": {"es": "", "en": " more"},
 }
 
 def get_lang():
@@ -286,7 +302,7 @@ def sort_players(players, sort_option, use_start_probability=True):
             players,
             key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team, x.name)
         )
-    elif sort_option ==t("sort.startprob"):
+    elif sort_option ==t("sort.startprobability"):
         return sorted(
             players,
             key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team, x.name)
@@ -598,9 +614,9 @@ tabs = st.tabs(tab_labels)
 # Sidebar filters
 lang_switcher()
 st.sidebar.header(t("sb.options"))
-app_option = st.sidebar.selectbox(t("sb.app"), ["LaLiga Fantasy", "Biwenger"], index=1)
+app_option = st.sidebar.selectbox(t("sb.app"), [t("app.laligafantasy"), t("app.biwenger")], index=1)
 penalties_option = st.sidebar.radio(t("sb.penalties"), [t("opt.yes"), t("opt.no")], index=0)
-sort_option = st.sidebar.selectbox(t("sb.sort_by"), [t("sort.score"), t("sort.worth"), t("sort.price"), t("sort.form"), t("sort.fixture"), t("sort.startprob"), t("sort.position")], index=0)
+sort_option = st.sidebar.selectbox(t("sb.sort_by"), [t("sort.score"), t("sort.worth"), t("sort.price"), t("sort.form"), t("sort.fixture"), t("sort.startprobability"), t("sort.position")], index=0)
 disable_rentabilidad = sort_option != t("sort.worth")
 # if disable_rentabilidad:
 #     st.sidebar.markdown("<span style='color:gray'>Ordena por 'Rentabilidad' para activar esta opción.</span>", unsafe_allow_html=True)
@@ -642,7 +658,7 @@ if disable_multi_jornada:
 form_option = st.sidebar.radio(t("sb.ignore_form"), [t("opt.yes"), t("opt.no")], index=1)
 fixtures_option = st.sidebar.radio(t("sb.ignore_fixtures"), [t("opt.yes"), t("opt.no")], index=1)
 
-is_biwenger = app_option == "Biwenger"
+is_biwenger = app_option == t("app.biwenger")
 ignore_penalties = penalties_option == t("opt.no")
 ignore_form = form_option == t("opt.yes")
 ignore_fixtures = fixtures_option == t("opt.yes")
@@ -1154,90 +1170,92 @@ with tabs[1]:
         position_counts = {pos: counts.get(pos, 0) for pos in ["GK", "DEF", "MID", "ATT"]}
         if use_premium:
             if position_counts["GK"] < 1:
-                st.warning("Necesitas al menos 1 Portero.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 1 {t("warning.gk")}.")
             if position_counts["DEF"] < 3:
-                st.warning("Necesitas al menos 3 Defensas.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 3 {t("warning.defs")}.")
             if position_counts["MID"] < 2:
-                st.warning("Necesitas al menos 2 Mediocentros.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 2 {t("warning.mids")}.")
             if position_counts["ATT"] < 0:
-                st.warning("Necesitas al menos 0 Delanteros.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 0 {t("warning.atts")}.")
             if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 5 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 5{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 4:
-                st.warning("Necesitas 1 Defensa/Mediocentro más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.mid")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 6 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 1 Defensa/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 4 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 1 Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 2:
-                st.warning("Necesitas 1 Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 5 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 1 Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
-                st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Defensa/Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 3:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 2:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 2 and position_counts["ATT"] >= 1:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 4{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 3 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 4{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 2 and position_counts["ATT"] == 0:
-                st.warning("Necesitas 4 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 4{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             # else:
             #     if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 2 and position_counts["ATT"] >= 0:
             #         st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
+            #         st.warning(f"{t("warning.need")} {t("warning.at_least")} 1{t("warning.more")} {t("warning.def")}/{t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
         else:
             if position_counts["GK"] < 1:
-                st.warning("Necesitas al menos 1 Portero.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 1 {t("warning.gk")}.")
             if position_counts["DEF"] < 3:
-                st.warning("Necesitas al menos 3 Defensas.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 3 {t("warning.defs")}.")
             if position_counts["MID"] < 3:
-                st.warning("Necesitas al menos 3 Mediocentros.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 3 {t("warning.mids")}.")
             if position_counts["ATT"] < 1:
-                st.warning("Necesitas al menos 1 Delantero.")
+                st.warning(f"{t("warning.need")} {t("warning.at_least")} 1 {t("warning.att")}.")
             if position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 3 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 3{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 3:
-                st.warning("Necesitas 1 Defensa/Mediocentro más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.mid")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 5 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Defensa/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.def")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 5 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 1 Mediocentro/Delantero más")
+                st.warning(f"{t("warning.need")} 1{t("warning.more")} {t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] == 3 and position_counts["ATT"] >= 2:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] == 3 and position_counts["MID"] >= 4 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             elif position_counts["GK"] >= 1 and position_counts["DEF"] >= 4 and position_counts["MID"] == 3 and position_counts["ATT"] == 1:
-                st.warning("Necesitas 2 Defensas/Mediocentros/Delanteros más")
+                st.warning(f"{t("warning.need")} 2{t("warning.more")} {t("warning.defs")}/{t("warning.mids")}/{t("warning.atts")}{t("warning.mas")}")
             # else:
             #     if position_counts["GK"] >= 1 and position_counts["DEF"] >= 3 and position_counts["MID"] >= 3 and position_counts["ATT"] >= 1:
             #         st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
+            #         st.warning(f"{t("warning.need")} {t("warning.at_least")} 1 {t("warning.def")}/{t("warning.mid")}/{t("warning.att")}{t("warning.mas")}")
         if len(filtered_players) < 11:
             if len(my_players_list) >= 11:
                 st.warning(t("warn.too_strict"))
