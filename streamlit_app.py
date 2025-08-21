@@ -662,7 +662,7 @@ if sort_option == t("sort.worth"):
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-display_to_key = {key.replace("_", " ").strip().title(): key for key in jornadas_dict}
+display_to_key = {key.replace("_", " ").strip().title().replace("Jornada", t("sb.jornada")): key for key in jornadas_dict}
 display_options = [t("jornada.next")] + list(display_to_key.keys())
 selected_display_jornada = st.sidebar.selectbox(t("sb.jornada"), options=display_options, format_func=lambda x: normalize_name(x), index=0)
 # selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
