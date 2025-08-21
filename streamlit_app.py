@@ -214,6 +214,10 @@ I18N = {
     "loader.players": {"es": "Cargando jugadores...", "en": "Loading players..."},
     "loader.future_players": {"es": "Cargando jugadores siguiente jornada...", "en": "Loading next weekday players..."},
     "loader.distant_players": {"es": "Cargando jugadores siguientes jornadas...", "en": "Loading next weekdays players..."},
+    "loader.knapsack_progress": {
+        "es": "Calculando mejores combinaciones",
+        "en": "Calculating best combinations"
+    },
 
     # Warnings
     "warning.need": {"es": "Necesitas", "en": "You need"},
@@ -1060,8 +1064,9 @@ with tabs[0]:
             needed_purge,
             possible_formations,
             budget,
-            verbose=2,
             speed_up=not use_slow_calc,
+            translator=t,
+            verbose=2,
         )
 
         display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set, is_biwenger)
@@ -1297,6 +1302,7 @@ with tabs[1]:
                 worthy_players,
                 possible_formations,
                 -1,
+                translator=t,
                 verbose=1
             )
             # print_best_full_teams(formation_score_players_by_score)

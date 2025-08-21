@@ -89,7 +89,7 @@ def filter_players_knapsack(players_list, formation):
     return filtered_players
 
 
-def best_full_teams(players_list, formations=possible_formations, budget=300, speed_up=True, verbose=1):
+def best_full_teams(players_list, formations=possible_formations, budget=300, speed_up=True, translator=None, verbose=1):
     super_verbose = bool(verbose-1)
     verbose = bool(verbose)
     # players_by_group = sorted(players_list, key=lambda x: x.get_group())
@@ -120,6 +120,9 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
     if STREAMLIT_ACTIVE:
         progress_text = st.empty()
         progress_bar = st.progress(0.0)
+
+        # fallback label if no translator provided
+        _label = (translator("loader.knapsack_progress") if callable(translator) else "Calculando mejores combinaciones")
         def make_update_master(total_ops):
             completed = 0
             last_percent = -1
@@ -131,7 +134,8 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
                 if percent > last_percent:
                     progress_bar.progress(completed / total_ops)
                     # progress_text.text(f"Calculando mejores combinaciones: {completed} / {total_ops}")
-                    progress_text.text(f"Calculando mejores combinaciones: {percent} %")
+                    # progress_text.text(f"Calculando mejores combinaciones: {percent} %")
+                    progress_text.text(f"{_label}: {percent} %")
                     last_percent = percent
             return update
         update_master = make_update_master(total_global_operations)
