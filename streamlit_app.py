@@ -55,8 +55,199 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+SUPPORTED_LANGS = ("es", "en")
+
+# Put every visible string behind a key. You can grow this dict over time.
+I18N = {
+    # App
+    "app.title": {"es": "Calculadora Fantasy 🤖", "en": "Fantasy Calculator 🤖"},
+    "app.hero_logo_alt": {"es": "Logo Calculadora", "en": "Calculator Logo"},
+
+    # Tabs
+    "tab.best11_budget": {"es": "💰 Mejores 11s con presupuesto", "en": "💰 Best XIs by budget"},
+    "tab.my_best11": {"es": "⚽ Mi mejor 11 posible", "en": "⚽ My best possible XI"},
+    "tab.players_list": {"es": "📋 Lista de jugadores", "en": "📋 Players list"},
+    "tab.my_market": {"es": "📈 Analizar mi mercado", "en": "📈 Analyze my market"},
+
+    # Sidebar
+    "sb.options": {"es": "Opciones", "en": "Options"},
+    "sb.app": {"es": "Aplicación", "en": "App"},
+    "sb.penalties": {"es": "¿Te importan los penaltis?", "en": "Do penalties matter to you?"},
+    "opt.yes": {"es": "Sí", "en": "Yes"},
+    "opt.no": {"es": "No", "en": "No"},
+    "sb.sort_by": {"es": "Ordenar por", "en": "Sort by"},
+    "sort.score": {"es": "Puntuación", "en": "Score"},
+    "sort.worth": {"es": "Rentabilidad", "en": "Worth"},
+    "sort.price": {"es": "Precio", "en": "Price"},
+    "sort.form": {"es": "Forma", "en": "Form"},
+    "sort.fixture": {"es": "Partido", "en": "Fixture"},
+    "sort.startprob": {"es": "Probabilidad", "en": "Start probability"},
+    "sort.position": {"es": "Posición", "en": "Position"},
+    "sb.use_start_prob_with_value": {
+        "es": "Utilizar '% Titular' cuando se Ordena por **Rentabilidad**",
+        "en": "Use 'Start %' when sorting by **Worth**",
+    },
+
+    # Jornada / matches
+    "sb.jornada": {"es": "Jornada", "en": "Matchweek"},
+    "jornada.next": {"es": "Siguiente partido", "en": "Next match"},
+    "sb.num_jornadas": {"es": "Cuántas jornadas tener en cuenta", "en": "How many matchweeks to consider"},
+    "num.one": {"es": "Una jornada (solo la jornada elegida)", "en": "One matchweek (only the selected matchweek)"},
+    "num.two": {"es": "Dos jornadas (jornada elegida +1)", "en": "Two matchweeks (selected matchweek +1)"},
+    "num.three": {"es": "Tres jornadas (jornada elegida +2)", "en": "Three matchweeks (selected matchweek +2)"},
+    "hint.select_specific_jornada": {
+        "es": "Selecciona una jornada específica para usar varias jornadas.",
+        "en": "Select a specific matchweek to use multiple matchweeks.",
+    },
+
+    # Toggles
+    "sb.ignore_form": {"es": "¿Ignorar estado de **forma**?", "en": "Ignore **form**?"},
+    "sb.ignore_fixtures": {"es": "¿Ignorar dificultad del **partido**?", "en": "Ignore **fixture difficulty**?"},
+
+    # Budget section
+    "h.budget11": {"es": "Mejores 11s dentro de tu presupuesto", "en": "Best XIs within your budget"},
+    "sb.budget.max": {"es": "Presupuesto máximo disponible", "en": "Maximum available budget"},
+    "sb.budget.hint": {"es": "Pon **-1** si quieres indicar presupuesto ilimitado", "en": "Use **-1** for unlimited budget"},
+    "sb.extra_filters": {"es": "**Filtros adicionales**", "en": "**Additional filters**"},
+    "sb.exclude_hard_fixtures": {
+        "es": "Excluir jugadores con partidos difíciles",
+        "en": "Exclude players with hard fixtures",
+    },
+    "sb.start_prob_range": {"es": "Probabilidad de ser titular (%)", "en": "Probability to start (%)"},
+    "sb.slow_calc": {"es": "Cálculo avanzado", "en": "Advanced calculation"},
+    "sb.slow_calc_hint": {
+        "es": "El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles",
+        "en": "This is **much slower**, but uses almost all available players",
+    },
+    "sb.premium_formations": {"es": "Formaciones Premium", "en": "Premium formations"},
+    "btn.calc11": {"es": "Calcular 11s", "en": "Calculate XIs"},
+    "h.best_combinations_budget": {
+        "es": "Mejores combinaciones posibles dentro del presupuesto:",
+        "en": "Best combinations within budget:",
+    },
+
+    # Blinded / banned
+    "blind.header": {"es": "Blindar o Excluir jugadores", "en": "Lock or Exclude players"},
+    "blind.title": {"es": "🔒 Jugadores blindados", "en": "🔒 Locked players"},
+    "blind.caption1": {
+        "es": "Estos jugadores estarán **sí o sí** en todos los equipos calculados",
+        "en": "These players will **always** be in every calculated team",
+    },
+    "blind.caption2": {
+        "es": "_(siempre que entren dentro del presupuesto seleccionado)_",
+        "en": "_(as long as they fit in your budget)_",
+    },
+    "blind.add": {"es": "Añadir jugador blindado", "en": "Add locked player"},
+    "blind.total_price": {"es": "Precio total de jugadores blindados:", "en": "Total price of locked players:"},
+    "ban.title": {"es": "🚫 Jugadores excluidos", "en": "🚫 Excluded players"},
+    "ban.caption": {
+        "es": "Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado",
+        "en": "These players will **never** be in any calculated team",
+    },
+    "ban.add": {"es": "Añadir jugador excluido", "en": "Add excluded player"},
+
+    # Players list
+    "h.players_list": {"es": "Lista de Jugadores Actualizada", "en": "Updated Players List"},
+    "players.legend": {
+        "es": "_· **Jugador** (Posición, Equipo): Precio - **Puntuación**_  \n_(Forma: estado de forma, Partido: complejidad del partido, Titular: probabilidad de ser titular %)_",
+        "en": "_· **Player** (Position, Team): Price - **Score**_  \n_(Form: player form, Fixture: match difficulty, Start: probability to start %)_",
+    },
+    "filters.more": {"es": "Filtros adicionales", "en": "More filters"},
+    "filters.complete_more_bold": {"es": "**Filtros adicionales sobre tu lista**", "en": "**Additional filters on your list**"},
+    "filters.complete_more": {"es": "Filtros adicionales sobre tu lista", "en": "Additional filters on your list"},
+    "filters.fixture": {"es": "Filtrar por dificultad de partido", "en": "Filter by fixture difficulty"},
+    "filters.price": {"es": "Filtrar por precio (en M)", "en": "Filter by price (M)"},
+    "filters.position": {"es": "**Filtrar por posición:**", "en": "**Filter by position:**"},
+    "pos.gk": {"es": "Portero", "en": "Goalkeeper"},
+    "pos.def": {"es": "Defensa", "en": "Defender"},
+    "pos.mid": {"es": "Mediocentro", "en": "Midfielder"},
+    "pos.att": {"es": "Delantero", "en": "Forward"},
+    "filters.teams": {"es": "Filtrar por equipos", "en": "Filter by teams"},
+    "filters.teams_placeholder": {"es": "Selecciona uno o varios equipos", "en": "Select one or multiple teams"},
+    "player.word": {"es": "jugador", "en": "player"},
+    "players.word": {"es": "jugadores", "en": "players"},
+    "player.found": {"es": "encontrado", "en": "found"},
+    "players.found": {"es": "encontrados", "en": "found"},
+    "player.filtered": {"es": "filtrado", "en": "filtered"},
+    "players.filtered": {"es": "filtrados", "en": "filtered"},
+    "player.selected": {"es": "seleccionado", "en": "selected"},
+    "players.selected": {"es": "seleccionados", "en": "selected"},
+    "btn.copy_players": {"es": "📋 Copiar jugadores", "en": "📋 Copy players"},
+    "btn.copy_players_full": {"es": "📋 Copiar jugadores (datos completos)", "en": "📋 Copy players (full data)"},
+
+    # My XI
+    "h.my_best11": {"es": "Selecciona Jugadores para tu 11 ideal", "en": "Select players for your ideal XI"},
+    "cap.add_all": {"es": "Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal", "en": "Add **all** your squad to compute your best XI"},
+    "sb.search_player": {"es": "Buscar jugador", "en": "Search player"},
+    "h.selected_players": {"es": "Jugadores seleccionados:", "en": "Selected players:"},
+    "cap.lock_note": {
+        "es": "_Nota: 'Blindar' jugadores obliga a que estén **sí o sí** en todos los equipos calculados_",
+        "en": "_Note: 'Locking' players forces them into all calculated teams_",
+    },
+    "blind.done": {"es": "🔒 Blindado", "en": "🔒 Locked"},
+    "blind.predone": {"es": "Blindar", "en": "Lock"},
+    "btn.ready": {"es": "Listo", "en": "Done"},
+    "warn.too_strict": {"es": "Filtros demasiado exigentes, selecciona menos filtros.", "en": "Filters too strict, loosen them."},
+    "warn.need_11": {"es": "Selecciona al menos 11 jugadores antes de continuar.", "en": "Select at least 11 players before continuing."},
+    "h.best_combinations": {"es": "Mejores combinaciones posibles:", "en": "Best possible combinations:"},
+
+    # Market tab
+    "h.market": {"es": "Selecciona los Jugadores de tu mercado", "en": "Pick the players from your market"},
+    "cap.market": {"es": "Selecciona los Jugadores que han salido en tu mercado para compararlos entre ellos", "en": "Select the players available in your market to compare them"},
+    "cap.same_as_list": {"es": "_Nota: es lo mismo que la 'Lista de jugadores', pero seleccionando solo a los jugadores que quieres ver_", "en": "_Note: same as the 'Players list' but only for the players you select_"},
+    "players.selected_count": {"es": "{n} {w} seleccionado{s} _({f} filtrado{s})_", "en": "{n} {w} selected _({f} filtered)_"},
+
+    # Tooltips & small texts
+    "toast.value_sorted": {"es": "Ordenados de mejor a peor 'chollo'", "en": "Sorted by best 'bargain'"},
+    "cap.form_note": {
+        "es": "_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_",
+        "en": "_Note: 'Form' is calculated from the player's price trend_",
+    },
+
+    # Footer
+    "footer.contact": {"es": "📩 Contacto", "en": "📩 Contact"},
+
+    # Loaders
+    "loader.players": {"es": "Cargando jugadores...", "en": "Loading players..."},
+    "loader.future_players": {"es": "Cargando jugadores siguiente jornada...", "en": "Loading next weekday players..."},
+    "loader.distant_players": {"es": "Cargando jugadores siguientes jornadas...", "en": "Loading next weekdays players..."},
+}
+
+def get_lang():
+    # Priority: URL ?lang= -> session_state -> default 'es'
+    qp = st.query_params
+    if "lang" in qp and qp["lang"] in SUPPORTED_LANGS:
+        st.session_state.lang = qp["lang"]
+    if "lang" not in st.session_state:
+        st.session_state.lang = "es"
+    # keep URL in sync for shareable links
+    if qp.get("lang") != st.session_state.lang:
+        st.query_params.update({"lang": st.session_state.lang})
+    return st.session_state.lang
+
+def t(key: str, **kwargs) -> str:
+    lang = get_lang()
+    txt = I18N.get(key, {}).get(lang, I18N.get(key, {}).get("es", key))
+    # allow "{m}" etc
+    try:
+        return txt.format(**kwargs)
+    except Exception:
+        return txt
+
+def lang_switcher():
+    lang = get_lang()
+    label = "Language" if lang == "en" else "Idioma"
+    choice = st.sidebar.selectbox(label, options=["es", "en"], format_func=lambda x: "Español" if x=="es" else "English", index=["es","en"].index(lang))
+    if choice != lang:
+        st.session_state.lang = choice
+        st.query_params.update({"lang": choice})
+        st.rerun()
+# --- end i18n -----------------------------------------------------------------
+
+
 def sort_players(players, sort_option, use_start_probability=True):
-    if sort_option == "Rentabilidad":
+    if sort_option == t("sort.worth"):
         values = [p.value for p in players]
         prices = [p.price for p in players]
         value_ranks_dict = percentile_ranks_dict(values)
@@ -80,33 +271,33 @@ def sort_players(players, sort_option, use_start_probability=True):
                     x.start_probability, x.value, x.form, x.fixture, x.price, x.team, x.name
                 )
             )
-    elif sort_option == "Precio":
+    elif sort_option == t("sort.price"):
         return sorted(
             players,
             key=lambda x: (-x.price, -x.value, -x.form, -x.fixture, x.team, x.name)
         )
-    elif sort_option == "Forma":
+    elif sort_option == t("sort.form"):
         return sorted(
             players,
             key=lambda x: (-x.form, -x.value, -x.fixture, x.price, x.team, x.name)
         )
-    elif sort_option == "Partido":
+    elif sort_option == t("sort.fixture"):
         return sorted(
             players,
             key=lambda x: (-x.fixture, -x.value, -x.form, x.price, x.team, x.name)
         )
-    elif sort_option == "Probabilidad":
+    elif sort_option ==t("sort.startprob"):
         return sorted(
             players,
             key=lambda x: (-x.start_probability, -x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
-    elif sort_option == "Posición":
+    elif sort_option == t("sort.position"):
         position_priority = {"GK": 0, "DEF": 1, "MID": 2, "ATT": 3}
         return sorted(
             players,
             key=lambda x: (position_priority.get(x.position, 99), -x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
-    else:  # Puntuación
+    else:  # Puntuación t("sort.score")
         return sorted(
             players,
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team, x.name)
@@ -378,15 +569,15 @@ def copy_to_clipboard_button(
     )
 
 
-st.title("Calculadora Fantasy 🤖")
+st.title(t("app.title"))
 
 st.markdown("---")
 
 tab_labels = [
-    "💰 Mejores 11s con presupuesto",
-    "⚽ Mi mejor 11 posible",
-    "📋 Lista de jugadores",
-    "📈 Analizar mi mercado"
+    t("tab.best11_budget"),
+    t("tab.my_best11"),
+    t("tab.players_list"),
+    t("tab.my_market"),
 ]
 tabs = st.tabs(tab_labels)
 # # Selector de funcionalidad principal
@@ -405,39 +596,40 @@ tabs = st.tabs(tab_labels)
 # )
 
 # Sidebar filters
-st.sidebar.header("Opciones")
-app_option = st.sidebar.selectbox("Aplicación", ["LaLiga Fantasy", "Biwenger"], index=1)
-penalties_option = st.sidebar.radio("¿Te importan los penaltis?", ["Sí", "No"], index=0)
-sort_option = st.sidebar.selectbox("Ordenar por", ["Puntuación", "Rentabilidad", "Precio", "Forma", "Partido", "Probabilidad", "Posición"], index=0)
-disable_rentabilidad = sort_option != "Rentabilidad"
+lang_switcher()
+st.sidebar.header(t("sb.options"))
+app_option = st.sidebar.selectbox(t("sb.app"), ["LaLiga Fantasy", "Biwenger"], index=1)
+penalties_option = st.sidebar.radio(t("sb.penalties"), [t("opt.yes"), t("opt.no")], index=0)
+sort_option = st.sidebar.selectbox(t("sb.sort_by"), [t("sort.score"), t("sort.worth"), t("sort.price"), t("sort.form"), t("sort.fixture"), t("sort.startprob"), t("sort.position")], index=0)
+disable_rentabilidad = sort_option != t("sort.worth")
 # if disable_rentabilidad:
 #     st.sidebar.markdown("<span style='color:gray'>Ordena por 'Rentabilidad' para activar esta opción.</span>", unsafe_allow_html=True)
 selected_use_start_probability = st.sidebar.radio(
-    "Utilizar '% Titular' cuando se Ordena por **Rentabilidad**",
-    options=["Sí", "No"],
+    t("sb.use_start_prob_with_value"),
+    options=[t("opt.yes"), t("opt.no")],
     index=0,
     disabled=disable_rentabilidad
 )
-use_start_probability = selected_use_start_probability == "Sí"
-if sort_option == "Rentabilidad":
-    st.toast("Ordenados de mejor a peor 'chollo'")
+use_start_probability = selected_use_start_probability == t("opt.yes")
+if sort_option == t("sort.worth"):
+    st.toast(t("toast.value_sorted"))
     # use_start_probability = st.sidebar.radio("Utilizar '% Titular' cuando se Ordena por **Rentabilidad**", ["Sí", "No"], index=0)
 
 # Jornada
 jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
 display_to_key = {key.replace("_", " ").strip().title(): key for key in jornadas_dict}
-display_options = ["Siguiente partido"] + list(display_to_key.keys())
-selected_display_jornada = st.sidebar.selectbox("Jornada", options=display_options, format_func=lambda x: normalize_name(x), index=0)
+display_options = [t("jornada.next")] + list(display_to_key.keys())
+selected_display_jornada = st.sidebar.selectbox(t("sb.jornada"), options=display_options, format_func=lambda x: normalize_name(x), index=0)
 # selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
-selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
+selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == t("jornada.next") else jornadas_dict[display_to_key[selected_display_jornada]]
 jornadas_map = {
-    "Una jornada (solo la jornada elegida)": 1,
-    "Dos jornadas (jornada elegida +1)": 2,
-    "Tres jornadas (jornada elegida +2)": 3,
+    t("num.one"): 1,
+    t("num.two"): 2,
+    t("num.three"): 3,
 }
-disable_multi_jornada = selected_display_jornada == "Siguiente partido"
+disable_multi_jornada = selected_display_jornada == t("jornada.next")
 selected_num_jornadas_label = st.sidebar.selectbox(
-    "Cuántas jornadas tener en cuenta",
+    t("sb.num_jornadas"),
     options=list(jornadas_map.keys()),
     format_func=lambda x: normalize_name(x),
     index=0,
@@ -445,17 +637,17 @@ selected_num_jornadas_label = st.sidebar.selectbox(
 )
 selected_num_jornadas = jornadas_map[selected_num_jornadas_label]
 if disable_multi_jornada:
-    st.sidebar.markdown("<span style='color:gray'>Selecciona una jornada específica para usar varias jornadas.</span>", unsafe_allow_html=True)
+    st.sidebar.markdown(f"<span style='color:gray'>{t("hint.select_specific_jornada")}</span>", unsafe_allow_html=True)
 
-form_option = st.sidebar.radio("¿Ignorar estado de **forma**?", ["Sí", "No"], index=1)
-fixtures_option = st.sidebar.radio("¿Ignorar dificultad del **partido**?", ["Sí", "No"], index=1)
+form_option = st.sidebar.radio(t("sb.ignore_form"), [t("opt.yes"), t("opt.no")], index=1)
+fixtures_option = st.sidebar.radio(t("sb.ignore_fixtures"), [t("opt.yes"), t("opt.no")], index=1)
 
 is_biwenger = app_option == "Biwenger"
-ignore_penalties = penalties_option == "No"
-ignore_form = form_option == "Sí"
-ignore_fixtures = fixtures_option == "Sí"
+ignore_penalties = penalties_option == t("opt.no")
+ignore_form = form_option == t("opt.yes")
+ignore_fixtures = fixtures_option == t("opt.yes")
 
-with st.spinner("Cargando jugadores..."):
+with st.spinner(t("loader.players")):
     current_players = get_current_players(
         no_form=ignore_form,
         no_fixtures=ignore_fixtures,
@@ -525,7 +717,7 @@ with st.spinner("Cargando jugadores..."):
             next_next_jornada_key = list(display_to_key.values())[jornada_index + 2] if jornada_index + 2 < len(
                 display_to_key) else None
         if next_jornada_key:
-            with st.spinner("Cargando jugadores siguiente jornada..."):
+            with st.spinner(t("loader.future_players")):
                 future_players = get_current_players(
                     no_form=True,
                     no_fixtures=ignore_fixtures,
@@ -584,7 +776,7 @@ with st.spinner("Cargando jugadores..."):
                     forced_matches=jornadas_dict[next_jornada_key],
                 )
         if next_next_jornada_key:
-            with st.spinner("Cargando jugadores siguientes jornadas..."):
+            with st.spinner(t("loader.distant_players")):
                 distant_players = get_current_players(
                     no_form=True,
                     no_fixtures=ignore_fixtures,
@@ -661,9 +853,9 @@ with st.spinner("Cargando jugadores..."):
     current_team_list = sorted(set(player.team for player in current_players))
 
 
+# Ocultar el botón de fullscreen de todas las st.image
 st.markdown(f"""
     <style>
-    /* Ocultar el botón de fullscreen de todas las st.image */
     div[data-testid="stElementToolbar"] {{
         display: none;
     }}
@@ -672,20 +864,20 @@ st.markdown(f"""
 
 # if main_option == "Mejores 11s con presupuesto" or main_option == "💰 Mejores 11s con presupuesto":
 with tabs[0]:
-    st.header("Mejores 11s dentro de tu presupuesto")
+    st.header(t("h.budget11"))
 
-    with st.expander("Blindar o Excluir jugadores"):
+    with st.expander(t("blind.header")):
         current_players_copy = copy.deepcopy(current_players)
         if "blinded_players_set" not in st.session_state:
             st.session_state.blinded_players_set = set()
         if "banned_players_set" not in st.session_state:
             st.session_state.banned_players_set = set()
 
-        st.markdown("### 🔒 Jugadores blindados")
-        st.caption("Estos jugadores estarán **sí o sí** en todos los equipos calculados")
-        st.caption("_(siempre que entren dentro del presupuesto seleccionado)_")
+        st.markdown(f"### {t("blind.title")}")
+        st.caption(t("blind.caption1"))
+        st.caption(t("blind.caption2"))
         blinded_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.blinded_players_set]
-        selected_blindado = st.selectbox("Añadir jugador blindado", options=[""] + blinded_candidates, format_func=lambda x: normalize_name(x), key="add_blindado")
+        selected_blindado = st.selectbox(t("blind.add"), options=[""] + blinded_candidates, format_func=lambda x: normalize_name(x), key="add_blindado")
         if selected_blindado:
             st.session_state.blinded_players_set.add(selected_blindado)
             st.session_state.banned_players_set.discard(selected_blindado)
@@ -711,12 +903,12 @@ with tabs[0]:
                     st.rerun()
         if blinded_players_list:
             total_price = sum(p.price / 10 if is_biwenger else p.price for p in blinded_players_list)
-            st.caption(f"Precio total de jugadores blindados: **{total_price}M**")
+            st.caption(f"{t("blind.total_price")} **{total_price}M**")
 
-        st.markdown("### 🚫 Jugadores excluidos")
-        st.caption("Estos jugadores **no estarán bajo ningún concepto** en ningún equipo calculado")
+        st.markdown(f"### {t("ban.title")}")
+        st.caption(t("ban.caption"))
         banned_candidates = [p.name for p in current_players_copy if p.name not in st.session_state.banned_players_set]
-        selected_baneado = st.selectbox("Añadir jugador excluido", options=[""] + banned_candidates, format_func=lambda x: normalize_name(x), key="add_baneado")
+        selected_baneado = st.selectbox(t("ban.add"), options=[""] + banned_candidates, format_func=lambda x: normalize_name(x), key="add_baneado")
         if selected_baneado:
             st.session_state.banned_players_set.add(selected_baneado)
             st.session_state.blinded_players_set.discard(selected_baneado)
@@ -742,26 +934,26 @@ with tabs[0]:
                     st.rerun()
 
     if is_biwenger:
-        budget = st.number_input("Presupuesto máximo disponible", min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
+        budget = st.number_input(t("sb.budget.max"), min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
         budget = int(budget * 10)
     else:
-        budget = st.number_input("Presupuesto máximo disponible", min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
-    st.caption("Pon **-1** si quieres indicar presupuesto ilimitado")
+        budget = st.number_input(t("sb.budget.max"), min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
+    st.caption(t("sb.budget.hint"))
     # if is_biwenger:
     #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
-    with st.expander("**Filtros adicionales**", expanded=True):
+    with st.expander(t("sb.extra_filters"), expanded=True):
         use_fixture_filter = st.radio(
-            "Excluir jugadores con partidos difíciles", ["No", "Sí"], index=0 if is_biwenger else 1,key="fixture_filter_budget"
-        ) == "Sí"
+            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if is_biwenger else 1,key="fixture_filter_budget"
+        ) == t("opt.yes")
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100
         prob_key = "prob_threshold_budget"
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider(t("sb.start_prob_range"), 0, 100, (65, 100), key=prob_key)
         max_prob_slider = 100
+        # Ocultar el segundo handle (derecho) del slider
         st.markdown(f"""
             <style>
-            /* Ocultar el segundo handle (derecho) del slider */
             div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
                 display: none;
             }}
@@ -770,10 +962,10 @@ with tabs[0]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        use_slow_calc = st.checkbox("Cálculo avanzado", value=False, key="is_slow_calc")
-        st.caption("El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles")
+        use_slow_calc = st.checkbox(t("sb.slow_calc"), value=False, key="is_slow_calc")
+        st.caption(t("sb.slow_calc_hint"))
 
-    use_premium = st.checkbox("Formaciones Premium", value=False, key="premium_budget")
+    use_premium = st.checkbox(t("sb.premium_formations"), value=False, key="premium_budget")
 
     my_filtered_players = purge_everything(
         current_players_copy,
@@ -815,8 +1007,8 @@ with tabs[0]:
             [5, 2, 3],
         ]
 
-    if st.button("Calcular 11s", key="submit_budget_11") and my_filtered_players:
-        st.markdown("## Mejores combinaciones posibles dentro del presupuesto:")
+    if st.button(t("btn.calc11"), key="submit_budget_11") and my_filtered_players:
+        st.markdown(f"## {t("h.best_combinations_budget")}")
         worthy_players = sorted(
             my_filtered_players,
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
@@ -836,8 +1028,8 @@ with tabs[0]:
 # Funcionalidades futuras
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
 with tabs[1]:
-    st.header("Selecciona Jugadores para tu 11 ideal")
-    st.caption("Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal")
+    st.header(t("h.my_best11"))
+    st.caption(t("cap.add_all"))
 
     current_players = sorted(
         current_players,
@@ -854,7 +1046,7 @@ with tabs[1]:
     # Búsqueda por autocompletado
     # player_names = [p.name for p in current_players]
     player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names]
-    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_jugador")
+    selected_name = st.selectbox(t("sb.search_player"), options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_jugador")
     if selected_name not in st.session_state.my_players_names:
         st.session_state.my_players_names.add(selected_name)
         st.rerun()
@@ -865,8 +1057,8 @@ with tabs[1]:
 
     # Mostrar jugadores seleccionados
     if my_players_list:
-        st.markdown("### Jugadores seleccionados:")
-        st.caption("_Nota: 'Blindar' jugadores obliga a que estén **sí o sí** en todos los equipos calculados_")
+        st.markdown(f"### {t("h.selected_players")}")
+        st.caption(t("cap.lock_note"))
         # Ordenar jugadores
         my_players_list = sort_players(my_players_list, sort_option, use_start_probability)
         my_players_list_show = copy.deepcopy(my_players_list)
@@ -885,7 +1077,7 @@ with tabs[1]:
                     st.rerun()
             with cols[2]:
                 is_blinded = p.name in st.session_state.blinded_players
-                blindar_label = "🔒 Blindado" if is_blinded else "Blindar"
+                blindar_label = t("blind.done") if is_blinded else t("blind.predone")
                 if st.button(blindar_label, key=f"blindar_{i}"):
                     if is_blinded:
                         st.session_state.blinded_players.remove(p.name)
@@ -902,18 +1094,18 @@ with tabs[1]:
                 p.fixture = 10
 
     # Filtros adicionales aplicados sobre `my_players_list`
-    with st.expander("**Filtros adicionales sobre tu lista**", expanded=True if my_players_list else 0):
+    with st.expander(t("filters.complete_more_bold"), expanded=True if my_players_list else 0):
         use_fixture_filter = st.radio(
-            "Excluir jugadores con partidos difíciles", ["No", "Sí"], index=0 if is_biwenger else 1, key="fixture_filter_my11"
-        ) == "Sí"
+            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if is_biwenger else 1,key="fixture_filter_my11"
+        ) == t("opt.yes")
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_my11")
         # threshold = threshold_slider / 100
         prob_key = "prob_threshold_my11"
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (65, 100), key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider(t("sb.start_prob_range"), 0, 100, (65, 100), key=prob_key)
         max_prob_slider = 100
+        # Ocultar el segundo handle (derecho) del slider
         st.markdown(f"""
             <style>
-            /* Ocultar el segundo handle (derecho) del slider */
             div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
                 display: none;
             }}
@@ -936,7 +1128,7 @@ with tabs[1]:
         ]
 
     # Checkbox para formaciones premium
-    use_premium = st.checkbox("Formaciones Premium", value=False)
+    use_premium = st.checkbox(t("sb.premium_formations"), value=False)
 
     possible_formations = [
         [3, 4, 3],
@@ -957,7 +1149,7 @@ with tabs[1]:
         ]
 
     # Botón para ejecutar selección final
-    if st.button("Listo", key="submit_my_11") and filtered_players:
+    if st.button(t("btn.ready"), key="submit_my_11") and filtered_players:
         counts = Counter(player.position for player in filtered_players)
         position_counts = {pos: counts.get(pos, 0) for pos in ["GK", "DEF", "MID", "ATT"]}
         if use_premium:
@@ -1048,11 +1240,11 @@ with tabs[1]:
             #         st.warning("Necesitas al menos 1 Defensa/Mediocentro/Delantero más")
         if len(filtered_players) < 11:
             if len(my_players_list) >= 11:
-                st.warning("Filtros demasiado exigentes, selecciona menos filtros.")
+                st.warning(t("warn.too_strict"))
             else:
-                st.warning("Selecciona al menos 11 jugadores antes de continuar.")
+                st.warning(t("warn.need_11"))
         else:
-            st.markdown("## Mejores combinaciones posibles:")
+            st.markdown(f"## {t("h.best_combinations")}")
             worthy_players = sorted(
                 filtered_players,
                 key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
@@ -1070,17 +1262,12 @@ with tabs[1]:
 # Si selecciona "Lista de jugadores"
 # ekif main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
 with tabs[2]:
-    st.header("Lista de Jugadores Actualizada")
-    st.markdown(
-        """
-            _· **Jugador** (Posición, Equipo): Precio - **Puntuación**_  
-            _(Forma: estado de forma, Partido: complejidad del partido, Titular: probabilidad de ser titular %)_
-        """
-    )
+    st.header(t("h.players_list"))
+    st.markdown(t("players.legend"))
 
     # Filtros adicionales
-    with st.expander("Filtros adicionales"):
-        use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0) == "Sí"
+    with st.expander(t("filters.more")):
+        use_fixture_filter = st.radio(t("filters.fixture"), [t("opt.no"), t("opt.yes")], index=0) == t("opt.yes")
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 0)
         # threshold = threshold_slider / 100
 
@@ -1091,13 +1278,13 @@ with tabs[2]:
         # else:
         #     st.session_state[prob_key] = (0, 100)
         # min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, value=st.session_state[prob_key], key=prob_key)
-        min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+        min_prob_slider, max_prob_slider = st.slider(t("sb.start_prob_range"), 0, 100, (0, 100), key=prob_key)
         max_prob_slider = 100
             # div[class*="st-key-prob_threshold_playerslist"] div[data-testid="stSlider"] > div > div > div > div:nth-child(2) {
             # div[class*="st-key-prob_threshold_playerslist"] div > div > div > div > div > div:nth-child(2) {
+        # Ocultar el segundo handle (derecho) del slider
         st.markdown(f"""
             <style>
-            /* Ocultar el segundo handle (derecho) del slider */
             div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
                 display: none;
             }}
@@ -1107,21 +1294,24 @@ with tabs[2]:
         max_prob = max_prob_slider / 100
 
         # Filtro por precio
+        max_player_price = max((p.price for p in current_players), default=300)
         if is_biwenger:
-            min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio", format="%.1f")
-            min_price = int(min_price * 10)
-            max_price = int(max_price * 10)
+            max_player_price_show = round(max_player_price / 10, 1)
+            min_price, max_price = st.slider(t("filters.price"), 0.0, max_player_price_show, (0.0, max_player_price_show), step=0.1, key="slider_precio", format="%.1f")
+            min_price = int(round(min_price * 10))
+            max_price = int(round(max_price * 10))
         else:
-            min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio", format="%.0f")
+            max_player_price_show = max_player_price
+            min_price, max_price = st.slider(t("filters.price"), 0, max_player_price, (0, max_player_price), step=1, key="slider_precio", format="%.0f")
 
         # Filtro por posición
-        st.markdown("**Filtrar por posición:**")
-        filter_gk = st.checkbox("Portero", value=True)
-        filter_def = st.checkbox("Defensa", value=True)
-        filter_mid = st.checkbox("Mediocentro", value=True)
-        filter_att = st.checkbox("Delantero", value=True)
+        st.markdown(t("filters.position"))
+        filter_gk = st.checkbox(t("pos.gk"), value=True)
+        filter_def = st.checkbox(t("pos.def"), value=True)
+        filter_mid = st.checkbox(t("pos.mid"), value=True)
+        filter_att = st.checkbox(t("pos.att"), value=True)
 
-        filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos")
+        filter_teams = st.multiselect(t("filters.teams"), options=current_team_list, format_func=lambda x: normalize_name(x), placeholder=t("filters.teams_placeholder"))
 
         # Aplicar filtros
         current_players_filtered = [
@@ -1148,9 +1338,10 @@ with tabs[2]:
 
     # Mostrar resultados
     num_jugadores = len(current_players_filtered)
-    jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
+    jugador_texto = t("player.word") if num_jugadores == 1 else t("players.word")
+    encontrado_texto = t("player.found") if num_jugadores == 1 else t("players.found")
     st.subheader(
-        f"{num_jugadores} {jugador_texto} encontrado" + ("s" if num_jugadores != 1 else "")
+        f"{num_jugadores} {jugador_texto} {encontrado_texto}"
     )
 
     show_players = copy.deepcopy(current_players_filtered)
@@ -1163,63 +1354,14 @@ with tabs[2]:
 
     cols = st.columns([5, 10, 1, ])
     with cols[0]:
-        copy_to_clipboard_button(copiable_text, label="📋 Copiar jugadores", key="players", )
+        copy_to_clipboard_button(copiable_text, label=t("btn.copy_players"), key="players", )
     with cols[1]:
-        copy_to_clipboard_button(copiable_full_text, label="📋 Copiar jugadores (datos completos)", key="players_full", )
-
-    # # --- Botones de copiar en el cliente (con fallback para iOS) ---
-    # components.html(
-    #     f"""
-    #     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    #     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    #       <button id="copyNames" style="padding:8px 14px; border-radius:10px; border:1px solid #444; background:#111; color:#fff; cursor:pointer;">📋 Copiar jugadores</button>
-    #       <button id="copyFull"  style="padding:8px 14px; border-radius:10px; border:1px solid #444; background:#111; color:#fff; cursor:pointer;">📋 Copiar jugadores (datos completos)</button>
-    #       <span id="copyStatus" style="margin-left:6px; font:14px sans-serif;"></span>
-    #     </div>
-    #     <script>
-    #       const namesText = {json.dumps(copiable_text)};
-    #       const fullText  = {json.dumps(copiable_full_text)};
-    #       const statusEl  = document.getElementById("copyStatus");
-    #
-    #       function legacyCopy(t) {{
-    #         const ta = document.createElement('textarea');
-    #         ta.value = t;
-    #         ta.setAttribute('readonly', '');
-    #         ta.style.position = 'fixed';
-    #         ta.style.opacity = '0';
-    #         document.body.appendChild(ta);
-    #         ta.focus();
-    #         ta.select();
-    #         let ok = false;
-    #         try {{ ok = document.execCommand('copy'); }} catch (e) {{}}
-    #         document.body.removeChild(ta);
-    #         return ok;
-    #       }}
-    #
-    #       async function copyWithFallback(text, btn) {{
-    #         try {{
-    #           await navigator.clipboard.writeText(text);
-    #           statusEl.textContent = "✅ Copiado";
-    #         }} catch (e) {{
-    #           const ok = legacyCopy(text);
-    #           statusEl.textContent = ok ? "✅ Copiado" : "❌ No se pudo copiar";
-    #         }}
-    #         const old = btn.textContent;
-    #         btn.textContent = "✅ Copiado";
-    #         setTimeout(() => {{ btn.textContent = old; statusEl.textContent = ""; }}, 1200);
-    #       }}
-    #
-    #       document.getElementById("copyNames").onclick = (ev) => copyWithFallback(namesText, ev.target);
-    #       document.getElementById("copyFull").onclick  = (ev) => copyWithFallback(fullText,  ev.target);
-    #     </script>
-    #     """,
-    #     height=70,
-    # )
+        copy_to_clipboard_button(copiable_full_text, label=t("btn.copy_players_full"), key="players_full", )
 
 with tabs[3]:
-    st.header("Selecciona los Jugadores de tu mercado")
-    st.caption("Selecciona los Jugadores que han salido en tu mercado para compararlos entre ellos")
-    st.caption("_Nota: es lo mismo que la 'Lista de jugadores', pero seleccionando solo a los jugadores que quieres ver_")
+    st.header(t("h.market"))
+    st.caption(t("cap.market"))
+    st.caption(t("cap.same_as_list"))
 
     current_players = sorted(
         current_players,
@@ -1234,7 +1376,7 @@ with tabs[3]:
     # Búsqueda por autocompletado
     # player_names = [p.name for p in current_players]
     player_names = [p.name for p in current_players if p.name not in st.session_state.my_players_names_set]
-    selected_name = st.selectbox("Buscar jugador", options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_mercado")
+    selected_name = st.selectbox(t("sb.search_player"), options=[""] + player_names, format_func=lambda x: normalize_name(x), key="busca_mercado")
     if selected_name not in st.session_state.my_players_names_set:
         st.session_state.my_players_names_set.add(selected_name)
         st.rerun()
@@ -1246,14 +1388,14 @@ with tabs[3]:
     # Mostrar jugadores seleccionados
     if my_market_players_list:
         # Filtros adicionales aplicados sobre `my_market_players_list`
-        with st.expander("Filtros adicionales sobre tu lista"):
-            use_fixture_filter = st.radio("Filtrar por dificultad de partido", ["No", "Sí"], index=0, key="fixture_filter") == "Sí"
+        with st.expander(t("filters.complete_more")):
+            use_fixture_filter = st.radio(t("filters.fixture"), [t("opt.no"), t("opt.yes")], index=0, key="fixture_filter") == t("opt.yes")
             prob_key = "prob_threshold_marketplayerslist"
-            min_prob_slider, max_prob_slider = st.slider("Probabilidad de ser titular (%)", 0, 100, (0, 100), key=prob_key)
+            min_prob_slider, max_prob_slider = st.slider(t("sb.start_prob_range"), 0, 100, (0, 100), key=prob_key)
             max_prob_slider = 100
+            # Ocultar el segundo handle (derecho) del slider
             st.markdown(f"""
                 <style>
-                /* Ocultar el segundo handle (derecho) del slider */
                 div[class*="st-key-{prob_key}"] div[data-baseweb="slider"] div[role="slider"]:nth-child(2) {{
                     display: none;
                 }}
@@ -1263,21 +1405,24 @@ with tabs[3]:
             max_prob = max_prob_slider / 100
 
             # Filtro por precio
+            max_player_price = max((p.price for p in current_players), default=300)
             if is_biwenger:
-                min_price, max_price = st.slider("Filtrar por precio (en M)", 0.0, 30.0, (0.0, 30.0), step=0.1, key="slider_precio_market", format="%.1f")
-                min_price = int(min_price * 10)
-                max_price = int(max_price * 10)
+                max_player_price_show = round(max_player_price / 10, 1)
+                min_price, max_price = st.slider(t("filters.price"), 0.0, max_player_price_show, (0.0, max_player_price_show), step=0.1, key="slider_precio_market", format="%.1f")
+                min_price = int(round(min_price * 10))
+                max_price = int(round(max_price * 10))
             else:
-                min_price, max_price = st.slider("Filtrar por precio (en M)", 0, 300, (0, 300), step=1, key="slider_precio_market", format="%.0f")
+                max_player_price_show = max_player_price
+                min_price, max_price = st.slider(t("filters.price"), 0, max_player_price, (0, max_player_price), step=1, key="slider_precio_market", format="%.0f")
 
             # Filtro por posición
-            st.markdown("**Filtrar por posición:**")
-            filter_gk = st.checkbox("Portero", value=True, key="filter_gk")
-            filter_def = st.checkbox("Defensa", value=True, key="filter_def")
-            filter_mid = st.checkbox("Mediocentro", value=True, key="filter_mid")
-            filter_att = st.checkbox("Delantero", value=True, key="filter_att")
+            st.markdown(t("filters.position"))
+            filter_gk = st.checkbox(t("pos.gk"), value=True, key="filter_gk")
+            filter_def = st.checkbox(t("pos.def"), value=True, key="filter_def")
+            filter_mid = st.checkbox(t("pos.mid"), value=True, key="filter_mid")
+            filter_att = st.checkbox(t("pos.att"), value=True, key="filter_att")
 
-            filter_teams = st.multiselect("Filtrar por equipos", options=current_team_list, format_func=lambda x: normalize_name(x), placeholder="Selecciona uno o varios equipos", key="multichoice_teams")
+            filter_teams = st.multiselect(t("filters.teams"), options=current_team_list, format_func=lambda x: normalize_name(x), placeholder=t("filters.teams_placeholder"), key="multichoice_teams")
 
             # Aplicar filtros
             my_market_filtered_players_list = [
@@ -1302,12 +1447,13 @@ with tabs[3]:
 
         # Mostrar resultados
         num_jugadores = len(my_market_filtered_players_list)
-        jugador_texto = "jugador" if num_jugadores == 1 else "jugadores"
-        filtrado_texto = "filtrado" if num_filtrados == 1 else "filtrados"
+        jugador_texto = t("player.word") if num_jugadores == 1 else t("players.word")
+        filtrado_texto = t("player.filtered") if num_filtrados == 1 else t("players.filtered")
+        seleccionado_texto = t("player.selected") if num_jugadores == 1 else t("players.selected")
         st.subheader(
-            f"{num_jugadores} {jugador_texto} seleccionado" + ("s" if num_jugadores != 1 else "") + f" _({num_filtrados} {filtrado_texto})_"
+            f"{num_jugadores} {jugador_texto} {seleccionado_texto}" + f" _({num_filtrados} {filtrado_texto})_"
         )
-        st.caption("_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_")
+        st.caption(t("cap.form_note"))
 
         # Ordenar jugadores
         my_market_filtered_players_list = sort_players(my_market_filtered_players_list, sort_option, use_start_probability)
@@ -1338,6 +1484,6 @@ st.markdown("---")
 # st.markdown(
 #     "By pabloroldan98 (Twitch: DonRoda)"
 # )
-st.markdown("📩 Contacto: [calculadora.fantasy@gmail.com](mailto:calculadora.fantasy@gmail.com)")
+st.markdown(f"{t("footer.contact")}: [calculadora.fantasy@gmail.com](mailto:calculadora.fantasy@gmail.com)")
 
 # Auto-update trigger: Thu Aug 21 07:21:57 UTC 2025

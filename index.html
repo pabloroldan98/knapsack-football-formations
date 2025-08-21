@@ -74,6 +74,29 @@
       pointer-events: none;
     }
 
+    .lang {
+      position: absolute;
+      top: 2rem;
+      left: 3rem;
+    }
+
+    .lang-btn {
+      position: static;
+      padding: 2px 4px;
+      font-size: 0.7rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .lang-btn:hover {
+      background: rgb(255, 76, 76);
+    }
+    .lang-btn.active {
+      border: 1.5px solid rgb(200, 50, 50);
+    }
+
     .logo {
       position: absolute;
       top: 2rem;
@@ -245,13 +268,25 @@
   <div class="wrapper">
     <!-- LANDING -->
     <div class="landing" id="landing">
+      <!-- Language -->
+      <div class="lang">
+        <div class="lang-toggle" aria-label="Language">
+          <button class="lang-btn" id="btnES" onclick="setLang('es')">
+            Español <img src="https://flagcdn.com/es.svg" alt="ES" style="width:18px; vertical-align:middle;">
+          </button>
+          <button class="lang-btn" id="btnEN" onclick="setLang('en')">
+            English <img src="https://flagcdn.com/gb.svg" alt="EN" style="width:18px; vertical-align:middle;">
+          </button>
+        </div>
+      </div>
       <!-- LOGO -->
       <div class="logo">
         <img src="logo.png" alt="Logo Calculadora Fantasy">
       </div>
-      <h1>Bienvenido a la Calculadora Fantasy</h1>
-      <h4>Con soporte para: LaLiga Fantasy & Biwenger</h4>
-      <button class="enter-button" onclick="enterApp()">Empezar a calcular</button>
+
+      <h1 id="t-title">Bienvenido a la Calculadora Fantasy</h1>
+      <h4 id="t-subtitle">Con soporte para: LaLiga Fantasy &amp; Biwenger</h4>
+      <button class="enter-button" id="t-enter" onclick="enterApp()">Empezar a calcular</button>
 
       <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
         <div class="slide-content" id="slideContent">
@@ -265,28 +300,33 @@
       </div>
 
       <footer>
-        <p>
-          📩 Contacto: <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a> |
-          <a href="#" onclick="openPrivacy()" style="color: rgba(255,255,255,0.7);">Política de Privacidad</a>
+        <p id="t-footer">
+          📩 <span id="t-contact-label">Contacto</span>:
+          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a> |
+          <a href="#" onclick="openPrivacy()" style="color: rgba(255,255,255,0.7);" id="t-privacy-link">Política de Privacidad</a>
         </p>
       </footer>
 
+      <!-- Privacy modal -->
       <div id="privacyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; padding:2rem; overflow:auto;">
         <div style="max-width:800px; margin:auto; background:#1e1e1e; padding:2rem; border-radius:8px;">
-          <h2>Política de Privacidad</h2>
-          <p>En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
-             Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
-          <p>Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
-             <a href="mailto:calculadora.fantasy@gmail.com" style="color:rgb(255,76,76);">calculadora.fantasy@gmail.com</a>.
+          <h2 id="t-privacy-title">Política de Privacidad</h2>
+          <p id="t-privacy-p1">
+            En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
+            Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.
           </p>
-          <button onclick="closePrivacy()" style="margin-top:1rem; padding:10px 20px; background:rgb(255, 76, 76); border:none; border-radius:6px; color:white; cursor:pointer;">Cerrar</button>
+          <p id="t-privacy-p2">
+            Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
+            <a href="mailto:calculadora.fantasy@gmail.com" style="color:rgb(255,76,76);">calculadora.fantasy@gmail.com</a>.
+          </p>
+          <button onclick="closePrivacy()" id="t-privacy-close" style="margin-top:1rem; padding:10px 20px; background:rgb(255, 76, 76); border:none; border-radius:6px; color:white; cursor:pointer;">Cerrar</button>
         </div>
       </div>
     </div>
 
     <!-- APP loader -->
     <div id="loading" class="loading-overlay">
-      <div class="spinner"></div> Cargando jugadores…
+      <div class="spinner"></div> <span id="t-loading">Cargando jugadores…</span>
     </div>
 <!--    &lt;!&ndash; APP &ndash;&gt;-->
 <!--    <div class="iframe-container">-->
@@ -300,29 +340,112 @@
   </div>
 
   <script>
-    const slides = [
-      {
-        title: "💰 Mejores 11s con presupuesto",
-        desc: "Calcula la mejor alineación posible según tu presupuesto disponible.",
-        img: "img/presupuesto.png"
+    // --- Simple i18n ----------------------------------------------------------
+    const I18N = {
+      es: {
+        title: "Bienvenido a la Calculadora Fantasy",
+        subtitle: "Con soporte para: LaLiga Fantasy & Biwenger",
+        enter: "Empezar a calcular",
+        contact_label: "Contacto",
+        privacy_link: "Política de Privacidad",
+        privacy_title: "Política de Privacidad",
+        privacy_p1: "En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.",
+        privacy_p2: "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
+        privacy_close: "Cerrar",
+        loading: "Cargando jugadores…",
+        slides: [
+          { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.", img: "img/presupuesto.png" },
+          { title: "⚽ Mi mejor 11 posible",        desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.",     img: "img/once.png" },
+          { title: "📋 Lista de jugadores",         desc: "Consulta estadísticas, precios y puntuaciones esperadas de todos los jugadores.", img: "img/lista.png" },
+          { title: "📈 Analizar mi mercado",        desc: "Selecciona varios jugadores para compararlos entre ellos.",         img: "img/mercado.png" },
+        ]
       },
-      {
-        title: "⚽ Mi mejor 11 posible",
-        desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.",
-        img: "img/once.png"
-      },
-      {
-        title: "📋 Lista de jugadores",
-        desc: "Consulta estadísticas, precios y puntuaciones esperadas de todos los jugadores.",
-        img: "img/lista.png"
-      },
-      {
-        title: "📈 Analizar mi mercado",
-        desc: "Selecciona varios jugadores para compararlos entre ellos.",
-        img: "img/mercado.png"
+      en: {
+        title: "Welcome to the Fantasy Calculator",
+        subtitle: "Supports: LaLiga Fantasy & Biwenger",
+        enter: "Start calculating",
+        contact_label: "Contact",
+        privacy_link: "Privacy Policy",
+        privacy_title: "Privacy Policy",
+        privacy_p1: "At Fantasy Calculator we respect your privacy and are committed to protecting your personal data. This site does not collect personal data without your consent and does not share information with third parties except when legally required.",
+        privacy_p2: "For more information or to exercise your rights of access, rectification or erasure, write to",
+        privacy_close: "Close",
+        loading: "Loading players…",
+        slides: [
+          { title: "💰 Best XIs by budget",         desc: "Compute the best possible lineup based on your available budget.",   img: "img/presupuesto.png" },
+          { title: "⚽ My best possible XI",        desc: "Pick your available players and get your ideal starting eleven.",     img: "img/once.png" },
+          { title: "📋 Players list",               desc: "See stats, prices and expected points for every player.",             img: "img/lista.png" },
+          { title: "📈 Analyze my market",          desc: "Select several players to compare them against each other.",         img: "img/mercado.png" },
+        ]
       }
-    ];
+    };
 
+    function getQueryLang(){
+      const p = new URLSearchParams(location.search);
+      const q = (p.get("lang") || "").toLowerCase();
+      return (q === "en" || q === "es") ? q : null;
+    }
+    function guessBrowserLang(){
+      const n = navigator.language || navigator.userLanguage || "es";
+      return n.toLowerCase().startsWith("en") ? "en" : "es";
+    }
+    function saveLang(lang){
+      try { localStorage.setItem("lang", lang); } catch(_) {}
+    }
+    function loadLang(){
+      try { return localStorage.getItem("lang"); } catch(_) { return null; }
+    }
+
+    let LANG = getQueryLang() || loadLang() || guessBrowserLang();
+
+    function applyLangToDom(){
+      const T = I18N[LANG] || I18N.es;
+      document.documentElement.lang = LANG;
+
+      // Top texts
+      document.getElementById("t-title").textContent = T.title;
+      document.getElementById("t-subtitle").textContent = T.subtitle;
+      document.getElementById("t-enter").textContent = T.enter;
+
+      // Footer & privacy
+      document.getElementById("t-contact-label").textContent = T.contact_label;
+      document.getElementById("t-privacy-link").textContent = T.privacy_link;
+      document.getElementById("t-privacy-title").textContent = T.privacy_title;
+      document.getElementById("t-privacy-p1").textContent = T.privacy_p1;
+      // p2 is text + email link
+      const p2 = document.getElementById("t-privacy-p2");
+      p2.firstChild && p2.removeChild(p2.firstChild);
+      p2.insertAdjacentText("afterbegin", T.privacy_p2 + " ");
+      document.getElementById("t-privacy-close").textContent = T.privacy_close;
+
+      // Loading overlay
+      document.getElementById("t-loading").textContent = T.loading;
+
+      // Slides content
+      slides = T.slides.slice(); // replace the global slides array
+      currentSlide = 0;
+      renderSlide(currentSlide);
+
+      // Toggle active button
+      document.getElementById("btnES").classList.toggle("active", LANG==="es");
+      document.getElementById("btnEN").classList.toggle("active", LANG==="en");
+
+      // Keep URL shareable with ?lang=
+      const url = new URL(location.href);
+      url.searchParams.set("lang", LANG);
+      history.replaceState(null, "", url.toString());
+    }
+
+    function setLang(lang){
+      if (lang !== "es" && lang !== "en") return;
+      LANG = lang;
+      saveLang(LANG);
+      applyLangToDom();
+    }
+    // -------------------------------------------------------------------------
+
+    // Slides (placeholder; overwritten by applyLangToDom on first run)
+    let slides = I18N[LANG].slides.slice();
     let currentSlide = 0;
     let intervalId;
     const slideContainer = document.getElementById('slide');
@@ -346,79 +469,42 @@
         // Fade in
         content.classList.remove('fade-out');
         content.classList.add('fade-in');
-      }, 300); // Duración del fade-out (debe coincidir con CSS)
+      }, 300);
     }
 
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      renderSlide(currentSlide);
-    }
-
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      renderSlide(currentSlide);
-    }
-
-    function startSlider() {
-      renderSlide(currentSlide);
-      intervalId = setInterval(nextSlide, 6000); // 6 segundos
-    }
-
-    function pauseSlider() {
-      clearInterval(intervalId);
-    }
-
-    function resumeSlider() {
-      intervalId = setInterval(nextSlide, 6000);
-    }
+    function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; renderSlide(currentSlide); }
+    function prevSlide() { currentSlide = (currentSlide - 1 + slides.length) % slides.length; renderSlide(currentSlide); }
+    function startSlider() { renderSlide(currentSlide); intervalId = setInterval(nextSlide, 6000); }
+    function pauseSlider() { clearInterval(intervalId); }
+    function resumeSlider() { intervalId = setInterval(nextSlide, 6000); }
 
     function enterApp() {
-      // document.getElementById('landing').classList.add('hidden');
-      // }
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('landing').classList.add('hidden');
-
       const mode = "landing";
       let path;
-
-      if (window.location.protocol === "file:") {
-        // Local: must specify index.html explicitly
-        // path = `app/index.html?src=${encodeURIComponent(mode)}`;
-        path = `app/index.html`;
-      } else {
-        // Online: clean URL works fine
-        // path = `app/?src=${encodeURIComponent(mode)}`;
-        path = `app/`;
-      }
-
+      if (window.location.protocol === "file:") { path = `app/index.html`; }
+      else { path = `app/`; }
       const target = new URL(path, window.location.href);
       console.log("Redirecting to:", target.toString());
-
-      setTimeout(() => {
-        window.location.href = target.toString();
-      }, 200);
+      // propagate language to the app path
+      target.searchParams.set("lang", LANG);
+      setTimeout(() => { window.location.href = target.toString(); }, 200);
     }
 
     startSlider();
+    applyLangToDom(); // initial render in the right language
 
     window.addEventListener('pageshow', (e) => {
-      const fromHistory = e.persisted ||
-        (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
-
+      const fromHistory = e.persisted || (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
       if (fromHistory) {
-        const loading = document.getElementById('loading');
-        const landing = document.getElementById('landing');
-        loading.style.display = 'none';
-        landing.classList.remove('hidden');
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('landing').classList.remove('hidden');
       }
     });
 
-    function openPrivacy() {
-      document.getElementById('privacyModal').style.display = 'block';
-    }
-    function closePrivacy() {
-      document.getElementById('privacyModal').style.display = 'none';
-    }
+    function openPrivacy() { document.getElementById('privacyModal').style.display = 'block'; }
+    function closePrivacy() { document.getElementById('privacyModal').style.display = 'none'; }
   </script>
 </body>
 </html>
