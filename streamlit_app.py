@@ -246,7 +246,7 @@ I18N = {
     },
     "formations.see_all": {
       "es": "Ver todos los jugadores utilizados",
-      "en": "See all players used"
+      "en": "See all the players used"
     },
 
     # Print player
