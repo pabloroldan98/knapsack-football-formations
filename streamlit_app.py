@@ -228,6 +228,31 @@ I18N = {
     "warning.atts": {"es": "Delanteros", "en": "Forwards"},
     "warning.mas": {"es": " más", "en": ""},
     "warning.more": {"es": "", "en": " more"},
+
+    # Display valid formations
+    "formations.name": {"es": "Formación", "en": "Formation"},
+    "formations.points": {"es": "puntos", "en": "points"},
+    "formations.motivo1": {
+      "es": " porque los otros jugadores blindados en esa posición son mejores",
+      "en": " because the other locked players in that position are better"
+    },
+    "formations.motivo2": {
+      "es": " con el presupuesto dado",
+      "en": " with the given budget"
+    },
+    "formations.premotivo": {
+      "es": "No se pudo incluir a:",
+      "en": "Could not include:"
+    },
+    "formations.see_all": {
+      "es": "Ver todos los jugadores utilizados",
+      "en": "See all players used"
+    },
+
+    # Print player
+    "player.form": {"es": "Forma", "en": "Form"},
+    "player.fixture": {"es": "Partido", "en": "Fixture"},
+    "player.titular": {"es": "Titular", "en": "Start"},
 }
 
 def get_lang():
@@ -358,16 +383,16 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         missing_blinded = blinded_players_names - player_names
         missing_ordered = [cp for cp in current_players_copy if cp.name in missing_blinded]
 
-        st.markdown(f"### Formación {formation}: {score:.3f} puntos – 💰 {price}M")
+        st.markdown(f"### {t("formations.name")} {formation}: {score:.3f} {t("formations.points")} – 💰 {price}M")
         if missing_ordered:
             # st.warning(f"No se pudo incluir a: {', '.join(missing_ordered)} con el presupuesto dado")
             for missing_player in missing_ordered:
                 motivo = ""
                 if len(blinded_lines[missing_player.position]) > len(lines[missing_player.position]):
-                    motivo = " porque los otros jugadores blindados en esa posición son mejores"
+                    motivo = t("formations.motivo1")
                 else:
-                    motivo = " con el presupuesto dado"
-                st.warning(f"No se pudo incluir a: **{missing_player.name}**{motivo}")
+                    motivo = t("formations.motivo2")
+                st.warning(f"{t("formations.premotivo")} **{missing_player.name}**{motivo}")
 
         for position in ["ATT", "MID", "DEF", "GK"]:
             if lines[position]:
@@ -390,7 +415,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                             unsafe_allow_html=True
                         )
 
-        with st.expander("Ver todos los jugadores utilizados"):
+        with st.expander(t("formations.see_all")):
             players_show = copy.deepcopy(players)
             for player in players_show:
                 blinded_mark = "🔒 " if player.name in blinded_players_names else ""
@@ -419,11 +444,11 @@ def print_player(player, small_size=0, is_biwenger=False):
         player_cols[0].markdown(
             f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
         )
-        player_cols[1].caption("Forma:")
+        player_cols[1].caption(f"{t("player.form")}:")
         player_cols[2].image(player.form_arrow, output_format="PNG", width=24) #, use_container_width=True)
-        player_cols[3].caption("Partido:")
+        player_cols[3].caption(f"{t("player.fixture")}:")
         player_cols[4].image(player.fixture_arrow, output_format="PNG", width=24) #, use_container_width=True)
-        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+        player_cols[5].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
     elif small_size==1:
         player_cols = st.columns([12, 2.7, 1.5, 3, 1.5, 5])  # Adjust width ratio if needed
         player_cols[0].markdown(
@@ -433,15 +458,15 @@ def print_player(player, small_size=0, is_biwenger=False):
             """
         )
         player_cols[1].markdown("")
-        player_cols[1].caption("Forma:")
+        player_cols[1].caption(f"{t("player.form")}:")
         player_cols[2].markdown("")
         player_cols[2].image(player.form_arrow, output_format="PNG", width=24)
         player_cols[3].markdown("")
-        player_cols[3].caption("Partido:")
+        player_cols[3].caption(f"{t("player.fixture")}:")
         player_cols[4].markdown("")
         player_cols[4].image(player.fixture_arrow, output_format="PNG", width=24)
         player_cols[5].markdown("")
-        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+        player_cols[5].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
     elif small_size==2:
         player_cols = st.columns([5, 12, 5, 5, 5])  # Adjust width ratio if needed
         # player_cols[0].image(player.img_link, width=70)
@@ -457,12 +482,12 @@ def print_player(player, small_size=0, is_biwenger=False):
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
-        player_cols[2].caption("Forma")
+        player_cols[2].caption(f"{t("player.form")}")
         player_cols[3].image(player.fixture_arrow, output_format="PNG", width=30)#, caption="Partido", use_container_width=True)
-        player_cols[3].caption("Partido")
+        player_cols[3].caption(f"{t("player.fixture")}")
         player_cols[4].markdown(
             f"""
-                Titular:  
+                {t("player.titular")}:  
                 **{player.start_probability*100:.0f} %**
             """
         )
@@ -473,7 +498,7 @@ def print_player(player, small_size=0, is_biwenger=False):
             f"<img src='{player.img_link}' height='{70}' style='object-fit: contain;'>",
             unsafe_allow_html=True
         )
-        player_cols[0].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+        player_cols[0].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
         player_cols[1].markdown("")
         player_cols[1].markdown(
             f"""
@@ -482,19 +507,19 @@ def print_player(player, small_size=0, is_biwenger=False):
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
-        player_cols[2].caption("Forma")
+        player_cols[2].caption(f"{t("player.form")}")
         player_cols[3].image(player.fixture_arrow, output_format="PNG", width=30)#, caption="Partido", use_container_width=True)
-        player_cols[3].caption("Partido")
+        player_cols[3].caption(f"{t("player.fixture")}")
     else:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
             f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
         )
-        player_cols[1].markdown("Forma:")
+        player_cols[1].markdown(f"{t("player.form")}:")
         player_cols[2].image(player.form_arrow, output_format="PNG") #, use_container_width=True)
-        player_cols[3].markdown("Partido:")
+        player_cols[3].markdown(f"{t("player.fixture")}:")
         player_cols[4].image(player.fixture_arrow, output_format="PNG") #, use_container_width=True)
-        player_cols[5].markdown(f"Titular: **{player.start_probability*100:.0f} %**")
+        player_cols[5].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
 
 def copy_to_clipboard_button(
     text: str,
