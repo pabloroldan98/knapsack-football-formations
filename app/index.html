@@ -14,8 +14,8 @@
 <!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
-  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>
-  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">
+  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app" crossorigin>
+  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -102,12 +102,45 @@
 <body>
   <div class="wrapper">
     <div class="iframe-container">
-      <iframe
-        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"
-        allowfullscreen
-        onload="this.classList.add('loaded')">
-      </iframe>
+      <iframe id="appFrame" allowfullscreen class="" ></iframe>
+<!--      <iframe-->
+<!--        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"-->
+<!--        allowfullscreen-->
+<!--        onload="this.classList.add('loaded')">-->
+<!--      </iframe>-->
     </div>
   </div>
+
+  <script>
+    // Build the iframe URL dynamically, copying ?lang=... (and any other params)
+    document.addEventListener('DOMContentLoaded', function () {
+      const BASE = "https://calculadorafantasy.streamlit.app/~/+/?embed=true";
+      const pageParams = new URLSearchParams(window.location.search);
+      const url = new URL(BASE);
+
+      // Forward all page params (so ?lang=en reaches Streamlit)
+      for (const [k, v] of pageParams.entries()) {
+        url.searchParams.set(k, v);
+      }
+      // Ensure embed=true remains set
+      url.searchParams.set('embed', 'true');
+
+      const iframe = document.getElementById('appFrame');
+      iframe.src = url.toString();
+      // optional: fade-in when loaded
+      iframe.onload = () => iframe.classList.add('loaded');
+    });
+
+    // Optional: keep iframe in sync if the page URL changes (back/forward)
+    window.addEventListener('popstate', function () {
+      const BASE = "https://calculadorafantasy.streamlit.app/~/+/?embed=true";
+      const url = new URL(BASE);
+      const q = new URLSearchParams(window.location.search);
+      for (const [k, v] of q.entries()) url.searchParams.set(k, v);
+      url.searchParams.set('embed', 'true');
+      const iframe = document.getElementById('appFrame');
+      if (iframe && iframe.src !== url.toString()) iframe.src = url.toString();
+    });
+  </script>
 </body>
 </html>
