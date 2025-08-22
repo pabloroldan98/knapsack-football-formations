@@ -204,7 +204,7 @@ I18N = {
     "toast.value_sorted": {"es": "Ordenados de mejor a peor 'chollo'", "en": "Sorted by best 'bargain'"},
     "cap.form_note": {
         "es": "_Nota: ten en cuenta que la 'Forma' se calcula en función de cómo sube o baja el precio del jugador_",
-        "en": "_Note: 'Form' is calculated from the player's price trend_",
+        "en": "_Note: 'Form' is calculated based on the player's price trend_",
     },
 
     # Footer
