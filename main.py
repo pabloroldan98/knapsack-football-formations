@@ -757,9 +757,9 @@ if __name__ == "__main__":
     # print()
     # purged_players = purge_everything(worthy_players_og, probability_threshold=0.35, fixture_filter=False)
     # worthy_players = purged_players.copy()
-    # for p in current_players:
-    #     if p.status == "injured" or p.status == "sanctioned":
-    #         worthy_players.append(p)
+    # # for p in current_players:
+    # #     if p.status == "injured" or p.status == "sanctioned":
+    # #         worthy_players.append(p)
     #
     # # Diccionario para acumular sumas y conteos por equipo
     # team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
@@ -785,7 +785,7 @@ if __name__ == "__main__":
     #
     # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
     # jornada = jornadas_dict.get(get_next_jornada(), [])
-    # # jornada = jornadas_dict["jornada_XX"]
+    # jornada = jornadas_dict["jornada_3"]
     # print(team_avg_dict)
     #
     # # Usamos el diccionario team_avg creado antes
