@@ -67,8 +67,8 @@ I18N = {
     "app.biwenger": {"es": "Biwenger", "en": "Biwenger"},
 
     # Tabs
-    "tab.best11_budget": {"es": "💰 Mejores 11s con presupuesto", "en": "💰 Best XIs by budget"},
-    "tab.my_best11": {"es": "⚽ Mi mejor 11 posible", "en": "⚽ My best possible XI"},
+    "tab.best11_budget": {"es": "💰 Mejores 11s con presupuesto", "en": "💰 Best lineups by budget"},
+    "tab.my_best11": {"es": "⚽ Mi mejor 11 posible", "en": "⚽ My best possible lineup"},
     "tab.players_list": {"es": "📋 Lista de jugadores", "en": "📋 Players list"},
     "tab.my_market": {"es": "📈 Analizar mi mercado", "en": "📈 Analyze my market"},
 
@@ -108,7 +108,7 @@ I18N = {
     "sb.ignore_fixtures": {"es": "¿Ignorar dificultad del **partido**?", "en": "Ignore **fixture difficulty**?"},
 
     # Budget section
-    "h.budget11": {"es": "Mejores 11s dentro de tu presupuesto", "en": "Best XIs within your budget"},
+    "h.budget11": {"es": "Mejores 11s dentro de tu presupuesto", "en": "Best lineups within your budget"},
     "sb.budget.max": {"es": "Presupuesto máximo disponible", "en": "Maximum available budget"},
     "sb.budget.hint": {"es": "Pon **-1** si quieres indicar presupuesto ilimitado", "en": "Use **-1** for unlimited budget"},
     "sb.extra_filters": {"es": "**Filtros adicionales**", "en": "**Additional filters**"},
@@ -123,7 +123,7 @@ I18N = {
         "en": "This is **much slower**, but uses almost all available players",
     },
     "sb.premium_formations": {"es": "Formaciones Premium", "en": "Premium formations"},
-    "btn.calc11": {"es": "Calcular 11s", "en": "Calculate XIs"},
+    "btn.calc11": {"es": "Calcular 11s", "en": "Calculate lineups"},
     "h.best_combinations_budget": {
         "es": "Mejores combinaciones posibles dentro del presupuesto:",
         "en": "Best combinations within budget:",
@@ -178,9 +178,9 @@ I18N = {
     "btn.copy_players": {"es": "📋 Copiar jugadores", "en": "📋 Copy players"},
     "btn.copy_players_full": {"es": "📋 Copiar jugadores (datos completos)", "en": "📋 Copy players (full data)"},
 
-    # My XI
-    "h.my_best11": {"es": "Selecciona Jugadores para tu 11 ideal", "en": "Select players for your ideal XI"},
-    "cap.add_all": {"es": "Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal", "en": "Add **all** your squad to compute your best XI"},
+    # My lineup
+    "h.my_best11": {"es": "Selecciona Jugadores para tu 11 ideal", "en": "Select players for your ideal lineup"},
+    "cap.add_all": {"es": "Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal", "en": "Add **all** your squad to compute your best lineup"},
     "sb.search_player": {"es": "Buscar jugador", "en": "Search player"},
     "h.selected_players": {"es": "Jugadores seleccionados:", "en": "Selected players:"},
     "cap.lock_note": {
