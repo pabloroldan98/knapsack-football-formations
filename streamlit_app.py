@@ -180,7 +180,7 @@ I18N = {
 
     # My lineup
     "h.my_best11": {"es": "Selecciona Jugadores para tu 11 ideal", "en": "Select players for your ideal lineup"},
-    "cap.add_all": {"es": "Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal", "en": "Add **all** your squad to compute your best lineup"},
+    "cap.add_all": {"es": "Añade a **todos** los jugadores de tu equipo para calcular tu 11 ideal", "en": "Add **all** your squad to compute your best possible lineup"},
     "sb.search_player": {"es": "Buscar jugador", "en": "Search player"},
     "h.selected_players": {"es": "Jugadores seleccionados:", "en": "Selected players:"},
     "cap.lock_note": {
