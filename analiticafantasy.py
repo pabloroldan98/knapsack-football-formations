@@ -1,10 +1,14 @@
 import os
 import requests
 import urllib3
-from bs4 import BeautifulSoup
 import json
+from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
 
-from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string  # same as before
+from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
+    create_driver  # same as before
 
 
 class AnaliticaFantasyScraper:
@@ -12,6 +16,9 @@ class AnaliticaFantasyScraper:
         self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
         # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
         self.session = requests.Session()
+        self.driver = create_driver()
+        self.wait = WebDriverWait(self.driver, 15)
+        self.small_wait = WebDriverWait(self.driver, 5)
         self.headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -21,57 +28,106 @@ class AnaliticaFantasyScraper:
         }
 
     def fetch_page(self, url):
+        self.driver.get(url)
+
+    def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, timeout=15, verify=False)
+        response = self.session.get(url, headers=self.headers, verify=False)
         response.raise_for_status()
         return response.text
 
-    def get_team_links(self, html):
+    def _dedup_preserve_order(self, items):
+        seen, out = set(), []
+        for x in items:
+            if x and x not in seen:
+                seen.add(x)
+                out.append(x)
+        return out
+
+    def get_team_links(self, html=None):
         """
         From the Alineaciones Probables page, find all <a> with href
         that starts with '/equipo/', like '/equipo/real-madrid'.
         Return the full absolute URLs.
         """
-        soup = BeautifulSoup(html, "html.parser")
         links = []
-        for a_tag in soup.find_all("a", href=True):
-            if a_tag["href"].startswith("/equipo/"):
+        if html:
+            soup = BeautifulSoup(html, "html.parser")
+            for a_tag in soup.find_all("a", href=True):
+                if a_tag["href"].startswith("/equipo/"):
+                    # Construct the full URL
+                    full_url = "https://www.analiticafantasy.com" + a_tag["href"]
+                    links.append(full_url)
+            # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
+            # links = sorted(
+            #     list(set(links)),
+            #     key=lambda u: int(u.split('/')[4])
+            # )
+        else:
+            els = self.wait.until(
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, 'a[href^="/equipo/"]')
+                )
+            )
+            for el in els:
+                href = el.get_attribute("href") or ""
+                # Some drivers resolve to absolute; others keep it relative
+                full_url = ""
                 # Construct the full URL
-                full_url = "https://www.analiticafantasy.com" + a_tag["href"]
-                links.append(full_url)
-        # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
-        # links = sorted(
-        #     list(set(links)),
-        #     key=lambda u: int(u.split('/')[4])
-        # )
-        return links
+                if "/equipo/" in href:
+                    if href.startswith("/equipo/"):
+                        full_url = "https://www.analiticafantasy.com" + href
+                    elif href.startswith("https://www.analiticafantasy.com"):
+                        full_url = href
+                if full_url:
+                    links.append(full_url)
+        return self._dedup_preserve_order(links)
 
-    def get_match_links(self, html):
+    def get_match_links(self, html=None):
         """
         From the Alineaciones Probables page, find all <a> with href
         that starts with '/partido/', like '/partido/1208772/alineaciones-probables'.
         Return the full absolute URLs.
         """
-        soup = BeautifulSoup(html, "html.parser")
         links = []
-        for a_tag in soup.find_all("a", href=True):
-            if a_tag["href"].startswith("/partido/"):
+        if html:
+            soup = BeautifulSoup(html, "html.parser")
+            for a_tag in soup.find_all("a", href=True):
+                if a_tag["href"].startswith("/partido/"):
+                    # Construct the full URL
+                    full_url = "https://www.analiticafantasy.com" + a_tag["href"]
+                    links.append(full_url)
+            # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
+            # links = sorted(
+            #     list(set(links)),
+            #     key=lambda u: int(u.split('/')[4])
+            # )
+        else:
+            els = self.wait.until(
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, 'a[href^="/partido/"]')
+                )
+            )
+            for el in els:
+                href = el.get_attribute("href") or ""
+                # Some drivers resolve to absolute; others keep it relative
+                full_url = ""
                 # Construct the full URL
-                full_url = "https://www.analiticafantasy.com" + a_tag["href"]
-                links.append(full_url)
-        # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
-        # links = sorted(
-        #     list(set(links)),
-        #     key=lambda u: int(u.split('/')[4])
-        # )
-        return links
+                if "/partido/" in href:
+                    if href.startswith("/partido/"):
+                        full_url = "https://www.analiticafantasy.com" + href
+                    elif href.startswith("https://www.analiticafantasy.com"):
+                        full_url = href
+                if full_url:
+                    links.append(full_url)
+        return self._dedup_preserve_order(links)
 
     def parse_match_page(self, match_url):
         """
         Example logic: parse the match page’s JSON or HTML to extract the chance/team/player data.
         The actual parsing details depend on how the data appears in the HTML.
         """
-        page_html = self.fetch_page(match_url)
+        page_html = self.fetch_response(match_url)
         # For illustration: suppose a <script id="__NEXT_DATA__"> tag contains a JSON
         # structure with the players’ data. We find and parse it:
         soup = BeautifulSoup(page_html, "html.parser")
@@ -174,7 +230,8 @@ class AnaliticaFantasyScraper:
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
-        main_html = self.fetch_page(self.base_url)
+        # main_html = self.fetch_response(self.base_url)
+        self.fetch_page(self.base_url)
 
         prices_dict = {}
         positions_dict = {}
@@ -182,7 +239,8 @@ class AnaliticaFantasyScraper:
         price_trends_dict = {}
         probabilities_dict = {}
 
-        team_links = self.get_team_links(main_html)
+        # team_links = self.get_team_links(main_html)
+        team_links = self.get_team_links()
         for url in team_links:
             match_data = self.parse_match_page(url)
             # Merge match_data into probabilities_dict
@@ -212,7 +270,8 @@ class AnaliticaFantasyScraper:
                 for player_name, data_val in players.items():
                     price_trends_dict[team_name][player_name] = data_val
 
-        match_links = self.get_match_links(main_html)
+        # match_links = self.get_match_links(main_html)
+        match_links = self.get_match_links()
         for url in match_links:
             match_data = self.parse_match_page(url)
             # Merge match_data into probabilities_dict
