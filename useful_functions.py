@@ -166,6 +166,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Areso": "Areso",
         "Olasagasti": "Olasagasti",
         "Pablo Gavi": "Gavi",
+        "Alejandro Primo": "Álex Primo",
 
         "Khéphren Thuram": "Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
