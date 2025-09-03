@@ -367,7 +367,7 @@ def competition_from_filename(file_name: str) -> str:
 
     mapping = {
         ("eurocopa", "euro", "europa", "europeo", ): "eurocopa",
-        ("copa-america", "copaamerica", ): "copa-america",
+        ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "mundial",
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-de-clubes",
         ("champions", "championsleague", "champions-league"): "champions-league",
@@ -375,8 +375,8 @@ def competition_from_filename(file_name: str) -> str:
         ('premier', 'premier-league', ): "premier",
         ('seriea', 'serie-a', ): "serie-a",
         ('bundesliga', 'bundes-liga', ): "bundesliga",
-        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
-        ('laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division', 'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
+        ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda",
     }
     for keys, slug in mapping.items():
         if any(k in s for k in keys):

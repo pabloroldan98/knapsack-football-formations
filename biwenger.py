@@ -26,7 +26,7 @@ def competition_from_filename(file_name: str) -> str:
 
     mapping = {
         ("eurocopa", "euro", "europa", "europeo", ): "euro",
-        ("copa-america", "copaamerica", ): "copa-america",
+        ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "world-cup",
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "club-world-cup",
         ("champions", "championsleague", "champions-league"): "champions-league",
@@ -34,8 +34,8 @@ def competition_from_filename(file_name: str) -> str:
         ('premier', 'premier-league', ): "premier-league",
         ('seriea', 'serie-a', ): "serie-a",
         ('bundesliga', 'bundes-liga', ): "bundesliga",
-        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
-        ('laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division', 'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
+        ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
     }
     for keys, slug in mapping.items():
         if any(k in s for k in keys):
@@ -116,7 +116,7 @@ def country_from_filename(file_name: str):
 
     mapping = {
         ("eurocopa", "euro", "europa", "europeo", ): None,
-        ("copa-america", "copaamerica", ): None,
+        ("copaamerica", "copa-america", ): None,
         ("mundial", "worldcup", "world-cup", ): None,
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): None,
         ("champions", "championsleague", "champions-league"): None,
@@ -124,7 +124,7 @@ def country_from_filename(file_name: str):
         ('premier', 'premier-league', ): "ENG",
         ('seriea', 'serie-a', ): "ITA",
         ('bundesliga', 'bundes-liga', ): "GER",
-        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "FRA",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "FRA",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
     }
     for keys, slug in mapping.items():

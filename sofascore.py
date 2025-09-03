@@ -376,7 +376,7 @@ def competition_from_filename(file_name: str) -> str:
 
     mapping = {
         ("eurocopa", "euro", "europa", "europeo", ): "europe/european-championship/1#id:56953",
-        ("copa-america", "copaamerica", ): "south-america/copa-america/133#id:57114",
+        ("copaamerica", "copa-america", ): "south-america/copa-america/133#id:57114",
         ("mundial", "worldcup", "world-cup", ): "world/world-championship/16#id:58210",
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "world/club-world-championship/357#id:69619",
         ("champions", "championsleague", "champions-league"): "europe/uefa-champions-league/7#id:76953",
@@ -384,7 +384,7 @@ def competition_from_filename(file_name: str) -> str:
         ('premier', 'premier-league', ): "england/premier-league/17#id:76986",
         ('seriea', 'serie-a', ): "italy/serie-a/23#id:76457",
         ('bundesliga', 'bundes-liga', ): "germany/bundesliga/35#id:77333",
-        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "france/ligue-1/34#id:77356",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "france/ligue-1/34#id:77356",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "spain/laliga-2/54#id:77558",
     }
     for keys, slug in mapping.items():
