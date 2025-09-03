@@ -15,6 +15,23 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
+def safe_get_biwenger_data(file_name, label):
+    try:
+        data = get_biwenger_data_dict(
+            write_file=True,
+            file_name=file_name,
+            force_scrape=True
+        )
+        print(data)
+        return data
+    except Exception as e:
+        print(f"Error scraping {label}: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
+        return None
+
+
 start_time = time.time()
 
 # Define the timezone for Spain
@@ -36,18 +53,23 @@ print("##############################")
 ##############################
 print("Scraping BIWENGER...")
 
-try:
-    biwenger_data = get_biwenger_data_dict(
-        write_file=True,
-        file_name="biwenger_laliga_data",
-        force_scrape=True
-    )
-    print(biwenger_data)
-except Exception as e:
-    print(f"Error scraping BIWENGER: {e}")
-    print(f"Exception type: {type(e).__name__}")
-    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
-    print(f"Error class: {e.__class__}")
+# try:
+biwenger_laliga_data = safe_get_biwenger_data("biwenger_laliga_data", "LaLiga")
+biwenger_premier_data = safe_get_biwenger_data("biwenger_premier_data", "Premier League")
+biwenger_seriea_data = safe_get_biwenger_data("biwenger_seriea_data", "Serie A")
+biwenger_bundesliga_data = safe_get_biwenger_data("biwenger_bundesliga_data", "Bundesliga")
+biwenger_ligueone_data = safe_get_biwenger_data("biwenger_ligueone_data", "Ligue 1")
+biwenger_segundadivision_data = safe_get_biwenger_data("biwenger_segundadivision_data", "Segunda División")
+biwenger_champions_data = safe_get_biwenger_data("biwenger_champions_data", "Champions League")
+biwenger_mundialito_data = safe_get_biwenger_data("biwenger_mundialito_data", "Mundialito")
+biwenger_mundial_data = safe_get_biwenger_data("biwenger_mundial_data", "Mundial")
+biwenger_eurocopa_data = safe_get_biwenger_data("biwenger_eurocopa_data", "Eurocopa")
+biwenger_copaamerica_data = safe_get_biwenger_data("biwenger_copaamerica_data", "Copa América")
+# except Exception as e:
+#     print(f"Error scraping BIWENGER: {e}")
+#     print(f"Exception type: {type(e).__name__}")
+#     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+#     print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")

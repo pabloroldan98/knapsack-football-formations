@@ -169,11 +169,11 @@ def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
+        ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
         ("eurocopa", "euro", "europa", "europeo", ): "-/teilnehmer/pokalwettbewerb/EURO",
         ("copaamerica", "copa-america", ): "-/teilnehmer/pokalwettbewerb/COPA",
         ("mundial", "worldcup", "world-cup", ): "-/teilnehmer/pokalwettbewerb/FIWC",
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
-        ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
         ("laliga", "la-liga", ): "-/startseite/wettbewerb/ES1",
         ('premier', 'premier-league', ): "-/startseite/wettbewerb/GB1",
         ('seriea', 'serie-a', ): "-/startseite/wettbewerb/IT1",
@@ -182,8 +182,9 @@ def competition_from_filename(file_name: str) -> str:
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
     }
     for keys, slug in mapping.items():
-        if any(k in s for k in keys):
-            return slug
+        for k in sorted(keys, key=len, reverse=True):  # longest first
+            if k in s:
+                return "/" + slug if slug else slug
     return "-/startseite/wettbewerb/ES1"
 
 

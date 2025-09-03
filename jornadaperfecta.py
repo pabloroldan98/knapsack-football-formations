@@ -366,11 +366,11 @@ def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-de-clubes",
+        ("champions", "championsleague", "champions-league"): "champions-league",
         ("eurocopa", "euro", "europa", "europeo", ): "eurocopa",
         ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "mundial",
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-de-clubes",
-        ("champions", "championsleague", "champions-league"): "champions-league",
         ("laliga", "la-liga", ): "",
         ('premier', 'premier-league', ): "premier",
         ('seriea', 'serie-a', ): "serie-a",
@@ -379,8 +379,9 @@ def competition_from_filename(file_name: str) -> str:
         ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda",
     }
     for keys, slug in mapping.items():
-        if any(k in s for k in keys):
-            return "/" + slug if slug else slug
+        for k in sorted(keys, key=len, reverse=True):  # longest first
+            if k in s:
+                return "/" + slug if slug else slug
     return ""
 
 

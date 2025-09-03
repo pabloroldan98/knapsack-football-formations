@@ -25,11 +25,11 @@ def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "club-world-cup",
+        ("champions", "championsleague", "champions-league"): "champions-league",
         ("eurocopa", "euro", "europa", "europeo", ): "euro",
         ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "world-cup",
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "club-world-cup",
-        ("champions", "championsleague", "champions-league"): "champions-league",
         ("laliga", "la-liga", ): "la-liga",
         ('premier', 'premier-league', ): "premier-league",
         ('seriea', 'serie-a', ): "serie-a",
@@ -38,8 +38,9 @@ def competition_from_filename(file_name: str) -> str:
         ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
     }
     for keys, slug in mapping.items():
-        if any(k in s for k in keys):
-            return slug
+        for k in sorted(keys, key=len, reverse=True):  # longest first
+            if k in s:
+                return slug
     return "la-liga"
 
 
@@ -115,11 +116,11 @@ def country_from_filename(file_name: str):
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): None,
+        ("champions", "championsleague", "champions-league"): None,
         ("eurocopa", "euro", "europa", "europeo", ): None,
         ("copaamerica", "copa-america", ): None,
         ("mundial", "worldcup", "world-cup", ): None,
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): None,
-        ("champions", "championsleague", "champions-league"): None,
         ("laliga", "la-liga", ): "ESP",
         ('premier', 'premier-league', ): "ENG",
         ('seriea', 'serie-a', ): "ITA",
@@ -128,8 +129,9 @@ def country_from_filename(file_name: str):
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
     }
     for keys, slug in mapping.items():
-        if any(k in s for k in keys):
-            return slug
+        for k in sorted(keys, key=len, reverse=True):  # longest first
+            if k in s:
+                return slug
     return None
 
 
