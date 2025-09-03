@@ -111,7 +111,7 @@ def get_championship_data(
     return sorted_championship_teams, sorted_championship_players
 
 
-def country_from_filename(file_name: str) -> str:
+def country_from_filename(file_name: str):
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
@@ -125,7 +125,7 @@ def country_from_filename(file_name: str) -> str:
     for keys, slug in mapping.items():
         if any(k in s for k in keys):
             return slug
-    return "ESP"
+    return None
 
 
 def get_teams_championship_data(data, is_country=False, extra_teams=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
