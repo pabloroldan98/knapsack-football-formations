@@ -5,7 +5,7 @@ import time
 import pytz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from jornadaperfecta import get_jornadaperfecta_data, get_players_start_probabilities_dict_jornadaperfecta_old
+from jornadaperfecta import get_jornadaperfecta_data, get_players_start_probabilities_dict_jornadaperfecta
 from analiticafantasy import get_analiticafantasy_data
 from futbolfantasy_analytics import get_futbolfantasy_data
 from futmondo import get_players_positions_dict_futmondo
@@ -62,7 +62,7 @@ try:
     # print("\nPrice Trends:")
     # for team, players in price_trends.items():
     #     print(team, players)
-    start_probabilities = get_players_start_probabilities_dict_jornadaperfecta_old(
+    start_probabilities = get_players_start_probabilities_dict_jornadaperfecta(
         file_name="jornadaperfecta_laliga_players_start_probabilities",
         force_scrape=True
     )

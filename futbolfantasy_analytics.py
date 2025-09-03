@@ -316,6 +316,13 @@ class FutbolFantasyScraper:
 
         return probabilities_dict
 
+    def scrape_probabilities(self):
+        teams_probabilities_dict = self.scrape_teams_probabilities()
+        matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
+        probabilities_dict = copy.deepcopy(matches_probabilities_dict)
+
+        return probabilities_dict
+
     def scrape(self):
         # self.fetch_page(self.base_url)
         # self.accept_cookies()
@@ -348,9 +355,7 @@ class FutbolFantasyScraper:
                 forms_dict[team_name][name] = float(form)
                 price_trends_dict[team_name][name] = float(price_trend)
 
-        teams_probabilities_dict = self.scrape_teams_probabilities()
-        matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
-        probabilities_dict = copy.deepcopy(matches_probabilities_dict)
+        probabilities_dict = self.scrape_probabilities()
 
         # We don't have a browser to quit, but we'll keep the comment
         # self.driver.quit()
@@ -476,7 +481,8 @@ def get_players_start_probabilities_dict_futbolfantasy(
 
     competition = competition_from_filename(file_name)
     scraper = FutbolFantasyScraper(competition=competition)
-    _, _, _, result, _ = scraper.scrape()
+    # _, _, _, result, _ = scraper.scrape()
+    result = scraper.scrape_probabilities()
 
     overwrite_dict_data(result, file_name)
 

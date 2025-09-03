@@ -502,27 +502,10 @@ def get_players_price_trends_dict_jornadaperfecta(
 
     competition = competition_from_filename(file_name)
     scraper = JornadaPerfectaScraper(competition=competition)
-    _, _, _, _, result = scraper.scrape()
-
-    overwrite_dict_data(result, file_name)
-
-    return result
-
-
-def get_players_start_probabilities_dict_jornadaperfecta_old(
-        file_name="jornadaperfecta_start_probabilities",
-        force_scrape=False
-):
-    if not force_scrape:
-        data = read_dict_data(file_name)
-        if data:
-            return data
-
-    competition = competition_from_filename(file_name)
-    scraper = JornadaPerfectaScraper(competition=competition)
+    # _, _, _, _, result = scraper.scrape()
     result = scraper.scrape_probabilities()
 
-    overwrite_dict_data(result, file_name, ignore_old_data=True)
+    overwrite_dict_data(result, file_name)
 
     return result
 
