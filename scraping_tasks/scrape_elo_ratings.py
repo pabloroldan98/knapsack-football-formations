@@ -15,6 +15,28 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
+def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False):
+    try:
+        elo_dict = get_teams_elos_dict(
+            is_country=is_country,
+            country=country,
+            extra_teams=extra_teams,
+            write_file=True,
+            file_name=file_name,
+            force_scrape=True
+        )
+        print(f"\n{label} Elo Ratings:")
+        for team, elo in elo_dict.items():
+            print(f"{team}: {elo}")
+        return elo_dict
+    except Exception as e:
+        print(f"Error scraping {label} Elo Ratings: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
+        return None
+
+
 start_time = time.time()
 
 # Define the timezone for Spain
@@ -36,33 +58,72 @@ print("##############################")
 ##############################
 print("Scraping ELO RATINGS...")
 
-try:
-    league_elo_ratings_dict = get_teams_elos_dict(
-        is_country=False,
-        # country=None,
-        country="ESP",
-        extra_teams=False,
-        write_file=True,
-        file_name="elo_ratings_laliga_data",
-        force_scrape=True
-    )
-    country_elo_ratings_dict = get_teams_elos_dict(
-        is_country=True,
-        write_file=True,
-        file_name="elo_ratings_countries_data",
-        force_scrape=True
-    )
-    print("League Elo Ratings:")
-    for team, elo in league_elo_ratings_dict.items():
-        print(f"{team}: {elo}")
-    print("\nCountry Elo Ratings:")
-    for team, elo in country_elo_ratings_dict.items():
-        print(f"{team}: {elo}")
-except Exception as e:
-    print(f"Error scraping ELO RATINGS: {e}")
-    print(f"Exception type: {type(e).__name__}")
-    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
-    print(f"Error class: {e.__class__}")
+# try:
+
+
+# Leagues
+elo_ratings_laliga_data = safe_get_elos(
+    "LaLiga",
+    is_country=False, country="ESP", extra_teams=False,
+    file_name="elo_ratings_laliga_data"
+)
+
+elo_ratings_premier_data = safe_get_elos(
+    "Premier League",
+    is_country=False, country="ENG", extra_teams=False,
+    file_name="elo_ratings_premier_data"
+)
+
+elo_ratings_seriea_data = safe_get_elos(
+    "Serie A",
+    is_country=False, country="ITA", extra_teams=False,
+    file_name="elo_ratings_seriea_data"
+)
+
+elo_ratings_bundesliga_data = safe_get_elos(
+    "Bundesliga",
+    is_country=False, country="GER", extra_teams=False,
+    file_name="elo_ratings_bundesliga_data"
+)
+
+elo_ratings_ligueone_data = safe_get_elos(
+    "Ligue 1",
+    is_country=False, country="FRA", extra_teams=False,
+    file_name="elo_ratings_ligueone_data"
+)
+
+elo_ratings_segundadivision_data = safe_get_elos(
+    "Segunda División",
+    is_country=False, country="ESP", extra_teams=False,
+    file_name="elo_ratings_segundadivision_data"
+)
+
+# Tournaments
+elo_ratings_champions_data = safe_get_elos(
+    "Champions League",
+    is_country=False, country=None, extra_teams=False,
+    file_name="elo_ratings_champions_data"
+)
+
+# elo_ratings_mundialito_data = safe_get_elos(
+#     "Mundialito",
+#     is_country=False, country=None, extra_teams=True,
+#     file_name="elo_ratings_mundialito_data"
+# )
+
+# Countries
+elo_ratings_countries_data = safe_get_elos(
+    "Countries",
+    is_country=True,
+    file_name="elo_ratings_countries_data"
+)
+
+
+# except Exception as e:
+#     print(f"Error scraping ELO RATINGS: {e}")
+#     print(f"Exception type: {type(e).__name__}")
+#     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+#     print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
