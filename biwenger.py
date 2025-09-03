@@ -7,6 +7,7 @@ from pprint import pprint
 import tls_requests
 import urllib3
 from urllib3.exceptions import ReadTimeoutError
+from urllib.parse import urlencode
 
 from player import Player, get_position, get_status
 from elo_ratings import get_teams_elos_dict
@@ -14,6 +15,32 @@ from team import Team
 from useful_functions import find_similar_string, read_dict_data, overwrite_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+
+
+def competition_from_filename(file_name: str) -> str:
+    """
+    Infer Biwenger competition slug from the filename.
+    Defaults to 'la-liga' if nothing matches.
+    """
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "euro",
+        ("copa-america", "copaamerica", ): "copa-america",
+        ("mundial", "worldcup", "world-cup", ): "world-cup",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "club-world-cup",
+        ("champions", "championsleague", "champions-league"): "champions-league",
+        ("laliga", "la-liga", ): "la-liga",
+        ('premier', 'premier-league', ): "premier-league",
+        ('seriea', 'serie-a', ): "serie-a",
+        ('bundesliga', 'bundes-liga', ): "bundesliga",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
+        ('laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division', 'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "la-liga"
 
 
 def get_biwenger_data_dict(
@@ -26,10 +53,13 @@ def get_biwenger_data_dict(
     data = None
     if force_scrape:
         try:
-            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
-            all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
-            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
-            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
+            slug = competition_from_filename(file_name)
+            params = {"lang": "en", "callback": "jsonp_xxx"}  # <-- no 'score' here
+            all_data_url = f"https://cf.biwenger.com/api/v2/competitions/{slug}/data?{urlencode(params)}"
+            # # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
+            # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
+            # # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/euro/data?lang=en&score=1&callback=jsonp_xxx'
+            # # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/copa-america/data?lang=en&callback=jsonp_xxx'
 
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -81,11 +111,29 @@ def get_championship_data(
     return sorted_championship_teams, sorted_championship_players
 
 
+def country_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("laliga", "la-liga", ): "ESP",
+        ('premier', 'premier-league', ): "ENG",
+        ('seriea', 'serie-a', ): "ITA",
+        ('bundesliga', 'bundes-liga', ): "GER",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "FRA",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "ESP"
+
+
 def get_teams_championship_data(data, is_country=False, extra_teams=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
-    
-    teams_elos_dict = get_teams_elos_dict(is_country=is_country, extra_teams=extra_teams, file_name=file_name)
+
+    country = country_from_filename(file_name)
+    teams_elos_dict = get_teams_elos_dict(is_country=is_country, country=country, extra_teams=extra_teams, file_name=file_name)
     championship_teams_db = create_teams_list(
         championship_teams,
         championship_players,

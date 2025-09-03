@@ -80,52 +80,6 @@ def get_team_links_from_league(league_url):
 
     soup = BeautifulSoup(html, "html.parser")
 
-    # # Copa America
-    # button_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[7]/div[2]/div[2]/button"
-    # button = wait.until(EC.element_to_be_clickable((By.XPATH, button_xpath)))
-    # button.click()
-    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a"
-    # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[1]/div[4]/div/a/div/div[1]/span"
-    # # Eurocopa
-    # teams_base_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
-    # team_name_xpath = "//*[@id='__next']/main/div/div[3]/div/div[1]/div[2]/div[12]/div/div/ul/ul/li/a"
-    # La Liga
-    # teams_base_xpath = "//*[@data-testid='standings_row']"
-    # team_name_xpath = teams_base_xpath + "/div/div[2]/div/div"
-    # time.sleep(15)
-    # OLD General
-    # panels = soup.find_all("div", attrs={"data-panelid": "1"})
-    # team_links = []
-    # for panel in panels:
-    #     team_links.extend(
-    #         panel.find_all(
-    #             "a",
-    #             href=lambda u: u and u.startswith("/team/"),
-    #             recursive=True
-    #         )
-    #     )
-    # # if len(team_links) > 32:
-    # #     half_len = len(team_links) // 2
-    # #     team_links = team_links[:half_len]
-    #
-    # team_data = {}
-    # seen_urls = set()
-    # for idx, a in enumerate(team_links, start=1):
-    #     href = a["href"]
-    #     full_url = urljoin("https://www.sofascore.com", href)
-    #     if full_url in seen_urls:
-    #         continue
-    #     seen_urls.add(full_url)
-    #
-    #     team_name = href.split("/")[-2]
-    #     team_name = team_name.replace("-", " ").strip().title()
-    #
-    #     name_span = a.select_one("span")
-    #     if name_span:
-    #         team_name = name_span.get_text(strip=True)
-    #
-    #     team_data[str(idx)] = [team_name, full_url]
-
     # General
     script = soup.find("script", id="__NEXT_DATA__")
     data = json.loads(script.string)
@@ -417,6 +371,28 @@ def get_player_page_average_rating(player_url):
     return None
 
 
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "europe/european-championship/1#id:56953",
+        ("copa-america", "copaamerica", ): "south-america/copa-america/133#id:57114",
+        ("mundial", "worldcup", "world-cup", ): "world/world-championship/16#id:58210",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "world/club-world-championship/357#id:69619",
+        ("champions", "championsleague", "champions-league"): "europe/uefa-champions-league/7#id:76953",
+        ("laliga", "la-liga", ): "spain/laliga/8#id:77559",
+        ('premier', 'premier-league', ): "england/premier-league/17#id:76986",
+        ('seriea', 'serie-a', ): "italy/serie-a/23#id:76457",
+        ('bundesliga', 'bundes-liga', ): "germany/bundesliga/35#id:77333",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "france/ligue-1/34#id:77356",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "spain/laliga-2/54#id:77558",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "spain/laliga/8#id:77559"
+
+
 def get_players_data(
         write_file=True,
         file_name="sofascore_players_ratings",
@@ -430,13 +406,16 @@ def get_players_data(
             return data
 
     if not team_links:
-        team_links = get_team_links_from_league(
-            # "https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619",
-            "https://www.sofascore.com/tournament/football/spain/laliga/8#id:77559",
-            # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
-            # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
-            # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
-        )
+        competition = get_team_links_from_league(file_name)
+        competition_url = f"https://www.sofascore.com/tournament/football/{competition}"
+        team_links = get_team_links_from_league(competition_url)
+        # team_links = get_team_links_from_league(
+        #     # "https://www.sofascore.com/tournament/football/world/club-world-championship/357#id:69619",
+        #     "https://www.sofascore.com/tournament/football/spain/laliga/8#id:77559",
+        #     # "https://www.sofascore.com/tournament/football/spain/laliga/8#52376",
+        #     # "https://www.sofascore.com/tournament/football/europe/european-championship/1#id:56953",
+        #     # "https://www.sofascore.com/tournament/football/south-america/copa-america/133#id:57114",
+        # )
     # team_links = {
     #     '0': ['León', 'https://www.sofascore.com/team/football/club-leon/36534'],
     # }

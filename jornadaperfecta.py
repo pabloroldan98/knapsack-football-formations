@@ -21,10 +21,16 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 
 class JornadaPerfectaScraper:
-    def __init__(self):
-        # self.base_url = "https://www.jornadaperfecta.com/la-liga/onces-posibles/"
-        self.base_url = "https://www.jornadaperfecta.com/onces-posibles/"
-        # self.base_url = "https://www.jornadaperfecta.com/mundial-de-clubes/onces-posibles/"
+    def __init__(self, competition: str = None):
+        self.base_url = "https://www.jornadaperfecta.com"
+        # # self.base_url = "https://www.jornadaperfecta.com/la-liga/onces-posibles" # No existe, sin nada = laliga
+        # self.base_url = "https://www.jornadaperfecta.com/onces-posibles"
+        # # self.base_url = "https://www.jornadaperfecta.com/mundial-de-clubes/onces-posibles"
+        self.competition =  (
+            competition
+            if competition is not None
+            else ""
+        )
         self.session = requests.Session()
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
@@ -49,7 +55,8 @@ class JornadaPerfectaScraper:
 
     def get_match_links(self):
         # 1) load the page
-        self.fetch_page(self.base_url)
+        # self.fetch_page(self.base_url)
+        self.fetch_page(f"{self.base_url}{self.competition}/onces-posibles")
 
         # # 2) figure out which round to pick based on Europe/Madrid time
         # cet = pytz.timezone("Europe/Madrid")
@@ -185,14 +192,16 @@ class JornadaPerfectaScraper:
         2) For each team link, parse the lineup data.
         3) Merge them all into a single dictionary.
         """
-        # TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
-        TEAMS_PAGE = "https://www.jornadaperfecta.com/clasificacion/"
+        # # TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
+        # TEAMS_PAGE = "https://www.jornadaperfecta.com/clasificacion/"
+        TEAMS_PAGE = f"{self.base_url}{self.competition}/clasificacion/"
         html = self.fetch_response(TEAMS_PAGE)
         soup = BeautifulSoup(html, "html.parser")
 
         # 1) Find all <a> tags whose href begins with the team prefix
-        # prefix = "https://www.jornadaperfecta.com/mundial-de-clubes/equipo/"
-        prefix = "https://www.jornadaperfecta.com/equipo/"
+        # # prefix = "https://www.jornadaperfecta.com/mundial-de-clubes/equipo/"
+        # prefix = "https://www.jornadaperfecta.com/equipo/"
+        prefix = f"{self.base_url}{self.competition}/equipo/"
         team_links = {
             a["href"]
             for a in soup.find_all("a", href=True)
@@ -248,7 +257,8 @@ class JornadaPerfectaScraper:
         return probabilities_dict
 
     def scrape_market(self):
-        self.fetch_page("https://www.jornadaperfecta.com/mercado/")
+        # self.fetch_page("https://www.jornadaperfecta.com/mercado/")
+        self.fetch_page(f"{self.base_url}{self.competition}/mercado/")
 
         try:
             # 1. Wait for the select element to be present
@@ -352,6 +362,28 @@ class JornadaPerfectaScraper:
         return prices_dict, positions_dict, forms_dict, start_probabilities_data, price_trends_dict
 
 
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "eurocopa",
+        ("copa-america", "copaamerica", ): "copa-america",
+        ("mundial", "worldcup", "world-cup", ): "mundial",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-de-clubes",
+        ("champions", "championsleague", "champions-league"): "champions-league",
+        ("laliga", "la-liga", ): "",
+        ('premier', 'premier-league', ): "premier",
+        ('seriea', 'serie-a', ): "serie-a",
+        ('bundesliga', 'bundes-liga', ): "bundesliga",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
+        ('laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division', 'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return "/" + slug if slug else slug
+    return ""
+
+
 def get_jornadaperfecta_data(
         price_file_name="jornadaperfecta_prices",
         positions_file_name="jornadaperfecta_positions",
@@ -372,7 +404,8 @@ def get_jornadaperfecta_data(
             return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
     # Otherwise, scrape fresh data
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(start_probability_file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
     # Save to file for next time
@@ -394,7 +427,8 @@ def get_players_prices_dict_jornadaperfecta(
         if data:
             return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     result, _, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -411,7 +445,8 @@ def get_players_positions_dict_jornadaperfecta(
         # if data:
         return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     _, result, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -428,7 +463,8 @@ def get_players_forms_dict_jornadaperfecta(
         if data:
             return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     _, _, result, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -445,7 +481,8 @@ def get_players_start_probabilities_dict_jornadaperfecta(
         if data:
             return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     _, _, _, result, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name, ignore_old_data=True)
@@ -462,7 +499,8 @@ def get_players_price_trends_dict_jornadaperfecta(
         if data:
             return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     _, _, _, _, result = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -479,7 +517,8 @@ def get_players_start_probabilities_dict_jornadaperfecta_old(
         if data:
             return data
 
-    scraper = JornadaPerfectaScraper()
+    competition = competition_from_filename(file_name)
+    scraper = JornadaPerfectaScraper(competition=competition)
     result = scraper.scrape_probabilities()
 
     overwrite_dict_data(result, file_name, ignore_old_data=True)

@@ -1,3 +1,4 @@
+import re
 import requests
 import tls_requests
 from bs4 import BeautifulSoup
@@ -12,8 +13,13 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 
 class TransfermarktScraper:
-    def __init__(self):
+    def __init__(self, competition: str = None):
         self.base_url = 'https://www.transfermarkt.com'
+        self.competition =  (
+            competition
+            if competition is not None
+            else "-/startseite/wettbewerb/ES1"
+        )
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
@@ -97,15 +103,38 @@ class TransfermarktScraper:
 
     def scrape(self):
         result = {}
-        # league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
-        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
-        # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
-        # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
+        # # league_url = f"{self.base_url}/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+        # league_url = f"{self.base_url}/laliga/startseite/wettbewerb/ES1"
+        # # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24"
+        # # league_url = f"{self.base_url}/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4"
+        league_url = f"{self.base_url}/{self.competition}"
         team_links = self.get_team_links(league_url)
         for team_name, team_suffix in team_links.items():
             print('Extracting penalty takers data from %s ...' % team_name)
             result[team_name] = self.get_penalty_takers(team_suffix)
         return result
+
+
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "-/teilnehmer/pokalwettbewerb/EURO",
+        ("copa-america", "copaamerica", ): "-/teilnehmer/pokalwettbewerb/COPA",
+        ("mundial", "worldcup", "world-cup", ): "-/teilnehmer/pokalwettbewerb/FIWC",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
+        ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
+        ("laliga", "la-liga", ): "-/startseite/wettbewerb/ES1",
+        ('premier', 'premier-league', ): "-/startseite/wettbewerb/GB1",
+        ('seriea', 'serie-a', ): "-/startseite/wettbewerb/IT1",
+        ('bundesliga', 'bundes-liga', ): "-/startseite/wettbewerb/L1",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "-/startseite/wettbewerb/FR1",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "-/startseite/wettbewerb/ES1"
 
 
 def get_penalty_takers_dict(
@@ -118,7 +147,8 @@ def get_penalty_takers_dict(
         if data:
             return data
 
-    scraper = TransfermarktScraper()
+    competition = competition_from_filename(file_name)
+    scraper = TransfermarktScraper(competition=competition)
     penalties_data = scraper.scrape()
 
     filtered_penalties_data = {}

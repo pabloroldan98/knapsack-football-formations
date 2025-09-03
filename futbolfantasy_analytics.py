@@ -20,9 +20,15 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 
 class FutbolFantasyScraper:
-    def __init__(self):
-        self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
-        # self.base_url = 'https://www.futbolfantasy.com/analytics/biwenger/mercado'
+    def __init__(self, base_url: str = None, competition: str = None):
+        self.base_url = "https://www.futbolfantasy.com"
+        # self.base_url = 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado'
+        # # self.base_url = 'https://www.futbolfantasy.com/analytics/biwenger/mercado'
+        self.competition =  (
+            competition
+            if competition is not None
+            else "laliga"
+        )
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
@@ -90,8 +96,9 @@ class FutbolFantasyScraper:
         return name, price, position, team_id, form, price_trend
 
     def scrape_teams_probabilities(self):
-        teams_list_url = "https://www.futbolfantasy.com/laliga/clasificacion"
-        # teams_list_url = "https://www.futbolfantasy.com/mundial-clubes/clasificacion"
+        teams_list_url = f"{self.base_url}/{self.competition}/clasificacion"
+        # teams_list_url = "https://www.futbolfantasy.com/laliga/clasificacion"
+        # # teams_list_url = "https://www.futbolfantasy.com/mundial-clubes/clasificacion"
         self.fetch_page(teams_list_url)
 
         team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//a[@href and @title]')))
@@ -175,8 +182,9 @@ class FutbolFantasyScraper:
             probabilities_dict = {}
 
         # 1) Fetch the possible lineups page via requests and parse out match URLs
-        html = self.fetch_response("https://www.futbolfantasy.com/laliga/posibles-alineaciones")
-        # html = self.fetch_response("https://www.futbolfantasy.com/mundial-clubes/posibles-alineaciones")
+        html = self.fetch_response(f"{self.base_url}/{self.competition}/posibles-alineaciones")
+        # html = self.fetch_response("https://www.futbolfantasy.com/laliga/posibles-alineaciones")
+        # # html = self.fetch_response("https://www.futbolfantasy.com/mundial-clubes/posibles-alineaciones")
         soup = BeautifulSoup(html, 'html.parser')
         main = soup.find('main')
 
@@ -311,7 +319,9 @@ class FutbolFantasyScraper:
     def scrape(self):
         # self.fetch_page(self.base_url)
         # self.accept_cookies()
-        main_html = self.fetch_response(self.base_url)
+        # main_html = self.fetch_response(self.base_url)
+        main_html = self.fetch_response(f"{self.base_url}/analytics/laliga-fantasy/mercado")
+        # main_html = self.fetch_response(f"{self.base_url}/analytics/biwenger/mercado")
         team_options = self.get_team_options(main_html)
 
         positions_normalize = {
@@ -347,6 +357,28 @@ class FutbolFantasyScraper:
         return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
 
 
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "eurocopa",
+        ("copa-america", "copaamerica", ): "copa-america",
+        ("mundial", "worldcup", "world-cup", ): "mundial",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-clubes",
+        ("champions", "championsleague", "champions-league"): "champions",
+        ("laliga", "la-liga", ): "laliga",
+        ('premier', 'premier-league', ): "premier-league",
+        ('seriea', 'serie-a', ): "serie-a",
+        ('bundesliga', 'bundes-liga', ): "bundesliga",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "laliga2",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "laliga"
+
+
 def get_futbolfantasy_data(
         price_file_name="futbolfantasy_prices",
         positions_file_name="futbolfantasy_positions",
@@ -365,7 +397,8 @@ def get_futbolfantasy_data(
         if prices_data and positions_data and forms_data and start_probabilities_data and price_trends_data:
             return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(start_probability_file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
     overwrite_dict_data(prices_data, price_file_name)
@@ -386,7 +419,8 @@ def get_players_prices_dict_futbolfantasy(
         if data:
             return data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     result, _, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -403,7 +437,8 @@ def get_players_positions_dict_futbolfantasy(
         if data:
             return data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     _, result, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -420,7 +455,8 @@ def get_players_forms_dict_futbolfantasy(
         if data:
             return data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     _, _, result, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -437,7 +473,8 @@ def get_players_start_probabilities_dict_futbolfantasy(
         if data:
             return data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     _, _, _, result, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -454,7 +491,8 @@ def get_players_price_trends_dict_futbolfantasy(
         if data:
             return data
 
-    scraper = FutbolFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = FutbolFantasyScraper(competition=competition)
     _, _, _, _, result = scraper.scrape()
 
     overwrite_dict_data(result, file_name)

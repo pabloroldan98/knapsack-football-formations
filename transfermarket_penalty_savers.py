@@ -1,5 +1,4 @@
-from pprint import pprint
-
+import re
 import requests
 import tls_requests
 from bs4 import BeautifulSoup
@@ -7,6 +6,7 @@ from datetime import datetime
 import time
 import os
 import ast
+from pprint import pprint
 
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, find_manual_similar_string
 
@@ -14,8 +14,13 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 
 class TransfermarktScraper:
-    def __init__(self):
+    def __init__(self, competition: str = None):
         self.base_url = 'https://www.transfermarkt.com'
+        self.competition =  (
+            competition
+            if competition is not None
+            else "-/startseite/wettbewerb/ES1"
+        )
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
@@ -57,8 +62,8 @@ class TransfermarktScraper:
                 for a in teams:
                     team_name = a.get("title")
                     team_name = find_manual_similar_string(team_name)
-                    if team_name not in ["CA Osasuna", "Getafe CF", ]:
-                        continue
+                    # if team_name not in ["CA Osasuna", "Getafe CF", ]:
+                    #     continue
                     team_link = a.get("href")
                     if team_name and team_link and "verein" in team_link:
                         team_links[team_name] = team_link
@@ -154,10 +159,11 @@ class TransfermarktScraper:
 
     def scrape(self):
         result = {}
-        # league_url = "https://www.transfermarkt.com/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
-        league_url = "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1"
-        # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24/saison_id/2023"
-        # league_url = "https://www.transfermarkt.com/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4/saison_id/2023"
+        # # league_url = f"{self.base_url}/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+        # league_url = f"{self.base_url}/laliga/startseite/wettbewerb/ES1"
+        # # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24"
+        # # league_url = f"{self.base_url}/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4"
+        league_url = f"{self.base_url}/{self.competition}"
         team_links = self.get_team_links(league_url)
         team_player_links = self.get_team_player_links(team_links)
         print()
@@ -172,6 +178,28 @@ class TransfermarktScraper:
         return result
 
 
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "-/teilnehmer/pokalwettbewerb/EURO",
+        ("copa-america", "copaamerica", ): "-/teilnehmer/pokalwettbewerb/COPA",
+        ("mundial", "worldcup", "world-cup", ): "-/teilnehmer/pokalwettbewerb/FIWC",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
+        ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
+        ("laliga", "la-liga", ): "-/startseite/wettbewerb/ES1",
+        ('premier', 'premier-league', ): "-/startseite/wettbewerb/GB1",
+        ('seriea', 'serie-a', ): "-/startseite/wettbewerb/IT1",
+        ('bundesliga', 'bundes-liga', ): "-/startseite/wettbewerb/L1",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "-/startseite/wettbewerb/FR1",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "-/startseite/wettbewerb/ES1"
+
+
 def get_penalty_savers_dict(
         write_file=True,
         file_name="transfermarket_laliga_penalty_savers",
@@ -182,7 +210,8 @@ def get_penalty_savers_dict(
         if data:
             return data
 
-    scraper = TransfermarktScraper()
+    competition = competition_from_filename(file_name)
+    scraper = TransfermarktScraper(competition=competition)
     penalty_saves_data = scraper.scrape()
 
     filtered_penalty_saves_data = {}

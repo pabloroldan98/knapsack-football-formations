@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import urllib3
 import json
@@ -12,9 +13,15 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 
 
 class AnaliticaFantasyScraper:
-    def __init__(self):
-        self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
-        # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
+    def __init__(self, competition: str = None):
+        self.base_url = "https://www.analiticafantasy.com"
+        # self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
+        # # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
+        self.competition =  (
+            competition
+            if competition is not None
+            else "la-liga"
+        )
         self.session = requests.Session()
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
@@ -56,7 +63,7 @@ class AnaliticaFantasyScraper:
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/equipo/"):
                     # Construct the full URL
-                    full_url = "https://www.analiticafantasy.com" + a_tag["href"]
+                    full_url = f"{self.base_url}{a_tag["href"]}"
                     links.append(full_url)
             # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
             # links = sorted(
@@ -76,8 +83,8 @@ class AnaliticaFantasyScraper:
                 # Construct the full URL
                 if "/equipo/" in href:
                     if href.startswith("/equipo/"):
-                        full_url = "https://www.analiticafantasy.com" + href
-                    elif href.startswith("https://www.analiticafantasy.com"):
+                        full_url = f"{self.base_url}{href}"
+                    elif href.startswith(f"{self.base_url}"):
                         full_url = href
                 if full_url:
                     links.append(full_url)
@@ -95,7 +102,7 @@ class AnaliticaFantasyScraper:
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/partido/"):
                     # Construct the full URL
-                    full_url = "https://www.analiticafantasy.com" + a_tag["href"]
+                    full_url = f"{self.base_url}{a_tag["href"]}"
                     links.append(full_url)
             # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
             # links = sorted(
@@ -115,8 +122,8 @@ class AnaliticaFantasyScraper:
                 # Construct the full URL
                 if "/partido/" in href:
                     if href.startswith("/partido/"):
-                        full_url = "https://www.analiticafantasy.com" + href
-                    elif href.startswith("https://www.analiticafantasy.com"):
+                        full_url = f"{self.base_url}{href}"
+                    elif href.startswith(f"{self.base_url}"):
                         full_url = href
                 if full_url:
                     links.append(full_url)
@@ -231,7 +238,8 @@ class AnaliticaFantasyScraper:
         3) Merge them all into a single dictionary.
         """
         # main_html = self.fetch_response(self.base_url)
-        self.fetch_page(self.base_url)
+        # self.fetch_page(self.base_url)
+        self.fetch_page(f"{self.base_url}/{self.competition}/alineaciones-probables")
 
         prices_dict = {}
         positions_dict = {}
@@ -304,6 +312,28 @@ class AnaliticaFantasyScraper:
         return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
 
 
+def competition_from_filename(file_name: str) -> str:
+    s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
+
+    mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): "eurocopa",
+        ("copa-america", "copaamerica", ): "copa-america",
+        ("mundial", "worldcup", "world-cup", ): "mundial",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "mundial-clubes",
+        ("champions", "championsleague", "champions-league"): "champions",
+        ("laliga", "la-liga", ): "la-liga",
+        ('premier', 'premier-league', ): "premier-league",
+        ('seriea', 'serie-a', ): "serie-a",
+        ('bundesliga', 'bundes-liga', ): "bundesliga",
+        ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
+        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "la-liga-2",
+    }
+    for keys, slug in mapping.items():
+        if any(k in s for k in keys):
+            return slug
+    return "la-liga"
+
+
 def get_analiticafantasy_data(
         price_file_name="analiticafantasy_prices",
         positions_file_name="analiticafantasy_positions",
@@ -324,7 +354,8 @@ def get_analiticafantasy_data(
             return prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data
 
     # Otherwise, scrape fresh data
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(start_probability_file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     prices_data, positions_data, forms_data, start_probabilities_data, price_trends_data = scraper.scrape()
 
     # Save to file for next time
@@ -346,7 +377,8 @@ def get_players_prices_dict_analiticafantasy(
         if data:
             return data
 
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     result, _, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -363,7 +395,8 @@ def get_players_positions_dict_analiticafantasy(
         # if data:
         return data
 
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     _, result, _, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -380,7 +413,8 @@ def get_players_forms_dict_analiticafantasy(
         if data:
             return data
 
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     _, _, result, _, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -397,7 +431,8 @@ def get_players_start_probabilities_dict_analiticafantasy(
         if data:
             return data
 
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     _, _, _, result, _ = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
@@ -414,7 +449,8 @@ def get_players_price_trends_dict_analiticafantasy(
         if data:
             return data
 
-    scraper = AnaliticaFantasyScraper()
+    competition = competition_from_filename(file_name)
+    scraper = AnaliticaFantasyScraper(competition=competition)
     _, _, _, _, result = scraper.scrape()
 
     overwrite_dict_data(result, file_name)

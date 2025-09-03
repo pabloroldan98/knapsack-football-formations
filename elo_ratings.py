@@ -28,7 +28,7 @@ def get_teams_elos_dict(
     data = None
     if force_scrape:
         try:
-            data = get_teams_elos(is_country=is_country, country=country, extra_teams=extra_teams)
+            data = get_teams_elos(is_country=is_country, country=country, extra_teams=extra_teams, file_name=file_name)
         except:
             pass
     if not data: # if force_scrape failed or not force_scrape
@@ -45,12 +45,14 @@ def get_teams_elos_dict(
     return data
 
 
-def get_besoccer_teams_elos():
+def get_besoccer_teams_elos(target_url=None):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # 1. Fetch the page
-    # url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
-    url = 'https://es.besoccer.com/competicion/clasificacion/primera'
+    # # url = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+    # url = 'https://es.besoccer.com/competicion/clasificacion/primera'
+    # Default when None/empty
+    url = target_url or "https://es.besoccer.com/competicion/clasificacion/primera"
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -114,13 +116,15 @@ def get_besoccer_teams_elos():
     return full_besoccer_teams_elos_dict
 
 
-def get_footballdatabase_teams_elos():
+def get_footballdatabase_teams_elos(target_url=None):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # 1. Fetch the page
-    # url = 'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-2025'
-    # url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2024-2025'
-    url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2025-2026'
+    # # url = 'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-2025'
+    # # url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2024-2025'
+    # url = 'https://footballdatabase.com/league-scores-tables/spain-primera-division-2025-2026'
+    # Default when None/empty
+    url = target_url or "https://footballdatabase.com/league-scores-tables/spain-primera-division-2025-2026"
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -383,7 +387,130 @@ def get_model_prediction(
     return df_elo["teams_elo"].to_dict()
 
 
-def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
+def extract_season_tokens(file_name=None, today=None):
+    """
+    Returns (league_span, year_single).
+    - league_span: 'YYYY-YYYY' for league URLs.
+    - year_single: 'YYYY' for single-year tournaments.
+    If file_name is None or no years found, uses the current season and current year.
+    """
+    if not today:
+        today = datetime.date.today()
+    if not file_name:
+        # now = datetime.datetime.now()
+        # European season assumption: Jul–Jun
+        if today.month >= 7:
+            y1, y2 = today.year, today.year + 1
+        else:
+            y1, y2 = today.year - 1, today.year
+        return f"{y1}-{y2}", str(today.year)
+
+    s = file_name.lower()
+
+    # YYYY ... YYYY (e.g., 2025_2026, 2025-2026)
+    m = re.search(r'(20\d{2})\D*(20\d{2})', s)
+    if m:
+        y1, y2 = m.group(1), m.group(2)
+        return f"{y1}-{y2}", y2  # use the second year for single-year tourneys
+
+    # YY ... YY (e.g., 24-25)
+    m = re.search(r'\b(\d{2})\D*(\d{2})\b', s)
+    if m:
+        y1, y2 = 2000 + int(m.group(1)), 2000 + int(m.group(2))
+        return f"{y1}-{y2}", str(y2)
+
+    # Single YYYY
+    m = re.search(r'(20\d{2})', s)
+    if m:
+        y = int(m.group(1))
+        return f"{y}-{y+1}", str(y)
+
+    # Fallback to current season
+    # now = datetime.datetime.now()
+    if today.month >= 7:
+        y1, y2 = today.year, today.year + 1
+    else:
+        y1, y2 = today.year - 1, today.year
+    return f"{y1}-{y2}", str(today.year)
+
+
+def elos_urls_from_filename(file_name=None, today=None):
+    """
+    Returns (besoccer_url, footballdatabase_url) inferred from file_name.
+    Defaults to Spain Primera + current season if ambiguous or None.
+    """
+    norm = re.sub(r'[^a-z0-9]+', '-', (file_name or '').lower())
+
+    league_span, year_single = extract_season_tokens(file_name, today)
+
+    is_champions = any(k in norm for k in [
+        'champions', 'champions-league', 'championsleague',
+    ])
+    is_mundialito = any(k in norm for k in [
+        "mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes",
+    ])
+    is_laliga = any(k in norm for k in [
+        'laliga', 'la-liga', 'primera', 'spain', 'espana', 'espa-a', 'españa',
+    ])
+    is_premier = any(k in norm for k in [
+        'premier', 'premier-league', 'premierleague', 'england', 'inglaterra',
+    ])
+    is_seriea = any(k in norm for k in [
+        'seriea', 'serie-a', 'serie', 'italy', 'italia',
+    ])
+    is_bundesliga = any(k in norm for k in [
+        'bundesliga', 'bundes-liga', 'bundes', 'germany', 'alemania',
+    ])
+    is_ligue1 = any(k in norm for k in [
+        'ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', 'france', 'francia',
+    ])
+    is_laliga2 = any(k in norm for k in [
+        'laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division', 'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion',
+    ])
+
+    if is_champions:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+        fdb = f'https://footballdatabase.com/league-scores-tables/uefa-champions-league-{league_span}'
+        return besoccer, fdb
+    if is_mundialito:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+        fdb = f'https://footballdatabase.com/league-scores-tables/fifa-club-world-cup-{year_single}'
+        return besoccer, fdb
+
+    # Realmente esto nunca se usa porque va a clubelo en estos casos
+    if is_laliga:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/primera'
+        fdb = f'https://footballdatabase.com/league-scores-tables/spain-primera-division-{league_span}'
+        return besoccer, fdb
+    if is_premier:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/premier'
+        fdb = f'https://footballdatabase.com/league-scores-tables/england-premier-league-{league_span}'
+        return besoccer, fdb
+    if is_seriea:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/serie_a'
+        fdb = f'https://footballdatabase.com/league-scores-tables/italy-serie-a-{league_span}'
+        return besoccer, fdb
+    if is_bundesliga:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/bundesliga'
+        fdb = f'https://footballdatabase.com/league-scores-tables/germany-bundesliga-{league_span}'
+        return besoccer, fdb
+    if is_ligue1:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/ligue_1'
+        fdb = f'https://footballdatabase.com/league-scores-tables/france-ligue-1-{league_span}'
+        return besoccer, fdb
+    if is_laliga2:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/segunda'
+        fdb = f'https://footballdatabase.com/league-scores-tables/spain-segunda-division-{league_span}'
+        return besoccer, fdb
+
+    # Default (or explicit Spain/LaLiga)
+    # if is_laliga or True:
+    besoccer = 'https://es.besoccer.com/competicion/clasificacion/primera'
+    fdb = f'https://footballdatabase.com/league-scores-tables/spain-primera-division-{league_span}'
+    return besoccer, fdb
+
+
+def get_teams_elos(is_country=False, country="ESP", extra_teams=False, file_name=None):
     if is_country:
         teams_elos_url = "https://www.eloratings.net/World.tsv"
         teams_elos_df = pd.read_table(teams_elos_url, sep="\t", header=None, na_filter=False)[[2, 3]]
@@ -400,8 +527,9 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
     else:
         # Get today's date in the format 'YYYY-MM-DD'
-        today = datetime.date.today().strftime('%Y-%m-%d')
-        url = f"http://api.clubelo.com/{today}"
+        today = datetime.date.today()
+        today_string = today.strftime('%Y-%m-%d')
+        url = f"http://api.clubelo.com/{today_string}"
         teams_elos_df = pd.read_csv(url)
 
         if country is not None:
@@ -417,8 +545,13 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False):
         full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
 
         if extra_teams:
-            full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
-            full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
+            # full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
+            # full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
+            # file_name can be None or a string like "laliga_2025_26" or "mundial_clubes_2025"
+            besoccer_url, fdb_url = elos_urls_from_filename(file_name, today)
+
+            full_besoccer_teams_elos_dict = get_besoccer_teams_elos(besoccer_url)
+            full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos(fdb_url)
             full_opta_teams_elos_dict = get_opta_teams_elos()
             # pprint(full_opta_teams_elos_dict)
             empty_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
