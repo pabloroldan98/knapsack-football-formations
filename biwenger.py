@@ -115,12 +115,17 @@ def country_from_filename(file_name: str):
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
+        ("eurocopa", "euro", "europa", "europeo", ): None,
+        ("copa-america", "copaamerica", ): None,
+        ("mundial", "worldcup", "world-cup", ): None,
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): None,
+        ("champions", "championsleague", "champions-league"): None,
         ("laliga", "la-liga", ): "ESP",
         ('premier', 'premier-league', ): "ENG",
         ('seriea', 'serie-a', ): "ITA",
         ('bundesliga', 'bundes-liga', ): "GER",
         ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "FRA",
-        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
+        ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
     }
     for keys, slug in mapping.items():
         if any(k in s for k in keys):

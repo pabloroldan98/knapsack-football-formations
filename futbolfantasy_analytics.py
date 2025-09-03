@@ -371,7 +371,7 @@ def competition_from_filename(file_name: str) -> str:
         ('seriea', 'serie-a', ): "serie-a",
         ('bundesliga', 'bundes-liga', ): "bundesliga",
         ('ligue1', 'ligue-1', 'ligue', 'ligueone', 'ligue-one', ): "ligue-1",
-        ("laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "laliga2",
+        ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "laliga2",
     }
     for keys, slug in mapping.items():
         if any(k in s for k in keys):
