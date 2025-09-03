@@ -469,7 +469,7 @@ def elos_urls_from_filename(file_name=None, today=None):
     ])
 
     if is_champions:
-        besoccer = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/champions'
         fdb = f'https://footballdatabase.com/league-scores-tables/uefa-champions-league-{league_span}'
         return besoccer, fdb
     if is_mundialito:
@@ -535,11 +535,11 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False, file_name
         if country is not None:
             filtered_teams_elos_df = teams_elos_df[
                 (teams_elos_df['Country'] == country) &
-                (teams_elos_df['Level'].isin([1, 2, ]))
+                (teams_elos_df['Level'].isin([0, 1, 2, ]))
             ]
         else:
             filtered_teams_elos_df = teams_elos_df[
-                teams_elos_df['Level'].isin([1, ])
+                teams_elos_df['Level'].isin([0, 1, ])
             ]
         full_teams_elos = dict(zip(filtered_teams_elos_df['Club'], filtered_teams_elos_df['Elo']))
         full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}

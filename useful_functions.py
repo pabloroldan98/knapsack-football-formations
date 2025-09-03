@@ -295,6 +295,12 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Al Ain": "Al-Ain",
         "Fluminense FC": "Fluminense",
         "CF Pachuca": "Pachuca",
+        "Bodoe Glimt": "Bodø/Glimt",
+        "FC København": "Copenhagen",
+        "FC Kobenhavn": "Copenhagen",
+        "Karabakh Agdam": "Qarabag",
+        "St Gillis": "Saint-Gilloise",
+        "Paphos": "Pafos",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
