@@ -17,6 +17,8 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False):
     try:
+        print()
+        print(f"- Scraping {label}:")
         elo_dict = get_teams_elos_dict(
             is_country=is_country,
             country=country,

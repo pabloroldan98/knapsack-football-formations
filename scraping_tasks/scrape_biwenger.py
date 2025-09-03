@@ -17,6 +17,8 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_biwenger_data(file_name, label):
     try:
+        print()
+        print(f"- Scraping {label}:")
         data = get_biwenger_data_dict(
             write_file=True,
             file_name=file_name,
