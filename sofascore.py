@@ -289,7 +289,7 @@ def get_player_statistics_rating(player_url):
     return average_rating
 
 
-def get_player_average_rating(player_url):
+def get_player_average_rating(player_url, retry_num=1):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -317,12 +317,14 @@ def get_player_average_rating(player_url):
     }
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    if resp.status_code == 403: # If blocked by too many calls
+        if retry_num <= 10:
+            print(f"Status: {resp.status_code} , so sleeping for 1 minute to avoid block (retry: {retry_num})")
+            time.sleep(60)
+            return get_player_average_rating(player_url, retry_num + 1)
+        else:
+            raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
     if resp.status_code != 200:
-        print(f"Status: {resp.status_code} {resp.reason}")
-        print(f"URL: {resp.url}")
-        print(f"Headers: {resp.headers}")
-        print("Response text (first 500 chars):")
-        print(resp.text[:500])  # cap to avoid huge dumps
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
     data = resp.json()
@@ -500,7 +502,7 @@ def get_players_data(
             timeout_retries = 3
 
             while timeout_retries > 0:
-                def scrape_players_rating_task(use_buffer=True):
+                def scrape_players_rating_task(use_buffer=False):
                     """
                     1) Try to find the <span role="meter" aria-valuenow="...">
                        (Summary last 12 months).
