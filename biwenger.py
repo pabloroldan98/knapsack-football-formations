@@ -33,9 +33,9 @@ def competition_from_filename(file_name: str) -> str:
         ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "world-cup",
         ("laliga", "la-liga", ): "la-liga",
-        ('premier', 'premier-league', ): "premier-league",
+        ('premier', 'premier-league', 'premierleague', ): "premier-league",
         ('seriea', 'serie-a', ): "serie-a",
-        ('bundesliga', 'bundes-liga', ): "bundesliga",
+        ('bundesliga', 'bundes-liga', 'bundes', ): "bundesliga",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
         ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
     }
@@ -126,9 +126,9 @@ def country_from_filename(file_name: str):
         ("copaamerica", "copa-america", ): None,
         ("mundial", "worldcup", "world-cup", ): None,
         ("laliga", "la-liga", ): "ESP",
-        ('premier', 'premier-league', ): "ENG",
+        ('premier', 'premier-league', 'premierleague', ): "ENG",
         ('seriea', 'serie-a', ): "ITA",
-        ('bundesliga', 'bundes-liga', ): "GER",
+        ('bundesliga', 'bundes-liga', 'bundes', ): "GER",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "FRA",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
     }

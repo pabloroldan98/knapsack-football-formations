@@ -84,6 +84,8 @@ laliga_goalkeepers_penalty_saves = safe_get_penalty_savers("LaLiga", "transferma
 # segundadivision_goalkeepers_penalty_saves = safe_get_penalty_savers("Segunda División", "transfermarket_segundadivision_penalty_savers")
 #
 # champions_goalkeepers_penalty_saves = safe_get_penalty_savers("Champions League", "transfermarket_champions_penalty_savers")
+# europaleague_goalkeepers_penalty_saves = safe_get_penalty_savers("Europa League", "transfermarket_europaleague_penalty_savers")
+# conference_goalkeepers_penalty_saves = safe_get_penalty_savers("Conference League", "transfermarket_conference_penalty_savers")
 # mundialito_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundialito", "transfermarket_mundialito_penalty_savers")
 #
 # mundial_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundial", "transfermarket_mundial_penalty_savers")

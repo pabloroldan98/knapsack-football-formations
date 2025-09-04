@@ -116,19 +116,25 @@ segundadivision_start_probabilities = safe_get_start_probabilities(
 champions_start_probabilities = safe_get_start_probabilities(
     "Champions League", "jornadaperfecta_champions_players_start_probabilities"
 )
-mundialito_start_probabilities = safe_get_start_probabilities(
-    "Mundialito", "jornadaperfecta_mundialito_players_start_probabilities"
+europaleague_start_probabilities = safe_get_start_probabilities(
+    "Europa League", "jornadaperfecta_europaleague_players_start_probabilities"
 )
-
-mundial_start_probabilities = safe_get_start_probabilities(
-    "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
+conference_start_probabilities = safe_get_start_probabilities(
+    "Conference League", "jornadaperfecta_conference_players_start_probabilities"
 )
-eurocopa_start_probabilities = safe_get_start_probabilities(
-    "Eurocopa", "jornadaperfecta_eurocopa_players_start_probabilities"
-)
-copaamerica_start_probabilities = safe_get_start_probabilities(
-    "Copa América", "jornadaperfecta_copaamerica_players_start_probabilities"
-)
+# mundialito_start_probabilities = safe_get_start_probabilities(
+#     "Mundialito", "jornadaperfecta_mundialito_players_start_probabilities"
+# )
+#
+# mundial_start_probabilities = safe_get_start_probabilities(
+#     "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
+# )
+# eurocopa_start_probabilities = safe_get_start_probabilities(
+#     "Eurocopa", "jornadaperfecta_eurocopa_players_start_probabilities"
+# )
+# copaamerica_start_probabilities = safe_get_start_probabilities(
+#     "Copa América", "jornadaperfecta_copaamerica_players_start_probabilities"
+# )
 
 
 # except Exception as e:

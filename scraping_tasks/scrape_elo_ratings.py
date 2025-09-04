@@ -108,6 +108,16 @@ elo_ratings_champions_data = safe_get_elos(
     is_country=False, country=None, extra_teams=False,
     file_name="elo_ratings_champions_data"
 )
+elo_ratings_europaleague_data = safe_get_elos(
+    "Europa League",
+    is_country=False, country=None, extra_teams=False,
+    file_name="elo_ratings_europaleague_data"
+)
+elo_ratings_conference_data = safe_get_elos(
+    "Conference League",
+    is_country=False, country=None, extra_teams=False,
+    file_name="elo_ratings_conference_data"
+)
 
 # elo_ratings_mundialito_data = safe_get_elos(
 #     "Mundialito",

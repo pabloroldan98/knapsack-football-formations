@@ -85,11 +85,13 @@ sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofa
 sofascore_segundadivision_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segundadivision_players_ratings")
 
 sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League", "sofascore_champions_players_ratings")
-sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
-
-sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
-sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")
-sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
+sofascore_europaleague_players_ratings = safe_get_sofascore_ratings("Europa League", "sofascore_europaleague_players_ratings")
+sofascore_conference_players_ratings = safe_get_sofascore_ratings("Conference League", "sofascore_conference_players_ratings")
+# sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
+#
+# sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
+# sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")
+# sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
 
 
 # except Exception as e:

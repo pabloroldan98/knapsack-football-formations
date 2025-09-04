@@ -68,11 +68,13 @@ biwenger_ligueone_data = safe_get_biwenger_data("biwenger_ligueone_data", "Ligue
 biwenger_segundadivision_data = safe_get_biwenger_data("biwenger_segundadivision_data", "Segunda División")
 
 biwenger_champions_data = safe_get_biwenger_data("biwenger_champions_data", "Champions League")
-biwenger_mundialito_data = safe_get_biwenger_data("biwenger_mundialito_data", "Mundialito")
-
-biwenger_mundial_data = safe_get_biwenger_data("biwenger_mundial_data", "Mundial")
-biwenger_eurocopa_data = safe_get_biwenger_data("biwenger_eurocopa_data", "Eurocopa")
-biwenger_copaamerica_data = safe_get_biwenger_data("biwenger_copaamerica_data", "Copa América")
+biwenger_europaleague_data = safe_get_biwenger_data("biwenger_europaleague_data", "Europa League")
+# biwenger_conference_data = safe_get_biwenger_data("biwenger_conference_data", "Conference League")
+# biwenger_mundialito_data = safe_get_biwenger_data("biwenger_mundialito_data", "Mundialito")
+#
+# biwenger_mundial_data = safe_get_biwenger_data("biwenger_mundial_data", "Mundial")
+# biwenger_eurocopa_data = safe_get_biwenger_data("biwenger_eurocopa_data", "Eurocopa")
+# biwenger_copaamerica_data = safe_get_biwenger_data("biwenger_copaamerica_data", "Copa América")
 
 
 # except Exception as e:

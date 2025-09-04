@@ -22,7 +22,6 @@ import copy
 from pprint import pprint
 import ast
 import time
-from fake_useragent import UserAgent
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
@@ -32,8 +31,6 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 # Maximum wait time for player data (in seconds)
 MAX_WAIT_TIME = 2 * 60  # 2 minutes (120 seconds)
-
-ua = UserAgent()  # create once, reuse
 
 
 def get_players_ratings_list(
@@ -173,16 +170,10 @@ def get_player_last_year_rating(player_url, headers=None):
         }
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
-    if resp.status_code == 403: # If blocked by too many calls
-        print(f"Status: {resp.status_code} , trying with no headers")
-        time.sleep(30)
-        headers = {
-            "User-Agent": ua.random,  # << random user agent
-            "Accept": "application/json, text/plain, */*",
-            "Referer": "https://www.sofascore.com/",
-            "Origin": "https://www.sofascore.com",
-        }
-        return get_player_last_year_rating(player_url, headers=headers)
+    # if resp.status_code == 403: # If blocked by too many calls
+    #     print(f"Status: {resp.status_code} , trying with no headers")
+    #     time.sleep(30)
+    #     return get_player_last_year_rating(player_url, headers=None)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -332,10 +323,10 @@ def get_player_average_rating(player_url, headers=None):
         }
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
-    if resp.status_code == 403: # If blocked by too many calls
-        print(f"Status: {resp.status_code} , trying with no headers")
-        time.sleep(30)
-        return get_player_average_rating(player_url, headers=None)
+    # if resp.status_code == 403: # If blocked by too many calls
+    #     print(f"Status: {resp.status_code} , trying with no headers")
+    #     time.sleep(30)
+    #     return get_player_average_rating(player_url, headers=None)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -402,9 +393,9 @@ def competition_from_filename(file_name: str) -> str:
         ("copaamerica", "copa-america", ): "south-america/copa-america/133#id:57114",
         ("mundial", "worldcup", "world-cup", ): "world/world-championship/16#id:58210",
         ("laliga", "la-liga", ): "spain/laliga/8#id:77559",
-        ('premier', 'premier-league', ): "england/premier-league/17#id:76986",
+        ('premier', 'premier-league', 'premierleague', ): "england/premier-league/17#id:76986",
         ('seriea', 'serie-a', ): "italy/serie-a/23#id:76457",
-        ('bundesliga', 'bundes-liga', ): "germany/bundesliga/35#id:77333",
+        ('bundesliga', 'bundes-liga', 'bundes', ): "germany/bundesliga/35#id:77333",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "france/ligue-1/34#id:77356",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "spain/laliga-2/54#id:77558",
     }

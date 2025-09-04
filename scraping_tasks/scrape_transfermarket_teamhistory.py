@@ -93,11 +93,13 @@ ligueone_team_history = safe_get_team_history("Ligue 1", "transfermarket_ligueon
 segundadivision_team_history = safe_get_team_history("Segunda División", "transfermarket_segundadivision_team_history", use_country_as_team=False)
 
 champions_team_history = safe_get_team_history("Champions League", "transfermarket_champions_team_history", use_country_as_team=False)
-mundialito_team_history = safe_get_team_history("Mundialito", "transfermarket_mundialito_team_history", use_country_as_team=False)
-
-mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history", use_country_as_team=True)
-eurocopa_team_history = safe_get_team_history("Eurocopa", "transfermarket_eurocopa_team_history", use_country_as_team=True)
-copaamerica_team_history = safe_get_team_history("Copa América", "transfermarket_copaamerica_team_history", use_country_as_team=True)
+europaleague_team_history = safe_get_team_history("Europa League", "transfermarket_europaleague_team_history", use_country_as_team=False)
+conference_team_history = safe_get_team_history("Conference League", "transfermarket_conference_team_history", use_country_as_team=False)
+# mundialito_team_history = safe_get_team_history("Mundialito", "transfermarket_mundialito_team_history", use_country_as_team=False)
+#
+# mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history", use_country_as_team=True)
+# eurocopa_team_history = safe_get_team_history("Eurocopa", "transfermarket_eurocopa_team_history", use_country_as_team=True)
+# copaamerica_team_history = safe_get_team_history("Copa América", "transfermarket_copaamerica_team_history", use_country_as_team=True)
 
 
 print()

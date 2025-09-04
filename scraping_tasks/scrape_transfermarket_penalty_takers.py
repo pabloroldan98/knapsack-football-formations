@@ -75,11 +75,13 @@ ligueone_penalty_takers = safe_get_penalty_takers("Ligue 1", "transfermarket_lig
 segundadivision_penalty_takers = safe_get_penalty_takers("Segunda División", "transfermarket_segundadivision_penalty_takers")
 
 champions_penalty_takers = safe_get_penalty_takers("Champions League", "transfermarket_champions_penalty_takers")
-mundialito_penalty_takers = safe_get_penalty_takers("Mundialito", "transfermarket_mundialito_penalty_takers")
-
-mundial_penalty_takers = safe_get_penalty_takers("Mundial", "transfermarket_mundial_penalty_takers")
-eurocopa_penalty_takers = safe_get_penalty_takers("Eurocopa", "transfermarket_eurocopa_penalty_takers")
-copaamerica_penalty_takers = safe_get_penalty_takers("Copa América", "transfermarket_copaamerica_penalty_takers")
+europaleague_penalty_takers = safe_get_penalty_takers("Europa League", "transfermarket_europaleague_penalty_takers")
+conference_penalty_takers = safe_get_penalty_takers("Conference League", "transfermarket_conference_penalty_takers")
+# mundialito_penalty_takers = safe_get_penalty_takers("Mundialito", "transfermarket_mundialito_penalty_takers")
+#
+# mundial_penalty_takers = safe_get_penalty_takers("Mundial", "transfermarket_mundial_penalty_takers")
+# eurocopa_penalty_takers = safe_get_penalty_takers("Eurocopa", "transfermarket_eurocopa_penalty_takers")
+# copaamerica_penalty_takers = safe_get_penalty_takers("Copa América", "transfermarket_copaamerica_penalty_takers")
 
 
 # except Exception as e:

@@ -114,6 +114,12 @@ segundadivision_start_probabilities = safe_get_start_probabilities(
 # champions_start_probabilities = safe_get_start_probabilities(
 #     "Champions League", "futbolfantasy_champions_players_start_probabilities"
 # )
+# europaleague_start_probabilities = safe_get_start_probabilities(
+#     "Europa League", "futbolfantasy_europaleague_players_start_probabilities"
+# )
+# conference_start_probabilities = safe_get_start_probabilities(
+#     "Conference League", "futbolfantasy_conference_players_start_probabilities"
+# )
 # mundialito_start_probabilities = safe_get_start_probabilities(
 #     "Mundialito", "futbolfantasy_mundialito_players_start_probabilities"
 # )

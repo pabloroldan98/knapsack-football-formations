@@ -191,9 +191,9 @@ def competition_from_filename(file_name: str) -> str:
         ("copaamerica", "copa-america", ): "-/teilnehmer/pokalwettbewerb/COPA",
         ("mundial", "worldcup", "world-cup", ): "-/teilnehmer/pokalwettbewerb/FIWC",
         ("laliga", "la-liga", ): "-/startseite/wettbewerb/ES1",
-        ('premier', 'premier-league', ): "-/startseite/wettbewerb/GB1",
+        ('premier', 'premier-league', 'premierleague', ): "-/startseite/wettbewerb/GB1",
         ('seriea', 'serie-a', ): "-/startseite/wettbewerb/IT1",
-        ('bundesliga', 'bundes-liga', ): "-/startseite/wettbewerb/L1",
+        ('bundesliga', 'bundes-liga', 'bundes', ): "-/startseite/wettbewerb/L1",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "-/startseite/wettbewerb/FR1",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
     }
