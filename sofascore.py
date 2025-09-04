@@ -318,6 +318,7 @@ def get_player_average_rating(player_url, retry_num=1):
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code == 403: # If blocked by too many calls
+        print(retry_num)
         if retry_num <= 10:
             print(f"Status: {resp.status_code} , sleeping for 1 minute to avoid block (retry: {retry_num})")
             time.sleep(60)
