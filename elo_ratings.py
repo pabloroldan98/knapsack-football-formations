@@ -444,7 +444,13 @@ def elos_urls_from_filename(file_name=None, today=None):
     league_span, year_single = extract_season_tokens(file_name, today)
 
     is_champions = any(k in norm for k in [
-        'champions', 'champions-league', 'championsleague',
+        'champions', 'championsleague', 'champions-league',
+    ])
+    is_europaleague = any(k in norm for k in [
+        'europaleague', 'europa-league',
+    ])
+    is_conference = any(k in norm for k in [
+        'conference', 'conference-league', 'conferenceleague',
     ])
     is_mundialito = any(k in norm for k in [
         "mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes",
@@ -471,6 +477,14 @@ def elos_urls_from_filename(file_name=None, today=None):
     if is_champions:
         besoccer = 'https://es.besoccer.com/competicion/clasificacion/champions'
         fdb = f'https://footballdatabase.com/league-scores-tables/uefa-champions-league-{league_span}'
+        return besoccer, fdb
+    if is_europaleague:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/uefa'
+        fdb = f'https://footballdatabase.com/league-scores-tables/uefa-europa-league-{league_span}'
+        return besoccer, fdb
+    if is_conference:
+        besoccer = 'https://es.besoccer.com/competicion/clasificacion/conference-league'
+        fdb = f'https://footballdatabase.com/league-scores-tables/uefa-europa-conference-league-{league_span}'
         return besoccer, fdb
     if is_mundialito:
         besoccer = 'https://es.besoccer.com/competicion/clasificacion/mundial_clubes'
