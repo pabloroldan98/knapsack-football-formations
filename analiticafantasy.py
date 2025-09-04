@@ -129,7 +129,7 @@ class AnaliticaFantasyScraper:
                     links.append(full_url)
         return self._dedup_preserve_order(links)
 
-    def parse_match_page(self, match_url):
+    def parse_lineup_page(self, match_url):
         """
         Example logic: parse the match page’s JSON or HTML to extract the chance/team/player data.
         The actual parsing details depend on how the data appears in the HTML.
@@ -205,7 +205,8 @@ class AnaliticaFantasyScraper:
                     match_dict["prices"][team_name][player_name] = price
                     match_dict["positions"][team_name][player_name] = position
                     match_dict["forms"][team_name][player_name] = form
-                    match_dict["start_probabilities"][team_name][player_name] = chance_fraction
+                    if chance_fraction:  # Sino salian duplicados como "Lewandowski" y "Robert Lewandowski"
+                        match_dict["start_probabilities"][team_name][player_name] = chance_fraction
                     match_dict["price_trends"][team_name][player_name] = price_trend
 
         # home_players = lineups_data.get("homeLineup", {}).get("players", [])
@@ -250,7 +251,7 @@ class AnaliticaFantasyScraper:
         # team_links = self.get_team_links(main_html)
         team_links = self.get_team_links()
         for url in team_links:
-            match_data = self.parse_match_page(url)
+            match_data = self.parse_lineup_page(url)
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:
@@ -281,7 +282,7 @@ class AnaliticaFantasyScraper:
         # match_links = self.get_match_links(main_html)
         match_links = self.get_match_links()
         for url in match_links:
-            match_data = self.parse_match_page(url)
+            match_data = self.parse_lineup_page(url)
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:

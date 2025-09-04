@@ -77,18 +77,18 @@ print("##############################")
 
 
 laliga_goalkeepers_penalty_saves = safe_get_penalty_savers("LaLiga", "transfermarket_laliga_penalty_savers")
-premier_goalkeepers_penalty_saves = safe_get_penalty_savers("Premier League", "transfermarket_premier_penalty_savers")
-seriea_goalkeepers_penalty_saves = safe_get_penalty_savers("Serie A", "transfermarket_seriea_penalty_savers")
-bundesliga_goalkeepers_penalty_saves = safe_get_penalty_savers("Bundesliga", "transfermarket_bundesliga_penalty_savers")
-ligueone_goalkeepers_penalty_saves = safe_get_penalty_savers("Ligue 1", "transfermarket_ligueone_penalty_savers")
-segundadivision_goalkeepers_penalty_saves = safe_get_penalty_savers("Segunda División", "transfermarket_segundadivision_penalty_savers")
-
-champions_goalkeepers_penalty_saves = safe_get_penalty_savers("Champions League", "transfermarket_champions_penalty_savers")
-mundialito_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundialito", "transfermarket_mundialito_penalty_savers")
-
-mundial_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundial", "transfermarket_mundial_penalty_savers")
-eurocopa_goalkeepers_penalty_saves = safe_get_penalty_savers("Eurocopa", "transfermarket_eurocopa_penalty_savers")
-copaamerica_goalkeepers_penalty_saves = safe_get_penalty_savers("Copa América", "transfermarket_copaamerica_penalty_savers")
+# premier_goalkeepers_penalty_saves = safe_get_penalty_savers("Premier League", "transfermarket_premier_penalty_savers")
+# seriea_goalkeepers_penalty_saves = safe_get_penalty_savers("Serie A", "transfermarket_seriea_penalty_savers")
+# bundesliga_goalkeepers_penalty_saves = safe_get_penalty_savers("Bundesliga", "transfermarket_bundesliga_penalty_savers")
+# ligueone_goalkeepers_penalty_saves = safe_get_penalty_savers("Ligue 1", "transfermarket_ligueone_penalty_savers")
+# segundadivision_goalkeepers_penalty_saves = safe_get_penalty_savers("Segunda División", "transfermarket_segundadivision_penalty_savers")
+#
+# champions_goalkeepers_penalty_saves = safe_get_penalty_savers("Champions League", "transfermarket_champions_penalty_savers")
+# mundialito_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundialito", "transfermarket_mundialito_penalty_savers")
+#
+# mundial_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundial", "transfermarket_mundial_penalty_savers")
+# eurocopa_goalkeepers_penalty_saves = safe_get_penalty_savers("Eurocopa", "transfermarket_eurocopa_penalty_savers")
+# copaamerica_goalkeepers_penalty_saves = safe_get_penalty_savers("Copa América", "transfermarket_copaamerica_penalty_savers")
 
 
 # except Exception as e:
