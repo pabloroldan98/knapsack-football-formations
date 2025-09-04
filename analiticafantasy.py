@@ -202,12 +202,17 @@ class AnaliticaFantasyScraper:
                     match_dict["price_trends"].setdefault(team_name, {})
 
                     # match_dict[team_name][player_name] = chance_fraction
-                    match_dict["prices"][team_name][player_name] = price
-                    match_dict["positions"][team_name][player_name] = position
-                    match_dict["forms"][team_name][player_name] = form
-                    if chance_fraction:  # Sino salian duplicados como "Lewandowski" y "Robert Lewandowski"
+                    # Sin los ifs salian duplicados como "Lewandowski" y "Robert Lewandowski"
+                    if price:
+                        match_dict["prices"][team_name][player_name] = price
+                    if position:
+                        match_dict["positions"][team_name][player_name] = position
+                    if form:
+                        match_dict["forms"][team_name][player_name] = form
+                    if chance_fraction:
                         match_dict["start_probabilities"][team_name][player_name] = chance_fraction
-                    match_dict["price_trends"][team_name][player_name] = price_trend
+                    if price_trend:
+                        match_dict["price_trends"][team_name][player_name] = price_trend
 
         # home_players = lineups_data.get("homeLineup", {}).get("players", [])
         # away_players = lineups_data.get("awayLineup", {}).get("players", [])
