@@ -244,6 +244,7 @@ def get_player_statistics_rating(player_url):
     }
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    # if resp.status_code == 403: # If blocked by too many calls
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -318,7 +319,6 @@ def get_player_average_rating(player_url, retry_num=1):
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code == 403: # If blocked by too many calls
-        print(retry_num)
         if retry_num <= 10:
             print(f"Status: {resp.status_code} , sleeping for 1 minute to avoid block (retry: {retry_num})")
             time.sleep(60)
@@ -526,11 +526,7 @@ def get_players_data(
                     try:
                         average_rating = float(get_player_average_rating(p))
                         return average_rating
-                    except Exception as e:
-                        print(f"Error while getting average rating for player {p}: {e}")
-                        print(f"Exception type: {type(e).__name__}")
-                        import traceback
-                        traceback.print_exc()
+                    except:
                         pass
 
                     # Attempt #3: "Average Sofascore Rating" fallback
@@ -538,11 +534,7 @@ def get_players_data(
                     try:
                         average_rating = float(get_player_last_year_rating(p))
                         return average_rating
-                    except Exception as e:
-                        print(f"Error while getting average rating for player {p}: {e}")
-                        print(f"Exception type: {type(e).__name__}")
-                        import traceback
-                        traceback.print_exc()
+                    except:
                         pass
 
                     # # Attempt #4: "Average Sofascore Rating" fallback
@@ -550,7 +542,11 @@ def get_players_data(
                     # try:
                     #     average_rating = float(get_player_statistics_rating(p))
                     #     # average_rating = get_player_average_rating_selenium(p)
-                    # except:
+                    # except Exception as e:
+                    #     print(f"Error while getting average rating for player {p}: {e}")
+                    #     print(f"Exception type: {type(e).__name__}")
+                    #     import traceback
+                    #     traceback.print_exc()
                     #     pass
 
                     return average_rating  # If all fails, return 6.0
