@@ -24,12 +24,13 @@ def safe_get_sofascore_ratings(label, file_name):
             backup_files=False,
             force_scrape=True
         )
-        print(f"\n{label} — Sofascore Player Ratings:")
+        print(f"\n{label} , DONE!")
+        # print(f"\n{label} — Sofascore Player Ratings:")
         # for p in data:
         #     # Print the object and its rating (guard in case attribute is missing)
         #     print(p)
         #     print(getattr(p, "sofascore_rating", None))
-        time.sleep(100)
+        # time.sleep(60)
         print("----------------------------------------")
         return data
     except Exception as e:

@@ -30,7 +30,7 @@ def safe_get_team_history(label, file_name, use_country_as_team=False):
             print(team)
             for player, team_history in players.items():
                 print(player, team_history)
-        time.sleep(100)
+        time.sleep(60)
         print("----------------------------------------")
         return data
     except Exception as e:

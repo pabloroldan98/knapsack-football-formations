@@ -319,7 +319,7 @@ def get_player_average_rating(player_url, retry_num=1):
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code == 403: # If blocked by too many calls
         if retry_num <= 10:
-            print(f"Status: {resp.status_code} , so sleeping for 1 minute to avoid block (retry: {retry_num})")
+            print(f"Status: {resp.status_code} , sleeping for 1 minute to avoid block (retry: {retry_num})")
             time.sleep(60)
             return get_player_average_rating(player_url, retry_num + 1)
         else:
@@ -533,7 +533,11 @@ def get_players_data(
                     try:
                         average_rating = float(get_player_last_year_rating(p))
                         return average_rating
-                    except:
+                    except Exception as e:
+                        print(f"Error while getting average rating for player {p}: {e}")
+                        print(f"Exception type: {type(e).__name__}")
+                        import traceback
+                        traceback.print_exc()
                         pass
 
                     # # Attempt #4: "Average Sofascore Rating" fallback
