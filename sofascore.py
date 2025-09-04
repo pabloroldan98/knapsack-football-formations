@@ -318,6 +318,11 @@ def get_player_average_rating(player_url):
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
+        print(f"Status: {resp.status_code} {resp.reason}")
+        print(f"URL: {resp.url}")
+        print(f"Headers: {resp.headers}")
+        print("Response text (first 500 chars):")
+        print(resp.text[:500])  # cap to avoid huge dumps
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
     data = resp.json()
