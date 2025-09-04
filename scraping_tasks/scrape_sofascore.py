@@ -79,17 +79,17 @@ print("##############################")
 
 sofascore_laliga_players_ratings = safe_get_sofascore_ratings("LaLiga", "sofascore_laliga_players_ratings")
 sofascore_premier_players_ratings = safe_get_sofascore_ratings("Premier League", "sofascore_premier_players_ratings")
-sofascore_seriea_players_ratings = safe_get_sofascore_ratings("Serie A", "sofascore_seriea_players_ratings")
-sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", "sofascore_bundesliga_players_ratings")
-sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofascore_ligueone_players_ratings")
-sofascore_segundadivision_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segundadivision_players_ratings")
+# sofascore_seriea_players_ratings = safe_get_sofascore_ratings("Serie A", "sofascore_seriea_players_ratings")
+# sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", "sofascore_bundesliga_players_ratings")
+# sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofascore_ligueone_players_ratings")
+# sofascore_segundadivision_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segundadivision_players_ratings")
 
 sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League", "sofascore_champions_players_ratings")
-sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
-
-sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
-sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")
-sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
+# sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
+#
+# sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
+# sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")
+# sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
 
 
 # except Exception as e:
