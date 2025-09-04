@@ -1,4 +1,4 @@
-name: Manual Scraper - Sofascore
+name: Manual Scraper - Sofascore (Parallel)
 
 on:
   workflow_dispatch: # Allows manual triggering
@@ -46,10 +46,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+#
+#      - name: Run tasks
+#        run: |
+#          python -u ./scraping_tasks/scrape_sofascore.py
+#
 
-      - name: Run tasks
+      - name: Run tasks (${{ matrix.league }})
         run: |
-          python -u ./scraping_tasks/scrape_sofascore.py
+          python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}.py
 
       - name: Configure git
         run: |
