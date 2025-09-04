@@ -375,7 +375,7 @@ def competition_from_filename(file_name: str) -> str:
         ("mundial", "worldcup", "world-cup", ): "mundial",
         ("laliga", "la-liga", ): "",
         ('premier', 'premier-league', ): "premier",
-        ('seriea', 'serie-a', ): "serie-a",
+        ('seriea', 'serie-a', ): "seriea",
         ('bundesliga', 'bundes-liga', ): "bundesliga",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
         ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda",
@@ -486,7 +486,8 @@ def get_players_start_probabilities_dict_jornadaperfecta(
 
     competition = competition_from_filename(file_name)
     scraper = JornadaPerfectaScraper(competition=competition)
-    _, _, _, result, _ = scraper.scrape()
+    # _, _, _, result, _ = scraper.scrape()
+    result = scraper.scrape_probabilities()
 
     overwrite_dict_data(result, file_name, ignore_old_data=True)
 
@@ -504,8 +505,7 @@ def get_players_price_trends_dict_jornadaperfecta(
 
     competition = competition_from_filename(file_name)
     scraper = JornadaPerfectaScraper(competition=competition)
-    # _, _, _, _, result = scraper.scrape()
-    result = scraper.scrape_probabilities()
+    _, _, _, _, result = scraper.scrape()
 
     overwrite_dict_data(result, file_name)
 
