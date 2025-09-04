@@ -407,7 +407,7 @@ def get_players_data(
             return data
 
     if not team_links:
-        competition = get_team_links_from_league(file_name)
+        competition = competition_from_filename(file_name)
         competition_url = f"https://www.sofascore.com/tournament/football/{competition}"
         team_links = get_team_links_from_league(competition_url)
         # team_links = get_team_links_from_league(
@@ -445,14 +445,34 @@ def get_players_data(
         response = tls_requests.get(team_url, headers=headers, verify=False)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        a_tags = soup.find_all("a", href=True)
-        for a_tag in a_tags:
-            href_val = a_tag["href"]
-            # if href_val.startswith("/player/"):
-            if "/player/" in href_val:
-                # Construct absolute URL
-                full_url = "https://www.sofascore.com" + href_val
-                player_paths_list.append(full_url)
+        # Try to parse JSON blob first
+        script = soup.find("script", id="__NEXT_DATA__")
+        if script and script.string:
+            try:
+                data = json.loads(script.string)
+                players_list = (
+                    data["props"]["pageProps"]["initialProps"]["players"]["players"]
+                )
+                for item in players_list:
+                    p = item.get("player", {})
+                    slug = p.get("slug")
+                    pid = p.get("id")
+                    if slug and pid:
+                        player_paths_list.append(
+                            f"https://www.sofascore.com/football/player/{slug}/{pid}"
+                        )
+            except (json.JSONDecodeError, KeyError, TypeError):
+                pass
+
+        # Fallback: scan <a> tags if JSON not found
+        if not player_paths_list:
+            for a_tag in soup.find_all("a", href=True):
+                href_val = a_tag["href"]
+                # if href_val.startswith("/player/"):
+                if "/player/" in href_val:
+                    # Construct absolute URL
+                    full_url = href_val if href_val.startswith("http") else "https://www.sofascore.com" + href_val
+                    player_paths_list.append(full_url)
 
         player_paths_list = sorted(list(set(player_paths_list)))
         # player_paths_list = [path for path in player_paths_list if "unai-marrero" in path]
