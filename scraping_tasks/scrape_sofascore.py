@@ -77,6 +77,7 @@ print("##############################")
 #         print(p.sofascore_rating)
 
 
+sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", "sofascore_bundesliga_players_ratings")
 sofascore_laliga_players_ratings = safe_get_sofascore_ratings("LaLiga", "sofascore_laliga_players_ratings")
 sofascore_premier_players_ratings = safe_get_sofascore_ratings("Premier League", "sofascore_premier_players_ratings")
 sofascore_seriea_players_ratings = safe_get_sofascore_ratings("Serie A", "sofascore_seriea_players_ratings")

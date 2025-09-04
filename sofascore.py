@@ -525,7 +525,11 @@ def get_players_data(
                     try:
                         average_rating = float(get_player_average_rating(p))
                         return average_rating
-                    except:
+                    except Exception as e:
+                        print(f"Error while getting average rating for player {p}: {e}")
+                        print(f"Exception type: {type(e).__name__}")
+                        import traceback
+                        traceback.print_exc()
                         pass
 
                     # Attempt #3: "Average Sofascore Rating" fallback
