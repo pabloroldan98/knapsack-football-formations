@@ -56,32 +56,31 @@ jobs:
       - name: Upload SofaScore DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
-          name: sofascore-${{ matrix.league }}-data
+          name: sofascore-data
           path: |
             csv_files/*sofascore*.csv
             json_files/*sofascore*.json
           if-no-files-found: ignore
 
-  publish:
-    runs-on: ubuntu-22.04
+  commit-and-push:
     needs: run-tasks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false
 
-      - name: Download all artifacts
+      - name: Download SofaScore DATA artifact
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          name: sofascore-data
+          path: data_files/sofascore/
 
-      - name: Merge artifacts into repo folders
+      - name: Move SofaScore DATA files to root csv_files and json_files directories
         run: |
-          shopt -s globstar nullglob
-          mkdir -p csv_files json_files
-          find artifacts -type f -name "*.csv"  -exec cp -f {} csv_files/ \;
-          find artifacts -type f -name "*.json" -exec cp -f {} json_files/ \;
+          mv -f data_files/sofascore/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/sofascore
 
       - name: Configure git
         run: |
@@ -100,13 +99,9 @@ jobs:
       - name: Commit changes
         run: |
           git add streamlit_app.py
-          git add csv_files/*.csv || true
-          git add json_files/*.json || true
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
-          else
-            git commit -m "Automated commit by GitHub Action (parallel publish)"
-          fi
+          git add csv_files/*.csv
+          git add json_files/*.json
+          git commit -m "Automated commit by GitHub Action"
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
