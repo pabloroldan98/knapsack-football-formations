@@ -5,8 +5,8 @@ on:
     - cron: '0 2 * * 0,1,3,4,5,6'            # Every day except Tuesdays at 3/4 AM (Spanish time)
     - cron: '0 4 * 1,2,8,9 2'                # Every Tuesday at 5/6 AM (Spanish time) in Jan, Feb, Aug, Sep
     - cron: '0 4 * 3,4,5,6,7,10,11,12 2'     # Every Tuesday at 5/6 AM (Spanish time) except Jan, Feb, Aug, Sep
-    - cron: '0 7 * 4,5,6,7,8,9,10 *'         # This runs at 9 AM every day (Spanish summer time)
-    - cron: '0 8 * 1,2,3,11,12 *'            # This runs at 9 AM every day (Spanish winter time)
+    - cron: '0 6 * 4,5,6,7,8,9,10 *'         # This runs at 8 AM every day (Spanish summer time)
+    - cron: '0 7 * 1,2,3,11,12 *'            # This runs at 8 AM every day (Spanish winter time)
     - cron: '30 22 * 4,5,6,7,8,9,10 *'        # This runs at 00:30 every day (Spanish summer time)
     - cron: '30 23 * 1,2,3,11,12 *'           # This runs at 00:30 every day (Spanish winter time)
 #    - cron: '0 2 * * *'                     # This runs at 3/4 AM every day (Spanish time)
@@ -16,7 +16,7 @@ jobs:
   scrape_biwenger:
     runs-on: ubuntu-latest
     timeout-minutes: 10  # Set the job timeout to 10 minutes
-    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -45,7 +45,7 @@ jobs:
   scrape_laligafantasy:
     runs-on: ubuntu-latest
     timeout-minutes: 10  # Set the job timeout to 10 minutes
-    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -74,7 +74,7 @@ jobs:
   scrape_elo_ratings:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
-    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -103,7 +103,7 @@ jobs:
   scrape_futbolfantasy:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
-#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -132,7 +132,7 @@ jobs:
   scrape_analiticafantasy:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
-#    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 7 * 4,5,6,7,8,9,10 *') || (github.event.schedule == '0 8 * 1,2,3,11,12 *')
+#    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 6 * 4,5,6,7,8,9,10 *') || (github.event.schedule == '0 7 * 1,2,3,11,12 *')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -161,7 +161,7 @@ jobs:
   scrape_jornadaperfecta:
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
-#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -219,7 +219,7 @@ jobs:
   scrape_transfermarket_penalty_takers:
     runs-on: ubuntu-latest
     timeout-minutes: 120  # Set the job timeout to 120 minutes
-    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -248,7 +248,7 @@ jobs:
   scrape_transfermarket_penalty_savers:
     runs-on: ubuntu-latest
     timeout-minutes: 120  # Set the job timeout to 120 minutes
-    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -308,7 +308,7 @@ jobs:
 #    runs-on: ubuntu-latest
     runs-on: ubuntu-22.04
 #    timeout-minutes: 300  # Set the job timeout to 300 minutes
-    timeout-minutes: 120  # Set the job timeout to 120 minutes
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
 #    if: (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && github.event.schedule_weekday == '2')
     if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 4 * 1,2,8,9 2' || github.event.schedule == '0 4 * 3,4,5,6,7,10,11,12 2' || github.event.schedule == '0 2 * * 0,1,3,4,5,6')
     steps:
