@@ -22,6 +22,7 @@ import copy
 from pprint import pprint
 import ast
 import time
+from fake_useragent import UserAgent
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
@@ -31,6 +32,8 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 # Maximum wait time for player data (in seconds)
 MAX_WAIT_TIME = 2 * 60  # 2 minutes (120 seconds)
+
+ua = UserAgent()  # create once, reuse
 
 
 def get_players_ratings_list(
@@ -137,7 +140,7 @@ def normalize_year(year_raw):
     return year_raw
 
 
-def get_player_last_year_rating(player_url, headers="default"):
+def get_player_last_year_rating(player_url, headers=None):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -160,7 +163,7 @@ def get_player_last_year_rating(player_url, headers="default"):
 
     # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/match-type/overall
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/match-type/overall"
-    if headers == "default":
+    if not headers:
         headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -173,7 +176,13 @@ def get_player_last_year_rating(player_url, headers="default"):
     if resp.status_code == 403: # If blocked by too many calls
         print(f"Status: {resp.status_code} , trying with no headers")
         time.sleep(30)
-        return get_player_last_year_rating(player_url, headers=None)
+        headers = {
+            "User-Agent": ua.random,  # << random user agent
+            "Accept": "application/json, text/plain, */*",
+            "Referer": "https://www.sofascore.com/",
+            "Origin": "https://www.sofascore.com",
+        }
+        return get_player_last_year_rating(player_url, headers=headers)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -294,7 +303,7 @@ def get_player_statistics_rating(player_url):
     return average_rating
 
 
-def get_player_average_rating(player_url, headers="default"):
+def get_player_average_rating(player_url, headers=None):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -313,7 +322,7 @@ def get_player_average_rating(player_url, headers="default"):
 
     # 2) Fetch seasons info: /api/v1/player/{player_id}/last-year-summary
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/last-year-summary"
-    if headers == "default":
+    if not headers:
         headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
