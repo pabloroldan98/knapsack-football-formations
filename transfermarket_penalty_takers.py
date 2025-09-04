@@ -136,7 +136,7 @@ def competition_from_filename(file_name: str) -> str:
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first
             if k in s:
-                return "/" + slug if slug else slug
+                return slug
     return "-/startseite/wettbewerb/ES1"
 
 

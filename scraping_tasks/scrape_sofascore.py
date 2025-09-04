@@ -29,6 +29,7 @@ def safe_get_sofascore_ratings(label, file_name):
             # Print the object and its rating (guard in case attribute is missing)
             print(p)
             print(getattr(p, "sofascore_rating", None))
+        time.sleep(100)
         return data
     except Exception as e:
         print(f"Error scraping {label} Sofascore ratings: {e}")
@@ -80,8 +81,8 @@ sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", 
 sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofascore_ligueone_players_ratings")
 sofascore_segundadivision_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segundadivision_players_ratings")
 
-sofascore_champions_players_ratings = ("Champions League", "sofascore_champions_players_ratings")
-sofascore_mundialito_players_ratings = ("Mundialito", "sofascore_mundialito_players_ratings")
+sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League", "sofascore_champions_players_ratings")
+sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
 
 sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
 sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")

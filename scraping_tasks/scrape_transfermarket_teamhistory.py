@@ -30,6 +30,7 @@ def safe_get_team_history(label, file_name, use_country_as_team=False):
             print(team)
             for player, team_history in players.items():
                 print(player, team_history)
+        time.sleep(100)
         return data
     except Exception as e:
         print(f"Error scraping {label} Team History: {e}")
@@ -82,19 +83,19 @@ print("Scraping TRANSFERMARKET (team history)...")
 #     print(f"Error class: {e.__class__}")
 
 
-laliga_team_history = safe_get_team_history("LaLiga", "transfermarket_laliga_team_history")
-premier_team_history = safe_get_team_history("Premier League", "transfermarket_premier_team_history")
-seriea_team_history = safe_get_team_history("Serie A", "transfermarket_seriea_team_history")
-bundesliga_team_history = safe_get_team_history("Bundesliga", "transfermarket_bundesliga_team_history")
-ligueone_team_history = safe_get_team_history("Ligue 1", "transfermarket_ligueone_team_history")
-segundadivision_team_history = safe_get_team_history("Segunda División", "transfermarket_segundadivision_team_history")
+laliga_team_history = safe_get_team_history("LaLiga", "transfermarket_laliga_team_history", use_country_as_team=False)
+premier_team_history = safe_get_team_history("Premier League", "transfermarket_premier_team_history", use_country_as_team=False)
+seriea_team_history = safe_get_team_history("Serie A", "transfermarket_seriea_team_history", use_country_as_team=False)
+bundesliga_team_history = safe_get_team_history("Bundesliga", "transfermarket_bundesliga_team_history", use_country_as_team=False)
+ligueone_team_history = safe_get_team_history("Ligue 1", "transfermarket_ligueone_team_history", use_country_as_team=False)
+segundadivision_team_history = safe_get_team_history("Segunda División", "transfermarket_segundadivision_team_history", use_country_as_team=False)
 
-champions_team_history = safe_get_team_history("Champions League", "transfermarket_champions_team_history")
-mundialito_team_history = safe_get_team_history("Mundialito", "transfermarket_mundialito_team_history")
+champions_team_history = safe_get_team_history("Champions League", "transfermarket_champions_team_history", use_country_as_team=False)
+mundialito_team_history = safe_get_team_history("Mundialito", "transfermarket_mundialito_team_history", use_country_as_team=False)
 
-mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history")
-eurocopa_team_history = safe_get_team_history("Eurocopa", "transfermarket_eurocopa_team_history")
-copaamerica_team_history = safe_get_team_history("Copa América", "transfermarket_copaamerica_team_history")
+mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history", use_country_as_team=True)
+eurocopa_team_history = safe_get_team_history("Eurocopa", "transfermarket_eurocopa_team_history", use_country_as_team=True)
+copaamerica_team_history = safe_get_team_history("Copa América", "transfermarket_copaamerica_team_history", use_country_as_team=True)
 
 
 print()
