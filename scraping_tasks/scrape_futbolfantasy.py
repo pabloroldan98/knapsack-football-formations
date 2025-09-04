@@ -17,7 +17,7 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_start_probabilities(label, file_name):
     try:
-        print()
+        print("----------------------------------------")
         print(f"- Scraping {label}:")
         data = get_players_start_probabilities_dict_futbolfantasy(
             file_name=file_name,
@@ -26,7 +26,7 @@ def safe_get_start_probabilities(label, file_name):
         print(f"\n{label} - Start Probabilities:")
         for team, players in data.items():
             print(team, players)
-        print("----------------------------------------")
+        print()
         return data
     except Exception as e:
         print(f"Error scraping {label} Start Probabilities: {e}")

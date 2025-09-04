@@ -134,7 +134,8 @@ class TransfermarktScraper:
                 if minute_elem and date_elem:
                     minute_text = minute_elem.text.replace("'", "").strip()
                     if minute_text.isdigit():
-                        date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+                        # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+                        date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
                         penalty_saves.append({
                             'is_saved': is_penalty_saved,
                             'date': date_obj,

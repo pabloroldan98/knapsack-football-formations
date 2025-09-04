@@ -17,7 +17,7 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_biwenger_data(file_name, label):
     try:
-        print()
+        print("----------------------------------------")
         print(f"- Scraping {label}:")
         data = get_biwenger_data_dict(
             write_file=True,
@@ -25,7 +25,7 @@ def safe_get_biwenger_data(file_name, label):
             force_scrape=True
         )
         print(data)
-        print("----------------------------------------")
+        print()
         return data
     except Exception as e:
         print(f"Error scraping {label}: {e}")

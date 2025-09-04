@@ -39,6 +39,7 @@ print("Scraping LaLigaFantasy...")
 print("##############################")
 
 try:
+    print("----------------------------------------")
     laligafantasy_data = get_laligafantasy_data(
         write_file=True,
         file_name="laligafantasy_laliga_data",
@@ -47,7 +48,7 @@ try:
     print()
     for player in laligafantasy_data:
         print(player)
-    print("----------------------------------------")
+    print()
 except Exception as e:
     print(f"Error scraping LaLigaFantasy: {e}")
     print(f"Exception type: {type(e).__name__}")

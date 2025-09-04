@@ -17,7 +17,7 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_team_history(label, file_name, use_country_as_team=False):
     try:
-        print()
+        print("----------------------------------------")
         print(f"- Scraping {label}:")
         data = get_players_team_history_dict(
             file_name=file_name,
@@ -31,7 +31,7 @@ def safe_get_team_history(label, file_name, use_country_as_team=False):
             for player, team_history in players.items():
                 print(player, team_history)
         time.sleep(60)
-        print("----------------------------------------")
+        print()
         return data
     except Exception as e:
         print(f"Error scraping {label} Team History: {e}")

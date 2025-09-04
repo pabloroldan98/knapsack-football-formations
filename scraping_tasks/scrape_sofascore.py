@@ -17,7 +17,7 @@ from elo_ratings import get_teams_elos_dict
 
 def safe_get_sofascore_ratings(label, file_name):
     try:
-        print()
+        print("----------------------------------------")
         print(f"- Scraping {label}:")
         data = get_players_ratings_list(
             file_name=file_name,
@@ -31,7 +31,7 @@ def safe_get_sofascore_ratings(label, file_name):
         #     print(p)
         #     print(getattr(p, "sofascore_rating", None))
         # time.sleep(60)
-        print("----------------------------------------")
+        print()
         return data
     except Exception as e:
         print(f"Error scraping {label} Sofascore ratings: {e}")
