@@ -171,6 +171,8 @@ def competition_from_filename(file_name: str) -> str:
     mapping = {
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
         ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
+        ('europaleague', 'europa-league', ): "-/teilnehmer/pokalwettbewerb/EL",
+        ('conference', 'conferenceleague', 'conference-league', ): "-/teilnehmer/pokalwettbewerb/UCOL",
         ("eurocopa", "euro", "europa", "europeo", ): "-/teilnehmer/pokalwettbewerb/EURO",
         ("copaamerica", "copa-america", ): "-/teilnehmer/pokalwettbewerb/COPA",
         ("mundial", "worldcup", "world-cup", ): "-/teilnehmer/pokalwettbewerb/FIWC",

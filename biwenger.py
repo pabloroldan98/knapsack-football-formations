@@ -27,6 +27,8 @@ def competition_from_filename(file_name: str) -> str:
     mapping = {
         ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "club-world-cup",
         ("champions", "championsleague", "champions-league"): "champions-league",
+        ('europaleague', 'europa-league', ): "europa-league",
+        ('conference', 'conferenceleague', 'conference-league', ): "conference-league",
         ("eurocopa", "euro", "europa", "europeo", ): "euro",
         ("copaamerica", "copa-america", ): "copa-america",
         ("mundial", "worldcup", "world-cup", ): "world-cup",
@@ -127,6 +129,8 @@ def country_from_filename(file_name: str):
         ('bundesliga', 'bundes-liga', ): "GER",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "FRA",
         ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
+        ('europaleague', 'europa-league', ): "europa-league",
+        ('conference', 'conferenceleague', 'conference-league', ): "conference-league",
     }
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first
