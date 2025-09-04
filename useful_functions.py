@@ -500,6 +500,9 @@ def delete_file(file_name, file_type="json"):
 
 def create_driver(keep_alive=True):
     chrome_options = webdriver.ChromeOptions()
+    chrome_options.page_load_strategy = "eager"
+    chrome_options.timeouts.page_load = 300
+    chrome_options.timeouts.script = 300
     chrome_options.add_argument("--disable-search-engine-choice-screen")
     chrome_options.add_argument("start-maximized")
     chrome_options.add_argument("enable-automation")

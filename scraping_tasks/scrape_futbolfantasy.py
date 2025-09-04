@@ -95,38 +95,38 @@ print("##############################")
 laliga_start_probabilities = safe_get_start_probabilities(
     "LaLiga", "futbolfantasy_laliga_players_start_probabilities"
 )
-premier_start_probabilities = safe_get_start_probabilities(
-    "Premier League", "futbolfantasy_premier_players_start_probabilities"
-)
+# premier_start_probabilities = safe_get_start_probabilities(
+#     "Premier League", "futbolfantasy_premier_players_start_probabilities"
+# )
 seriea_start_probabilities = safe_get_start_probabilities(
     "Serie A", "futbolfantasy_seriea_players_start_probabilities"
 )
-bundesliga_start_probabilities = safe_get_start_probabilities(
-    "Bundesliga", "futbolfantasy_bundesliga_players_start_probabilities"
-)
-ligueone_start_probabilities = safe_get_start_probabilities(
-    "Ligue 1", "futbolfantasy_ligueone_players_start_probabilities"
-)
+# bundesliga_start_probabilities = safe_get_start_probabilities(
+#     "Bundesliga", "futbolfantasy_bundesliga_players_start_probabilities"
+# )
+# ligueone_start_probabilities = safe_get_start_probabilities(
+#     "Ligue 1", "futbolfantasy_ligueone_players_start_probabilities"
+# )
 segundadivision_start_probabilities = safe_get_start_probabilities(
     "Segunda División", "futbolfantasy_segundadivision_players_start_probabilities"
 )
 
-champions_start_probabilities = safe_get_start_probabilities(
-    "Champions League", "futbolfantasy_champions_players_start_probabilities"
-)
-mundialito_start_probabilities = safe_get_start_probabilities(
-    "Mundialito", "futbolfantasy_mundialito_players_start_probabilities"
-)
-
-mundial_start_probabilities = safe_get_start_probabilities(
-    "Mundial", "futbolfantasy_mundial_players_start_probabilities"
-)
-eurocopa_start_probabilities = safe_get_start_probabilities(
-    "Eurocopa", "futbolfantasy_eurocopa_players_start_probabilities"
-)
-copaamerica_start_probabilities = safe_get_start_probabilities(
-    "Copa América", "futbolfantasy_copaamerica_players_start_probabilities"
-)
+# champions_start_probabilities = safe_get_start_probabilities(
+#     "Champions League", "futbolfantasy_champions_players_start_probabilities"
+# )
+# mundialito_start_probabilities = safe_get_start_probabilities(
+#     "Mundialito", "futbolfantasy_mundialito_players_start_probabilities"
+# )
+#
+# mundial_start_probabilities = safe_get_start_probabilities(
+#     "Mundial", "futbolfantasy_mundial_players_start_probabilities"
+# )
+# eurocopa_start_probabilities = safe_get_start_probabilities(
+#     "Eurocopa", "futbolfantasy_eurocopa_players_start_probabilities"
+# )
+# copaamerica_start_probabilities = safe_get_start_probabilities(
+#     "Copa América", "futbolfantasy_copaamerica_players_start_probabilities"
+# )
 
 
 # except Exception as e:
