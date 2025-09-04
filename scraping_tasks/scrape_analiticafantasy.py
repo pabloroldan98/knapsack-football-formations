@@ -27,6 +27,7 @@ def safe_get_start_probabilities(label, file_name):
         print(f"\n{label} - Start Probabilities:")
         for team, players in data.items():
             print(team, players)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label} Start Probabilities: {e}")
@@ -56,6 +57,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping ANALITICAFANTASY...")
+print("##############################")
 
 # try:
 

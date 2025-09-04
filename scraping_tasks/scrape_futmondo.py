@@ -35,12 +35,14 @@ print()
 print("##############################")
 ##############################
 print("Scraping FUTMONDO...")
+print("##############################")
 
 try:
     players_positions_dict = get_players_positions_dict_futmondo(file_name="futmondo_laliga_players_positions", force_scrape=True)
     # Print the result in a readable way
     for team, players in players_positions_dict.items():
         print(team, players)
+    print("----------------------------------------")
 except Exception as e:
     print(f"Error scraping FUTMONDO: {e}")
     print(f"Exception type: {type(e).__name__}")

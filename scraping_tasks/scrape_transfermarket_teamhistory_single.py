@@ -30,6 +30,7 @@ def safe_get_team_history(label, file_name, use_country_as_team=False):
             print(team)
             for player, team_history in players.items():
                 print(player, team_history)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label} Team History: {e}")
@@ -59,6 +60,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (team history)...")
+print("##############################")
 
 # try:
 

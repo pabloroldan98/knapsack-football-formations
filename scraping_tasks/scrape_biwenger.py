@@ -25,6 +25,7 @@ def safe_get_biwenger_data(file_name, label):
             force_scrape=True
         )
         print(data)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label}: {e}")
@@ -54,6 +55,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping BIWENGER...")
+print("##############################")
 
 # try:
 

@@ -27,6 +27,7 @@ def safe_get_penalty_takers(label, file_name):
         for team, penalties in data.items():
             print(team, penalties)
         time.sleep(100)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label} Penalty Takers: {e}")
@@ -56,6 +57,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (penalty TAKERS)...")
+print("##############################")
 
 # try:
 

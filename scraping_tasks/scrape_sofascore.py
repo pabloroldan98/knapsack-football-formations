@@ -25,11 +25,12 @@ def safe_get_sofascore_ratings(label, file_name):
             force_scrape=True
         )
         print(f"\n{label} — Sofascore Player Ratings:")
-        for p in data:
-            # Print the object and its rating (guard in case attribute is missing)
-            print(p)
-            print(getattr(p, "sofascore_rating", None))
+        # for p in data:
+        #     # Print the object and its rating (guard in case attribute is missing)
+        #     print(p)
+        #     print(getattr(p, "sofascore_rating", None))
         time.sleep(100)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label} Sofascore ratings: {e}")
@@ -59,6 +60,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping SOFASCORE...")
+print("##############################")
 
 # try:
 
@@ -74,8 +76,8 @@ print("Scraping SOFASCORE...")
 #         print(p.sofascore_rating)
 
 
-sofascore_laliga_players_ratings = safe_get_sofascore_ratings("LaLiga", "sofascore_laliga_players_ratings")
-sofascore_premier_players_ratings = safe_get_sofascore_ratings("Premier League", "sofascore_premier_players_ratings")
+# sofascore_laliga_players_ratings = safe_get_sofascore_ratings("LaLiga", "sofascore_laliga_players_ratings")
+# sofascore_premier_players_ratings = safe_get_sofascore_ratings("Premier League", "sofascore_premier_players_ratings")
 sofascore_seriea_players_ratings = safe_get_sofascore_ratings("Serie A", "sofascore_seriea_players_ratings")
 sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", "sofascore_bundesliga_players_ratings")
 sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofascore_ligueone_players_ratings")

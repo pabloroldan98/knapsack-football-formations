@@ -30,6 +30,7 @@ def safe_get_penalty_savers(label, file_name):
             for goalkeeper, penalty_saves in goalkeepers_penalties.items():
                 print(goalkeeper, penalty_saves)
         time.sleep(100)
+        print("----------------------------------------")
         return data
     except Exception as e:
         print(f"Error scraping {label} Penalty Savers: {e}")
@@ -59,6 +60,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (penalty SAVERS)...")
+print("##############################")
 
 # try:
 

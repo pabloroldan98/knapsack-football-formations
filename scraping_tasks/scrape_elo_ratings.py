@@ -30,6 +30,7 @@ def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False)
         print(f"\n{label} Elo Ratings:")
         for team, elo in elo_dict.items():
             print(f"{team}: {elo}")
+        print("----------------------------------------")
         return elo_dict
     except Exception as e:
         print(f"Error scraping {label} Elo Ratings: {e}")
@@ -59,6 +60,7 @@ print()
 print("##############################")
 ##############################
 print("Scraping ELO RATINGS...")
+print("##############################")
 
 # try:
 

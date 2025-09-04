@@ -495,7 +495,7 @@ def get_players_data(
             timeout_retries = 3
 
             while timeout_retries > 0:
-                def scrape_players_rating_task():
+                def scrape_players_rating_task(use_buffer=True):
                     """
                     1) Try to find the <span role="meter" aria-valuenow="...">
                        (Summary last 12 months).
@@ -503,6 +503,8 @@ def get_players_data(
                        then look for the <span role="meter"> near it,
                        apply *0.95.
                     """
+                    if use_buffer:
+                        time.sleep(1)
                     average_rating = float(6.0)
 
                     # # Attempt #1: "Summary (last 12 months)"
