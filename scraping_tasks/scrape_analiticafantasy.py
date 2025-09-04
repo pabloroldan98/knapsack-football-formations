@@ -94,38 +94,38 @@ print("Scraping ANALITICAFANTASY...")
 laliga_start_probabilities = safe_get_start_probabilities(
     "LaLiga", "analiticafantasy_laliga_players_start_probabilities"
 )
-premier_start_probabilities = safe_get_start_probabilities(
-    "Premier League", "analiticafantasy_premier_players_start_probabilities"
-)
-seriea_start_probabilities = safe_get_start_probabilities(
-    "Serie A", "analiticafantasy_seriea_players_start_probabilities"
-)
-bundesliga_start_probabilities = safe_get_start_probabilities(
-    "Bundesliga", "analiticafantasy_bundesliga_players_start_probabilities"
-)
-ligueone_start_probabilities = safe_get_start_probabilities(
-    "Ligue 1", "analiticafantasy_ligueone_players_start_probabilities"
-)
-segundadivision_start_probabilities = safe_get_start_probabilities(
-    "Segunda División", "analiticafantasy_segundadivision_players_start_probabilities"
-)
-
-champions_start_probabilities = safe_get_start_probabilities(
-    "Champions League", "analiticafantasy_champions_players_start_probabilities"
-)
-mundialito_start_probabilities = safe_get_start_probabilities(
-    "Mundialito", "analiticafantasy_mundialito_players_start_probabilities"
-)
-
-mundial_start_probabilities = safe_get_start_probabilities(
-    "Mundial", "analiticafantasy_mundial_players_start_probabilities"
-)
-eurocopa_start_probabilities = safe_get_start_probabilities(
-    "Eurocopa", "analiticafantasy_eurocopa_players_start_probabilities"
-)
-copaamerica_start_probabilities = safe_get_start_probabilities(
-    "Copa América", "analiticafantasy_copaamerica_players_start_probabilities"
-)
+# premier_start_probabilities = safe_get_start_probabilities(
+#     "Premier League", "analiticafantasy_premier_players_start_probabilities"
+# )
+# seriea_start_probabilities = safe_get_start_probabilities(
+#     "Serie A", "analiticafantasy_seriea_players_start_probabilities"
+# )
+# bundesliga_start_probabilities = safe_get_start_probabilities(
+#     "Bundesliga", "analiticafantasy_bundesliga_players_start_probabilities"
+# )
+# ligueone_start_probabilities = safe_get_start_probabilities(
+#     "Ligue 1", "analiticafantasy_ligueone_players_start_probabilities"
+# )
+# segundadivision_start_probabilities = safe_get_start_probabilities(
+#     "Segunda División", "analiticafantasy_segundadivision_players_start_probabilities"
+# )
+#
+# champions_start_probabilities = safe_get_start_probabilities(
+#     "Champions League", "analiticafantasy_champions_players_start_probabilities"
+# )
+# mundialito_start_probabilities = safe_get_start_probabilities(
+#     "Mundialito", "analiticafantasy_mundialito_players_start_probabilities"
+# )
+#
+# mundial_start_probabilities = safe_get_start_probabilities(
+#     "Mundial", "analiticafantasy_mundial_players_start_probabilities"
+# )
+# eurocopa_start_probabilities = safe_get_start_probabilities(
+#     "Eurocopa", "analiticafantasy_eurocopa_players_start_probabilities"
+# )
+# copaamerica_start_probabilities = safe_get_start_probabilities(
+#     "Copa América", "analiticafantasy_copaamerica_players_start_probabilities"
+# )
 
 
 # except Exception as e:

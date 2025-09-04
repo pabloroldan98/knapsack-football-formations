@@ -15,6 +15,26 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
+def safe_get_penalty_takers(label, file_name):
+    try:
+        print()
+        print(f"- Scraping {label}:")
+        data = get_penalty_takers_dict(
+            file_name=file_name,
+            force_scrape=True
+        )
+        print(f"\n{label} — Penalty Takers:")
+        for team, penalties in data.items():
+            print(team, penalties)
+        return data
+    except Exception as e:
+        print(f"Error scraping {label} Penalty Takers: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
+        return None
+
+
 start_time = time.time()
 
 # Define the timezone for Spain
@@ -36,16 +56,34 @@ print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (penalty TAKERS)...")
 
-try:
-    penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
-    print(penalty_takers)
-    for team, penalties in penalty_takers.items():
-        print(team, penalties)
-except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (penalty TAKERS): {e}")
-    print(f"Exception type: {type(e).__name__}")
-    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
-    print(f"Error class: {e.__class__}")
+# try:
+
+
+    # penalty_takers = get_penalty_takers_dict(file_name="transfermarket_laliga_penalty_takers", force_scrape=True)
+    # for team, penalties in penalty_takers.items():
+    #     print(team, penalties)
+
+
+laliga_penalty_takers = safe_get_penalty_takers("LaLiga", "transfermarket_laliga_penalty_takers")
+premier_penalty_takers = safe_get_penalty_takers("Premier League", "transfermarket_premier_penalty_takers")
+seriea_penalty_takers = safe_get_penalty_takers("Serie A", "transfermarket_seriea_penalty_takers")
+bundesliga_penalty_takers = safe_get_penalty_takers("Bundesliga", "transfermarket_bundesliga_penalty_takers")
+ligueone_penalty_takers = safe_get_penalty_takers("Ligue 1", "transfermarket_ligueone_penalty_takers")
+segundadivision_penalty_takers = safe_get_penalty_takers("Segunda División", "transfermarket_segundadivision_penalty_takers")
+
+champions_penalty_takers = safe_get_penalty_takers("Champions League", "transfermarket_champions_penalty_takers")
+mundialito_penalty_takers = safe_get_penalty_takers("Mundialito", "transfermarket_mundialito_penalty_takers")
+
+mundial_penalty_takers = safe_get_penalty_takers("Mundial", "transfermarket_mundial_penalty_takers")
+eurocopa_penalty_takers = safe_get_penalty_takers("Eurocopa", "transfermarket_eurocopa_penalty_takers")
+copaamerica_penalty_takers = safe_get_penalty_takers("Copa América", "transfermarket_copaamerica_penalty_takers")
+
+
+# except Exception as e:
+#     print(f"Error scraping TRANSFERMARKET (penalty TAKERS): {e}")
+#     print(f"Exception type: {type(e).__name__}")
+#     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+#     print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")

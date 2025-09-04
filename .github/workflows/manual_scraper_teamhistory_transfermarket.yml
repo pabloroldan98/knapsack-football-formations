@@ -6,7 +6,7 @@ on:
 jobs:
   run-tasks:
     runs-on: ubuntu-latest
-    timeout-minutes: 180  # Set the job timeout to 3 hours (180 minutes)
+    timeout-minutes: 300  # Set the job timeout to 5 hours (300 minutes)
 
     steps:
       - name: Checkout repository
@@ -27,6 +27,7 @@ jobs:
       - name: Run tasks
         run: |
           python -u ./scraping_tasks/scrape_transfermarket_teamhistory.py
+#          python -u ./scraping_tasks/scrape_transfermarket_teamhistory_single.py
 
       - name: Configure git
         run: |

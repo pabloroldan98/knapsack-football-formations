@@ -15,6 +15,29 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
+def safe_get_penalty_savers(label, file_name):
+    try:
+        print()
+        print(f"- Scraping {label}:")
+        data = get_penalty_savers_dict(
+            file_name=file_name,
+            force_scrape=True
+        )
+        print(f"\n{label} — Penalty Savers:")
+        for team, goalkeepers_penalties in data.items():
+            print()
+            print(team)
+            for goalkeeper, penalty_saves in goalkeepers_penalties.items():
+                print(goalkeeper, penalty_saves)
+        return data
+    except Exception as e:
+        print(f"Error scraping {label} Penalty Savers: {e}")
+        print(f"Exception type: {type(e).__name__}")
+        print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+        print(f"Error class: {e.__class__}")
+        return None
+
+
 start_time = time.time()
 
 # Define the timezone for Spain
@@ -36,23 +59,40 @@ print("##############################")
 ##############################
 print("Scraping TRANSFERMARKET (penalty SAVERS)...")
 
-try:
-    goalkeepers_penalty_saves = get_penalty_savers_dict(
-        file_name="transfermarket_laliga_penalty_savers",
-        force_scrape=True
-    )
+# try:
 
-    print(goalkeepers_penalty_saves)
-    for team, goalkeepers_penalties in goalkeepers_penalty_saves.items():
-        print()
-        print(team)
-        for goalkeeper, penalty_saves in goalkeepers_penalties.items():
-            print(goalkeeper, penalty_saves)
-except Exception as e:
-    print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
-    print(f"Exception type: {type(e).__name__}")
-    print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
-    print(f"Error class: {e.__class__}")
+
+    # laliga_goalkeepers_penalty_saves = get_penalty_savers_dict(
+    #     file_name="transfermarket_laliga_penalty_savers",
+    #     force_scrape=True
+    # )
+    # for team, goalkeepers_penalties in laliga_goalkeepers_penalty_saves.items():
+    #     print()
+    #     print(team)
+    #     for goalkeeper, penalty_saves in goalkeepers_penalties.items():
+    #         print(goalkeeper, penalty_saves)
+
+
+laliga_goalkeepers_penalty_saves = safe_get_penalty_savers("LaLiga", "transfermarket_laliga_penalty_savers")
+premier_goalkeepers_penalty_saves = safe_get_penalty_savers("Premier League", "transfermarket_premier_penalty_savers")
+seriea_goalkeepers_penalty_saves = safe_get_penalty_savers("Serie A", "transfermarket_seriea_penalty_savers")
+bundesliga_goalkeepers_penalty_saves = safe_get_penalty_savers("Bundesliga", "transfermarket_bundesliga_penalty_savers")
+ligueone_goalkeepers_penalty_saves = safe_get_penalty_savers("Ligue 1", "transfermarket_ligueone_penalty_savers")
+segundadivision_goalkeepers_penalty_saves = safe_get_penalty_savers("Segunda División", "transfermarket_segundadivision_penalty_savers")
+
+champions_goalkeepers_penalty_saves = safe_get_penalty_savers("Champions League", "transfermarket_champions_penalty_savers")
+mundialito_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundialito", "transfermarket_mundialito_penalty_savers")
+
+mundial_goalkeepers_penalty_saves = safe_get_penalty_savers("Mundial", "transfermarket_mundial_penalty_savers")
+eurocopa_goalkeepers_penalty_saves = safe_get_penalty_savers("Eurocopa", "transfermarket_eurocopa_penalty_savers")
+copaamerica_goalkeepers_penalty_saves = safe_get_penalty_savers("Copa América", "transfermarket_copaamerica_penalty_savers")
+
+
+# except Exception as e:
+#     print(f"Error scraping TRANSFERMARKET (penalty SAVERS): {e}")
+#     print(f"Exception type: {type(e).__name__}")
+#     print(f"Full class path: {e.__class__.__module__}.{e.__class__.__name__}")
+#     print(f"Error class: {e.__class__}")
 
 print()
 print("##############################")
