@@ -24,7 +24,7 @@ class TransfermarktScraper:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
 
-    def fetch_page(self, url, tries: int = 3, pause: float = 20.0):
+    def fetch_page(self, url, tries: int = 5, pause: float = 20.0):
         """
         Fetch a URL, retrying up to `tries` times if the status is not 200.
         Sleeps `pause` seconds between attempts.
