@@ -52,15 +52,13 @@ jobs:
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}.py
 
-      # NEW: upload each league’s outputs instead of pushing from every job
       - name: Upload SofaScore DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
-          name: sofascore-${{ matrix.league }}-data
+          name: sofascore-data-${{ matrix.league }}
           path: |
             csv_files/*sofascore*.csv
             json_files/*sofascore*.json
-          if-no-files-found: ignore
 
   commit-and-push:
     needs: run-tasks
@@ -74,14 +72,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
 #          name: sofascore-data
-          pattern: sofascore-*-data
+          pattern: sofascore-data-*
           merge-multiple: true
           path: data_files/sofascore/
 
       - name: Move SofaScore DATA files to root csv_files and json_files directories
         run: |
-          mv -f data_files/sofascore/*.csv csv_files/ 2>/dev/null || true
-          mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
+          mv -f data_files/sofascore/csv_files/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/sofascore/json_files/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/sofascore
 
       - name: Configure git
