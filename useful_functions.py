@@ -301,6 +301,14 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Karabakh Agdam": "Qarabag",
         "St Gillis": "Saint-Gilloise",
         "Paphos": "Pafos",
+        "Wolves": "Wolverhampton",
+        "Rennes": "Rennais",
+        "Gijón": "Sporting",
+        "Gijon": "Sporting",
+        "Sporting Gijón": "Sporting",
+        "Sporting Gijon": "Sporting",
+        "Santander": "Racing",
+        "Andorra CF": "FC Andorra",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
