@@ -96,10 +96,10 @@ elo_ratings_ligueone_data = safe_get_elos(
     file_name="elo_ratings_ligueone_data"
 )
 
-elo_ratings_segundadivision_data = safe_get_elos(
+elo_ratings_segunda_data = safe_get_elos(
     "Segunda División",
     is_country=False, country="ESP", extra_teams=False,
-    file_name="elo_ratings_segundadivision_data"
+    file_name="elo_ratings_segunda_data"
 )
 
 # Tournaments

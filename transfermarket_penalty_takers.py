@@ -132,7 +132,7 @@ def competition_from_filename(file_name: str) -> str:
         ('seriea', 'serie-a', ): "-/startseite/wettbewerb/IT1",
         ('bundesliga', 'bundes-liga', 'bundes', ): "-/startseite/wettbewerb/L1",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "-/startseite/wettbewerb/FR1",
-        ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
+        ("segunda", "segundadivision", "segunda-division", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "-/startseite/wettbewerb/ES2",
     }
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first

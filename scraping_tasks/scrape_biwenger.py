@@ -65,7 +65,7 @@ biwenger_premier_data = safe_get_biwenger_data("biwenger_premier_data", "Premier
 biwenger_seriea_data = safe_get_biwenger_data("biwenger_seriea_data", "Serie A")
 biwenger_bundesliga_data = safe_get_biwenger_data("biwenger_bundesliga_data", "Bundesliga")
 biwenger_ligueone_data = safe_get_biwenger_data("biwenger_ligueone_data", "Ligue 1")
-biwenger_segundadivision_data = safe_get_biwenger_data("biwenger_segundadivision_data", "Segunda División")
+biwenger_segunda_data = safe_get_biwenger_data("biwenger_segunda_data", "Segunda División")
 
 biwenger_champions_data = safe_get_biwenger_data("biwenger_champions_data", "Champions League")
 biwenger_europaleague_data = safe_get_biwenger_data("biwenger_europaleague_data", "Europa League")

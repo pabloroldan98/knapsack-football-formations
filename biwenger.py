@@ -37,7 +37,7 @@ def competition_from_filename(file_name: str) -> str:
         ('seriea', 'serie-a', ): "serie-a",
         ('bundesliga', 'bundes-liga', 'bundes', ): "bundesliga",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
-        ('segundadivision', 'segunda-division', 'segunda', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
+        ('segunda', 'segundadivision', 'segunda-division', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "segunda-division",
     }
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first
@@ -130,7 +130,7 @@ def country_from_filename(file_name: str):
         ('seriea', 'serie-a', ): "ITA",
         ('bundesliga', 'bundes-liga', 'bundes', ): "GER",
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "FRA",
-        ("segunda", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
+        ("segunda", "segundadivision", "segunda-division", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "ESP",
     }
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first

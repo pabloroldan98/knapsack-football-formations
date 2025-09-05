@@ -108,8 +108,8 @@ laliga_start_probabilities = safe_get_start_probabilities(
 # ligueone_start_probabilities = safe_get_start_probabilities(
 #     "Ligue 1", "analiticafantasy_ligueone_players_start_probabilities"
 # )
-# segundadivision_start_probabilities = safe_get_start_probabilities(
-#     "Segunda División", "analiticafantasy_segundadivision_players_start_probabilities"
+# segunda_start_probabilities = safe_get_start_probabilities(
+#     "Segunda División", "analiticafantasy_segunda_players_start_probabilities"
 # )
 #
 # champions_start_probabilities = safe_get_start_probabilities(

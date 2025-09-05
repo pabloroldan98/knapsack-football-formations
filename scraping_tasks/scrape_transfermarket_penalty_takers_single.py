@@ -72,7 +72,7 @@ laliga_penalty_takers = safe_get_penalty_takers("LaLiga", "transfermarket_laliga
 # seriea_penalty_takers = safe_get_penalty_takers("Serie A", "transfermarket_seriea_penalty_takers")
 # bundesliga_penalty_takers = safe_get_penalty_takers("Bundesliga", "transfermarket_bundesliga_penalty_takers")
 # ligueone_penalty_takers = safe_get_penalty_takers("Ligue 1", "transfermarket_ligueone_penalty_takers")
-# segundadivision_penalty_takers = safe_get_penalty_takers("Segunda División", "transfermarket_segundadivision_penalty_takers")
+# segunda_penalty_takers = safe_get_penalty_takers("Segunda División", "transfermarket_segunda_penalty_takers")
 #
 # champions_penalty_takers = safe_get_penalty_takers("Champions League", "transfermarket_champions_penalty_takers")
 # europaleague_penalty_takers = safe_get_penalty_takers("Europa League", "transfermarket_europaleague_penalty_takers")

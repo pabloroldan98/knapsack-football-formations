@@ -82,7 +82,7 @@ sofascore_laliga_players_ratings = safe_get_sofascore_ratings("LaLiga", "sofasco
 # sofascore_seriea_players_ratings = safe_get_sofascore_ratings("Serie A", "sofascore_seriea_players_ratings")
 # sofascore_bundesliga_players_ratings = safe_get_sofascore_ratings("Bundesliga", "sofascore_bundesliga_players_ratings")
 # sofascore_ligueone_players_ratings = safe_get_sofascore_ratings("Ligue 1", "sofascore_ligueone_players_ratings")
-# sofascore_segundadivision_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segundadivision_players_ratings")
+# sofascore_segunda_players_ratings = safe_get_sofascore_ratings("Segunda División", "sofascore_segunda_players_ratings")
 #
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League", "sofascore_champions_players_ratings")
 # sofascore_europaleague_players_ratings = safe_get_sofascore_ratings("Europa League", "sofascore_europaleague_players_ratings")

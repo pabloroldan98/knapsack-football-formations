@@ -89,7 +89,7 @@ laliga_team_history = safe_get_team_history("LaLiga", "transfermarket_laliga_tea
 # seriea_team_history = safe_get_team_history("Serie A", "transfermarket_seriea_team_history")
 # bundesliga_team_history = safe_get_team_history("Bundesliga", "transfermarket_bundesliga_team_history")
 # ligueone_team_history = safe_get_team_history("Ligue 1", "transfermarket_ligueone_team_history")
-# segundadivision_team_history = safe_get_team_history("Segunda División", "transfermarket_segundadivision_team_history")
+# segunda_team_history = safe_get_team_history("Segunda División", "transfermarket_segunda_team_history")
 #
 # champions_team_history = safe_get_team_history("Champions League", "transfermarket_champions_team_history"))
 # europaleague_team_history = safe_get_team_history("Europa League", "transfermarket_europaleague_team_history", use_country_as_team=False)
