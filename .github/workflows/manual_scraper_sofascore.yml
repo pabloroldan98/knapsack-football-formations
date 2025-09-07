@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 #    runs-on: ubuntu-22.04
 #    timeout-minutes: 360  # Set the job timeout to 6 hours (360 minutes)
-    timeout-minutes: 200  # Set the job timeout 200 minutes
+    timeout-minutes: 60  # Set the job timeout 60 minutes
     strategy:
       fail-fast: false
-      max-parallel: 12
+      max-parallel: 13
       matrix:
         league:
           - laliga
@@ -19,13 +19,14 @@ jobs:
           - seriea
           - bundesliga
           - ligueone
+          - segunda
           - champions
           - europaleague
           - conference
-      #   - mundialito
-      #   - mundial
-      #   - eurocopa
-      #   - copaamerica
+          # - mundialito
+          # - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Enable Debug Logging
@@ -48,9 +49,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tasks
+      - name: Run tasks (${{ matrix.league }})
         run: |
-          python -u ./scraping_tasks/scrape_sofascore.py
+          python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}.py
+
+      - name: Upload DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: sofascore-data-${{ matrix.league }}
+          path: |
+            csv_files/*sofascore*.csv
+            json_files/*sofascore*.json
+
+  commit-and-push:
+    needs: run-tasks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download SofaScore DATA artifact
+        uses: actions/download-artifact@v4
+        with:
+#          name: sofascore-data
+          pattern: sofascore-data-*
+          merge-multiple: true
+          -path: data_files/sofascore/
+
+      - name: Move SofaScore DATA files to root csv_files and json_files directories
+        run: |
+          mv -f data_files/sofascore/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/sofascore
 
       - name: Configure git
         run: |

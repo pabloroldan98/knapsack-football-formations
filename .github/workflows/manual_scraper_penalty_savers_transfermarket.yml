@@ -6,7 +6,25 @@ on:
 jobs:
   run-tasks:
     runs-on: ubuntu-latest
-    timeout-minutes: 180  # Set the job timeout to 180 minutes
+    timeout-minutes: 120  # Set the job timeout to 120 minutes
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+          - laliga
+          - premier
+          - seriea
+          - bundesliga
+          - ligueone
+          - segunda
+          - champions
+          - europaleague
+          - conference
+          # - mundialito
+          # - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Checkout repository
@@ -24,9 +42,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tasks
+      - name: Run tasks (${{ matrix.league }})
         run: |
-          python -u ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+#          python -u ./scraping_tasks/scrape_transfermarket_penalty_savers.py
+          python -u ./scraping_tasks/transfermarket_penalty_savers_scrapers/scrape_transfermarket_penalty_savers_{{ matrix.league }}.py
+
+      - name: Upload DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: transfermarket-penalty-savers-data-${{ matrix.league }}
+          path: |
+            csv_files/*transfermarket*penalt*saver*.csv
+            json_files/*transfermarket*penalt*saver*.json
+
+  commit-and-push:
+    needs: run-tasks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download DATA artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: transfermarket-penalty-savers-data-*
+          merge-multiple: true
+          -path: data_files/transfermarket_penalty_savers/
+
+      - name: Move DATA files to root csv_files and json_files directories
+        run: |
+          mv -f data_files/transfermarket_penalty_savers/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/transfermarket_penalty_savers/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/transfermarket_penalty_savers
 
       - name: Configure git
         run: |
