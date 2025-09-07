@@ -44,7 +44,6 @@ jobs:
 
       - name: Run tasks (${{ matrix.league }})
         run: |
-#          python -u ./scraping_tasks/scrape_transfermarket_penalty_savers.py
           python -u ./scraping_tasks/transfermarket_penalty_savers_scrapers/scrape_transfermarket_penalty_savers_{{ matrix.league }}.py
 
       - name: Upload DATA files as artifact (${{ matrix.league }})

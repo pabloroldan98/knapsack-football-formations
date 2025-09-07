@@ -192,10 +192,10 @@ class JornadaPerfectaScraper:
         2) For each team link, parse the lineup data.
         3) Merge them all into a single dictionary.
         """
-        # # TEAMS_PAGE = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
-        # TEAMS_PAGE = "https://www.jornadaperfecta.com/clasificacion/"
-        TEAMS_PAGE = f"{self.base_url}{self.competition}/clasificacion/"
-        html = self.fetch_response(TEAMS_PAGE)
+        # # teams_page = "https://www.jornadaperfecta.com/mundial-de-clubes/clasificacion/"
+        # teams_page = "https://www.jornadaperfecta.com/clasificacion/"
+        teams_page = f"{self.base_url}{self.competition}/clasificacion/"
+        html = self.fetch_response(teams_page)
         soup = BeautifulSoup(html, "html.parser")
 
         # 1) Find all <a> tags whose href begins with the team prefix
