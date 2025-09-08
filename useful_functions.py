@@ -228,6 +228,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Saad Al Muthary": "Al-Mutairi",
         "Saad Khalid Almuthary": "Al-Mutairi",
         "Saad Al-Muthary": "Al-Mutairi",
+        "El Hadji Malick Diouf": "El Diouf",
+        "Ajibola-Joshua Alese": "Aji Alese",
+        "Ian Carlo Poveda": "Ian Poveda",
+        "Pape Matar Sarr": "Pape Sarr",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "RCD Espanyol": "Espanyol",
