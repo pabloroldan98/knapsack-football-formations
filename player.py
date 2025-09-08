@@ -60,6 +60,7 @@ class Player:
             fixture_arrow: str = "https://www.calculadorafantasy.com/img/arrows/0.png",
             start_probability:  float = 0,
             img_link: str = "https://cdn.biwenger.com/i/p/XXXXX.png",
+            show_value: float = 0,
     ):
         self.name = name
         self._position = position
@@ -89,9 +90,11 @@ class Player:
         self.fixture_arrow = fixture_arrow
         self.start_probability = start_probability
         self.img_link = img_link
+        self.show_value = show_value
 
     def __str__(self):
         return f"({self.name}, {self.position}, {self.team}, {self.price}, {self.value:.3f}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
+        # return f"({self.name}, {self.position}, {self.team}, {self.price}, {self.show_value:.1f}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f}) --> {self.start_probability*100:.0f} %"
         # return f"({self.name}, {self.position}, {self.price}, {self.value:.3f}, {self.team}, {self.status}) - (form: {self.form:.4f}, fixture: {self.fixture:.4f})"
         # return f"({self.name}, {self.position}, {self.price}, {self.value}, {self.team})"
 
@@ -218,9 +221,67 @@ class Player:
         predicted_value = ((float(self.sofascore_rating) * float(self.form)) + float(self.penalty_boost) + float(self.strategy_boost)) * float(self.fixture)
         return predicted_value
 
+    def calc_show_value(self, value=None):
+        if not value:
+            value = self.value
+        round_value = round(value, 1)
+
+        if round_value <= -0.1:
+            predicted_show_value = -7
+        elif 0 <= round_value <= 4.9:
+            predicted_show_value = -6
+        elif 5.0 <= round_value <= 5.1:
+            predicted_show_value = -5
+        elif 5.2 <= round_value <= 5.3:
+            predicted_show_value = -4
+        elif 5.4 <= round_value <= 5.5:
+            predicted_show_value = -3
+        elif 5.6 <= round_value <= 5.7:
+            predicted_show_value = -2
+        elif 5.8 <= round_value <= 5.9:
+            predicted_show_value = -1
+        elif 6.0 <= round_value <= 6.1:
+            predicted_show_value = 0
+        elif 6.2 <= round_value <= 6.3:
+            predicted_show_value = 1
+        elif 6.4 <= round_value <= 6.5:
+            predicted_show_value = 2
+        elif 6.6 <= round_value <= 6.7:
+            predicted_show_value = 3
+        elif 6.8 <= round_value <= 6.9:
+            predicted_show_value = 4
+        elif 7.0 <= round_value <= 7.1:
+            predicted_show_value = 5
+        elif 7.2 <= round_value <= 7.3:
+            predicted_show_value = 6
+        elif 7.4 <= round_value <= 7.5:
+            predicted_show_value = 7
+        elif 7.6 <= round_value <= 7.7:
+            predicted_show_value = 8
+        elif 7.8 <= round_value <= 7.9:
+            predicted_show_value = 9
+        elif 8.0 <= round_value <= 8.1:
+            predicted_show_value = 10
+        elif 8.2 <= round_value <= 8.5:
+            predicted_show_value = 11
+        elif 8.6 <= round_value <= 8.9:
+            predicted_show_value = 12
+        elif 9.0 <= round_value <= 9.4:
+            predicted_show_value = 13
+        elif 9.5 <= round_value <= 10.0:
+            predicted_show_value = 14
+        elif 10.1 <= round_value:
+            predicted_show_value = 15
+        else:
+            predicted_show_value = 0
+
+        return predicted_show_value
+
     def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
         predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, skip_arrows=skip_arrows, arrows_data=arrows_data)
         self.value = predicted_value
+        predicted_show_value = self.calc_show_value(predicted_value)
+        self.show_value = predicted_show_value
 
 
 def get_position(group):
