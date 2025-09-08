@@ -78,6 +78,7 @@ class PunditScraper:
             raw_team_name = h2.get_text(strip=True)
             # Remove "Predicted Lineup" (case insensitive)
             team_name = re.sub(r'predicted\s*lineup', '', raw_team_name, flags=re.I).strip()
+            team_name = normalize_whitespace(team_name)
             if not team_name:
                 continue
 
@@ -118,6 +119,7 @@ class PunditScraper:
                         team_players[player_name] = prob
 
             if team_players:
+                team_name = find_manual_similar_string(team_name)
                 probabilities[team_name] = team_players
 
         return probabilities

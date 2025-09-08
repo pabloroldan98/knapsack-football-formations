@@ -860,6 +860,11 @@ def set_start_probabilities(players_list, full_players_start_probabilities_dict,
                 if player.start_probability != new_start_probability:
                     print(f"{player.name}: {start_probabilities} --> {new_start_probability}")
             player.start_probability = new_start_probability
+        # if len(valid_probs) == 1 and new_start_probability>=0.5:
+        #     print(player.name)
+        #     print(player.team)
+        #     print(start_probabilities)
+        #     print(new_start_probability)
 
     return result_players
 

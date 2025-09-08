@@ -232,6 +232,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Ajibola-Joshua Alese": "Aji Alese",
         "Ian Carlo Poveda": "Ian Poveda",
         "Pape Matar Sarr": "Pape Sarr",
+        "Jorgen Strand Larsen": "Larsen",
+        "V. Ven": "Van de Ven",
+        "Reinildo": "Mandava",
+        "Yehor Yarmoliuk": "Yarmolyuk",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "RCD Espanyol": "Espanyol",
@@ -313,6 +317,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Sporting Gijon": "Sporting",
         "Santander": "Racing",
         "Andorra CF": "FC Andorra",
+        "Man Utd": "Manchester United",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
