@@ -1,18 +1,16 @@
-name: Main Manual Scraper - Fantasy Data (FutbolFantasy, AnaliticaFantasy & JornadaPerfecta + Biwenger & LaLigaFantasy)
+name: Main Manual Scraper - Fantasy Data (Probabilities + Market)
 
 on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  run-tasks:
+  scrape_biwenger:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Set the job timeout to 30 minutes
-
+    timeout-minutes: 15  # Set the job timeout to 15 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -24,13 +22,331 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tasks
+      - name: Run Biwenger Scraper
+        run: python -u ./scraping_tasks/scrape_biwenger.py
+
+      - name: Upload Biwenger DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: biwenger-data
+          path: |
+            csv_files/*biwenger*.csv
+            json_files/*biwenger*.json
+
+  scrape_laligafantasy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # Set the job timeout to 10 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
         run: |
-          python -u ./scraping_tasks/scrape_futbolfantasy.py
-          python -u ./scraping_tasks/scrape_analiticafantasy.py
-          python -u ./scraping_tasks/scrape_jornadaperfecta.py
-          python -u ./scraping_tasks/scrape_biwenger.py
-          python -u ./scraping_tasks/scrape_laligafantasy.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run LaLigaFantasy Scraper
+        run: python -u ./scraping_tasks/scrape_laligafantasy.py
+
+      - name: Upload LaLigaFantasy DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: laligafantasy-data
+          path: |
+            csv_files/*laligafantasy*.csv
+            json_files/*laligafantasy*.json
+
+  scrape_futbolfantasy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+          - laliga
+          - premier
+          - seriea
+          - bundesliga
+          - ligueone
+          - segunda
+          - champions
+          - europaleague
+          - conference
+      #   - mundialito
+      #   - mundial
+      #   - eurocopa
+      #   - copaamerica
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+#      - name: Run FutbolFantasy Scraper
+#        run: python -u ./scraping_tasks/scrape_futbolfantasy.py
+
+      - name: Run FutbolFantasy Scraper (${{ matrix.league }})
+        run: |
+          python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_${{ matrix.league }}.py
+
+#      - name: Upload FutbolFantasy DATA files as artifact
+      - name: Upload FutbolFantasy DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+#          name: futbolfantasy-data
+          name: futbolfantasy-data-${{ matrix.league }}
+          path: |
+            csv_files/*futbolfantasy*.csv
+            json_files/*futbolfantasy*.json
+
+  scrape_analiticafantasy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 6 * 4,5,6,7,8,9,10 *') || (github.event.schedule == '0 7 * 1,2,3,11,12 *')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run AnaliticaFantasy Scraper
+        run: python -u ./scraping_tasks/scrape_analiticafantasy.py
+
+      - name: Upload AnaliticaFantasy DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: analiticafantasy-data
+          path: |
+            csv_files/*analiticafantasy*.csv
+            json_files/*analiticafantasy*.json
+
+  scrape_jornadaperfecta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run JornadaPerfecta Scraper
+        run: python -u ./scraping_tasks/scrape_jornadaperfecta.py
+
+      - name: Upload JornadaPerfecta DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jornadaperfecta-data
+          path: |
+            csv_files/*jornadaperfecta*.csv
+            json_files/*jornadaperfecta*.json
+
+  scrape_pundit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pundit Scraper
+        run: python -u ./scraping_tasks/scrape_pundit.py
+
+      - name: Upload Pundit DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pundit-data
+          path: |
+            csv_files/*pundit*.csv
+            json_files/*pundit*.json
+
+  scrape_scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Scout Scraper
+        run: python -u ./scraping_tasks/scrape_scout.py
+
+      - name: Upload Scout DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scout-data
+          path: |
+            csv_files/*scout*.csv
+            json_files/*scout*.json
+
+  commit-and-push:
+    needs: [scrape_biwenger, scrape_laligafantasy, scrape_futbolfantasy, scrape_analiticafantasy, scrape_jornadaperfecta, scrape_pundit, scrape_scout]
+    if: ${{ always() && (
+          (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
+          (needs.scrape_laligafantasy.result == 'success' || needs.scrape_laligafantasy.result == 'skipped' || needs.scrape_laligafantasy.result == 'cancelled' || needs.scrape_laligafantasy.result == 'failure') &&
+          (needs.scrape_futbolfantasy.result == 'success' || needs.scrape_futbolfantasy.result == 'skipped' || needs.scrape_futbolfantasy.result == 'cancelled' || needs.scrape_futbolfantasy.result == 'failure') &&
+          (needs.scrape_analiticafantasy.result == 'success' || needs.scrape_analiticafantasy.result == 'skipped' || needs.scrape_analiticafantasy.result == 'cancelled' || needs.scrape_analiticafantasy.result == 'failure') &&
+          (needs.scrape_jornadaperfecta.result == 'success' || needs.scrape_jornadaperfecta.result == 'skipped' || needs.scrape_jornadaperfecta.result == 'cancelled' || needs.scrape_jornadaperfecta.result == 'failure') &&
+          (needs.scrape_pundit.result == 'success' || needs.scrape_pundit.result == 'skipped' || needs.scrape_pundit.result == 'cancelled' || needs.scrape_pundit.result == 'failure') &&
+          (needs.scrape_scout.result == 'success' || needs.scrape_scout.result == 'skipped' || needs.scrape_scout.result == 'cancelled' || needs.scrape_scout.result == 'failure')
+        )}}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download Biwenger DATA artifact
+        if: needs.scrape_biwenger.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: biwenger-data
+          -path: data_files/biwenger/
+
+      - name: Move Biwenger DATA files to root csv_files and json_files directories
+        if: needs.scrape_biwenger.result == 'success'
+        run: |
+          mv -f data_files/biwenger/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/biwenger/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/biwenger
+
+      - name: Download LaLigaFantasy DATA artifact
+        if: needs.scrape_laligafantasy.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: laligafantasy-data
+          -path: data_files/laligafantasy/
+
+      - name: Move LaLigaFantasy DATA files to root csv_files and json_files directories
+        if: needs.scrape_laligafantasy.result == 'success'
+        run: |
+          mv -f data_files/laligafantasy/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/laligafantasy/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/laligafantasy
+
+      - name: Download FutbolFantasy DATA artifact
+        if: needs.scrape_futbolfantasy.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+#          name: futbolfantasy-data
+          pattern: futbolfantasy-data-*
+          merge-multiple: true
+          -path: data_files/futbolfantasy/
+
+      - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
+        if: needs.scrape_futbolfantasy.result == 'success'
+        run: |
+          mv -f data_files/futbolfantasy/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/futbolfantasy/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/futbolfantasy
+
+      - name: Download AnaliticaFantasy DATA artifact
+        if: needs.scrape_analiticafantasy.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: analiticafantasy-data
+          -path: data_files/analiticafantasy/
+
+      - name: Move AnaliticaFantasy DATA files to root csv_files and json_files directories
+        if: needs.scrape_analiticafantasy.result == 'success'
+        run: |
+          mv -f data_files/analiticafantasy/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/analiticafantasy/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/analiticafantasy
+
+      - name: Download JornadaPerfecta DATA artifact
+        if: needs.scrape_jornadaperfecta.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: jornadaperfecta-data
+          -path: data_files/jornadaperfecta/
+
+      - name: Move JornadaPerfecta DATA files to root csv_files and json_files directories
+        if: needs.scrape_jornadaperfecta.result == 'success'
+        run: |
+          mv -f data_files/jornadaperfecta/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/jornadaperfecta/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/jornadaperfecta
+
+      - name: Download Pundit DATA artifact
+        if: needs.scrape_pundit.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: pundit-data
+          -path: data_files/pundit/
+
+      - name: Move Pundit DATA files to root csv_files and json_files directories
+        if: needs.scrape_pundit.result == 'success'
+        run: |
+          mv -f data_files/pundit/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/pundit/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/pundit
+
+      - name: Download Scout DATA artifact
+        if: needs.scrape_scout.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: scout-data
+          -path: data_files/scout/
+
+      - name: Move Scout DATA files to root csv_files and json_files directories
+        if: needs.scrape_scout.result == 'success'
+        run: |
+          mv -f data_files/scout/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/scout/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/scout
 
       - name: Configure git
         run: |
