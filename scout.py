@@ -20,9 +20,9 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
-class PunditScraper:
+class ScoutScraper:
     def __init__(self): #, competition: str = None):
-        self.base_url = "https://www.fantasyfootballpundit.com"
+        self.base_url = "https://www.fantasyfootballscout.co.uk"
         # self.competition =  (
         #     competition
         #     if competition is not None
@@ -35,10 +35,10 @@ class PunditScraper:
         # Use this custom headers dict when making GET requests
         self.headers = {
             "User-Agent": (
-                'Mozilla/5.0 (Platform; Security; OS-or-CPU; Localization; rv:1.4) Gecko/20030624 Netscape/7.1 (ax)'
-                # "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                # "AppleWebKit/537.36 (KHTML, like Gecko) "
-                # "Chrome/91.0.4472.124 Safari/537.36"
+                # 'Mozilla/5.0 (Platform; Security; OS-or-CPU; Localization; rv:1.4) Gecko/20030624 Netscape/7.1 (ax)'
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/91.0.4472.124 Safari/537.36"
             )
         }
 
@@ -53,14 +53,15 @@ class PunditScraper:
 
     def scrape_probabilities(self):
         """
-        - Find every team block via h2[id$="-team-news"]
-        - Team name = h2.text with "Predicted Lineup" removed (case-insensitive), stripped
-        - Scope = the block (div>div>h2 -> first div)
-        - Parse tables with class 'has-fixed-layout'
-        - Each tbody>tr is a player row: first td = name; span inside class*="fpl-colored-percent" = probability
-        - Probabilities stored as float (0.6 for "60%")
+        - Team blocks: elements with class "team-news-item"
+        - Team name: text of element with class "team-badge"
+        - Players:
+            * Elements whose class contains "player-name" => prob = 0.8
+            * <li> that contain a <span> with class containing "doubt-percent":
+                - name = li text (minus the span text)
+                - prob = span text like "75%" -> 0.75
         """
-        teams_page = f"{self.base_url.rstrip('/')}/fantasy-premier-league-team-news"
+        teams_page = f"{self.base_url.rstrip('/')}/team-news"
         html = self.fetch_response(teams_page)
         soup = BeautifulSoup(html, "html.parser")
 
@@ -68,55 +69,49 @@ class PunditScraper:
             if not txt:
                 return None
             m = re.search(r'(\d+(?:\.\d+)?)\s*%', txt)
-            if not m:
-                return None
-            return float(m.group(1)) / 100.0
+            return float(m.group(1)) / 100.0 if m else None
 
         probabilities = {}
 
-        for h2 in soup.select('h2[id$="-team-news"]'):
-            raw_team_name = h2.get_text(strip=True)
-            # Remove "Predicted Lineup" (case insensitive)
-            team_name = re.sub(r'predicted\s*lineup', '', raw_team_name, flags=re.I).strip()
-            team_name = normalize_whitespace(team_name)
+        for team_block in soup.select(".team-news-item"):
+            badge_el = team_block.select_one(".team-badge")
+            team_name = normalize_whitespace(badge_el.get_text(" ", strip=True)) if badge_el else ""
             if not team_name:
-                continue
-
-            # Per structure: div>div>h2, we want the first div (two levels up)
-            team_block = None
-            if h2.parent and h2.parent.name == "div" and h2.parent.parent and h2.parent.parent.name == "div":
-                team_block = h2.parent.parent
-            else:
-                team_block = h2.find_parent("div")
-
-            if team_block is None:
                 continue
 
             team_players = {}
 
-            for tbl in team_block.select("table.has-fixed-layout"):
-                tbody = tbl.find("tbody")
-                if not tbody:
+            # 1) Players with implicit 80% probability
+            for name_el in team_block.select('[class*="player-name"]'):
+                raw_name = name_el.get_text(" ", strip=True)
+                player_name = normalize_whitespace(raw_name)
+                player_name = re.sub(r'\([^)]*\)', '', player_name).strip()
+                if not player_name:
                     continue
+                player_name = find_manual_similar_string(player_name)
+                team_players[player_name] = 0.8  # will be overridden if explicit % is found later
 
-                for tr in tbody.find_all("tr"):
-                    tds = tr.find_all("td")
-                    if not tds:
+            # 2) Doubt list players with explicit percent
+            for players_ul in team_block.select('ul.players'):
+                for li in players_ul.find_all("li"):
+                    span = li.select_one('[class="doubt-percent"]')
+                    if not span:
                         continue
 
-                    # player_name = tds[0].get_text(strip=True)
-                    raw_name = tds[0].get_text(" ", strip=True)  # join text nodes with a real space
-                    player_name = normalize_whitespace(raw_name)
-                    if not player_name:
-                        continue
-
-                    pct_el = tds[-1]#.find("span")
-                    pct_text = pct_el.get_text(strip=True) if pct_el else ""
+                    pct_text = span.get_text(strip=True)
                     prob = pct_to_float(pct_text)
+                    if prob is None:
+                        continue
 
-                    if prob is not None:
-                        player_name = find_manual_similar_string(player_name)
-                        team_players[player_name] = prob
+                    li_text = li.get_text(" ", strip=True)
+                    # Remove the percent text from the li text to leave just the name
+                    name_text = normalize_whitespace(li_text.replace(pct_text, ""))
+                    if not name_text:
+                        continue
+
+                    player_name = find_manual_similar_string(name_text)
+                    player_name = re.sub(r'\([^)]*\)', '', player_name).strip()
+                    team_players[player_name] = prob  # override 0.8 if already set
 
             if team_players:
                 team_name = find_manual_similar_string(team_name)
@@ -134,8 +129,8 @@ class PunditScraper:
         return start_probabilities_data
 
 
-def get_pundit_data(
-        start_probability_file_name="pundit_start_probabilities",
+def get_scout_data(
+        start_probability_file_name="scout_start_probabilities",
         force_scrape=False
 ):
     # If not forced to scrape, attempt to read from local file
@@ -146,7 +141,7 @@ def get_pundit_data(
             return start_probabilities_data
 
     # Otherwise, scrape fresh data
-    scraper = PunditScraper()
+    scraper = ScoutScraper()
     start_probabilities_data = scraper.scrape()
 
     # Save to file for next time
@@ -156,8 +151,8 @@ def get_pundit_data(
     return start_probabilities_data
 
 
-def get_players_start_probabilities_dict_pundit(
-        file_name="pundit_start_probabilities",
+def get_players_start_probabilities_dict_scout(
+        file_name="scout_start_probabilities",
         force_scrape=False
 ):
     if not force_scrape:
@@ -165,7 +160,7 @@ def get_players_start_probabilities_dict_pundit(
         if data:
             return data
 
-    scraper = PunditScraper()
+    scraper = ScoutScraper()
     result = scraper.scrape_probabilities()
 
     overwrite_dict_data(result, file_name, ignore_old_data=True)
@@ -186,12 +181,12 @@ def normalize_whitespace(s: str) -> str:
     return s
 
 
-# # Example usage:
-# start_probabilities = get_pundit_data(
-#     start_probability_file_name="test_pundit_premier_players_start_probabilities",
-#     force_scrape=True
-# )
-#
-# print("\nStart Probabilities:")
-# for team, players in start_probabilities.items():
-#     print(team, players)
+# Example usage:
+start_probabilities = get_scout_data(
+    start_probability_file_name="test_scout_premier_players_start_probabilities",
+    force_scrape=True
+)
+
+print("\nStart Probabilities:")
+for team, players in start_probabilities.items():
+    print(team, players)

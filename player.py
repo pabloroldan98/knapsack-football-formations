@@ -23,6 +23,7 @@ from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta
     get_players_positions_dict_jornadaperfecta, get_players_prices_dict_jornadaperfecta, \
     get_players_price_trends_dict_jornadaperfecta, get_players_forms_dict_jornadaperfecta
 from pundit import get_players_start_probabilities_dict_pundit
+from scout import get_players_start_probabilities_dict_scout
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data, \
     overwrite_dict_data
 
@@ -861,7 +862,7 @@ def set_price_trends(players_list, full_players_price_trends_dict, full_players_
 
 
 def get_players_start_probabilities_dict(
-        file_names=["futbolfantasy_start_probabilities", "analiticafantasy_start_probabilities", "jornadaperfecta_start_probabilities", "pundit_start_probabilities", ],
+        file_names=["futbolfantasy_start_probabilities", "analiticafantasy_start_probabilities", "jornadaperfecta_start_probabilities", "pundit_start_probabilities", "scout_start_probabilities", ],
         force_scrape=False
 ):
     players_dict = {}
@@ -900,6 +901,15 @@ def get_players_start_probabilities_dict(
                     force_scrape=force_scrape,
                 )
                 players_dict["pundit"] = pundit_data
+            except:
+                pass
+        elif "scout" in file_name.lower():
+            try:
+                scout_data = get_players_start_probabilities_dict_scout(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["scout"] = scout_data
             except:
                 pass
     return players_dict

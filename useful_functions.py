@@ -310,6 +310,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "St Gillis": "Saint-Gilloise",
         "Paphos": "Pafos",
         "Wolves": "Wolverhampton",
+        "Wolverhampton Wanderers": "Wolverhampton",
         "Rennes": "Rennais",
         "Gijón": "Sporting",
         "Gijon": "Sporting",
