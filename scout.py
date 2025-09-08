@@ -181,12 +181,12 @@ def normalize_whitespace(s: str) -> str:
     return s
 
 
-# Example usage:
-start_probabilities = get_scout_data(
-    start_probability_file_name="test_scout_premier_players_start_probabilities",
-    force_scrape=True
-)
-
-print("\nStart Probabilities:")
-for team, players in start_probabilities.items():
-    print(team, players)
+# # Example usage:
+# start_probabilities = get_scout_data(
+#     start_probability_file_name="test_scout_premier_players_start_probabilities",
+#     force_scrape=True
+# )
+#
+# print("\nStart Probabilities:")
+# for team, players in start_probabilities.items():
+#     print(team, players)

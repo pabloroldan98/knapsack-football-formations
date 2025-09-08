@@ -7,6 +7,24 @@ jobs:
   run-tasks:
     runs-on: ubuntu-latest
     timeout-minutes: 60  # Set the job timeout to 60 minutes
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+          - laliga
+          - premier
+          - seriea
+          - bundesliga
+          - ligueone
+          - segunda
+          - champions
+          - europaleague
+          - conference
+          # - mundialito
+          # - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Checkout repository
@@ -24,9 +42,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tasks
+      - name: Run tasks (${{ matrix.league }})
         run: |
-          python -u ./scraping_tasks/scrape_futbolfantasy.py
+          python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_{{ matrix.league }}.py
+
+      - name: Upload DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: futbolfantasy-data-${{ matrix.league }}
+          path: |
+            csv_files/*futbolfantasy*.csv
+            json_files/*futbolfantasy*.json
+
+  commit-and-push:
+    needs: run-tasks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Set the job timeout to 30 minutes
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download FutbolFantasy DATA artifact
+        uses: actions/download-artifact@v4
+        with:
+#          name: futbolfantasy-data
+          pattern: futbolfantasy-data-*
+          merge-multiple: true
+          -path: data_files/futbolfantasy/
+
+      - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
+        run: |
+          mv -f data_files/futbolfantasy/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/futbolfantasy/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/futbolfantasy
 
       - name: Configure git
         run: |

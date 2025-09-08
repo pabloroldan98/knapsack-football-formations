@@ -104,6 +104,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60  # Set the job timeout to 60 minutes
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 6 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 7 * 1,2,3,11,12 *'))
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+          - laliga
+          - premier
+          - seriea
+          - bundesliga
+          - ligueone
+          - segunda
+          - champions
+          - europaleague
+          - conference
+      #   - mundialito
+      #   - mundial
+      #   - eurocopa
+      #   - copaamerica
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -118,13 +136,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run FutbolFantasy Scraper
-        run: python -u ./scraping_tasks/scrape_futbolfantasy.py
+#      - name: Run FutbolFantasy Scraper
+#        run: python -u ./scraping_tasks/scrape_futbolfantasy.py
 
-      - name: Upload FutbolFantasy DATA files as artifact
+      - name: Run FutbolFantasy Scraper (${{ matrix.league }})
+        run: |
+          python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_${{ matrix.league }}.py
+
+#      - name: Upload FutbolFantasy DATA files as artifact
+      - name: Upload FutbolFantasy DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
-          name: futbolfantasy-data
+#          name: futbolfantasy-data
+          name: futbolfantasy-data-${{ matrix.league }}
           path: |
             csv_files/*futbolfantasy*.csv
             json_files/*futbolfantasy*.json
@@ -573,7 +597,9 @@ jobs:
         if: needs.scrape_futbolfantasy.result == 'success'
         uses: actions/download-artifact@v4
         with:
-          name: futbolfantasy-data
+#          name: futbolfantasy-data
+          pattern: futbolfantasy-data-*
+          merge-multiple: true
           -path: data_files/futbolfantasy/
 
       - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
