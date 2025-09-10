@@ -25,11 +25,11 @@ def safe_get_sofascore_ratings(label, file_name):
             force_scrape=True
         )
         print(f"\n{label} , DONE!")
-        print(f"\n{label} — Sofascore Player Ratings:")
-        for p in data:
-            # Print the object and its rating (guard in case attribute is missing)
-            print(p)
-            print(getattr(p, "sofascore_rating", None))
+        # print(f"\n{label} — Sofascore Player Ratings:")
+        # for p in data:
+        #     # Print the object and its rating (guard in case attribute is missing)
+        #     print(p)
+        #     print(getattr(p, "sofascore_rating", None))
         # time.sleep(60)
         print()
         return data
