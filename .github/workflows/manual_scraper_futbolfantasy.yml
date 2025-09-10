@@ -44,7 +44,7 @@ jobs:
 
       - name: Run tasks (${{ matrix.league }})
         run: |
-          python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_{{ matrix.league }}.py
+          python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_${{ matrix.league }}.py
 
 #      - name: Upload DATA files as artifact (${{ matrix.league }})
       - name: Upload DATA files as artifact (${{ matrix.league }})
