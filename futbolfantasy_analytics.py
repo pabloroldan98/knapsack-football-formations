@@ -538,10 +538,3 @@ def get_players_price_trends_dict_futbolfantasy(
 # print("\nPrice Trends:")
 # for team, players in price_trends.items():
 #     print(team, players)
-
-data = get_players_start_probabilities_dict_futbolfantasy(
-    file_name="test_futbolfantasy_seriea_players_start_probabilities",
-    force_scrape=True
-)
-for team, players in data.items():
-    print(team, players)
