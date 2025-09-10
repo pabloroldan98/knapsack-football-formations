@@ -13,8 +13,8 @@ jobs:
       matrix:
         league:
           - laliga
-          - premier
-          - seriea
+#          - premier
+#          - seriea
 #          - bundesliga
 #          - ligueone
           - segunda
@@ -46,10 +46,12 @@ jobs:
         run: |
           python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_{{ matrix.league }}.py
 
+#      - name: Upload DATA files as artifact (${{ matrix.league }})
       - name: Upload DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
-          name: futbolfantasy-data-${{ matrix.league }}
+#          name: futbolfantasy-data-${{ matrix.league }}
+          name: futbolfantasy-data
           path: |
             csv_files/*futbolfantasy*.csv
             json_files/*futbolfantasy*.json
@@ -65,8 +67,8 @@ jobs:
       - name: Download FutbolFantasy DATA artifact
         uses: actions/download-artifact@v4
         with:
-#          name: futbolfantasy-data
-          pattern: futbolfantasy-data-*
+          name: futbolfantasy-data
+#          pattern: futbolfantasy-data-*
           merge-multiple: true
           -path: data_files/futbolfantasy/
 
