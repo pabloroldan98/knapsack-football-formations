@@ -46,12 +46,10 @@ jobs:
         run: |
           python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_${{ matrix.league }}.py
 
-#      - name: Upload DATA files as artifact (${{ matrix.league }})
       - name: Upload DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
-#          name: futbolfantasy-data-${{ matrix.league }}
-          name: futbolfantasy-data
+          name: futbolfantasy-data-${{ matrix.league }}
           path: |
             csv_files/*futbolfantasy*.csv
             json_files/*futbolfantasy*.json
@@ -67,9 +65,8 @@ jobs:
       - name: Download FutbolFantasy DATA artifact
         uses: actions/download-artifact@v4
         with:
-          name: futbolfantasy-data
-#          pattern: futbolfantasy-data-*
-          merge-multiple: true
+          pattern: futbolfantasy-data-*
+#          merge-multiple: true
           -path: data_files/futbolfantasy/
 
       - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
