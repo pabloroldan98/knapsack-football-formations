@@ -51,8 +51,8 @@ jobs:
         with:
           name: futbolfantasy-data-${{ matrix.league }}
           path: |
-            csv_files/*futbolfantasy*.csv
-            json_files/*futbolfantasy*.json
+            csv_files/*futbolfantasy_${{ matrix.league }}*.csv
+            json_files/*futbolfantasy_${{ matrix.league }}*.json
 
   commit-and-push:
     needs: run-tasks
@@ -66,7 +66,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: futbolfantasy-data-*
-#          merge-multiple: true
+          merge-multiple: true
           -path: data_files/futbolfantasy/
 
       - name: Move FutbolFantasy DATA files to root csv_files and json_files directories
