@@ -32,8 +32,8 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
-    if my_string in ["Álvaro Carreras", "Álvaro Fernández", ]:
-        similarity_threshold = 0.6
+    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Álvaro Carreras Fernández", ]:
+        similarity_threshold = 0.65
     # Before anything, we check the manual checks
     if not is_formatted:
         my_manual_string = find_manual_similar_string(my_string, fallback_none=fallback_none)
@@ -166,7 +166,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Pablo Gavi": "Gavi",
         "Alejandro Primo": "Álex Primo",
 
-        "Khéphren Thuram": "Thuram-Ulien",
+        "Khéphren Thuram": "K. Thuram-Ulien",
+        "K. Thuram": "K. Thuram-Ulien",
+        "Thuram-Ulien": "K. Thuram-Ulien",
+        "Khéphren Thuram-Ulien": "K. Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
         "Samu Aghehowa": "Samu Omorodion",
         "Stiven Barreiro": "Jaine Barreiro",
@@ -210,8 +213,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Rodri Heráandez": "Rodrigo",
         "R. Rabia": "Rami Rabia",
         "Mohamed Ali Ben Romdhane": "M. Ben Romdhane",
-        "Arnold": "Trent",
-        "Trent Alexander-Arnold": "Trent",
+        "Arnold": "Trent Alexander-Arnold",
+        "Trent": "Trent Alexander-Arnold",
+        # "Trent Alexander-Arnold": "Trent",
         "B. Said": "Bechir Ben Said",
         "W. Ali": "Wessam Abou Ali",
         "K. Debes": "Karim El Debes",
@@ -280,8 +284,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "D. Fuente": "De La Fuente",
         "L. León": "Lautaro de León",
         "Guilherme Guedes": "Gui Guedes",
-        "AAAAAAAA": "BBBBBBB",
-        "AAAAAAAA": "BBBBBBB",
+        "Álvaro Carreras": "Álvaro Carreras Fernández",
+        "Alejandro Baena": "Álex Baena",
+        "David Datro Fofana": "David Fofana",
         "AAAAAAAA": "BBBBBBB",
         "AAAAAAAA": "BBBBBBB",
         "AAAAAAAA": "BBBBBBB",
