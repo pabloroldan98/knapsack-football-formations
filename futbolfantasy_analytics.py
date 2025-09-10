@@ -3,6 +3,8 @@ import os
 import re
 import copy
 import shutil
+from pprint import pprint
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -150,12 +152,14 @@ class FutbolFantasyScraper:
                 probability = "0%"
                 try:
                     player_name = player_element.find_element(
-                        By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                        By.XPATH, f'.//ancestor::*[contains(@class, "fotocontainer {self.competition}")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                        # By.XPATH, './/ancestor::*[contains(@class, "fotocontainer laliga")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                         # By.XPATH, './/ancestor::*[contains(@class, "fotocontainer mundial-clubes")]').find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                 except NoSuchElementException:  # Error while getting player_name
                     try:
                         player_name = player_element.find_element(
-                            By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
+                            By.XPATH, f'.//*[@class="img   {self.competition} "]').get_attribute('alt').strip()
+                            # By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
                             # By.XPATH, './/*[@class="img   mundial-clubes "]').get_attribute('alt').strip()
                     except NoSuchElementException:  # Error while getting player_name
                         player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
@@ -280,13 +284,15 @@ class FutbolFantasyScraper:
                             probability = "0%"
                             try:
                                 player_name = player_element.find_element(
-                                    By.CSS_SELECTOR, 'div.fotocontainer.laliga'
+                                    By.CSS_SELECTOR, f'div.fotocontainer.{self.competition}'
+                                    # By.CSS_SELECTOR, 'div.fotocontainer.laliga'
                                     # By.CSS_SELECTOR, 'div.fotocontainer.mundial-clubes'
                                 ).find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
                             except NoSuchElementException:  # Error while getting player_name
                                 try:
                                     player_name = player_element.find_element(
-                                        By.XPATH, './/*[contains(@class, "img") and contains(@class, "laliga")]'
+                                        By.XPATH, f'.//*[contains(@class, "img") and contains(@class, "{self.competition}")]'
+                                        # By.XPATH, './/*[contains(@class, "img") and contains(@class, "laliga")]'
                                         # By.XPATH, './/*[contains(@class, "img") and contains(@class, "mundial-clubes")]'
                                     ).get_attribute('alt').strip()
                                 except NoSuchElementException:  # Error while getting player_name
@@ -532,3 +538,10 @@ def get_players_price_trends_dict_futbolfantasy(
 # print("\nPrice Trends:")
 # for team, players in price_trends.items():
 #     print(team, players)
+
+data = get_players_start_probabilities_dict_futbolfantasy(
+    file_name="test_futbolfantasy_seriea_players_start_probabilities",
+    force_scrape=True
+)
+for team, players in data.items():
+    print(team, players)
