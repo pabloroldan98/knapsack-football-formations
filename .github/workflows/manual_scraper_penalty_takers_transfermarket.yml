@@ -51,8 +51,8 @@ jobs:
         with:
           name: transfermarket-penalty-takers-data-${{ matrix.league }}
           path: |
-            csv_files/*transfermarket*penalt*taker*.csv
-            json_files/*transfermarket*penalt*taker*.json
+            csv_files/*transfermarket_${{ matrix.league }}*penalt*taker*.csv
+            json_files/*transfermarket_${{ matrix.league }}*penalt*taker*.json
 
   commit-and-push:
     needs: run-tasks

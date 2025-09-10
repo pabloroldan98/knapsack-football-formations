@@ -51,8 +51,8 @@ jobs:
         with:
           name: transfermarket-teamhistory-data-${{ matrix.league }}
           path: |
-            csv_files/*transfermarket*history*.csv
-            json_files/*transfermarket*history*.json
+            csv_files/*transfermarket_${{ matrix.league }}*history*.csv
+            json_files/*transfermarket_${{ matrix.league }}*history*.json
 
   commit-and-push:
     needs: run-tasks

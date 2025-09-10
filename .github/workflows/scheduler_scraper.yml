@@ -150,8 +150,8 @@ jobs:
 #          name: futbolfantasy-data
           name: futbolfantasy-data-${{ matrix.league }}
           path: |
-            csv_files/*futbolfantasy*.csv
-            json_files/*futbolfantasy*.json
+            csv_files/*futbolfantasy_${{ matrix.league }}*.csv
+            json_files/*futbolfantasy_${{ matrix.league }}*.json
 
   scrape_analiticafantasy:
     runs-on: ubuntu-latest
@@ -349,8 +349,8 @@ jobs:
 #          name: transfermarket-penalty-takers-data
           name: transfermarket-penalty-takers-data-${{ matrix.league }}
           path: |
-            csv_files/*transfermarket*penalt*taker*.csv
-            json_files/*transfermarket*penalt*taker*.json
+            csv_files/*transfermarket_${{ matrix.league }}*penalt*taker*.csv
+            json_files/*transfermarket_${{ matrix.league }}*penalt*taker*.json
 
   scrape_transfermarket_penalty_savers:
     runs-on: ubuntu-latest
@@ -403,8 +403,8 @@ jobs:
 #          name: transfermarket-penalty-savers-data
           name: transfermarket-penalty-savers-data-${{ matrix.league }}
           path: |
-            csv_files/*transfermarket*penalt*saver*.csv
-            json_files/*transfermarket*penalt*saver*.json
+            csv_files/*transfermarket_${{ matrix.league }}*penalt*saver*.csv
+            json_files/*transfermarket_${{ matrix.league }}*penalt*saver*.json
 
   scrape_transfermarket_teamhistory:
     runs-on: ubuntu-latest
@@ -458,8 +458,8 @@ jobs:
 #          name: transfermarket-teamhistory-data
           name: transfermarket-teamhistory-data-${{ matrix.league }}
           path: |
-            csv_files/*transfermarket*history*.csv
-            json_files/*transfermarket*history*.json
+            csv_files/*transfermarket_${{ matrix.league }}*history*.csv
+            json_files/*transfermarket_${{ matrix.league }}*history*.json
 
 
   scrape_sofascore:
@@ -525,8 +525,8 @@ jobs:
         with:
           name: sofascore-data-${{ matrix.league }}
           path: |
-            csv_files/*sofascore*.csv
-            json_files/*sofascore*.json
+            csv_files/*sofascore_${{ matrix.league }}*.csv
+            json_files/*sofascore_${{ matrix.league }}*.json
 
   commit-and-push:
     needs: [scrape_biwenger, scrape_laligafantasy, scrape_elo_ratings, scrape_futbolfantasy, scrape_analiticafantasy, scrape_jornadaperfecta, scrape_pundit, scrape_scout, scrape_futmondo, scrape_transfermarket_penalty_takers, scrape_transfermarket_penalty_savers, scrape_transfermarket_teamhistory, scrape_sofascore]

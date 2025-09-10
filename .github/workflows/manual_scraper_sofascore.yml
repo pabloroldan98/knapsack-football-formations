@@ -58,8 +58,8 @@ jobs:
         with:
           name: sofascore-data-${{ matrix.league }}
           path: |
-            csv_files/*sofascore*.csv
-            json_files/*sofascore*.json
+            csv_files/*sofascore_${{ matrix.league }}*.csv
+            json_files/*sofascore_${{ matrix.league }}*.json
 
   commit-and-push:
     needs: run-tasks
