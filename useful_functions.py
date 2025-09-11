@@ -32,7 +32,7 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
-    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Álvaro Carreras Fernández", ]:
+    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", ]:
         similarity_threshold = 0.65
     # Before anything, we check the manual checks
     if not is_formatted:
@@ -82,8 +82,11 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
             max_similarity = similarity
             most_similar_string = list_string
     if verbose:
+    # if True:
         print(f"Most similar string for \"{my_string}\": {most_similar_string} ({max_similarity*100:.2f} %)")
     if max_similarity >= similarity_threshold:
+        # print("ENTRA")
+        # print(string_list)
         return most_similar_string
     return None
 
@@ -339,6 +342,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "B. Dortmund": "Borussia Dortmund",
         "Bayern": "Bayern Munich",
         "Bayern München": "Bayern Munich",
+        "FC Bayern München": "Bayern Munich",
         "Atl. Madrid": "Atlético",
         "Atletico": "Atlético",
         "Atlético Madrid": "Atlético",
@@ -394,6 +398,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Santander": "Racing",
         "Andorra CF": "FC Andorra",
         "Man Utd": "Manchester United",
+        "Man United": "Manchester United",
+        "Bayer 04 Leverkusen": "Bayer Leverkusen",
+        "SK Slavia Praha": "Slavia Prag",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
