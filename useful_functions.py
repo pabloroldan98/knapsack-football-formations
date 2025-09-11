@@ -401,6 +401,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Man United": "Manchester United",
         "Bayer 04 Leverkusen": "Bayer Leverkusen",
         "SK Slavia Praha": "Slavia Prag",
+        "Burgos Club de Fútbol": "Burgos CF",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
