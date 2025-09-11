@@ -678,11 +678,11 @@ selected_num_jornadas_label = st.sidebar.selectbox(
     options=list(jornadas_map.keys()),
     format_func=lambda x: normalize_name(x),
     index=0,
-    disabled=disable_multi_jornada
+    # disabled=disable_multi_jornada
 )
 selected_num_jornadas = jornadas_map[selected_num_jornadas_label]
-if disable_multi_jornada:
-    st.sidebar.markdown(f"<span style='color:gray'>{t("hint.select_specific_jornada")}</span>", unsafe_allow_html=True)
+# if disable_multi_jornada:
+#     st.sidebar.markdown(f"<span style='color:gray'>{t("hint.select_specific_jornada")}</span>", unsafe_allow_html=True)
 
 form_option = st.sidebar.radio(t("sb.ignore_form"), [t("opt.yes"), t("opt.no")], index=1)
 fixtures_option = st.sidebar.radio(t("sb.ignore_fixtures"), [t("opt.yes"), t("opt.no")], index=1)
@@ -727,8 +727,11 @@ with st.spinner(t("loader.players")):
         debug=False,
         forced_matches=selected_jornada
     )
-    if not disable_multi_jornada:
-        jornada_index = list(display_to_key.keys()).index(selected_display_jornada)
+    # if not disable_multi_jornada:
+    if selected_num_jornadas != 1:
+        # jornada_index = list(display_to_key.keys()).index(selected_display_jornada)
+        jornada_values = list(display_to_key.values())
+        jornada_index = next((i for i, k in enumerate(jornada_values) if jornadas_dict[k] == selected_jornada), None)
         next_jornada_key = None
         if selected_num_jornadas >= 2:
             next_jornada_key = list(display_to_key.values())[jornada_index + 1] if jornada_index + 1 < len(
