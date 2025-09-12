@@ -6,7 +6,7 @@ on:
 jobs:
   run-tasks:
     runs-on: ubuntu-latest
-    timeout-minutes: 120  # Set the job timeout to 120 minutes
+    timeout-minutes: 180  # Set the job timeout to 180 minutes
     strategy:
       fail-fast: false
       max-parallel: 13
