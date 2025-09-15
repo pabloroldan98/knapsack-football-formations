@@ -5077,10 +5077,7 @@
         "playedHome": 1,
         "playedAway": 0,
         "fitness": [
-          5,
-          null,
-          null,
-          null
+          5
         ],
         "points": 5,
         "pointsHome": 5,
@@ -12924,9 +12921,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -15257,8 +15251,8 @@
         ]
       }
     },
-    "update": 1757908810,
-    "etag": 1283991936,
+    "update": 1757904271,
+    "etag": 3362937252,
     "scoreID": 3
   },
   "meta": {
@@ -16491,6 +16485,7 @@
         "useInternalReviewAppFlow": false,
         "recentSeasons": [
           3,
+          3,
           1,
           51,
           2,
@@ -16614,6 +16609,39 @@
       }
     ],
     "competitions": [
+      {
+        "id": 3,
+        "name": "Premier League",
+        "slug": "premier-league",
+        "sport": "football",
+        "currency": "£",
+        "scores": [
+          {
+            "id": 3,
+            "name": "SofaScore",
+            "kind": "SofaScore"
+          },
+          {
+            "id": 1,
+            "name": "Statistics",
+            "kind": "Stats"
+          }
+        ],
+        "config": {
+          "coaches": true,
+          "standings": {
+            "champion": 1,
+            "playoffs": 5,
+            "other": 6,
+            "descends": 3
+          },
+          "leagueSponsor": {
+            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
+            "title": "Sportium"
+          }
+        }
+      },
       {
         "id": 3,
         "name": "Premier League",
