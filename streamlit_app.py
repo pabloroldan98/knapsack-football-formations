@@ -938,8 +938,9 @@ with tabs[0]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        use_slow_calc = st.checkbox(t("sb.slow_calc"), value=False, key="is_slow_calc")
-        st.caption(t("sb.slow_calc_hint"))
+        use_slow_calc = False
+        # use_slow_calc = st.checkbox(t("sb.slow_calc"), value=False, key="is_slow_calc")
+        # st.caption(t("sb.slow_calc_hint"))
 
     use_premium = st.checkbox(t("sb.premium_formations"), value=False, key="premium_budget")
 
