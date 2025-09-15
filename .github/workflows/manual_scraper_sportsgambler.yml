@@ -1,0 +1,55 @@
+name: Manual Scraper - SportsGambler
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  run-tasks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # Ensure the checkout action doesn't persist credentials
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tasks
+        run: |
+          python -u ./scraping_tasks/scrape_sportsgambler.py
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Update auto-update trigger in streamlit_app.py
+        run: |
+          TRIGGER_LINE="# Auto-update trigger: $(date)"
+          if grep -q "^# Auto-update trigger:" streamlit_app.py; then
+            sed -i "s/^# Auto-update trigger:.*/$TRIGGER_LINE/" streamlit_app.py
+          else
+            echo "$TRIGGER_LINE" >> streamlit_app.py
+          fi
+
+      - name: Commit changes
+        run: |
+          git add streamlit_app.py
+          git add csv_files/*.csv
+          git add json_files/*.json
+          git commit -m "Automated commit by GitHub Action"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
