@@ -23,7 +23,9 @@ from jornadaperfecta import get_players_start_probabilities_dict_jornadaperfecta
     get_players_positions_dict_jornadaperfecta, get_players_prices_dict_jornadaperfecta, \
     get_players_price_trends_dict_jornadaperfecta, get_players_forms_dict_jornadaperfecta
 from pundit import get_players_start_probabilities_dict_pundit
+from rotowire import get_players_start_probabilities_dict_rotowire
 from scout import get_players_start_probabilities_dict_scout
+from sportsgambler import get_players_start_probabilities_dict_sportsgambler
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data, \
     overwrite_dict_data
 
@@ -910,6 +912,24 @@ def get_players_start_probabilities_dict(
                     force_scrape=force_scrape,
                 )
                 players_dict["scout"] = scout_data
+            except:
+                pass
+        elif "rotowire" in file_name.lower():
+            try:
+                rotowire_data = get_players_start_probabilities_dict_rotowire(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["rotowire"] = rotowire_data
+            except:
+                pass
+        elif "sportsgambler" in file_name.lower():
+            try:
+                sportsgambler_data = get_players_start_probabilities_dict_sportsgambler(
+                    file_name=file_name,
+                    force_scrape=force_scrape,
+                )
+                players_dict["sportsgambler"] = sportsgambler_data
             except:
                 pass
     return players_dict

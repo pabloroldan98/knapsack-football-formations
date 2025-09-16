@@ -32,7 +32,7 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
-    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", ]:
+    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", ]:
         similarity_threshold = 0.65
     # Before anything, we check the manual checks
     if not is_formatted:
@@ -170,9 +170,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Alejandro Primo": "Álex Primo",
 
         "Khéphren Thuram": "K. Thuram-Ulien",
-        "K. Thuram": "K. Thuram-Ulien",
         "Thuram-Ulien": "K. Thuram-Ulien",
         "Khéphren Thuram-Ulien": "K. Thuram-Ulien",
+        "Khephren Thuram": "K. Thuram-Ulien",
+        # "K. Thuram": "K. Thuram-Ulien",
         "Samuel Aghehowa": "Samu Omorodion",
         "Samu Aghehowa": "Samu Omorodion",
         "Stiven Barreiro": "Jaine Barreiro",
@@ -218,6 +219,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Mohamed Ali Ben Romdhane": "M. Ben Romdhane",
         "Arnold": "Trent Alexander-Arnold",
         "Trent": "Trent Alexander-Arnold",
+        "T. Alexander-Arnold": "Trent Alexander-Arnold",
         # "Trent Alexander-Arnold": "Trent",
         "B. Said": "Bechir Ben Said",
         "W. Ali": "Wessam Abou Ali",
@@ -236,7 +238,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "El Hadji Malick Diouf": "El Diouf",
         "Ajibola-Joshua Alese": "Aji Alese",
         "Ian Carlo Poveda": "Ian Poveda",
-        "Pape Matar Sarr": "Pape Sarr",
+        # "Pape Matar Sarr": "Pape Sarr",
         "Jorgen Strand Larsen": "Larsen",
         "V. Ven": "Van de Ven",
         "Reinildo": "Mandava",
@@ -247,6 +249,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Bruun Larsen": "Jacob Larsen",
         "Valentín Castellanos": "Taty Castellanos",
         "Frank Anguissa": "Zambo Anguissa",
+        "Andre Zambo Anguissa": "Zambo Anguissa",
         "Vakoun Issouf Bayo": "Vakoun Bayo",
         "Jean-Daniel Akpa Akpro": "Akpa Akpro",
         "Jeremy Kandje Mbambi": "Jeremy Mbambi",
@@ -272,6 +275,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Hamed Junior Traorè": "Hamed Traoré",
         "Lionel M'Pasi": "Mpasi",
         "Kevin Medina": "Kevin Villodres",
+        "Kevin David Medina Renteria": "Kevin Villodres",
         "Fernando Niño": "Fer Niño",
         "Samuel Obeng": "Samuel Gyabaa",
         "Kialy Abdoul Kone": "Kialy Kone",
@@ -291,6 +295,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Carreras": "Álvaro Carreras Fernández",
         "Álvaro F. Carreras": "Álvaro Carreras Fernández",
         "Á. Carreras": "Álvaro Carreras Fernández",
+        "Alvaro Carreras": "Álvaro Carreras Fernández",
         "Alejandro Baena": "Álex Baena",
         "David Datro Fofana": "David Fofana",
         "Georgiy Sudakov": "Heorhii Sudakov",
@@ -311,6 +316,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Ole Didrik Blomberg": "O. Blomberg",
         "Nariman Akhundzade": "N. Akhundzada",
         "Maximiliano Araújo": "Maxi Araújo",
+        "Viktor Gyoekeres": "Gyökeres",
+        "Kady Malinowski": "Kady Borges",
+        "Bahlul Mustafazade": "B. Mustafazada",
+        "Elvin Jafarquliyev": "E. Cafarquliyev",
         "AAAAAAAA": "BBBBBBB",
         "AAAAAAAA": "BBBBBBB",
         "AAAAAAAA": "BBBBBBB",
