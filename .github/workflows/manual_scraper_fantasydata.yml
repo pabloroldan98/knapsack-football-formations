@@ -77,7 +77,7 @@ jobs:
 #          - bundesliga
 #          - ligueone
           - segunda
-#          - champions
+          - champions
 #          - europaleague
 #          - conference
       #   - mundialito
@@ -231,8 +231,66 @@ jobs:
             csv_files/*scout*.csv
             json_files/*scout*.json
 
+  scrape_rotowire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run RotoWire Scraper
+        run: python -u ./scraping_tasks/scrape_rotowire.py
+
+      - name: Upload RotoWire DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rotowire-data
+          path: |
+            csv_files/*rotowire*.csv
+            json_files/*rotowire*.json
+
+  scrape_sportsgambler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  # Set the job timeout to 60 minutes
+#    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run SportsGambler Scraper
+        run: python -u ./scraping_tasks/scrape_sportsgambler.py
+
+      - name: Upload SportsGambler DATA files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sportsgambler-data
+          path: |
+            csv_files/*sportsgambler*.csv
+            json_files/*sportsgambler*.json
+
   commit-and-push:
-    needs: [scrape_biwenger, scrape_laligafantasy, scrape_futbolfantasy, scrape_analiticafantasy, scrape_jornadaperfecta, scrape_pundit, scrape_scout]
+    needs: [scrape_biwenger, scrape_laligafantasy, scrape_futbolfantasy, scrape_analiticafantasy, scrape_jornadaperfecta, scrape_pundit, scrape_scout, scrape_rotowire, scrape_sportsgambler]
     if: ${{ always() && (
           (needs.scrape_biwenger.result == 'success' || needs.scrape_biwenger.result == 'skipped' || needs.scrape_biwenger.result == 'cancelled' || needs.scrape_biwenger.result == 'failure') &&
           (needs.scrape_laligafantasy.result == 'success' || needs.scrape_laligafantasy.result == 'skipped' || needs.scrape_laligafantasy.result == 'cancelled' || needs.scrape_laligafantasy.result == 'failure') &&
@@ -240,7 +298,9 @@ jobs:
           (needs.scrape_analiticafantasy.result == 'success' || needs.scrape_analiticafantasy.result == 'skipped' || needs.scrape_analiticafantasy.result == 'cancelled' || needs.scrape_analiticafantasy.result == 'failure') &&
           (needs.scrape_jornadaperfecta.result == 'success' || needs.scrape_jornadaperfecta.result == 'skipped' || needs.scrape_jornadaperfecta.result == 'cancelled' || needs.scrape_jornadaperfecta.result == 'failure') &&
           (needs.scrape_pundit.result == 'success' || needs.scrape_pundit.result == 'skipped' || needs.scrape_pundit.result == 'cancelled' || needs.scrape_pundit.result == 'failure') &&
-          (needs.scrape_scout.result == 'success' || needs.scrape_scout.result == 'skipped' || needs.scrape_scout.result == 'cancelled' || needs.scrape_scout.result == 'failure')
+          (needs.scrape_scout.result == 'success' || needs.scrape_scout.result == 'skipped' || needs.scrape_scout.result == 'cancelled' || needs.scrape_scout.result == 'failure') &&
+          (needs.scrape_rotowire.result == 'success' || needs.scrape_rotowire.result == 'skipped' || needs.scrape_rotowire.result == 'cancelled' || needs.scrape_rotowire.result == 'failure') &&
+          (needs.scrape_sportsgambler.result == 'success' || needs.scrape_sportsgambler.result == 'skipped' || needs.scrape_sportsgambler.result == 'cancelled' || needs.scrape_sportsgambler.result == 'failure')
         )}}
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
@@ -347,6 +407,34 @@ jobs:
           mv -f data_files/scout/*.csv csv_files/ 2>/dev/null || true
           mv -f data_files/scout/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/scout
+
+      - name: Download RotoWire DATA artifact
+        if: needs.scrape_rotowire.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: rotowire-data
+          -path: data_files/rotowire/
+
+      - name: Move RotoWire DATA files to root csv_files and json_files directories
+        if: needs.scrape_rotowire.result == 'success'
+        run: |
+          mv -f data_files/rotowire/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/rotowire/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/rotowire
+
+      - name: Download SportsGambler DATA artifact
+        if: needs.scrape_sportsgambler.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: sportsgambler-data
+          -path: data_files/sportsgambler/
+
+      - name: Move SportsGambler DATA files to root csv_files and json_files directories
+        if: needs.scrape_sportsgambler.result == 'success'
+        run: |
+          mv -f data_files/sportsgambler/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/sportsgambler/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/sportsgambler
 
       - name: Configure git
         run: |
