@@ -218,9 +218,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "R. Rabia": "Rami Rabia",
         "Mohamed Ali Ben Romdhane": "M. Ben Romdhane",
         "Arnold": "Trent Alexander-Arnold",
-        "Trent": "Trent Alexander-Arnold",
         "T. Alexander-Arnold": "Trent Alexander-Arnold",
         # "Trent Alexander-Arnold": "Trent",
+        # "Trent": "Trent Alexander-Arnold",
         "B. Said": "Bechir Ben Said",
         "W. Ali": "Wessam Abou Ali",
         "K. Debes": "Karim El Debes",
@@ -296,6 +296,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Álvaro F. Carreras": "Álvaro Carreras Fernández",
         "Á. Carreras": "Álvaro Carreras Fernández",
         "Alvaro Carreras": "Álvaro Carreras Fernández",
+        "Á. F. Carreras": "Álvaro Carreras Fernández",
         "Alejandro Baena": "Álex Baena",
         "David Datro Fofana": "David Fofana",
         "Georgiy Sudakov": "Heorhii Sudakov",
@@ -736,3 +737,6 @@ def percentile_rank(array, score):
     if not array:  # empty list
         return 0.0
     return np.sum(np.array(array) <= score) / len(array)
+
+
+# find_similar_string("Trent", ["Trent Alexander-Arnold", ], verbose=True)
