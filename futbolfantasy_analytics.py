@@ -163,10 +163,13 @@ class FutbolFantasyScraper:
                             # By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
                             # By.XPATH, './/*[@class="img   mundial-clubes "]').get_attribute('alt').strip()
                     except NoSuchElementException:  # Error while getting player_name
-                        # player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
-                        player_name = player_element.get_attribute('href').split("/jugadores/")[-1].split("/")[0].replace('-', ' ').strip()
-                        player_name = player_name.encode('latin1').decode('utf-8')
-                        player_name = player_name.title()
+                        try:
+                            player_name = player_element.find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                        except NoSuchElementException:  # Error while getting player_name
+                            # player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                            player_name = player_element.get_attribute('href').split("/jugadores/")[-1].split("/")[0].replace('-', ' ').strip()
+                            player_name = player_name.encode('latin1').decode('utf-8')
+                            player_name = player_name.title()
                 try:
                     probability = player_element.get_attribute('data-probabilidad')
                     # if probability is None:
@@ -270,9 +273,9 @@ class FutbolFantasyScraper:
         match_links = sorted(list(set(match_links)))
 
         for match_url in match_links:
+            # print(match_url)
             # if "leganes" not in match_url:
             #     continue
-            # print(match_url)
             # 2) Load each match page with Selenium
             self.fetch_page(match_url)
 
