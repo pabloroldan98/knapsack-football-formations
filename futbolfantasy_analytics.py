@@ -163,7 +163,8 @@ class FutbolFantasyScraper:
                             # By.XPATH, './/*[@class="img   laliga "]').get_attribute('alt').strip()
                             # By.XPATH, './/*[@class="img   mundial-clubes "]').get_attribute('alt').strip()
                     except NoSuchElementException:  # Error while getting player_name
-                        player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        # player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                        player_name = player_element.get_attribute('href').split("/jugadores/")[-1].split("/")[0].replace('-', ' ').strip()
                         player_name = player_name.encode('latin1').decode('utf-8')
                         player_name = player_name.title()
                 try:
@@ -206,7 +207,8 @@ class FutbolFantasyScraper:
                                     raise NoSuchElementException(f"Invalid probability format: {aux_probability!r} from {full_text!r}")
                                 player_name = re.sub(r"[\d%]", " ", full_text).strip()
                             except NoSuchElementException:  # Error while getting player_name
-                                player_name = sub_player.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                                # player_name = sub_player.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                                player_name = sub_player.get_attribute('href').split("/jugadores/")[-1].split("/")[0].replace('-', ' ').strip()
                                 player_name = player_name.encode('latin1').decode('utf-8')
                                 player_name = player_name.title()
                         try:
@@ -368,9 +370,13 @@ class FutbolFantasyScraper:
                                         # By.XPATH, './/*[contains(@class, "img") and contains(@class, "mundial-clubes")]'
                                     ).get_attribute('alt').strip()
                                 except NoSuchElementException:  # Error while getting player_name
-                                    player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
-                                    player_name = player_name.encode('latin1').decode('utf-8')
-                                    player_name = player_name.title()
+                                    try:
+                                        player_name = player_element.find_element(By.TAG_NAME, 'img').get_attribute('alt').strip()
+                                    except NoSuchElementException:  # Error while getting player_name
+                                        # player_name = player_element.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                                        player_name = player_element.get_attribute('href').split("/jugadores/")[-1].split("/")[0].replace('-', ' ').strip()
+                                        player_name = player_name.encode('latin1').decode('utf-8')
+                                        player_name = player_name.title()
                             try:
                                 # probability = player_element.get_attribute('data-probabilidad').strip()
                                 probability = player_element.get_attribute('data-probabilidad')
