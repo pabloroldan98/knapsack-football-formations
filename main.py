@@ -304,6 +304,10 @@ if __name__ == "__main__":
             "analiticafantasy_laliga_players_start_probabilities",
             "futbolfantasy_laliga_players_start_probabilities",
             "jornadaperfecta_laliga_players_start_probabilities",
+            # "pundit_laliga_players_start_probabilities",
+            # "scout_laliga_players_start_probabilities",
+            # "sportsgambler_laliga_players_start_probabilities",
+            # "rotowire_laliga_players_start_probabilities",
         ],
         is_country=False,
         extra_teams=False,
@@ -351,7 +355,13 @@ if __name__ == "__main__":
         reverse=False
     )
 
-
+    # # Count players per team with start_probability > 0
+    # from collections import Counter
+    # team_counts = Counter(
+    #     p.team for p in current_players if p.start_probability >= 0.5
+    # )
+    # for team, count in team_counts.items():
+    #     print(f"{team}: {count}")
 
     # for player in current_players:
     #     player.value = percentile_rank(values, player.value) * player.start_probability / max(percentile_rank(prices, player.price), min_price_percentile)
@@ -426,7 +436,7 @@ if __name__ == "__main__":
 
 
     # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-    # best_full_teams(needed_purge, possible_formations, 200, speed_up=True, verbose=2)
+    # best_full_teams(needed_purge, possible_formations, 250, speed_up=False, verbose=2)
 
 
 

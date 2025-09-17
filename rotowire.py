@@ -154,7 +154,7 @@ class RotowireScraper:
                         # Predicted Lineup
                         prob = 0.8
                         if inj == "OUT":
-                            prob = 0.1
+                            prob = 0.4
                         elif inj == "QUES":
                             prob = 0.5
 
