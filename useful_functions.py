@@ -32,7 +32,7 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
-    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", ]:
+    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", "Pape Sarr", ]:
         similarity_threshold = 0.65
     # Before anything, we check the manual checks
     if not is_formatted:
