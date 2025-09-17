@@ -193,15 +193,23 @@ class FutbolFantasyScraper:
             if len(team_probabilities) == 11: # If we just have the starters, we are going to look for the subs in the text
                 for true_player_element in true_player_elements:
                     all_players = true_player_element.find_element(
-                        By.XPATH, './ancestor::*[1]').find_element(By.XPATH, './/*[@class="juggadores"]').find_elements(By.TAG_NAME, 'a')
+                        By.XPATH, './ancestor::*[1]').find_element(By.CSS_SELECTOR, '.juggadores').find_elements(By.TAG_NAME, 'a')
                     sub_players = all_players[1:]
                     for sub_player in sub_players:
                         player_name = None
                         probability = "0%"
 
                         full_text = sub_player.text.strip()
+                        if not full_text:
+                            full_text = sub_player.get_property('innerText').strip()
+                            if not full_text:
+                                full_text = sub_player.get_property('textContent').strip()
                         try:
-                            player_name = sub_player.find_element(By.CSS_SELECTOR, "span").text.strip()
+                            player_name = sub_player.find_element(By.TAG_NAME, "span").text.strip()
+                            if not player_name:
+                                player_name = sub_player.find_element(By.TAG_NAME, "span").get_property('innerText').strip()
+                                if not player_name:
+                                    player_name = sub_player.find_element(By.TAG_NAME, "span").get_property('textContent').strip()
                         except NoSuchElementException:  # Error while getting player_name
                             try:
                                 aux_probability = re.sub(r"[^\d%]", "", full_text).replace(" ", "")
@@ -220,7 +228,11 @@ class FutbolFantasyScraper:
                                 # probability = "80%" if is_start else "20%"
                                 probability = "20%"
                                 try:
-                                    aux_player_name = sub_player.find_element(By.CSS_SELECTOR, "span").text.strip()
+                                    aux_player_name = sub_player.find_element(By.TAG_NAME, "span").text.strip()
+                                    if not aux_player_name:
+                                        aux_player_name = sub_player.find_element(By.TAG_NAME, "span").get_property('innerText').strip()
+                                        if not aux_player_name:
+                                            aux_player_name = sub_player.find_element(By.TAG_NAME, "span").get_property('textContent').strip()
                                     probability = full_text.replace(aux_player_name, "", 1).strip()
                                     # must be 1–3 digits followed by % (no spaces)
                                     if not re.fullmatch(r"\d{1,3}%", probability):
