@@ -112,7 +112,7 @@ class FutbolFantasyScraper:
             team_link = team_element.get_attribute("href").strip()
             team_name = team_element.get_attribute("title").strip()
             team_name = find_manual_similar_string(team_name)
-            if team_name and team_link and pattern.match(team_link):
+            if team_name and team_link and pattern.match(team_link):# and team_name == "Leganés":
                 team_links[team_name] = team_link
 
         # team_elements = self.wait.until(EC.presence_of_all_elements_located((By.XPATH, '//tr[contains(@class,"team")][td[contains(@class,"column left nombre")]]')))
@@ -147,6 +147,7 @@ class FutbolFantasyScraper:
             except TimeoutException:
                 pass
             team_probabilities = {}
+            true_player_elements = []
             for player_element in player_elements:
                 player_name = None
                 probability = "0%"
@@ -166,7 +167,14 @@ class FutbolFantasyScraper:
                         player_name = player_name.encode('latin1').decode('utf-8')
                         player_name = player_name.title()
                 try:
-                    probability = player_element.get_attribute('data-probabilidad').strip()
+                    probability = player_element.get_attribute('data-probabilidad')
+                    # if probability is None:
+                    #     probability = "80%" if is_start else "20%"
+                    probability = probability.strip()
+                    if probability == "Titular":
+                        probability = "100%"
+                    if probability == "Suplente":
+                        probability = "0%"
                 except AttributeError: # Error while getting probability
                     continue
                 player_name = re.sub(r'[\d%]', '', player_name).strip()
@@ -175,6 +183,66 @@ class FutbolFantasyScraper:
                     player_name = find_manual_similar_string(player_name)
                     probability = float(probability.replace('%', '')) / 100
                     team_probabilities[player_name] = probability
+
+                    true_player_elements.append(player_element)
+
+            if len(team_probabilities) == 11: # If we just have the starters, we are going to look for the subs in the text
+                for true_player_element in true_player_elements:
+                    all_players = true_player_element.find_element(
+                        By.XPATH, './ancestor::*[1]').find_element(By.XPATH, './/*[@class="juggadores"]').find_elements(By.TAG_NAME, 'a')
+                    sub_players = all_players[1:]
+                    for sub_player in sub_players:
+                        player_name = None
+                        probability = "0%"
+
+                        full_text = sub_player.text.strip()
+                        try:
+                            player_name = sub_player.find_element(By.CSS_SELECTOR, "span").text.strip()
+                        except NoSuchElementException:  # Error while getting player_name
+                            try:
+                                aux_probability = re.sub(r"[^\d%]", "", full_text).replace(" ", "")
+                                # must be 1–3 digits followed by % (no spaces)
+                                if not re.fullmatch(r"\d{1,3}%", probability):
+                                    raise NoSuchElementException(f"Invalid probability format: {aux_probability!r} from {full_text!r}")
+                                player_name = re.sub(r"[\d%]", " ", full_text).strip()
+                            except NoSuchElementException:  # Error while getting player_name
+                                player_name = sub_player.get_attribute('href').split('/')[-1].replace('-', ' ').strip()
+                                player_name = player_name.encode('latin1').decode('utf-8')
+                                player_name = player_name.title()
+                        try:
+                            probability = sub_player.get_attribute('data-probabilidad')
+                            if probability is None:
+                                # probability = "80%" if is_start else "20%"
+                                probability = "20%"
+                                try:
+                                    aux_player_name = sub_player.find_element(By.CSS_SELECTOR, "span").text.strip()
+                                    probability = full_text.replace(aux_player_name, "", 1).strip()
+                                    # must be 1–3 digits followed by % (no spaces)
+                                    if not re.fullmatch(r"\d{1,3}%", probability):
+                                        raise NoSuchElementException(
+                                            f"Invalid probability format")
+                                except NoSuchElementException:  # Error while getting probability
+                                    try:
+                                        probability = re.sub(r"[^\d%]", "", full_text).replace(" ", "")
+                                        # must be 1–3 digits followed by % (no spaces)
+                                        if not re.fullmatch(r"\d{1,3}%", probability):
+                                            raise NoSuchElementException(
+                                                f"Invalid probability format")
+                                    except NoSuchElementException:  # Error while getting probability
+                                        probability = "20%"  # default to "20%"
+                            probability = probability.strip()
+                            if probability == "Titular":
+                                probability = "100%"
+                            if probability == "Suplente":
+                                probability = "0%"
+                        except AttributeError: # Error while getting probability
+                            continue
+                        player_name = re.sub(r'[\d%]', '', player_name).strip()
+                        probability = re.sub(r'[^0-9%]', '', probability)
+                        if player_name and probability:
+                            player_name = find_manual_similar_string(player_name)
+                            probability = float(probability.replace('%', '')) / 100
+                            team_probabilities[player_name] = probability
 
             if team_probabilities:
                 probabilities_dict[team_name] = team_probabilities
@@ -200,6 +268,8 @@ class FutbolFantasyScraper:
         match_links = sorted(list(set(match_links)))
 
         for match_url in match_links:
+            # if "leganes" not in match_url:
+            #     continue
             # print(match_url)
             # 2) Load each match page with Selenium
             self.fetch_page(match_url)
@@ -216,6 +286,8 @@ class FutbolFantasyScraper:
             except:
                 pass
 
+            home_team_name = ""
+            away_team_name = ""
             try:
                 # 4) Extract home & away team names
                 local_el = self.wait.until(
@@ -305,6 +377,10 @@ class FutbolFantasyScraper:
                                 if probability is None:
                                     probability = "80%" if is_start else "20%"
                                 probability = probability.strip()
+                                if probability == "Titular":
+                                    probability = "100%"
+                                if probability == "Suplente":
+                                    probability = "0%"
                             except AttributeError:  # Error while getting probability
                                 continue
 
@@ -315,7 +391,12 @@ class FutbolFantasyScraper:
                                 player_name = find_manual_similar_string(player_name)
                                 team_probabilities[player_name] = float(probability.replace('%','')) / 100
 
-                    probabilities_dict[team_name] = team_probabilities
+                    # probabilities_dict[team_name] = team_probabilities
+                    # Merge team_probabilities (match data) into probabilities_dict
+                    if team_name not in probabilities_dict:
+                        probabilities_dict[team_name] = {}
+                    for match_player_name, chance_val in team_probabilities.items():
+                        probabilities_dict[team_name][match_player_name] = chance_val
                 except TimeoutException:
                     # skip this team if anything timed out
                     continue
