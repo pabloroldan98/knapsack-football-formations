@@ -194,7 +194,7 @@ def competition_from_filename(file_name: str) -> str:
         ('premier', 'premier-league', 'premierleague', ): "england-premier-league",
         ('seriea', 'serie-a', ): "italy-serie-a",
         ('bundesliga', 'bundes-liga', 'bundes', ): "germany-bundesliga",
-        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "football/france-ligue-1",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "france-ligue-1",
         ('segunda', 'segundadivision', 'segunda-division', 'laliga2', 'la-liga2', 'la-liga-2', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion', ): "spain-la-liga-2",
     }
     for keys, slug in mapping.items():
