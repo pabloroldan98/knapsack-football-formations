@@ -153,7 +153,7 @@ class Player:
         else:
             return False
 
-    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, is_tournament=False, skip_arrows=True, arrows_data=None):
         if alt_forms:
             # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
             # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
@@ -170,6 +170,8 @@ class Player:
             aux_coef = np.log1p(np.log1p(np.abs(prod_percent_price / 100000)))
             aux_coef_extra = max(aux_coef - 2.5, 0)
             form_coef = aux_coef_extra * np.sign(self.price_trend) * 13 / 100 + 1
+            if is_tournament:
+                form_coef = aux_coef_extra * np.sign(self.price_trend) * 10 / 100 + 1
 
         if no_form:
             form_coef = 1
@@ -180,7 +182,7 @@ class Player:
             # #     capped_elo_dif = capped_elo_dif * 0.2
             # base_coef = capped_elo_dif * 0.0075 + 1 if self.next_match_elo_dif >= 0 else 1 - capped_elo_dif * 0.015
             capped_elo_dif = self.next_match_elo_dif
-            if self.position == "GK":
+            if self.position == "GK" and ignore_gk_fixture != False:
                 capped_elo_dif = capped_elo_dif * 0.2
 
             capped_elo_dif = np.sign(capped_elo_dif) * 0.01 * (np.abs(capped_elo_dif) / 100.0) ** 0.8
@@ -197,8 +199,8 @@ class Player:
             # capped_elo_dif = min(400.0, max(-400.0, self.next_match_elo_dif))
             # capped_elo_dif = min(450.0, max(-450.0, self.next_match_elo_dif))
             capped_elo_dif = self.next_match_elo_dif
-            # if self.position == "GK":
-            #     capped_elo_dif = capped_elo_dif * 0.2
+            if self.position == "GK" and ignore_gk_fixture == True:
+                capped_elo_dif = capped_elo_dif * 0.2
 
             capped_elo_dif = np.sign(capped_elo_dif) * np.log1p(abs(capped_elo_dif/1000))
             base_coef = capped_elo_dif * 1.25 / 10 + 1
@@ -280,8 +282,8 @@ class Player:
 
         return predicted_show_value
 
-    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
-        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, skip_arrows=skip_arrows, arrows_data=arrows_data)
+    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, is_tournament=False, skip_arrows=True, arrows_data=None):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, ignore_gk_fixture=ignore_gk_fixture, is_tournament=is_tournament, skip_arrows=skip_arrows, arrows_data=arrows_data)
         self.value = predicted_value
         predicted_show_value = self.calc_show_value(predicted_value)
         self.show_value = predicted_show_value
@@ -1272,10 +1274,10 @@ def set_players_sofascore_rating(
     return result_players
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, skip_arrows=True, arrows_data=None):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, is_tournament=False, skip_arrows=True, arrows_data=None):
     result_players = copy.deepcopy(players_list)
     for player in result_players:
-        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, skip_arrows, arrows_data)
+        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, ignore_gk_fixture, is_tournament, skip_arrows, arrows_data)
     return result_players
 
 
