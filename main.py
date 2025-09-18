@@ -414,7 +414,7 @@ if __name__ == "__main__":
     # best_transfers(my_team, mega_purged_players, 5, verbose=True)
 
     # needed_purge = purged_players[:50]
-    needed_purge = worthy_players[:150]
+    needed_purge = worthy_players[:200]
     # needed_purge = [player for player in worthy_players if player.price > 7]
     # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
     # needed_purge = needed_purge[:150]
@@ -807,3 +807,38 @@ if __name__ == "__main__":
     # # Imprimir
     # for local, visitante, diff in diffs:
     #     print(f"{local} vs {visitante}: {diff:.4f}")
+    #
+    # # Guardar dict de forced_matches
+    # import json
+    # import ast
+    # from useful_functions import overwrite_dict_data
+    #
+    # jornadas = {}
+    # current_jornada = None
+    # buffer = []
+    #
+    # with open("forced_matches_champions_2025_26.txt", encoding="utf-8") as f:
+    #     for line in f:
+    #         line = line.strip()
+    #
+    #         if line.startswith("jornada_"):
+    #             if current_jornada and buffer:
+    #                 try:
+    #                     jornadas[current_jornada] = ast.literal_eval("[" + "".join(buffer) + "]")
+    #                 except Exception as e:
+    #                     print(f"Error en {current_jornada}:", e)
+    #                 buffer = []
+    #             current_jornada = line.split("=")[0].strip()
+    #
+    #         elif current_jornada:
+    #             if line.startswith("]"):  # Fin de jornada
+    #                 try:
+    #                     jornadas[current_jornada] = ast.literal_eval("[" + "".join(buffer) + "]")
+    #                 except Exception as e:
+    #                     print(f"Error en {current_jornada}:", e)
+    #                 current_jornada = None
+    #                 buffer = []
+    #             elif line and not line.startswith("-----"):
+    #                 buffer.append(line)
+    # print(jornadas)
+    # overwrite_dict_data(jornadas, "forced_matches_champions_2025_26")
