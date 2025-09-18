@@ -48,7 +48,7 @@ def get_current_players(
         no_home_boost=False,
         alt_fixture_method=False,
         ignore_gk_fixture=None,
-        is_tournament=False,
+        nerf_form=False,
         skip_arrows=False,
         no_penalty_takers_boost=False,
         nerf_penalty_boost=False,
@@ -194,7 +194,7 @@ def get_current_players(
     arrows_data = None
     if not skip_arrows:
         arrows_data = get_arrows_data(file_name="arrows_data")
-    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, use_laligafantasy_data, ignore_gk_fixture, is_tournament, skip_arrows, arrows_data)
+    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, use_laligafantasy_data, ignore_gk_fixture, nerf_form, skip_arrows, arrows_data)
     # end = time.time()
     # print(f"Execution time: {end - start:.2f} seconds")
     # full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
@@ -249,8 +249,9 @@ if __name__ == "__main__":
     # current_players = get_current_players()
 
 
-    jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-    jornada_selected = jornadas_dict.get(get_next_jornada(), [])
+    competition = "champions"
+    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+    jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
     # jornada_selected = jornadas_dict["jornada_XX"]
 
     current_players = get_current_players(
@@ -260,7 +261,7 @@ if __name__ == "__main__":
         no_team_history_boost=False,
         alt_fixture_method=False,
         ignore_gk_fixture=False,
-        is_tournament=False,
+        nerf_form=False,
         skip_arrows=False,
         use_laligafantasy_data=True,
         alt_positions=False,

@@ -382,9 +382,11 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
     return players_list
 
 
-def get_next_jornada():
-    all_teams, _ = get_championship_data(verbose=False)
-    jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+def get_next_jornada(competition="laliga"):
+    biwenger_file_name = f"biwenger_{competition}_data"
+    all_teams, _ = get_championship_data(verbose=False, biwenger_file_name=biwenger_file_name)
+    jornada_file_name = f"forced_matches_{competition}_2025_26"
+    jornadas_dict = read_dict_data(jornada_file_name)
 
     next_jornadas = []
 
@@ -397,15 +399,18 @@ def get_next_jornada():
             for match in matches:
                 home, away = match
                 if team.is_home and team.next_opponent == away:
+                    # print(match)
                     next_jornadas.append(jornada_name)
                     break
                 elif not team.is_home and team.next_opponent == home:
+                    # print(match)
                     next_jornadas.append(jornada_name)
                     break
             else:
                 continue
             break
 
+    # print(next_jornadas)
     # Return the latest jornada key among all teams
     return max(next_jornadas, key=lambda x: int(x.split('_')[1])) if next_jornadas else None
 
