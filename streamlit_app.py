@@ -12,7 +12,7 @@ from unidecode import unidecode
 from collections import Counter
 
 from group_knapsack import print_best_full_teams, best_full_teams
-from main import get_current_players, purge_everything
+from main import get_current_players, get_current_players_wrapper, purge_everything
 from useful_functions import read_dict_data, percentile_ranks_dict, percentile_rank
 from biwenger import get_next_jornada
 
@@ -72,8 +72,24 @@ I18N = {
     "tab.players_list": {"es": "📋 Lista de jugadores", "en": "📋 Players list"},
     "tab.my_market": {"es": "📈 Analizar mi mercado", "en": "📈 Analyze my market"},
 
+    # Competitions
+    "competition.laliga": {"es": "LaLiga", "en": "LaLiga"},
+    "competition.premier": {"es": "Premier League", "en": "Premier League"},
+    "competition.seriea": {"es": "Serie A", "en": "Serie A"},
+    "competition.ligueone": {"es": "Ligue 1", "en": "Ligue 1"},
+    "competition.bundesliga": {"es": "Bundesliga", "en": "Bundesliga"},
+    "competition.segunda": {"es": "Segunda División", "en": "Segunda Division"},
+    "competition.mundialito": {"es": "Mundialito de Clubes", "en": "Club World Cup"},
+    "competition.champions": {"es": "Champions League", "en": "Champions League"},
+    "competition.europaleague": {"es": "Europa League", "en": "Europa League"},
+    "competition.conference": {"es": "Conference League", "en": "Conference League"},
+    "competition.mundial": {"es": "Mundial", "en": "World Cup"},
+    "competition.eurocopa": {"es": "Eurocopa", "en": "Euro"},
+    "competition.copaamerica": {"es": "Copa América", "en": "Copa America"},
+
     # Sidebar
     "sb.options": {"es": "Opciones", "en": "Options"},
+    "sb.competition": {"es": "Competición", "en": "Competition"},
     "sb.app": {"es": "Aplicación", "en": "App"},
     "sb.penalties": {"es": "¿Te importan los penaltis?", "en": "Do penalties matter to you?"},
     "opt.yes": {"es": "Sí", "en": "Yes"},
@@ -643,7 +659,31 @@ tabs = st.tabs(tab_labels)
 # Sidebar filters
 lang_switcher()
 st.sidebar.header(t("sb.options"))
-app_option = st.sidebar.selectbox(t("sb.app"), [t("app.laligafantasy"), t("app.biwenger")], index=1)
+competitions_map = {
+    t("competition.laliga"): "laliga",
+    t("competition.premier"): "premier",
+    t("competition.seriea"): "seriea",
+    t("competition.ligueone"): "ligueone",
+    # t("competition.bundesliga"): "bundesliga",
+    t("competition.segunda"): "segunda",
+
+    # t("competition.mundialito"): "mundialito",
+    t("competition.champions"): "champions",
+    # t("competition.europaleague"): "europaleague",
+    # t("competition.conference"): "conference",
+
+    # t("competition.mundial"): "mundial",
+    # t("competition.eurocopa"): "eurocopa",
+    # t("competition.copaamerica"): "copaamerica",
+}
+competition_option = st.sidebar.selectbox(t("sb.competition"), list(competitions_map.keys()), index=0)
+competition = competitions_map[competition_option]
+is_laliga = competition == "laliga"
+
+if is_laliga:
+    app_option = st.sidebar.selectbox(t("sb.app"), [t("app.laligafantasy"), t("app.biwenger")], index=1)
+else:
+    app_option = st.sidebar.selectbox(t("sb.app"), [t("app.biwenger")], index=0)
 penalties_option = st.sidebar.radio(t("sb.penalties"), [t("opt.yes"), t("opt.no")], index=0)
 sort_option = st.sidebar.selectbox(t("sb.sort_by"), [t("sort.score"), t("sort.worth"), t("sort.price"), t("sort.form"), t("sort.fixture"), t("sort.startprobability"), t("sort.position")], index=0)
 disable_rentabilidad = sort_option != t("sort.worth")
@@ -661,28 +701,30 @@ if sort_option == t("sort.worth"):
     # use_start_probability = st.sidebar.radio("Utilizar '% Titular' cuando se Ordena por **Rentabilidad**", ["Sí", "No"], index=0)
 
 # Jornada
-jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-display_to_key = {key.replace("_", " ").strip().title().replace("Jornada", t("sb.jornada")): key for key in jornadas_dict}
-display_options = [t("jornada.next")] + list(display_to_key.keys())
-selected_display_jornada = st.sidebar.selectbox(t("sb.jornada"), options=display_options, format_func=lambda x: normalize_name(x), index=0)
-# selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
-selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == t("jornada.next") else jornadas_dict[display_to_key[selected_display_jornada]]
-jornadas_map = {
-    t("num.one"): 1,
-    t("num.two"): 2,
-    t("num.three"): 3,
-}
-disable_multi_jornada = selected_display_jornada == t("jornada.next")
-selected_num_jornadas_label = st.sidebar.selectbox(
-    t("sb.num_jornadas"),
-    options=list(jornadas_map.keys()),
-    format_func=lambda x: normalize_name(x),
-    index=0,
-    # disabled=disable_multi_jornada
-)
-selected_num_jornadas = jornadas_map[selected_num_jornadas_label]
-# if disable_multi_jornada:
-#     st.sidebar.markdown(f"<span style='color:gray'>{t("hint.select_specific_jornada")}</span>", unsafe_allow_html=True)
+selected_jornada = []
+if is_laliga:
+    jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+    display_to_key = {key.replace("_", " ").strip().title().replace("Jornada", t("sb.jornada")): key for key in jornadas_dict}
+    display_options = [t("jornada.next")] + list(display_to_key.keys())
+    selected_display_jornada = st.sidebar.selectbox(t("sb.jornada"), options=display_options, format_func=lambda x: normalize_name(x), index=0)
+    # selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
+    selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == t("jornada.next") else jornadas_dict[display_to_key[selected_display_jornada]]
+    jornadas_map = {
+        t("num.one"): 1,
+        t("num.two"): 2,
+        t("num.three"): 3,
+    }
+    disable_multi_jornada = selected_display_jornada == t("jornada.next")
+    selected_num_jornadas_label = st.sidebar.selectbox(
+        t("sb.num_jornadas"),
+        options=list(jornadas_map.keys()),
+        format_func=lambda x: normalize_name(x),
+        index=0,
+        # disabled=disable_multi_jornada
+    )
+    selected_num_jornadas = jornadas_map[selected_num_jornadas_label]
+    # if disable_multi_jornada:
+    #     st.sidebar.markdown(f"<span style='color:gray'>{t("hint.select_specific_jornada")}</span>", unsafe_allow_html=True)
 
 form_option = st.sidebar.radio(t("sb.ignore_form"), [t("opt.yes"), t("opt.no")], index=1)
 fixtures_option = st.sidebar.radio(t("sb.ignore_fixtures"), [t("opt.yes"), t("opt.no")], index=1)
@@ -693,146 +735,171 @@ ignore_form = form_option == t("opt.yes")
 ignore_fixtures = fixtures_option == t("opt.yes")
 
 with st.spinner(t("loader.players")):
-    current_players = get_current_players(
+    # current_players = get_current_players(
+    #     no_form=ignore_form,
+    #     no_fixtures=ignore_fixtures,
+    #     no_home_boost=False,
+    #     no_team_history_boost=False,
+    #     alt_fixture_method=False,
+    #     ignore_gk_fixture=False,
+    #     nerf_form=False,
+    #     skip_arrows=False,
+    #     use_laligafantasy_data=not is_biwenger,
+    #     add_start_probability=True,
+    #     no_penalty_takers_boost=False,
+    #     nerf_penalty_boost=ignore_penalties,
+    #     no_penalty_savers_boost=False,
+    #     no_team_status_nerf=False,
+    #     no_manual_boost=True,
+    #     use_old_players_data=False,
+    #     use_old_teams_data=False,
+    #     use_comunio_price=True,
+    #     biwenger_file_name="biwenger_laliga_data",
+    #     elo_ratings_file_name="elo_ratings_laliga_data",
+    #     ratings_file_name="sofascore_laliga_players_ratings",
+    #     penalty_takers_file_name="transfermarket_laliga_penalty_takers",
+    #     penalty_saves_file_name="transfermarket_laliga_penalty_savers",
+    #     team_history_file_name="transfermarket_laliga_team_history",
+    #     laligafantasy_file_name="laligafantasy_laliga_data",
+    #     start_probability_file_names=[
+    #         "analiticafantasy_laliga_players_start_probabilities",
+    #         "futbolfantasy_laliga_players_start_probabilities",
+    #         "jornadaperfecta_laliga_players_start_probabilities",
+    #     ],
+    #     is_country=False,
+    #     extra_teams=False,
+    #     debug=False,
+    #     forced_matches=selected_jornada
+    # )
+    current_players = get_current_players_wrapper(
+        competition=competition,
+        is_biwenger=is_biwenger,
         no_form=ignore_form,
         no_fixtures=ignore_fixtures,
-        no_home_boost=False,
-        no_team_history_boost=False,
-        alt_fixture_method=False,
-        ignore_gk_fixture=False,
-        nerf_form=False,
-        skip_arrows=False,
-        use_laligafantasy_data=not is_biwenger,
-        add_start_probability=True,
-        no_penalty_takers_boost=False,
         nerf_penalty_boost=ignore_penalties,
-        no_penalty_savers_boost=False,
-        no_team_status_nerf=False,
-        no_manual_boost=True,
-        use_old_players_data=False,
-        use_old_teams_data=False,
-        use_comunio_price=True,
-        biwenger_file_name="biwenger_laliga_data",
-        elo_ratings_file_name="elo_ratings_laliga_data",
-        ratings_file_name="sofascore_laliga_players_ratings",
-        penalty_takers_file_name="transfermarket_laliga_penalty_takers",
-        penalty_saves_file_name="transfermarket_laliga_penalty_savers",
-        team_history_file_name="transfermarket_laliga_team_history",
-        laligafantasy_file_name="laligafantasy_laliga_data",
-        start_probability_file_names=[
-            "analiticafantasy_laliga_players_start_probabilities",
-            "futbolfantasy_laliga_players_start_probabilities",
-            "jornadaperfecta_laliga_players_start_probabilities",
-        ],
-        is_country=False,
-        extra_teams=False,
-        debug=False,
-        forced_matches=selected_jornada
+        forced_matches=selected_jornada,
     )
     # if not disable_multi_jornada:
-    if selected_num_jornadas != 1:
-        # jornada_index = list(display_to_key.keys()).index(selected_display_jornada)
-        jornada_values = list(display_to_key.values())
-        jornada_index = next((i for i, k in enumerate(jornada_values) if jornadas_dict[k] == selected_jornada), None)
-        next_jornada_key = None
-        if selected_num_jornadas >= 2:
-            next_jornada_key = list(display_to_key.values())[jornada_index + 1] if jornada_index + 1 < len(
-                display_to_key) else None
-        next_next_jornada_key = None
-        if selected_num_jornadas >= 3:
-            next_next_jornada_key = list(display_to_key.values())[jornada_index + 2] if jornada_index + 2 < len(
-                display_to_key) else None
-        if next_jornada_key:
-            with st.spinner(t("loader.future_players")):
-                future_players = get_current_players(
-                    no_form=True,
-                    no_fixtures=ignore_fixtures,
-                    no_home_boost=False,
-                    no_team_history_boost=False,
-                    alt_fixture_method=False,
-                    ignore_gk_fixture=False,
-                    nerf_form=False,
-                    skip_arrows=False,
-                    use_laligafantasy_data=not is_biwenger,
-                    add_start_probability=True,
-                    no_penalty_takers_boost=False,
-                    nerf_penalty_boost=ignore_penalties,
-                    no_penalty_savers_boost=False,
-                    no_team_status_nerf=False,
-                    no_manual_boost=True,
-                    use_old_players_data=False,
-                    use_old_teams_data=False,
-                    use_comunio_price=True,
-                    biwenger_file_name="biwenger_laliga_data",
-                    elo_ratings_file_name="elo_ratings_laliga_data",
-                    ratings_file_name="sofascore_laliga_players_ratings",
-                    penalty_takers_file_name="transfermarket_laliga_penalty_takers",
-                    penalty_saves_file_name="transfermarket_laliga_penalty_savers",
-                    team_history_file_name="transfermarket_laliga_team_history",
-                    laligafantasy_file_name="laligafantasy_laliga_data",
-                    start_probability_file_names=[
-                        "analiticafantasy_laliga_players_start_probabilities",
-                        "futbolfantasy_laliga_players_start_probabilities",
-                        "jornadaperfecta_laliga_players_start_probabilities",
-                    ],
-                    is_country=False,
-                    extra_teams=False,
-                    debug=False,
-                    forced_matches=jornadas_dict[next_jornada_key],
-                )
-        if next_next_jornada_key:
-            with st.spinner(t("loader.distant_players")):
-                distant_players = get_current_players(
-                    no_form=True,
-                    no_fixtures=ignore_fixtures,
-                    no_home_boost=False,
-                    no_team_history_boost=False,
-                    alt_fixture_method=False,
-                    ignore_gk_fixture=False,
-                    nerf_form=False,
-                    skip_arrows=False,
-                    use_laligafantasy_data=not is_biwenger,
-                    add_start_probability=True,
-                    no_penalty_takers_boost=False,
-                    nerf_penalty_boost=ignore_penalties,
-                    no_penalty_savers_boost=False,
-                    no_team_status_nerf=False,
-                    no_manual_boost=True,
-                    use_old_players_data=False,
-                    use_old_teams_data=False,
-                    use_comunio_price=True,
-                    biwenger_file_name="biwenger_laliga_data",
-                    elo_ratings_file_name="elo_ratings_laliga_data",
-                    ratings_file_name="sofascore_laliga_players_ratings",
-                    penalty_takers_file_name="transfermarket_laliga_penalty_takers",
-                    penalty_saves_file_name="transfermarket_laliga_penalty_savers",
-                    team_history_file_name="transfermarket_laliga_team_history",
-                    laligafantasy_file_name="laligafantasy_laliga_data",
-                    start_probability_file_names=[
-                        "analiticafantasy_laliga_players_start_probabilities",
-                        "futbolfantasy_laliga_players_start_probabilities",
-                        "jornadaperfecta_laliga_players_start_probabilities",
-                    ],
-                    is_country=False,
-                    extra_teams=False,
-                    debug=False,
-                    forced_matches=jornadas_dict[next_next_jornada_key],
-                )
-        if selected_num_jornadas == 2:
-            for cp in current_players:
-                for fp in future_players:
-                    if cp.name == fp.name:
-                        cp.value = (cp.value + fp.value) / 2
-                        cp.form = (cp.form + fp.form) / 2
-                        cp.fixture = (cp.fixture + fp.fixture) / 2
-        elif selected_num_jornadas == 3:
-            for cp in current_players:
-                for fp in future_players:
-                    for dp in distant_players:
-                        if cp.name == fp.name == dp.name:
-                            cp.value = (cp.value + fp.value + dp.value) / 3
-                            cp.form = (cp.form + fp.form + dp.form) / 3
-                            cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
+    if is_laliga:
+        if selected_num_jornadas != 1:
+            # jornada_index = list(display_to_key.keys()).index(selected_display_jornada)
+            jornada_values = list(display_to_key.values())
+            jornada_index = next((i for i, k in enumerate(jornada_values) if jornadas_dict[k] == selected_jornada), None)
+            next_jornada_key = None
+            if selected_num_jornadas >= 2:
+                next_jornada_key = list(display_to_key.values())[jornada_index + 1] if jornada_index + 1 < len(
+                    display_to_key) else None
+            next_next_jornada_key = None
+            if selected_num_jornadas >= 3:
+                next_next_jornada_key = list(display_to_key.values())[jornada_index + 2] if jornada_index + 2 < len(
+                    display_to_key) else None
+            if next_jornada_key:
+                with st.spinner(t("loader.future_players")):
+                    # future_players = get_current_players(
+                    #     no_form=True,
+                    #     no_fixtures=ignore_fixtures,
+                    #     no_home_boost=False,
+                    #     no_team_history_boost=False,
+                    #     alt_fixture_method=False,
+                    #     ignore_gk_fixture=False,
+                    #     nerf_form=False,
+                    #     skip_arrows=False,
+                    #     use_laligafantasy_data=not is_biwenger,
+                    #     add_start_probability=True,
+                    #     no_penalty_takers_boost=False,
+                    #     nerf_penalty_boost=ignore_penalties,
+                    #     no_penalty_savers_boost=False,
+                    #     no_team_status_nerf=False,
+                    #     no_manual_boost=True,
+                    #     use_old_players_data=False,
+                    #     use_old_teams_data=False,
+                    #     use_comunio_price=True,
+                    #     biwenger_file_name="biwenger_laliga_data",
+                    #     elo_ratings_file_name="elo_ratings_laliga_data",
+                    #     ratings_file_name="sofascore_laliga_players_ratings",
+                    #     penalty_takers_file_name="transfermarket_laliga_penalty_takers",
+                    #     penalty_saves_file_name="transfermarket_laliga_penalty_savers",
+                    #     team_history_file_name="transfermarket_laliga_team_history",
+                    #     laligafantasy_file_name="laligafantasy_laliga_data",
+                    #     start_probability_file_names=[
+                    #         "analiticafantasy_laliga_players_start_probabilities",
+                    #         "futbolfantasy_laliga_players_start_probabilities",
+                    #         "jornadaperfecta_laliga_players_start_probabilities",
+                    #     ],
+                    #     is_country=False,
+                    #     extra_teams=False,
+                    #     debug=False,
+                    #     forced_matches=jornadas_dict[next_jornada_key],
+                    # )
+                    future_players = get_current_players_wrapper(
+                        competition=competition,
+                        is_biwenger=is_biwenger,
+                        no_form=True,
+                        no_fixtures=ignore_fixtures,
+                        nerf_penalty_boost=ignore_penalties,
+                        forced_matches=jornadas_dict[next_jornada_key],
+                    )
+            if next_next_jornada_key:
+                with st.spinner(t("loader.distant_players")):
+                    # distant_players = get_current_players(
+                    #     no_form=True,
+                    #     no_fixtures=ignore_fixtures,
+                    #     no_home_boost=False,
+                    #     no_team_history_boost=False,
+                    #     alt_fixture_method=False,
+                    #     ignore_gk_fixture=False,
+                    #     nerf_form=False,
+                    #     skip_arrows=False,
+                    #     use_laligafantasy_data=not is_biwenger,
+                    #     add_start_probability=True,
+                    #     no_penalty_takers_boost=False,
+                    #     nerf_penalty_boost=ignore_penalties,
+                    #     no_penalty_savers_boost=False,
+                    #     no_team_status_nerf=False,
+                    #     no_manual_boost=True,
+                    #     use_old_players_data=False,
+                    #     use_old_teams_data=False,
+                    #     use_comunio_price=True,
+                    #     biwenger_file_name="biwenger_laliga_data",
+                    #     elo_ratings_file_name="elo_ratings_laliga_data",
+                    #     ratings_file_name="sofascore_laliga_players_ratings",
+                    #     penalty_takers_file_name="transfermarket_laliga_penalty_takers",
+                    #     penalty_saves_file_name="transfermarket_laliga_penalty_savers",
+                    #     team_history_file_name="transfermarket_laliga_team_history",
+                    #     laligafantasy_file_name="laligafantasy_laliga_data",
+                    #     start_probability_file_names=[
+                    #         "analiticafantasy_laliga_players_start_probabilities",
+                    #         "futbolfantasy_laliga_players_start_probabilities",
+                    #         "jornadaperfecta_laliga_players_start_probabilities",
+                    #     ],
+                    #     is_country=False,
+                    #     extra_teams=False,
+                    #     debug=False,
+                    #     forced_matches=jornadas_dict[next_next_jornada_key],
+                    # )
+                    distant_players = get_current_players_wrapper(
+                        competition=competition,
+                        is_biwenger=is_biwenger,
+                        no_form=True,
+                        no_fixtures=ignore_fixtures,
+                        nerf_penalty_boost=ignore_penalties,
+                        forced_matches=jornadas_dict[next_next_jornada_key],
+                    )
+            if selected_num_jornadas == 2:
+                for cp in current_players:
+                    for fp in future_players:
+                        if cp.name == fp.name:
+                            cp.value = (cp.value + fp.value) / 2
+                            cp.form = (cp.form + fp.form) / 2
+                            cp.fixture = (cp.fixture + fp.fixture) / 2
+            elif selected_num_jornadas == 3:
+                for cp in current_players:
+                    for fp in future_players:
+                        for dp in distant_players:
+                            if cp.name == fp.name == dp.name:
+                                cp.value = (cp.value + fp.value + dp.value) / 3
+                                cp.form = (cp.form + fp.form + dp.form) / 3
+                                cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
 
     current_team_list = sorted(set(player.team for player in current_players))
 

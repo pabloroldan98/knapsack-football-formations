@@ -383,6 +383,9 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
 
 
 def get_next_jornada(competition="laliga"):
+    def jnum(jname: str) -> int:
+        return int(jname.split('_')[1])
+
     biwenger_file_name = f"biwenger_{competition}_data"
     all_teams, _ = get_championship_data(verbose=False, biwenger_file_name=biwenger_file_name)
     jornada_file_name = f"forced_matches_{competition}_2025_26"
@@ -394,6 +397,7 @@ def get_next_jornada(competition="laliga"):
     for team in all_teams:
         # Loop over jornadas sorted by number
         for jornada_name, matches in sorted(jornadas_dict.items(), key=lambda x: int(x[0].split('_')[1])):
+        # for jornada_name, matches in sorted(jornadas_dict.items(), key=lambda x: int(x[0].split('_')[1]), reverse=True):
 
             # Check each match
             for match in matches:
@@ -410,9 +414,37 @@ def get_next_jornada(competition="laliga"):
                 continue
             break
 
-    # print(next_jornadas)
-    # Return the latest jornada key among all teams
-    return max(next_jornadas, key=lambda x: int(x.split('_')[1])) if next_jornadas else None
+    if not next_jornadas:
+        return None
+
+    # # print(next_jornadas)
+    # # Return the latest jornada key among all teams
+    # return max(next_jornadas, key=lambda x: int(x.split('_')[1])) if next_jornadas else None
+
+    # ---- Trim list: keep only the longest consecutive block; drop any jump >= 2
+    # 1) dedupe and sort ascending by jornada number
+    nums = sorted({jnum(j) for j in next_jornadas})
+
+    # 2) keep prefix while consecutive (diff <= 1); stop at first gap >= 2
+    kept_nums = []
+    last = None
+    for n in nums:
+        if last is None or n - last <= 1:
+            kept_nums.append(n)
+            last = n
+        else:
+            break
+
+    if not kept_nums:
+        return None
+
+    def jtext(jname: str) -> str:
+        return str(jname.split('_')[0])
+
+    jornada_text = jtext(next_jornadas[0])
+
+    # 3) return the latest jornada from the kept consecutive block
+    return f"{jornada_text}_{max(kept_nums)}"
 
 
 # all_teams, all_players = get_championship_data(
