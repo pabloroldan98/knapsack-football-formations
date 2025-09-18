@@ -396,17 +396,16 @@ def get_next_jornada(competition="laliga"):
     # Loop over teams
     for team in all_teams:
         # Loop over jornadas sorted by number
-        for jornada_name, matches in sorted(jornadas_dict.items(), key=lambda x: int(x[0].split('_')[1])):
-        # for jornada_name, matches in sorted(jornadas_dict.items(), key=lambda x: int(x[0].split('_')[1]), reverse=True):
+        for jornada_name, matches in sorted(jornadas_dict.items(), key=lambda x: int(x[0].split('_')[1]), reverse=True):
 
             # Check each match
             for match in matches:
                 home, away = match
-                if team.is_home and team.next_opponent == away:
+                if team.is_home and team.name == home and team.next_opponent == away:
                     # print(match)
                     next_jornadas.append(jornada_name)
                     break
-                elif not team.is_home and team.next_opponent == home:
+                elif not team.is_home and team.name == away and team.next_opponent == home:
                     # print(match)
                     next_jornadas.append(jornada_name)
                     break
