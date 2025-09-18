@@ -353,9 +353,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Koffi Franck Kouao": "Koffi Kouao",
         "Kevin Omoruyi": "Kevin Carlos",
         "Eric Junior": "Eric Ebimbe",
-        "AAAAAAAA": "BBBBBBB",
-        "AAAAAAAA": "BBBBBBB",
-        "AAAAAAAA": "BBBBBBB",
+        "S. Berg": "Sepp van den Berg",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
 
         "RCD Espanyol Barcelona": "Espanyol",
         "RCD Espanyol": "Espanyol",
