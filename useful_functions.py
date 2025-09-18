@@ -388,7 +388,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Atl. Madrid": "Atlético",
         "Atletico": "Atlético",
         "Atlético Madrid": "Atlético",
-        "Atlético de Madrid": "Atlético",
+        # "Atlético de Madrid": "Atlético",
         "Paris Saint-Germain": "PSG",
         "Paris SG": "PSG",
         "Psg": "PSG",
