@@ -204,13 +204,16 @@ def get_current_players(
     return full_players_data
 
 
-def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, nerf_penalty_boost=False, ):
+def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, nerf_penalty_boost=False, forced_matches=[]):
 
-    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
-    if jornadas_dict:
-        jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
+    if forced_matches:
+        jornada_selected = forced_matches.copy()
     else:
-        jornada_selected = []
+        jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+        if jornadas_dict:
+            jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
+        else:
+            jornada_selected = []
 
     if competition == "laliga":
         # is_biwenger=False
