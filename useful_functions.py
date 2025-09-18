@@ -169,7 +169,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Pablo Gavi": "Gavi",
         "Alejandro Primo": "Álex Primo",
 
-        "Khéphren Thuram": "K. Thuram-Ulien",
+        # "Khéphren Thuram": "K. Thuram-Ulien",
         "Thuram-Ulien": "K. Thuram-Ulien",
         "Khéphren Thuram-Ulien": "K. Thuram-Ulien",
         "Khephren Thuram": "K. Thuram-Ulien",
