@@ -204,6 +204,325 @@ def get_current_players(
     return full_players_data
 
 
+def get_current_players_wrapper(competition="laliga", is_biwenger=True):
+
+    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+    if jornadas_dict:
+        jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
+    else:
+        jornada_selected = []
+
+    if competition == "laliga":
+        # is_biwenger=False
+        use_comunio_price = True
+        start_probability_file_names = [
+            f"analiticafantasy_{competition}_players_start_probabilities",
+            f"futbolfantasy_{competition}_players_start_probabilities",
+            f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            # f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "premier":
+        is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            f"jornadaperfecta_{competition}_players_start_probabilities",
+            f"pundit_{competition}_players_start_probabilities",
+            f"scout_{competition}_players_start_probabilities",
+            f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "seriea":
+        is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "ligueone":
+        is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "bundesliga":
+        is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "segunda":
+        is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            f"futbolfantasy_{competition}_players_start_probabilities",
+            f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+
+    elif competition == "champions":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "europaleague":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "conference":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+    elif competition == "mundialito":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=False
+        host_team=["Inter Miami", "Seattle", ]
+        extra_teams=True
+
+
+    elif competition == "mundial":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=True
+        host_team=["US", "México", "Canadá", ]
+        extra_teams=False
+
+    elif competition == "eurocopa":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=True
+        host_team=["Inglaterra", "Irlanda", "Escocia", "Gales", ]
+        extra_teams=False
+
+    elif competition == "copaamerica":
+        is_biwenger=True
+        use_comunio_price = False
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = True
+        nerf_form = True
+        is_country=True
+        host_team=["Ecuador", ]
+        extra_teams=False
+
+
+    else:
+        # is_biwenger=True
+        use_comunio_price = True
+        start_probability_file_names = [
+            # f"analiticafantasy_{competition}_players_start_probabilities",
+            # f"futbolfantasy_{competition}_players_start_probabilities",
+            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            # f"pundit_{competition}_players_start_probabilities",
+            # f"scout_{competition}_players_start_probabilities",
+            # f"rotowire_{competition}_players_start_probabilities",
+            f"sportsgambler_{competition}_players_start_probabilities",
+        ]
+        alt_fixture_method = False
+        ignore_gk_fixture = False
+        nerf_form = False
+        is_country=False
+        host_team=None
+        extra_teams=False
+
+
+    current_players = get_current_players(
+        no_form=False,
+        no_fixtures=False,
+        no_home_boost=False,
+        no_team_history_boost=False,
+        alt_fixture_method=alt_fixture_method,
+        ignore_gk_fixture=ignore_gk_fixture,
+        nerf_form=nerf_form,
+        skip_arrows=False,
+        use_laligafantasy_data=not is_biwenger,
+        alt_positions=False,
+        alt_prices=False,
+        alt_price_trends=False,
+        alt_forms=False,
+        add_start_probability=True,
+        no_penalty_takers_boost=False,
+        nerf_penalty_boost=False,
+        no_penalty_savers_boost=False,
+        no_team_status_nerf=False,
+        no_manual_boost=True,
+        use_old_players_data=False,
+        use_old_teams_data=False,
+        use_comunio_price=use_comunio_price,
+        biwenger_file_name=f"biwenger_{competition}_data",
+        elo_ratings_file_name=f"elo_ratings_{competition}_data",
+        ratings_file_name=f"sofascore_{competition}_players_ratings",
+        penalty_takers_file_name=f"transfermarket_{competition}_penalty_takers",
+        penalty_saves_file_name=f"transfermarket_{competition}_penalty_savers",
+        team_history_file_name=f"transfermarket_{competition}_team_history",
+        laligafantasy_file_name=f"laligafantasy_{competition}_data",
+        start_probability_file_names=start_probability_file_names,
+        is_country=is_country,
+        host_team=host_team,
+        extra_teams=extra_teams,
+        debug=False,
+        forced_matches=jornada_selected,
+    )
+
+    return current_players
+
+
 def get_last_jornada_players():
     all_teams, all_players = get_championship_data()
     return set_players_value_to_last_fitness(all_players)
@@ -249,9 +568,12 @@ if __name__ == "__main__":
     # current_players = get_current_players()
 
 
-    competition = "champions"
+    competition = "laliga"
     jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
-    jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
+    if jornadas_dict:
+        jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
+    else:
+        jornada_selected = []
     # jornada_selected = jornadas_dict["jornada_XX"]
 
     current_players = get_current_players(
@@ -311,8 +633,8 @@ if __name__ == "__main__":
             "jornadaperfecta_laliga_players_start_probabilities",
             # "pundit_laliga_players_start_probabilities",
             # "scout_laliga_players_start_probabilities",
-            # "sportsgambler_laliga_players_start_probabilities",
             # "rotowire_laliga_players_start_probabilities",
+            # "sportsgambler_laliga_players_start_probabilities",
         ],
         is_country=False,
         extra_teams=False,
