@@ -32,6 +32,8 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
+    if my_string in ["Kevin Medina", "Kevin Villodres", ]:
+        similarity_threshold = 0.45
     if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", "Pape Sarr", "Frank Anguissa", ]:
         similarity_threshold = 0.65
     # Before anything, we check the manual checks
@@ -274,9 +276,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Karim Dermane": "Dermane Karim",
         "Hamed Junior Traorè": "Hamed Traoré",
         "Lionel M'Pasi": "Mpasi",
-        # "Kevin Medina": "Kevin Medina Villodres",
         "Kevin David Medina Renteria": "Kevin Medina Villodres",
-        "Kevin Villodres": "Kevin Medina Villodres",
+        # "Kevin Medina": "Kevin Medina Villodres",
+        # "Kevin Villodres": "Kevin Medina Villodres",
         "Fernando Niño": "Fer Niño",
         "Samuel Obeng": "Samuel Gyabaa",
         "Kialy Abdoul Kone": "Kialy Kone",
