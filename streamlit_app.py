@@ -387,7 +387,8 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         ]
         names_result_players = {player.name for player in actual_players}
         actual_formation = formation.copy()
-        actual_score = sum(player.value for player in current_players_copy if player.name in names_result_players)
+        # actual_score = sum(player.value for player in current_players_copy if player.name in names_result_players)
+        actual_score = sum(player.show_value for player in current_players_copy if player.name in names_result_players)
         # total_price = sum(player.price for player in players)
         actual_price = sum(player.price for player in current_players_copy if player.name in names_result_players)
         show_price = actual_price / 10 if divide_millions else actual_price
@@ -462,7 +463,8 @@ def print_player(player, small_size=0, divide_millions=False):
     if small_size==0:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
-            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
+            # f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
+            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M ~ **{player.show_value:.0f} pts**"
         )
         player_cols[1].caption(f"{t("player.form")}:")
         player_cols[2].image(player.form_arrow, output_format="PNG", width=24) #, use_container_width=True)
@@ -471,10 +473,16 @@ def print_player(player, small_size=0, divide_millions=False):
         player_cols[5].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
     elif small_size==1:
         player_cols = st.columns([12, 2.7, 1.5, 3, 1.5, 5])  # Adjust width ratio if needed
+        # player_cols[0].markdown(
+        #     f"""
+        #         - **{player.name}** ({player.position}, {player.team}):
+        #         {show_price}M - **{player.value:.3f} pts**
+        #     """
+        # )
         player_cols[0].markdown(
             f"""
                 - **{player.name}** ({player.position}, {player.team}):  
-                {show_price}M - **{player.value:.3f} pts**
+                {show_price}M ~ **{player.show_value:.0f} pts**
             """
         )
         player_cols[1].markdown("")
@@ -495,10 +503,16 @@ def print_player(player, small_size=0, divide_millions=False):
             unsafe_allow_html=True
         )
         player_cols[1].markdown("")
+        # player_cols[1].markdown(
+        #     f"""
+        #         **{player.name}** ({player.position}, {player.team}):
+        #         {show_price}M - **{player.value:.3f} pts**
+        #     """
+        # )
         player_cols[1].markdown(
             f"""
                 **{player.name}** ({player.position}, {player.team}):  
-                {show_price}M - **{player.value:.3f} pts**
+                {show_price}M ~ **{player.show_value:.0f} pts**
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
@@ -520,10 +534,16 @@ def print_player(player, small_size=0, divide_millions=False):
         )
         player_cols[0].markdown(f"{t("player.titular")}: **{player.start_probability*100:.0f} %**")
         player_cols[1].markdown("")
+        # player_cols[1].markdown(
+        #     f"""
+        #         **{player.name}** ({player.position}, {player.team}):
+        #         {show_price}M - **{player.value:.3f} pts**
+        #     """
+        # )
         player_cols[1].markdown(
             f"""
                 **{player.name}** ({player.position}, {player.team}):  
-                {show_price}M - **{player.value:.3f} pts**
+                {show_price}M ~ **{player.show_value:.0f} pts**
             """
         )
         player_cols[2].image(player.form_arrow, output_format="PNG", width=30)#, caption="Forma", use_container_width=True)
@@ -533,7 +553,8 @@ def print_player(player, small_size=0, divide_millions=False):
     else:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
-            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
+            # f"- **{player.name}** ({player.position}, {player.team}): {show_price}M - **{player.value:.3f} pts**"
+            f"- **{player.name}** ({player.position}, {player.team}): {show_price}M ~ **{player.show_value:.0f} pts**"
         )
         player_cols[1].markdown(f"{t("player.form")}:")
         player_cols[2].image(player.form_arrow, output_format="PNG") #, use_container_width=True)
@@ -892,6 +913,7 @@ with st.spinner(t("loader.players")):
                     for fp in future_players:
                         if cp.name == fp.name:
                             cp.value = (cp.value + fp.value) / 2
+                            cp.show_value = (cp.show_value + fp.show_value) / 2
                             cp.form = (cp.form + fp.form) / 2
                             cp.fixture = (cp.fixture + fp.fixture) / 2
             elif selected_num_jornadas == 3:
@@ -900,6 +922,7 @@ with st.spinner(t("loader.players")):
                         for dp in distant_players:
                             if cp.name == fp.name == dp.name:
                                 cp.value = (cp.value + fp.value + dp.value) / 3
+                                cp.show_value = (cp.show_value + fp.show_value + dp.show_value) / 3
                                 cp.form = (cp.form + fp.form + dp.form) / 3
                                 cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
 
