@@ -575,25 +575,29 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False): 
             team_players_dict[player.team] = {}
         team_players_dict[player.team][player.name] = []
 
+    num_probability_files = 0
     for source, players_data_dict in full_players_data_dict.items():
+        num_probability_files = num_probability_files + 1
 
         team_data_names_list = list(players_data_dict.keys())
 
         for player_team_name, players_in_team in team_players_dict.items():
             closest_player_data_team = find_similar_string(player_team_name, team_data_names_list, similarity_threshold=0)
-            for player_name, player_data in players_in_team.items():
-                player_data_names_list = list(players_data_dict[closest_player_data_team].keys())
-                # if source == "jornadaperfecta" and flag:
-                #     closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=True)
-                closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=False)
-                if closest_player_data_name:
-                    new_data = players_data_dict[closest_player_data_team][closest_player_data_name]
-                    old_player_data = player_data.copy()
-                    new_data = old_player_data + [new_data]
-                    if verbose:
-                        if old_player_data != new_data:
-                            print(f"{player_name}: {old_player_data} --> {new_data} ({closest_player_data_name})")
-                    team_players_dict[player_team_name][player_name] = new_data
+            if closest_player_data_team:
+                team_players_dict[player_team_name]["num_probability_files"] = num_probability_files
+                for player_name, player_data in players_in_team.items():
+                    player_data_names_list = list(players_data_dict[closest_player_data_team].keys())
+                    # if source == "jornadaperfecta" and flag:
+                    #     closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=True)
+                    closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=False)
+                    if closest_player_data_name:
+                        new_data = players_data_dict[closest_player_data_team][closest_player_data_name]
+                        old_player_data = player_data.copy()
+                        new_data = old_player_data + [new_data]
+                        if verbose:
+                            if old_player_data != new_data:
+                                print(f"{player_name}: {old_player_data} --> {new_data} ({closest_player_data_name})")
+                        team_players_dict[player_team_name][player_name] = new_data
     return team_players_dict
 
 
@@ -703,20 +707,6 @@ def set_players_database(players_list, new_players_list, verbose=False):
         player for player in result_players
         if (player.name, player.team) not in players_to_remove
     ]
-
-    return result_players
-
-    team_players_dict = get_team_players_dict(result_players, full_players_positions_dict, verbose)
-
-    for player in result_players:
-        positions = team_players_dict[player.team][player.name].copy()
-        valid_positions = [p for p in positions if p is not None]
-        new_position = valid_positions[0] if valid_positions else None
-        if new_position:
-            if verbose:
-                if player.position != new_position:
-                    print(f"{player.name}: {positions} --> {new_position}")
-            player.position = new_position
 
     return result_players
 
@@ -941,14 +931,15 @@ def set_start_probabilities(players_list, full_players_start_probabilities_dict,
     result_players = copy.deepcopy(players_list)
 
     team_players_dict = get_team_players_dict(result_players, full_players_start_probabilities_dict, verbose) #, True)
-    num_probability_files = len(full_players_start_probabilities_dict)
+    # num_probability_files = len(full_players_start_probabilities_dict)
 
     for player in result_players:
         start_probabilities = team_players_dict[player.team][player.name].copy()
         valid_probs = [p for p in start_probabilities if p is not None]
         new_start_probability = round(sum(valid_probs) / len(valid_probs), 4) if valid_probs else 0
-        if num_probability_files <= 2:
-            new_start_probability = round(sum(valid_probs) / len(full_players_start_probabilities_dict), 4) if valid_probs else 0
+        num_probability_files = team_players_dict[player.team]["num_probability_files"]
+        if 0 < num_probability_files <= 2:
+            new_start_probability = round(sum(valid_probs) / num_probability_files, 4) if valid_probs else 0
         # if player.status == "sanctioned":
         #     new_start_probability = 0
         if new_start_probability:
