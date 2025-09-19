@@ -364,7 +364,7 @@ def sort_players(players, sort_option, use_start_probability=True):
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team, x.name)
         )
 
-def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None, is_biwenger=False):
+def display_valid_formations(formation_score_players_by_score, current_players, blinded_players_names=None, divide_millions=False):
     current_players_copy = copy.deepcopy(current_players)
     if blinded_players_names is None:
         blinded_players_names = set()
@@ -390,7 +390,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         actual_score = sum(player.value for player in current_players_copy if player.name in names_result_players)
         # total_price = sum(player.price for player in players)
         actual_price = sum(player.price for player in current_players_copy if player.name in names_result_players)
-        show_price = actual_price / 10 if is_biwenger else actual_price
+        show_price = actual_price / 10 if divide_millions else actual_price
 
         show_formations.append((actual_formation, actual_score, actual_players, show_price))
 
@@ -442,7 +442,7 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
                 # st.markdown(f"- {player} {blinded_mark}")
                 player.name = blinded_mark + player.name
                 # player.name = player.name + blinded_mark
-                print_player(player, small_size=1, is_biwenger=is_biwenger)
+                print_player(player, small_size=1, divide_millions=divide_millions)
 
         st.markdown("---")
 
@@ -457,8 +457,8 @@ def normalize_name(name):
     normalized = normalized.replace("___ENYE___", "ñ").replace("___ENYE_UPPER___", "Ñ")
     return normalized.strip()
 
-def print_player(player, small_size=0, is_biwenger=False):
-    show_price = player.price / 10 if is_biwenger else player.price
+def print_player(player, small_size=0, divide_millions=False):
+    show_price = player.price / 10 if divide_millions else player.price
     if small_size==0:
         player_cols = st.columns([12, 1.8, 1, 2, 1, 3])  # Adjust width ratio if needed
         player_cols[0].markdown(
@@ -679,6 +679,7 @@ competitions_map = {
 competition_option = st.sidebar.selectbox(t("sb.competition"), list(competitions_map.keys()), index=0)
 competition = competitions_map[competition_option]
 is_laliga = competition == "laliga"
+is_tournament = competition in ["mundialito", "champions", "europaleague", "conference", "mundial", "eurocopa", "copaamerica", ]
 
 if is_laliga:
     app_option = st.sidebar.selectbox(t("sb.app"), [t("app.laligafantasy"), t("app.biwenger")], index=1)
@@ -733,6 +734,7 @@ is_biwenger = app_option == t("app.biwenger")
 ignore_penalties = penalties_option == t("opt.no")
 ignore_form = form_option == t("opt.yes")
 ignore_fixtures = fixtures_option == t("opt.yes")
+divide_millions = (not is_tournament) and is_biwenger
 
 with st.spinner(t("loader.players")):
     # current_players = get_current_players(
@@ -946,14 +948,14 @@ with tabs[0]:
             with cols[0]:
                 # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
-                print_player(p, small_size=3, is_biwenger=is_biwenger)
+                print_player(p, small_size=3, divide_millions=divide_millions)
             with cols[1]:
                 if st.button("❌", key=f"remove_blindado_{i}"):
                     st.session_state.blinded_players_set.remove(p.name)
                     blinded_players_list.remove(p)
                     st.rerun()
         if blinded_players_list:
-            total_price = sum(p.price / 10 if is_biwenger else p.price for p in blinded_players_list)
+            total_price = sum(p.price / 10 if divide_millions else p.price for p in blinded_players_list)
             st.caption(f"{t("blind.total_price")} **{total_price}M**")
 
         st.markdown(f"### {t("ban.title")}")
@@ -977,25 +979,25 @@ with tabs[0]:
             with cols[0]:
                 # st.markdown(f"- **{p.name}**: {p.position}, {p.team} – {show_price}M💰 {p.value:.3f} pts --> ({p.start_probability*100:.0f} %)")
                 # st.markdown(f"- {p}")
-                print_player(p, small_size=1, is_biwenger=is_biwenger)
+                print_player(p, small_size=1, divide_millions=divide_millions)
             with cols[1]:
                 if st.button("❌", key=f"remove_baneado_{i}"):
                     st.session_state.banned_players_set.remove(p.name)
                     banned_players_list.remove(p)
                     st.rerun()
 
-    if is_biwenger:
+    if divide_millions:
         budget = st.number_input(t("sb.budget.max"), min_value=-1.0, max_value=100.0, value=30.0, step=0.1, key="budget_cap", format="%.1f")
         budget = int(budget * 10)
     else:
         budget = st.number_input(t("sb.budget.max"), min_value=-1, max_value=1000, value=200, step=1, key="budget_cap")
     st.caption(t("sb.budget.hint"))
-    # if is_biwenger:
+    # if divide_millions:
     #     st.markdown(f"En Biwenger: **{budget / 10:.1f}M**")
 
     with st.expander(t("sb.extra_filters"), expanded=True):
         use_fixture_filter = st.radio(
-            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if is_biwenger else 1,key="fixture_filter_budget"
+            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if divide_millions else 1,key="fixture_filter_budget"
         ) == t("opt.yes")
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100
@@ -1076,7 +1078,7 @@ with tabs[0]:
             verbose=2,
         )
 
-        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set, is_biwenger)
+        display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players_set, divide_millions)
 
 # Funcionalidades futuras
 # elif main_option == "Mi mejor 11 posible" or main_option == "⚽ Mi mejor 11 posible":
@@ -1122,7 +1124,7 @@ with tabs[1]:
             with cols[0]:
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
                 # st.markdown(f"{p}")
-                print_player(p, small_size=3, is_biwenger=is_biwenger)
+                print_player(p, small_size=3, divide_millions=divide_millions)
             with cols[1]:
                 if st.button("❌", key=f"remove_{i}"):
                     st.session_state.my_players_names.remove(p.name)
@@ -1313,7 +1315,7 @@ with tabs[1]:
                 verbose=1
             )
             # print_best_full_teams(formation_score_players_by_score)
-            display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players, is_biwenger)
+            display_valid_formations(formation_score_players_by_score, current_players, st.session_state.blinded_players, divide_millions)
 
 # Si selecciona "Lista de jugadores"
 # ekif main_option == "Lista de jugadores" or main_option == "📋 Lista de jugadores":
@@ -1351,7 +1353,7 @@ with tabs[2]:
 
         # Filtro por precio
         max_player_price = max((p.price for p in current_players), default=300)
-        if is_biwenger:
+        if divide_millions:
             max_player_price_show = round(max_player_price / 10, 1)
             min_price, max_price = st.slider(t("filters.price"), 0.0, max_player_price_show, (0.0, max_player_price_show), step=0.1, key="slider_precio", format="%.1f")
             min_price = int(round(min_price * 10))
@@ -1403,7 +1405,7 @@ with tabs[2]:
     show_players = copy.deepcopy(current_players_filtered)
     for player in show_players:
         # st.text(str(player))
-        print_player(player, small_size=0, is_biwenger=is_biwenger)
+        print_player(player, small_size=0, divide_millions=divide_millions)
 
     copiable_text = "\n".join(f"- {p.name}" for p in show_players)
     copiable_full_text = "\n".join(f"- {p}" for p in show_players)
@@ -1462,7 +1464,7 @@ with tabs[3]:
 
             # Filtro por precio
             max_player_price = max((p.price for p in current_players), default=300)
-            if is_biwenger:
+            if divide_millions:
                 max_player_price_show = round(max_player_price / 10, 1)
                 min_price, max_price = st.slider(t("filters.price"), 0.0, max_player_price_show, (0.0, max_player_price_show), step=0.1, key="slider_precio_market", format="%.1f")
                 min_price = int(round(min_price * 10))
@@ -1521,14 +1523,14 @@ with tabs[3]:
             with cols[0]:
                 # st.markdown(f"**{p.name}** - {p.position} - {p.team} - {p.price}M - {p.value} pts")
                 # st.markdown(f"{p}")
-                print_player(p, small_size=1, is_biwenger=is_biwenger)
+                print_player(p, small_size=1, divide_millions=divide_millions)
             with cols[1]:
                 if st.button("❌", key=f"market_remove_{i}"):
                     st.session_state.my_players_names_set.remove(p.name)
                     st.session_state.blinded_players.discard(p.name)
                     st.rerun()
         # for player in my_market_filtered_players_list_show:
-        #     if is_biwenger:
+        #     if divide_millions:
         #         player.price = player.price / 10
         #     st.text(str(player))
     else:
