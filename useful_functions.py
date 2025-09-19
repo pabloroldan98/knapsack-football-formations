@@ -550,20 +550,20 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10, f
 def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old_data=False, file_type="json"):
     file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
     file_path_old = os.path.join(ROOT_DIR, 'json_files', f"{file_name}_OLD.json")
+    correct_data_file = file_name
+    correct_data_file_path = os.path.join(ROOT_DIR, 'json_files', f"{correct_data_file}_OLD.json")
     if file_type and isinstance(file_type, str):
         file_path = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}.{file_type}")
         file_path_old = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}_OLD.{file_type}")
     if not ignore_old_data:
         # Check if the data is not valid, and if so, fill it with old data
         if not is_valid_league_dict(dict_data) or ignore_valid_file:
-            if os.path.exists(file_path):
-                if os.path.exists(file_path_old):
-                    dict_data = correct_teams_with_old_data(dict_data, file_name, file_type=file_type)
+            if os.path.exists(correct_data_file_path):
+                dict_data = correct_teams_with_old_data(dict_data, correct_data_file, file_type=file_type)
         # If data is valid now, we use old data that we missed
         if is_valid_league_dict(dict_data) or ignore_valid_file:
-            if os.path.exists(file_path):
-                if os.path.exists(file_path_old):
-                    dict_data = add_old_data_to_teams(dict_data, file_name, file_type=file_type)
+            if os.path.exists(correct_data_file_path):
+                dict_data = add_old_data_to_teams(dict_data, correct_data_file, file_type=file_type)
     # If data is valid again, we overwrite
     if is_valid_league_dict(dict_data) or ignore_valid_file:
         # Check if the file exists and delete it
