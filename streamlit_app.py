@@ -404,7 +404,8 @@ def display_valid_formations(formation_score_players_by_score, current_players, 
         missing_blinded = blinded_players_names - player_names
         missing_ordered = [cp for cp in current_players_copy if cp.name in missing_blinded]
 
-        st.markdown(f"### {t("formations.name")} {formation}: {score:.3f} {t("formations.points")} – 💰 {price}M")
+        # st.markdown(f"### {t("formations.name")} {formation}: {score:.3f} {t("formations.points")} – 💰 {price}M")
+        st.markdown(f"### {t("formations.name")} {formation}: {score:.0f} {t("formations.points")} – 💰 {price}M")
         if missing_ordered:
             # st.warning(f"No se pudo incluir a: {', '.join(missing_ordered)} con el presupuesto dado")
             for missing_player in missing_ordered:
