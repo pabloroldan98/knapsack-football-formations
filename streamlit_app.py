@@ -78,7 +78,7 @@ I18N = {
     "competition.seriea": {"es": "Serie A", "en": "Serie A"},
     "competition.ligueone": {"es": "Ligue 1", "en": "Ligue 1"},
     "competition.bundesliga": {"es": "Bundesliga", "en": "Bundesliga"},
-    "competition.segunda": {"es": "Segunda División", "en": "Segunda Division"},
+    "competition.segunda": {"es": "Segunda División", "en": "Spanish Second Division"},
     "competition.mundialito": {"es": "Mundialito de Clubes", "en": "Club World Cup"},
     "competition.champions": {"es": "Champions League", "en": "Champions League"},
     "competition.europaleague": {"es": "Europa League", "en": "Europa League"},
