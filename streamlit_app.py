@@ -1022,7 +1022,7 @@ with tabs[0]:
 
     with st.expander(t("sb.extra_filters"), expanded=True):
         use_fixture_filter = st.radio(
-            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if divide_millions else 1,key="fixture_filter_budget"
+            t("sb.exclude_hard_fixtures"), [t("opt.no"), t("opt.yes")], index=0 if is_biwenger else 1,key="fixture_filter_budget"
         ) == t("opt.yes")
         # threshold_slider = st.slider("Probabilidad mínima de titularidad (%)", 0, 100, 65, key="prob_threshold_budget")
         # threshold = threshold_slider / 100

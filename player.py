@@ -361,7 +361,8 @@ def purge_eliminated_players(players_list, qualified_teams):
 
 
 def purge_non_starting_players(players_list, probability_threshold=0.5):
-    if probability_threshold and not all(player.start_probability == 0 for player in players_list):
+    # if probability_threshold and not all(player.start_probability == 0 for player in players_list):
+    if probability_threshold is not None and not all(player.start_probability == 0 for player in players_list):
         result_players = [
             player for player in players_list
             if (player.start_probability >= probability_threshold)
@@ -1271,17 +1272,6 @@ def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_bo
     for player in result_players:
         player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, ignore_gk_fixture, nerf_form, skip_arrows, arrows_data)
     return result_players
-
-
-def set_players_value_to_last_fitness(players_list):
-    purged_list = purge_non_starting_players(players_list)
-    for player in purged_list:
-        if player.fitnesss[0] is None:
-            player.value = float(player.fitness[1])
-        else:
-            player.value = float(player.fitness[0])
-    repurged_list = purge_negative_values(purged_list)
-    return repurged_list
 
 
 def set_players_value_to_last_fitness(players_list):
