@@ -661,7 +661,7 @@ if __name__ == "__main__":
     #         if current_player.name == future_player.name:
     #             # Calculate the mean of value, form, and fixture
     #             current_player.value = (current_player.value + future_player.value) / 2
-    #             current_player.show_value = (current_player.show_value + future_player.show_value) / 2
+    #             current_player.show_value = current_player.calc_show_value()
     #             current_player.form = (current_player.form + future_player.form) / 2
     #             current_player.fixture = (current_player.fixture + future_player.fixture) / 2
 

@@ -725,6 +725,7 @@ if sort_option == t("sort.worth"):
 
 # Jornada
 selected_jornada = []
+selected_num_jornadas = 1
 if is_laliga:
     jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
     display_to_key = {key.replace("_", " ").strip().title().replace("Jornada", t("sb.jornada")): key for key in jornadas_dict}
@@ -914,7 +915,7 @@ with st.spinner(t("loader.players")):
                     for fp in future_players:
                         if cp.name == fp.name:
                             cp.value = (cp.value + fp.value) / 2
-                            cp.show_value = (cp.show_value + fp.show_value) / 2
+                            cp.show_value = cp.calc_show_value()
                             cp.form = (cp.form + fp.form) / 2
                             cp.fixture = (cp.fixture + fp.fixture) / 2
             elif selected_num_jornadas == 3:
@@ -923,7 +924,7 @@ with st.spinner(t("loader.players")):
                         for dp in distant_players:
                             if cp.name == fp.name == dp.name:
                                 cp.value = (cp.value + fp.value + dp.value) / 3
-                                cp.show_value = (cp.show_value + fp.show_value + dp.show_value) / 3
+                                cp.show_value = cp.calc_show_value()
                                 cp.form = (cp.form + fp.form + dp.form) / 3
                                 cp.fixture = (cp.fixture + fp.fixture + dp.fixture) / 3
 
