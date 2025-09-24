@@ -360,6 +360,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Elvin Cafarquliyev": "Jafarguliyev",
         "Amad Traoré": "Amad Diallo",
         "Rodri Hernández": "Rodrigo",
+        "Olzhas Baibek": "Baybek",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
