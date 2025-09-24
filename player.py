@@ -231,9 +231,9 @@ class Player:
             value = self.value
         round_value = round(value, 1)
 
-        if round_value <= -0.1:
+        if round_value <= 0.9:
             predicted_show_value = -7
-        elif 0 <= round_value <= 4.9:
+        elif 1.0 <= round_value <= 4.9:
             predicted_show_value = -6
         elif 5.0 <= round_value <= 5.1:
             predicted_show_value = -5
