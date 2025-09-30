@@ -652,7 +652,7 @@ if __name__ == "__main__":
         # host_team="US",
         # debug=False,
     # )
-    # current_players = get_current_players_wrapper("champions")
+    # current_players = get_current_players_wrapper("champions")#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place
