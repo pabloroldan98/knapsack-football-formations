@@ -168,7 +168,7 @@ def get_current_players(
         print("BBBBBB")
     if add_start_probability:
         players_start_probabilities = get_players_start_probabilities_dict(file_names=start_probability_file_names)
-        partial_players_data = set_start_probabilities(partial_players_data, players_start_probabilities, verbose=False)
+        partial_players_data = set_start_probabilities(partial_players_data, players_start_probabilities, is_tournament=ignore_gk_fixture, verbose=False)
     if debug:
         print("CCCCCC")
 

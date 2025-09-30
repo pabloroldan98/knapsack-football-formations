@@ -929,7 +929,7 @@ def get_players_start_probabilities_dict(
     return players_dict
 
 
-def set_start_probabilities(players_list, full_players_start_probabilities_dict, verbose=False):
+def set_start_probabilities(players_list, full_players_start_probabilities_dict, is_tournament=False, verbose=False):
     result_players = copy.deepcopy(players_list)
 
     team_players_dict = get_team_players_dict(result_players, full_players_start_probabilities_dict, verbose) #, True)
@@ -940,7 +940,8 @@ def set_start_probabilities(players_list, full_players_start_probabilities_dict,
         valid_probs = [p for p in start_probabilities if p is not None]
         new_start_probability = round(sum(valid_probs) / len(valid_probs), 4) if valid_probs else 0
         num_probability_files = team_players_dict[player.team]["num_probability_files"]
-        if 0 < num_probability_files <= 2:
+        # if 0 < num_probability_files <= 2:
+        if (0 < num_probability_files <= 2) or is_tournament:
             new_start_probability = round(sum(valid_probs) / num_probability_files, 4) if valid_probs else 0
         # if player.status == "sanctioned":
         #     new_start_probability = 0
