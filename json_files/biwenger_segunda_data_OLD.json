@@ -87,7 +87,7 @@
           "id": 4566,
           "name": "Round 7",
           "short": "R7",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4567,
@@ -306,208 +306,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4566,
-        "name": "Round 7",
-        "short": "R7",
-        "status": "active",
-        "end": 1759244400,
-        "type": "round",
-        "games": [
-          {
-            "id": 46957,
-            "date": 1759170600,
-            "status": "finished",
-            "home": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 0
-            },
-            "away": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 1
-            }
-          },
-          {
-            "id": 46948,
-            "date": 1759086000,
-            "status": "finished",
-            "home": {
-              "id": 157,
-              "name": "Huesca",
-              "slug": "huesca",
-              "score": 0
-            },
-            "away": {
-              "id": 290,
-              "name": "Granada",
-              "slug": "granada",
-              "score": 1
-            }
-          },
-          {
-            "id": 46950,
-            "date": 1759077000,
-            "status": "finished",
-            "home": {
-              "id": 156,
-              "name": "Real Valladolid",
-              "slug": "real-valladolid",
-              "score": 0
-            },
-            "away": {
-              "id": 293,
-              "name": "Cultural Leonesa",
-              "slug": "cultural-leonesa",
-              "score": 1
-            }
-          },
-          {
-            "id": 46953,
-            "date": 1759077000,
-            "status": "finished",
-            "home": {
-              "id": 291,
-              "name": "Sporting",
-              "slug": "sporting",
-              "score": 3
-            },
-            "away": {
-              "id": 295,
-              "name": "Albacete",
-              "slug": "albacete",
-              "score": 4
-            }
-          },
-          {
-            "id": 46955,
-            "date": 1759068900,
-            "status": "finished",
-            "home": {
-              "id": 159,
-              "name": "Cádiz",
-              "slug": "cadiz",
-              "score": 0
-            },
-            "away": {
-              "id": 780,
-              "name": "Ceuta",
-              "slug": "ceuta",
-              "score": 0
-            }
-          },
-          {
-            "id": 46958,
-            "date": 1759068900,
-            "status": "finished",
-            "home": {
-              "id": 588,
-              "name": "Burgos CF",
-              "slug": "burgos-cf",
-              "score": 2
-            },
-            "away": {
-              "id": 422,
-              "name": "Málaga",
-              "slug": "malaga",
-              "score": 1
-            }
-          },
-          {
-            "id": 46952,
-            "date": 1759060800,
-            "status": "finished",
-            "home": {
-              "id": 587,
-              "name": "Real Sociedad B",
-              "slug": "real-sociedad-b",
-              "score": 1
-            },
-            "away": {
-              "id": 160,
-              "name": "Córdoba",
-              "slug": "cordoba",
-              "score": 1
-            }
-          },
-          {
-            "id": 46949,
-            "date": 1758999600,
-            "status": "finished",
-            "home": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 0
-            },
-            "away": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 1
-            }
-          },
-          {
-            "id": 46951,
-            "date": 1758990600,
-            "status": "finished",
-            "home": {
-              "id": 584,
-              "name": "Eibar",
-              "slug": "eibar",
-              "score": 1
-            },
-            "away": {
-              "id": 421,
-              "name": "Deportivo",
-              "slug": "deportivo",
-              "score": 1
-            }
-          },
-          {
-            "id": 46954,
-            "date": 1758990600,
-            "status": "finished",
-            "home": {
-              "id": 471,
-              "name": "Racing",
-              "slug": "racing",
-              "score": 1
-            },
-            "away": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 2
-            }
-          },
-          {
-            "id": 46956,
-            "date": 1758911400,
-            "status": "finished",
-            "home": {
-              "id": 171,
-              "name": "Mirandes",
-              "slug": "mirandes",
-              "score": 0
-            },
-            "away": {
-              "id": 154,
-              "name": "Zaragoza",
-              "slug": "zaragoza",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 578039
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35069": {
         "id": 35069,
@@ -933,7 +732,8 @@
           2,
           2,
           2,
-          6
+          6,
+          null
         ],
         "points": 12,
         "pointsHome": 2,
@@ -1341,6 +1141,7 @@
         "playedAway": 0,
         "fitness": [
           2,
+          null,
           null,
           null,
           null
@@ -1775,7 +1576,8 @@
           6,
           11,
           2,
-          2
+          2,
+          null
         ],
         "points": 21,
         "pointsHome": 2,
@@ -2254,7 +2056,9 @@
         "fitness": [
           null,
           null,
-          2
+          2,
+          null,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -2349,7 +2153,9 @@
         "fitness": [
           null,
           null,
-          -2
+          -2,
+          null,
+          null
         ],
         "points": -2,
         "pointsHome": 0,
@@ -2685,6 +2491,7 @@
           null,
           -2,
           2,
+          null,
           null
         ],
         "points": 0,
@@ -2753,6 +2560,9 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
+          null,
           null,
           null
         ],
@@ -3617,14 +3427,14 @@
         "playedHome": 3,
         "playedAway": 1,
         "fitness": [
-          0,
+          2,
           null,
           null,
           0,
           2
         ],
-        "points": 4,
-        "pointsHome": 4,
+        "points": 6,
+        "pointsHome": 6,
         "pointsAway": 0,
         "pointsLastSeason": 86
       },
@@ -3933,7 +3743,8 @@
           -2,
           2,
           2,
-          2
+          2,
+          null
         ],
         "points": 4,
         "pointsHome": 0,
@@ -4437,6 +4248,7 @@
           null,
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -4558,7 +4370,8 @@
           null,
           null,
           0,
-          2
+          null,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -4725,6 +4538,7 @@
           2,
           null,
           null,
+          null,
           null
         ],
         "points": 2,
@@ -4745,6 +4559,7 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -4796,6 +4611,7 @@
           2,
           2,
           2,
+          null,
           null
         ],
         "points": 6,
@@ -4938,10 +4754,13 @@
         "playedAway": 0,
         "fitness": [
           2,
-          6
+          6,
+          null,
+          null,
+          null
         ],
-        "points": 6,
-        "pointsHome": 6,
+        "points": 8,
+        "pointsHome": 8,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -5514,7 +5333,8 @@
           "doubt",
           2,
           -2,
-          10
+          10,
+          null
         ],
         "points": 10,
         "pointsHome": -2,
@@ -5657,7 +5477,8 @@
           2,
           2,
           2,
-          6
+          6,
+          null
         ],
         "points": 12,
         "pointsHome": 4,
@@ -5704,7 +5525,8 @@
           null,
           null,
           null,
-          0
+          0,
+          null
         ],
         "points": 0,
         "pointsHome": 0,
@@ -6039,7 +5861,8 @@
           null,
           null,
           0,
-          6
+          6,
+          null
         ],
         "points": 6,
         "pointsHome": 0,
@@ -6666,7 +6489,8 @@
           6,
           null,
           2,
-          "discarded"
+          "discarded",
+          null
         ],
         "points": 8,
         "pointsHome": 0,
@@ -7099,6 +6923,7 @@
           null,
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -7337,7 +7162,10 @@
         "playedAway": 1,
         "fitness": [
           2,
-          2
+          null,
+          null,
+          null,
+          null
         ],
         "points": 4,
         "pointsHome": 2,
@@ -7529,7 +7357,8 @@
           null,
           -2,
           2,
-          2
+          2,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -8250,6 +8079,7 @@
           2,
           null,
           null,
+          null,
           null
         ],
         "points": 2,
@@ -8369,7 +8199,8 @@
           null,
           -2,
           2,
-          2
+          2,
+          null
         ],
         "points": 2,
         "pointsHome": 4,
@@ -8847,6 +8678,8 @@
         "fitness": [
           null,
           null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -8991,6 +8824,7 @@
           null,
           6,
           6,
+          null,
           null
         ],
         "points": 12,
@@ -9035,6 +8869,7 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -9997,6 +9832,7 @@
           -2,
           2,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -10482,7 +10318,7 @@
           "injured",
           "injured",
           "injured",
-          "doubt"
+          null
         ],
         "points": 10,
         "pointsHome": 4,
@@ -10505,6 +10341,7 @@
           null,
           2,
           0,
+          null,
           null
         ],
         "points": 2,
@@ -10672,7 +10509,8 @@
           null,
           null,
           null,
-          -2
+          -2,
+          null
         ],
         "points": -2,
         "pointsHome": 0,
@@ -10743,7 +10581,8 @@
           6,
           6,
           2,
-          9
+          9,
+          null
         ],
         "points": 23,
         "pointsHome": 8,
@@ -10910,6 +10749,7 @@
           2,
           2,
           null,
+          null,
           null
         ],
         "points": 4,
@@ -11005,7 +10845,8 @@
           2,
           -2,
           2,
-          6
+          6,
+          null
         ],
         "points": 8,
         "pointsHome": 8,
@@ -11245,6 +11086,7 @@
           -2,
           6,
           2,
+          null,
           null
         ],
         "points": 6,
@@ -11530,7 +11372,11 @@
         "playedHome": 1,
         "playedAway": 0,
         "fitness": [
-          0
+          0,
+          null,
+          null,
+          null,
+          null
         ],
         "points": 0,
         "pointsHome": 0,
@@ -11937,7 +11783,9 @@
         "fitness": [
           null,
           null,
-          0
+          0,
+          null,
+          null
         ],
         "points": 0,
         "pointsHome": 0,
@@ -12008,6 +11856,7 @@
           2,
           0,
           null,
+          null,
           null
         ],
         "points": 2,
@@ -12055,7 +11904,8 @@
           null,
           null,
           2,
-          2
+          null,
+          null
         ],
         "points": 4,
         "pointsHome": 4,
@@ -12078,7 +11928,8 @@
           null,
           null,
           0,
-          9
+          9,
+          null
         ],
         "points": 9,
         "pointsHome": 9,
@@ -12316,6 +12167,7 @@
         "playedAway": 0,
         "fitness": [
           6,
+          null,
           null,
           null,
           null
@@ -12991,7 +12843,8 @@
           null,
           null,
           null,
-          2
+          2,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -13038,6 +12891,7 @@
           null,
           2,
           2,
+          null,
           null
         ],
         "points": 4,
@@ -13203,7 +13057,10 @@
         "playedAway": 1,
         "fitness": [
           6,
-          2
+          2,
+          null,
+          null,
+          null
         ],
         "points": 8,
         "pointsHome": 2,
@@ -14468,7 +14325,7 @@
       }
     },
     "update": 1759287610,
-    "etag": 3448257386,
+    "etag": 2282310109,
     "scoreID": 1
   },
   "meta": {
