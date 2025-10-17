@@ -214,6 +214,7 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
 
     else:
         teams_status_num_dict = {}
+        teams_img_links_dict = {}
         for championship_team_id in championship_teams:
             team_name = championship_teams[str(championship_team_id)]["name"]
 
@@ -230,8 +231,10 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                     player_status = championship_player["status"]
                     if player_status in team_status_num:
                         team_status_num[player_status] += 1
+            team_img_link = f"https://cdn.biwenger.com/i/t/{championship_team_id}.png"
 
             teams_status_num_dict[team_name] = team_status_num
+            teams_img_links_dict[team_name] = team_img_link
 
         for new_match in forced_matches:
             home_team = new_match[0]
@@ -247,7 +250,7 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 else:
                     is_team_home = False
             try:
-                team_status_num = teams_status_num_dict[away_team]
+                team_status_num = teams_status_num_dict[home_team]
             except:
                 team_status_num = {
                     "ok": 0,
@@ -256,6 +259,10 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                     "sanctioned": 0,
                     "warned": 0,
                 }
+            try:
+                team_img_link = teams_img_links_dict[home_team]
+            except:
+                team_img_link = "https://cdn.biwenger.com/i/t/XXXXX.png"
             new_team = Team(
                 name=home_team,
                 next_opponent=away_team,
@@ -265,7 +272,8 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 num_injured=team_status_num["injured"],
                 num_doubt=team_status_num["doubt"],
                 num_sanctioned=team_status_num["sanctioned"],
-                num_warned=team_status_num["warned"]
+                num_warned=team_status_num["warned"],
+                img_link=team_img_link
             )
             teams_list.append(new_team)
 
@@ -288,6 +296,10 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                     "sanctioned": 0,
                     "warned": 0,
                 }
+            try:
+                team_img_link = teams_img_links_dict[away_team]
+            except:
+                team_img_link = "https://cdn.biwenger.com/i/t/XXXXX.png"
             new_team = Team(
                 name=away_team,
                 next_opponent=home_team,
@@ -297,7 +309,8 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
                 num_injured=team_status_num["injured"],
                 num_doubt=team_status_num["doubt"],
                 num_sanctioned=team_status_num["sanctioned"],
-                num_warned=team_status_num["warned"]
+                num_warned=team_status_num["warned"],
+                img_link=team_img_link
             )
             teams_list.append(new_team)
 
