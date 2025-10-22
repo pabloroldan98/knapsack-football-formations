@@ -24,6 +24,7 @@ class AnaliticaFantasyScraper:
         )
         self.session = requests.Session()
         self.driver = create_driver()
+        self.big_wait = WebDriverWait(self.driver, 60)
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
         self.headers = {
@@ -40,7 +41,7 @@ class AnaliticaFantasyScraper:
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         print("AAAAA")
-        response = self.session.get(url, headers=self.headers, verify=False, timeout=500)
+        response = self.session.get(url, headers=self.headers, verify=False)
         print("BBBB")
         response.raise_for_status()
         return response.text
@@ -119,7 +120,7 @@ class AnaliticaFantasyScraper:
             # )
         else:
             print("FFFF")
-            els = self.wait.until(
+            els = self.big_wait.until(
                 EC.presence_of_all_elements_located(
                     (By.CSS_SELECTOR, 'a[href^="/partido/"]')
                 )
