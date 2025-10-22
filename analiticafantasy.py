@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
     create_driver  # same as before
@@ -257,7 +258,7 @@ class AnaliticaFantasyScraper:
         """
         print("1111")
         # To get an error if there is no page
-        self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
+        main_html = self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
         print("2222")
         # main_html = self.fetch_response(self.base_url)
         # self.fetch_page(self.base_url)
@@ -306,7 +307,11 @@ class AnaliticaFantasyScraper:
 
         # match_links = self.get_match_links(main_html)
         print("6666")
-        match_links = self.get_match_links()
+        try:
+            match_links = self.get_match_links()
+        except TimeoutException:
+            print("676767")
+            match_links = self.get_match_links(main_html)
         print("7777")
         for url in match_links:
             match_data = self.parse_lineup_page(url)
