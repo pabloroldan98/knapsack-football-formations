@@ -39,7 +39,9 @@ class AnaliticaFantasyScraper:
 
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        print("AAAAA")
         response = self.session.get(url, headers=self.headers, verify=False, timeout=500)
+        print("BBBB")
         response.raise_for_status()
         return response.text
 
