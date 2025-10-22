@@ -8,6 +8,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from requests.exceptions import ReadTimeout
+from urllib3.exceptions import ReadTimeoutError
+from http.client import RemoteDisconnected
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
     create_driver  # same as before
@@ -25,7 +28,6 @@ class AnaliticaFantasyScraper:
         )
         self.session = requests.Session()
         self.driver = create_driver()
-        self.big_wait = WebDriverWait(self.driver, 60)
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
         self.headers = {
@@ -41,9 +43,7 @@ class AnaliticaFantasyScraper:
 
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        print("AAAAA")
         response = self.session.get(url, headers=self.headers, verify=False)
-        print("BBBB")
         response.raise_for_status()
         return response.text
 
@@ -62,10 +62,8 @@ class AnaliticaFantasyScraper:
         Return the full absolute URLs.
         """
         links = []
-        print("QQQQ")
         if html:
             soup = BeautifulSoup(html, "html.parser")
-            print("WWWW")
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/equipo/"):
                     # Construct the full URL
@@ -82,7 +80,6 @@ class AnaliticaFantasyScraper:
                     (By.CSS_SELECTOR, 'a[href^="/equipo/"]')
                 )
             )
-            print("EEEE")
             for el in els:
                 href = el.get_attribute("href") or ""
                 # Some drivers resolve to absolute; others keep it relative
@@ -95,7 +92,6 @@ class AnaliticaFantasyScraper:
                         full_url = href
                 if full_url:
                     links.append(full_url)
-        print("RRRR")
         return self._dedup_preserve_order(links)
 
     def get_match_links(self, html=None):
@@ -105,9 +101,7 @@ class AnaliticaFantasyScraper:
         Return the full absolute URLs.
         """
         links = []
-        print("SSSS")
         if html:
-            print("DDDD")
             soup = BeautifulSoup(html, "html.parser")
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/partido/"):
@@ -120,13 +114,11 @@ class AnaliticaFantasyScraper:
             #     key=lambda u: int(u.split('/')[4])
             # )
         else:
-            print("FFFF")
-            els = self.big_wait.until(
+            els = self.wait.until(
                 EC.presence_of_all_elements_located(
                     (By.CSS_SELECTOR, 'a[href^="/partido/"]')
                 )
             )
-            print("GGGG")
             for el in els:
                 href = el.get_attribute("href") or ""
                 # Some drivers resolve to absolute; others keep it relative
@@ -139,7 +131,6 @@ class AnaliticaFantasyScraper:
                         full_url = href
                 if full_url:
                     links.append(full_url)
-        print("HHHH")
         return self._dedup_preserve_order(links)
 
     def parse_lineup_page(self, match_url):
@@ -256,14 +247,11 @@ class AnaliticaFantasyScraper:
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
-        print("1111")
         # To get an error if there is no page
         main_html = self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
-        print("2222")
         # main_html = self.fetch_response(self.base_url)
         # self.fetch_page(self.base_url)
         self.fetch_page(f"{self.base_url}/{self.competition}/alineaciones-probables")
-        print("3333")
         # print(f"{self.base_url}/{self.competition}/alineaciones-probables")
 
         prices_dict = {}
@@ -273,11 +261,13 @@ class AnaliticaFantasyScraper:
         probabilities_dict = {}
 
         # team_links = self.get_team_links(main_html)
-        team_links = self.get_team_links()
-        print("4444")
+        try:
+            team_links = self.get_team_links()
+        except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
+            print("Fallback team links")
+            team_links = self.get_team_links(main_html)
         for url in team_links:
             match_data = self.parse_lineup_page(url)
-            print("5555")
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:
@@ -306,16 +296,13 @@ class AnaliticaFantasyScraper:
                     price_trends_dict[team_name][player_name] = data_val
 
         # match_links = self.get_match_links(main_html)
-        print("6666")
         try:
             match_links = self.get_match_links()
-        except:
-            print("676767")
+        except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
+            print("Fallback match links")
             match_links = self.get_match_links(main_html)
-        print("7777")
         for url in match_links:
             match_data = self.parse_lineup_page(url)
-            print("8888")
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:
@@ -342,7 +329,6 @@ class AnaliticaFantasyScraper:
                     price_trends_dict[team_name] = {}
                 for player_name, data_val in players.items():
                     price_trends_dict[team_name][player_name] = data_val
-        print("9999")
 
         return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
 
