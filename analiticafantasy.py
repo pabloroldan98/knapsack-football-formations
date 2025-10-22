@@ -309,7 +309,7 @@ class AnaliticaFantasyScraper:
         print("6666")
         try:
             match_links = self.get_match_links()
-        except TimeoutException:
+        except:
             print("676767")
             match_links = self.get_match_links(main_html)
         print("7777")
