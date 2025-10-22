@@ -63,7 +63,7 @@ class AnaliticaFantasyScraper:
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/equipo/"):
                     # Construct the full URL
-                    full_url = f"{self.base_url}{a_tag["href"]}"
+                    full_url = f"{self.base_url}{a_tag['href']}"
                     links.append(full_url)
             # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
             # links = sorted(
@@ -102,7 +102,7 @@ class AnaliticaFantasyScraper:
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/partido/"):
                     # Construct the full URL
-                    full_url = f"{self.base_url}{a_tag["href"]}"
+                    full_url = f"{self.base_url}{a_tag['href']}"
                     links.append(full_url)
             # # WE DO NOT USE THIS BECAUSE IT IS BETTER THE ORDER IT HAS IN THE HTML
             # links = sorted(
