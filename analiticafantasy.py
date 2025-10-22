@@ -103,7 +103,9 @@ class AnaliticaFantasyScraper:
         Return the full absolute URLs.
         """
         links = []
+        print("SSSS")
         if html:
+            print("DDDD")
             soup = BeautifulSoup(html, "html.parser")
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/partido/"):
@@ -116,11 +118,13 @@ class AnaliticaFantasyScraper:
             #     key=lambda u: int(u.split('/')[4])
             # )
         else:
+            print("FFFF")
             els = self.wait.until(
                 EC.presence_of_all_elements_located(
                     (By.CSS_SELECTOR, 'a[href^="/partido/"]')
                 )
             )
+            print("GGGG")
             for el in els:
                 href = el.get_attribute("href") or ""
                 # Some drivers resolve to absolute; others keep it relative
@@ -133,6 +137,7 @@ class AnaliticaFantasyScraper:
                         full_url = href
                 if full_url:
                     links.append(full_url)
+        print("HHHH")
         return self._dedup_preserve_order(links)
 
     def parse_lineup_page(self, match_url):
