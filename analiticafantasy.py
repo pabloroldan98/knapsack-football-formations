@@ -60,8 +60,10 @@ class AnaliticaFantasyScraper:
         Return the full absolute URLs.
         """
         links = []
+        print("QQQQ")
         if html:
             soup = BeautifulSoup(html, "html.parser")
+            print("WWWW")
             for a_tag in soup.find_all("a", href=True):
                 if a_tag["href"].startswith("/equipo/"):
                     # Construct the full URL
@@ -78,6 +80,7 @@ class AnaliticaFantasyScraper:
                     (By.CSS_SELECTOR, 'a[href^="/equipo/"]')
                 )
             )
+            print("EEEE")
             for el in els:
                 href = el.get_attribute("href") or ""
                 # Some drivers resolve to absolute; others keep it relative
@@ -90,6 +93,7 @@ class AnaliticaFantasyScraper:
                         full_url = href
                 if full_url:
                     links.append(full_url)
+        print("RRRR")
         return self._dedup_preserve_order(links)
 
     def get_match_links(self, html=None):
