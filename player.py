@@ -267,16 +267,38 @@ class Player:
             predicted_show_value = 9
         elif 8.0 <= round_value <= 8.1:
             predicted_show_value = 10
-        elif 8.2 <= round_value <= 8.5:
+        # elif 8.2 <= round_value <= 8.5:
+        #     predicted_show_value = 11
+        # elif 8.6 <= round_value <= 8.9:
+        #     predicted_show_value = 12
+        # elif 9.0 <= round_value <= 9.4:
+        #     predicted_show_value = 13
+        # elif 9.5 <= round_value <= 10.0:
+        #     predicted_show_value = 14
+        # elif 10.1 <= round_value:
+        #     predicted_show_value = 15
+        elif 8.2 <= round_value <= 8.3:
             predicted_show_value = 11
-        elif 8.6 <= round_value <= 8.9:
+        elif 8.4 <= round_value <= 8.5:
             predicted_show_value = 12
-        elif 9.0 <= round_value <= 9.4:
+        elif 8.6 <= round_value <= 8.7:
             predicted_show_value = 13
-        elif 9.5 <= round_value <= 10.0:
+        elif 8.8 <= round_value <= 8.9:
             predicted_show_value = 14
-        elif 10.1 <= round_value:
+        elif 9.0 <= round_value <= 9.1:
             predicted_show_value = 15
+        elif 9.2 <= round_value <= 9.3:
+            predicted_show_value = 16
+        elif 9.4 <= round_value <= 9.5:
+            predicted_show_value = 17
+        elif 9.6 <= round_value <= 9.7:
+            predicted_show_value = 18
+        elif 9.8 <= round_value <= 9.9:
+            predicted_show_value = 19
+        elif 10.0 <= round_value <= 10.1:
+            predicted_show_value = 20
+        elif 10.2 <= round_value:
+            predicted_show_value = int((int(round_value * 10) - 60) // 2)
         else:
             predicted_show_value = 0
 

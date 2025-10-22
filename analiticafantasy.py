@@ -301,8 +301,6 @@ class AnaliticaFantasyScraper:
         except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
             print("Fallback match links")
             match_links = self.get_match_links(main_html)
-        print("match_links")
-        print(match_links)
         for url in match_links:
             match_data = self.parse_lineup_page(url)
             # Merge match_data into probabilities_dict
