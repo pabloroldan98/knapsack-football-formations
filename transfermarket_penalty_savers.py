@@ -135,7 +135,9 @@ class TransfermarktScraper:
                     minute_text = minute_elem.text.replace("'", "").strip()
                     if minute_text.isdigit():
                         # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
-                        date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                        # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                        date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+                        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
                         penalty_saves.append({
                             'is_saved': is_penalty_saved,
                             'date': date_obj,
@@ -150,7 +152,9 @@ class TransfermarktScraper:
                     minute_text = minute_elem.text.replace("'", "").strip()
                     if minute_text.isdigit():
                         # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
-                        date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                        # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                        date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+                        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
                         penalty_saves.append({
                             'is_saved': is_penalty_saved,
                             'date': date_obj,

@@ -89,7 +89,10 @@ class TransfermarktScraper:
                         is_goal = True if is_goal_text == "in" else False
                         if minute_text.isdigit():
                             # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
-                            date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                            # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+                            # date_obj = datetime.strptime(date_elem.text.strip(), "%d/%m/%Y")
+                            date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+                            date_obj = datetime.strptime(date_str, "%d/%m/%Y")
                             player_name = name_elem['title']
                             player_name = find_manual_similar_string(player_name)
                             takers.append({
