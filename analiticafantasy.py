@@ -245,11 +245,14 @@ class AnaliticaFantasyScraper:
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
+        print("1111")
         # To get an error if there is no page
         self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
+        print("2222")
         # main_html = self.fetch_response(self.base_url)
         # self.fetch_page(self.base_url)
         self.fetch_page(f"{self.base_url}/{self.competition}/alineaciones-probables")
+        print("3333")
         # print(f"{self.base_url}/{self.competition}/alineaciones-probables")
 
         prices_dict = {}
@@ -260,8 +263,10 @@ class AnaliticaFantasyScraper:
 
         # team_links = self.get_team_links(main_html)
         team_links = self.get_team_links()
+        print("4444")
         for url in team_links:
             match_data = self.parse_lineup_page(url)
+            print("5555")
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:
@@ -290,9 +295,12 @@ class AnaliticaFantasyScraper:
                     price_trends_dict[team_name][player_name] = data_val
 
         # match_links = self.get_match_links(main_html)
+        print("6666")
         match_links = self.get_match_links()
+        print("7777")
         for url in match_links:
             match_data = self.parse_lineup_page(url)
+            print("8888")
             # Merge match_data into probabilities_dict
             for team_name, players in match_data["prices"].items():
                 if team_name not in prices_dict:
@@ -319,6 +327,7 @@ class AnaliticaFantasyScraper:
                     price_trends_dict[team_name] = {}
                 for player_name, data_val in players.items():
                     price_trends_dict[team_name][player_name] = data_val
+        print("9999")
 
         return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
 
