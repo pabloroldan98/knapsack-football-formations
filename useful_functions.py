@@ -401,7 +401,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         # "Diego Aguado": "BBBBBBB",
         # "Marco Esteban": "BBBBBBB",
         # "Fortea": "BBBBBBB",
-        # "Youssef": "BBBBBBB",
+        "Youssef": "Yusi Enríquez",
         # "Thiago Pitarch": "BBBBBBB",
         # "Alex Costa": "BBBBBBB",
         # "D. Pérez": "BBBBBBB",
