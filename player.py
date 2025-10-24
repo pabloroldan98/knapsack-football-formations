@@ -679,6 +679,7 @@ def set_players_database(players_list, new_players_list, verbose=False):
     team_names = list(set(p.team for p in original_players))
     # closest_players_names = [p.name for p in original_players]
     # new_players_names = [p.name for p in result_players]
+    is_original_players_assigned_dict = {p.name: False for p in original_players}
     for player in result_players:
         player_needs_removal = True
         closest_team = find_similar_string(player.team, team_names)
@@ -704,6 +705,8 @@ def set_players_database(players_list, new_players_list, verbose=False):
                 player.fantasy_price = original_player.fantasy_price
                 player.img_link = original_player.img_link
 
+                is_original_players_assigned_dict[player.name] = True
+
         ## DABA FALLO PORQUE HAY NOMBRES COMO WILLIAM, O NICO, QUE NO LOS PONE CON QUIEN DEBERÍA
         # else:
         #     # Reviso que no vaya a ser que esté en otro equipo
@@ -727,6 +730,12 @@ def set_players_database(players_list, new_players_list, verbose=False):
             # result_players.remove(player)
             # if player.status != "unknown":
             #     print(player)
+    if verbose:
+        print()
+        print("Not assigned players from Biwenger:")
+        for name, flag in is_original_players_assigned_dict.items():
+            if not flag:
+                print(name)
 
     result_players = [
         player for player in result_players
