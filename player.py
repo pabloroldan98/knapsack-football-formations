@@ -684,15 +684,16 @@ def set_players_database(players_list, new_players_list, verbose=False):
         closest_team = find_similar_string(player.team, team_names)
 
         # Get LaLigaFantasy players in the closest team
-        closest_team_players = [p for p in original_players if p.team == closest_team]
-        closest_team_players_names = [p.name for p in closest_team_players]
+        # closest_team_players = [p for p in original_players if p.team == closest_team]
+        # closest_team_players_names = [p.name for p in closest_team_players]
+        closest_team_players_names = [p.name for p in original_players if p.team == closest_team]
 
         closest_name = find_similar_string(player.name, closest_team_players_names, fallback_none=True, verbose=False)
 
         if closest_name:
             # En este caso actualizas con los datos de LaLigaFantasy
             # original_player = next((p for p in closest_team_players if p.name == closest_name), None)
-            original_player = next((p for p in original_players if p.name == closest_name), None)
+            original_player = next((p for p in original_players if p.name == closest_name and p.team == closest_team), None)
             if original_player:
                 player_needs_removal = False
                 if verbose:
@@ -721,7 +722,7 @@ def set_players_database(players_list, new_players_list, verbose=False):
         if player_needs_removal:
             # Este es el caso en el que está en LaLigaFantasy y no en Biwenger, o que no lo haya cogido bien
             if verbose:
-                print(f"{player.name} --> REMOVED ({player.status})")
+                print(f"{player.name} ({player.team} - {player.position}) --> REMOVED ({player.status}) ~ {player.price}")
             players_to_remove.add((player.name, player.team))
             # result_players.remove(player)
             # if player.status != "unknown":
