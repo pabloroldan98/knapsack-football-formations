@@ -97,7 +97,7 @@
           "id": 4649,
           "name": "Round 10",
           "short": "R10",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4650,
@@ -251,172 +251,6 @@
       }
     },
     "activeEvents": [
-      {
-        "id": 4649,
-        "name": "Round 10",
-        "short": "R10",
-        "status": "active",
-        "end": 1761840000,
-        "type": "round",
-        "games": [
-          {
-            "id": 47808,
-            "date": 1761768300,
-            "status": "finished",
-            "home": {
-              "id": 43,
-              "name": "Toulouse",
-              "slug": "toulouse",
-              "score": 2
-            },
-            "away": {
-              "id": 51,
-              "name": "Rennais",
-              "slug": "rennais",
-              "score": 2
-            }
-          },
-          {
-            "id": 47809,
-            "date": 1761768300,
-            "status": "finished",
-            "home": {
-              "id": 776,
-              "name": "Paris FC",
-              "slug": "paris-fc",
-              "score": 3
-            },
-            "away": {
-              "id": 48,
-              "name": "Lyon",
-              "slug": "lyon",
-              "score": 3
-            }
-          },
-          {
-            "id": 47810,
-            "date": 1761768300,
-            "status": "finished",
-            "home": {
-              "id": 286,
-              "name": "Strasbourg",
-              "slug": "strasbourg",
-              "score": 3
-            },
-            "away": {
-              "id": 638,
-              "name": "Auxerre",
-              "slug": "auxerre",
-              "score": 0
-            }
-          },
-          {
-            "id": 47811,
-            "date": 1761768300,
-            "status": "finished",
-            "home": {
-              "id": 47,
-              "name": "Nantes",
-              "slug": "nantes",
-              "score": 3
-            },
-            "away": {
-              "id": 45,
-              "name": "Monaco",
-              "slug": "monaco",
-              "score": 5
-            }
-          },
-          {
-            "id": 47813,
-            "date": 1761768300,
-            "status": "finished",
-            "home": {
-              "id": 54,
-              "name": "Marseille",
-              "slug": "marseille",
-              "score": 2
-            },
-            "away": {
-              "id": 61,
-              "name": "Angers",
-              "slug": "angers",
-              "score": 2
-            }
-          },
-          {
-            "id": 47805,
-            "date": 1761760800,
-            "status": "finished",
-            "home": {
-              "id": 53,
-              "name": "Metz",
-              "slug": "metz",
-              "score": 2
-            },
-            "away": {
-              "id": 478,
-              "name": "Lens",
-              "slug": "lens",
-              "score": 0
-            }
-          },
-          {
-            "id": 47806,
-            "date": 1761760800,
-            "status": "finished",
-            "home": {
-              "id": 46,
-              "name": "Nice",
-              "slug": "nice",
-              "score": 2
-            },
-            "away": {
-              "id": 52,
-              "name": "Lille",
-              "slug": "lille",
-              "score": 0
-            }
-          },
-          {
-            "id": 47807,
-            "date": 1761760800,
-            "status": "finished",
-            "home": {
-              "id": 684,
-              "name": "Le Havre",
-              "slug": "le-havre",
-              "score": 1
-            },
-            "away": {
-              "id": 474,
-              "name": "Stade Brest",
-              "slug": "stade-brest",
-              "score": 0
-            }
-          },
-          {
-            "id": 47812,
-            "date": 1761760800,
-            "status": "finished",
-            "home": {
-              "id": 56,
-              "name": "Lorient",
-              "slug": "lorient",
-              "score": 1
-            },
-            "away": {
-              "id": 49,
-              "name": "Paris Saint-Germain",
-              "slug": "paris-saint-germain",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 583470
-        }
-      },
       {
         "id": 4650,
         "name": "Round 11",
@@ -579,7 +413,10 @@
               "score": null
             }
           }
-        ]
+        ],
+        "pool": {
+          "id": 584561
+        }
       }
     ],
     "players": {
@@ -3476,7 +3313,9 @@
         "fitness": [
           1,
           null,
-          5
+          5,
+          null,
+          null
         ],
         "points": 6,
         "pointsHome": 5,
@@ -10803,6 +10642,30 @@
         "pointsAway": 4,
         "pointsLastSeason": 6
       },
+      "39314": {
+        "id": 39314,
+        "name": "Ryan Rodin",
+        "slug": "ryan-rodin",
+        "teamID": 638,
+        "position": 4,
+        "price": 630000,
+        "fantasyPrice": 9000000,
+        "status": "ok",
+        "priceIncrement": 0,
+        "playedHome": 0,
+        "playedAway": 1,
+        "fitness": [
+          2,
+          null,
+          null,
+          null,
+          null
+        ],
+        "points": 2,
+        "pointsHome": 0,
+        "pointsAway": 2,
+        "pointsLastSeason": null
+      },
       "20138": {
         "id": 20138,
         "name": "Salis Abdul Samed",
@@ -10888,11 +10751,11 @@
         "playedHome": 1,
         "playedAway": 2,
         "fitness": [
-          8,
-          0,
-          2,
           null,
-          null
+          8,
+          null,
+          0,
+          2
         ],
         "points": 10,
         "pointsHome": 0,
@@ -13147,7 +13010,7 @@
       }
     },
     "update": 1761883210,
-    "etag": 3436459913,
+    "etag": 1080035640,
     "scoreID": 3
   },
   "meta": {
