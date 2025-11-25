@@ -165,7 +165,7 @@ def get_penalty_takers_dict(
         for p in penalty_takers:
             key = (p["minute"], p["date"])
             combo_counts[key] = combo_counts.get(key, 0) + 1
-        filtered_penalties = [p["name"] for p in penalty_takers if combo_counts[(p["minute"], p["date"])] == 1][:6]
+        filtered_penalties = [p["name"] for p in penalty_takers if p["minute"] < 90 or combo_counts[(p["minute"], p["date"])] < 3][:6]
         # filtered_penalties = [penalty_taker["name"] for penalty_taker in penalty_takers if penalty_taker["minute"] != 120][:6]
         filtered_penalties += ["UNKNOWN"] * (6 - len(filtered_penalties))
         filtered_penalties_data[team] = filtered_penalties
