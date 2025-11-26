@@ -1135,7 +1135,7 @@ if __name__ == "__main__":
     # # Usamos el diccionario team_avg creado antes
     # diffs = []
     # for local, visitante in jornada:
-    #     diff = team_avg_dict[local] - team_avg_dict[visitante]
+    #     diff = team_avg_dict.get(local, 0) - team_avg_dict.get(visitante, 0)
     #     diffs.append((local, visitante, diff))
     #
     # # Imprimir
