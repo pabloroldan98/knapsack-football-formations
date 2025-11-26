@@ -1107,7 +1107,8 @@ if __name__ == "__main__":
     # team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
     #
     # for player in worthy_players:
-    #     team_stats[player.team]["sum"] += player.sofascore_rating * player.team_elo / 10_000
+    #     team_stats[player.team]["sum"] += player.sofascore_rating * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
+    #     # team_stats[player.team]["sum"] += player.value * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
     #     team_stats[player.team]["count"] += 1
     #
     # # Calcular medias y ordenarlas
@@ -1125,9 +1126,10 @@ if __name__ == "__main__":
     #     print(f"{team}: {avg:.4f}")
     # # Partidos
     #
-    # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-    # jornada = jornadas_dict.get(get_next_jornada(), [])
-    # jornada = jornadas_dict["jornada_3"]
+    # # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+    # # jornada = jornadas_dict.get(get_next_jornada(), [])
+    # # jornada = jornadas_dict["jornada_3"]
+    # jornada = jornada_selected.copy()
     # print(team_avg_dict)
     #
     # # Usamos el diccionario team_avg creado antes
