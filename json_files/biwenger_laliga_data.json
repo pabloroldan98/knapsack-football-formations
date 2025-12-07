@@ -338,57 +338,6 @@
             }
           },
           {
-            "id": 46266,
-            "date": 1765042200,
-            "status": "finished",
-            "home": {
-              "id": 87,
-              "name": "Betis",
-              "slug": "betis",
-              "score": 3
-            },
-            "away": {
-              "id": 3,
-              "name": "Barcelona",
-              "slug": "barcelona",
-              "score": 5
-            }
-          },
-          {
-            "id": 46268,
-            "date": 1765034100,
-            "status": "finished",
-            "home": {
-              "id": 91,
-              "name": "Alavés",
-              "slug": "alaves",
-              "score": 1
-            },
-            "away": {
-              "id": 13,
-              "name": "Real Sociedad",
-              "slug": "real-sociedad",
-              "score": 0
-            }
-          },
-          {
-            "id": 46261,
-            "date": 1765026000,
-            "status": "finished",
-            "home": {
-              "id": 19,
-              "name": "Villarreal",
-              "slug": "villarreal",
-              "score": 2
-            },
-            "away": {
-              "id": 8,
-              "name": "Getafe",
-              "slug": "getafe",
-              "score": 0
-            }
-          },
-          {
             "id": 46267,
             "date": 1765112400,
             "status": "preview",
@@ -403,6 +352,23 @@
               "name": "Girona",
               "slug": "girona",
               "score": null
+            }
+          },
+          {
+            "id": 46266,
+            "date": 1765042200,
+            "status": "finished",
+            "home": {
+              "id": 87,
+              "name": "Betis",
+              "slug": "betis",
+              "score": 3
+            },
+            "away": {
+              "id": 3,
+              "name": "Barcelona",
+              "slug": "barcelona",
+              "score": 5
             }
           },
           {
@@ -423,6 +389,23 @@
             }
           },
           {
+            "id": 46268,
+            "date": 1765034100,
+            "status": "finished",
+            "home": {
+              "id": 91,
+              "name": "Alavés",
+              "slug": "alaves",
+              "score": 1
+            },
+            "away": {
+              "id": 13,
+              "name": "Real Sociedad",
+              "slug": "real-sociedad",
+              "score": 0
+            }
+          },
+          {
             "id": 46262,
             "date": 1765128600,
             "status": "preview",
@@ -437,6 +420,23 @@
               "name": "Rayo Vallecano",
               "slug": "rayo-vallecano",
               "score": null
+            }
+          },
+          {
+            "id": 46261,
+            "date": 1765026000,
+            "status": "finished",
+            "home": {
+              "id": 19,
+              "name": "Villarreal",
+              "slug": "villarreal",
+              "score": 2
+            },
+            "away": {
+              "id": 8,
+              "name": "Getafe",
+              "slug": "getafe",
+              "score": 0
             }
           },
           {
@@ -6082,10 +6082,10 @@
         "playedAway": 4,
         "fitness": [
           0,
-          null,
           2,
           null,
-          0
+          0,
+          2
         ],
         "points": 10,
         "pointsHome": 8,
@@ -8652,7 +8652,7 @@
         "playedAway": 3,
         "fitness": [
           null,
-          "doubt",
+          null,
           null,
           0,
           null
@@ -9195,10 +9195,10 @@
         "playedAway": 8,
         "fitness": [
           2,
-          null,
           "sanctioned",
           6,
-          2
+          2,
+          10
         ],
         "points": 48,
         "pointsHome": 32,
@@ -9620,7 +9620,7 @@
           2,
           2,
           "injured",
-          "injured",
+          null,
           2
         ],
         "points": 8,
@@ -10047,7 +10047,7 @@
         "fitness": [
           2,
           null,
-          null,
+          2,
           2,
           2
         ],
@@ -11227,10 +11227,10 @@
         "playedAway": 5,
         "fitness": [
           null,
-          null,
           2,
           2,
-          6
+          6,
+          null
         ],
         "points": 55,
         "pointsHome": 33,
@@ -14235,8 +14235,8 @@
         ]
       }
     },
-    "update": 1765063224,
-    "etag": 2389074282,
+    "update": 1765077715,
+    "etag": 3968049143,
     "scoreID": 1
   },
   "meta": {
