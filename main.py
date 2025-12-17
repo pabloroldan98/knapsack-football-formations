@@ -1089,60 +1089,9 @@ if __name__ == "__main__":
     #         similar_player = find_similar_string(player, other_players, similarity_threshold=0.7, verbose=False)
     #         if similar_player and similar_player != player:
     #             print(f"Similar names found: '{player}' and '{similar_player}' in team '{team}'.")
-
-    # ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
     #
-    # from collections import defaultdict
-    # print()
-    # print()
-    # print("__________________________________________")
-    # print()
-    # purged_players = purge_everything(worthy_players_og, probability_threshold=0.35, fixture_filter=False)
-    # worthy_players = purged_players.copy()
-    # # for p in current_players:
-    # #     if p.status == "injured" or p.status == "sanctioned":
-    # #         worthy_players.append(p)
     #
-    # # Diccionario para acumular sumas y conteos por equipo
-    # team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
-    #
-    # for player in worthy_players:
-    #     team_stats[player.team]["sum"] += player.sofascore_rating * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
-    #     # team_stats[player.team]["sum"] += player.value * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
-    #     team_stats[player.team]["count"] += 1
-    #
-    # # Calcular medias y ordenarlas
-    # sorted_team_avg = sorted(
-    #     ((team, stats["sum"] / stats["count"]) for team, stats in team_stats.items()),
-    #     key=lambda x: x[1],
-    #     reverse=True
-    # )
-    #
-    # # Imprimir
-    # # Convertimos a dict para acceso rápido
-    # team_avg_dict = dict(sorted_team_avg)
-    # for team, avg in team_avg_dict.items():
-    #     avg = (avg - 1) * 10
-    #     print(f"{team}: {avg:.4f}")
-    # # Partidos
-    #
-    # # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
-    # # jornada = jornadas_dict.get(get_next_jornada(), [])
-    # # jornada = jornadas_dict["jornada_3"]
-    # jornada = jornada_selected.copy()
-    # print(team_avg_dict)
-    #
-    # # Usamos el diccionario team_avg creado antes
-    # diffs = []
-    # for local, visitante in jornada:
-    #     diff = team_avg_dict.get(local, 0) - team_avg_dict.get(visitante, 0)
-    #     diffs.append((local, visitante, diff))
-    #
-    # # Imprimir
-    # for local, visitante, diff in diffs:
-    #     print(f"{local} vs {visitante}: {diff:.4f}")
-    #
-    # # Guardar dict de forced_matches
+    # ### GUARDAR DICT DE forced_matches
     # import json
     # import ast
     # from useful_functions import overwrite_dict_data
@@ -1176,3 +1125,61 @@ if __name__ == "__main__":
     #                 buffer.append(line)
     # print(jornadas)
     # overwrite_dict_data(jornadas, "forced_matches_champions_2025_26")
+    #
+    #
+    # ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
+    #
+    # new_current_players = get_current_players_wrapper("laliga", is_biwenger=False, no_fixtures=True, nerf_penalty_boost=True)  # , forced_matches=jornada_selected)
+    #
+    # from collections import defaultdict
+    # print()
+    # print()
+    # print("__________________________________________")
+    # print()
+    # # purged_players = purge_everything(worthy_players_og, probability_threshold=0.35, fixture_filter=False)
+    # purged_players = purge_everything(new_current_players, probability_threshold=0.35, fixture_filter=False)
+    # worthy_players = purged_players.copy()
+    # # for p in current_players:
+    # #     if p.status == "injured" or p.status == "sanctioned":
+    # #         worthy_players.append(p)
+    #
+    # # Diccionario para acumular sumas y conteos por equipo
+    # team_stats = defaultdict(lambda: {"sum": 0, "count": 0})
+    #
+    # for player in worthy_players:
+    #     # team_stats[player.team]["sum"] += player.sofascore_rating * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
+    #     team_stats[player.team]["sum"] += player.value * (player.team_elo + 50*int(player.is_playing_home)) / 10_000
+    #     team_stats[player.team]["count"] += 1
+    #
+    # # Calcular medias y ordenarlas
+    # sorted_team_avg = sorted(
+    #     ((team, stats["sum"] / stats["count"]) for team, stats in team_stats.items()),
+    #     key=lambda x: x[1],
+    #     reverse=True
+    # )
+    #
+    # # Imprimir
+    # # Convertimos a dict para acceso rápido
+    # team_avg_dict = dict(sorted_team_avg)
+    # for team, avg in team_avg_dict.items():
+    #     avg = (avg - 1) * 10
+    #     print(f"{team}: {avg:.4f}")
+    # # Partidos
+    #
+    # # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+    # # jornada = jornadas_dict.get(get_next_jornada(), [])
+    # # jornada = jornadas_dict["jornada_3"]
+    # jornada = jornada_selected.copy()
+    # print()
+    # print(team_avg_dict)
+    #
+    # # Usamos el diccionario team_avg creado antes
+    # diffs = []
+    # for local, visitante in jornada:
+    #     diff = team_avg_dict.get(local, 0) - team_avg_dict.get(visitante, 0)
+    #     diffs.append((local, visitante, diff))
+    #
+    # # Imprimir
+    # for local, visitante, diff in diffs:
+    #     print(f"{local} vs {visitante}: {diff:.4f}")
+
