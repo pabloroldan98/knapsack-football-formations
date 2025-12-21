@@ -345,57 +345,6 @@
             }
           },
           {
-            "id": 46289,
-            "date": 1766251800,
-            "status": "finished",
-            "home": {
-              "id": 93,
-              "name": "Osasuna",
-              "slug": "osasuna",
-              "score": 3
-            },
-            "away": {
-              "id": 91,
-              "name": "Alavés",
-              "slug": "alaves",
-              "score": 0
-            }
-          },
-          {
-            "id": 46286,
-            "date": 1766243700,
-            "status": "finished",
-            "home": {
-              "id": 10,
-              "name": "Levante",
-              "slug": "levante",
-              "score": 1
-            },
-            "away": {
-              "id": 13,
-              "name": "Real Sociedad",
-              "slug": "real-sociedad",
-              "score": 1
-            }
-          },
-          {
-            "id": 46282,
-            "date": 1766235600,
-            "status": "finished",
-            "home": {
-              "id": 779,
-              "name": "Real Oviedo",
-              "slug": "real-oviedo",
-              "score": 0
-            },
-            "away": {
-              "id": 5,
-              "name": "Celta",
-              "slug": "celta",
-              "score": 0
-            }
-          },
-          {
             "id": 46287,
             "date": 1766322000,
             "status": "preview",
@@ -410,6 +359,23 @@
               "name": "Atlético",
               "slug": "atletico",
               "score": null
+            }
+          },
+          {
+            "id": 46289,
+            "date": 1766251800,
+            "status": "finished",
+            "home": {
+              "id": 93,
+              "name": "Osasuna",
+              "slug": "osasuna",
+              "score": 3
+            },
+            "away": {
+              "id": 91,
+              "name": "Alavés",
+              "slug": "alaves",
+              "score": 0
             }
           },
           {
@@ -430,6 +396,23 @@
             }
           },
           {
+            "id": 46286,
+            "date": 1766243700,
+            "status": "finished",
+            "home": {
+              "id": 10,
+              "name": "Levante",
+              "slug": "levante",
+              "score": 1
+            },
+            "away": {
+              "id": 13,
+              "name": "Real Sociedad",
+              "slug": "real-sociedad",
+              "score": 1
+            }
+          },
+          {
             "id": 46288,
             "date": 1766338200,
             "status": "preview",
@@ -444,6 +427,23 @@
               "name": "Rayo Vallecano",
               "slug": "rayo-vallecano",
               "score": null
+            }
+          },
+          {
+            "id": 46282,
+            "date": 1766235600,
+            "status": "finished",
+            "home": {
+              "id": 779,
+              "name": "Real Oviedo",
+              "slug": "real-oviedo",
+              "score": 0
+            },
+            "away": {
+              "id": 5,
+              "name": "Celta",
+              "slug": "celta",
+              "score": 0
             }
           },
           {
@@ -520,8 +520,8 @@
           6,
           6,
           6,
-          null,
-          "sanctioned"
+          "sanctioned",
+          11
         ],
         "points": 74,
         "pointsHome": 46,
@@ -1028,7 +1028,7 @@
           6,
           2,
           6,
-          null,
+          6,
           6
         ],
         "points": 42,
@@ -1106,8 +1106,8 @@
           "discarded",
           13,
           -2,
-          2,
-          6
+          null,
+          2
         ],
         "points": 61,
         "pointsHome": 32,
@@ -1594,7 +1594,7 @@
           10,
           6,
           0,
-          2,
+          null,
           2
         ],
         "points": 60,
@@ -1649,8 +1649,8 @@
           0,
           "doubt",
           0,
-          -2,
-          2
+          null,
+          -2
         ],
         "points": 17,
         "pointsHome": 2,
@@ -1774,7 +1774,7 @@
           0,
           3,
           1,
-          0,
+          null,
           0
         ],
         "points": 20,
@@ -3082,8 +3082,8 @@
           "injured",
           "injured",
           2,
-          2,
-          "doubt"
+          null,
+          2
         ],
         "points": 32,
         "pointsHome": 16,
@@ -3985,9 +3985,9 @@
         "fitness": [
           null,
           "injured",
+          "doubt",
           "injured",
-          "injured",
-          "injured"
+          "doubt"
         ],
         "points": 2,
         "pointsHome": 0,
@@ -4417,7 +4417,7 @@
           2,
           10,
           2,
-          null,
+          2,
           2
         ],
         "points": 46,
@@ -4669,8 +4669,8 @@
           "discarded",
           9,
           null,
-          2,
-          6
+          null,
+          2
         ],
         "points": 37,
         "pointsHome": 19,
@@ -4952,7 +4952,7 @@
           6,
           null,
           null,
-          "doubt"
+          null
         ],
         "points": 14,
         "pointsHome": 6,
@@ -5534,10 +5534,10 @@
         "playedAway": 7,
         "fitness": [
           2,
-          null,
+          "doubt",
           "injured",
           "injured",
-          "injured"
+          2
         ],
         "points": 44,
         "pointsHome": 14,
@@ -6325,8 +6325,8 @@
           -2,
           "sanctioned",
           "sanctioned",
-          -8,
-          "doubt"
+          "sanctioned",
+          -8
         ],
         "points": 39,
         "pointsHome": 18,
@@ -6605,10 +6605,10 @@
         "playedAway": 4,
         "fitness": [
           0,
-          "doubt",
+          null,
           "injured",
           "injured",
-          2
+          "injured"
         ],
         "points": 10,
         "pointsHome": 4,
@@ -7431,8 +7431,8 @@
           6,
           6,
           2,
-          2,
-          "sanctioned"
+          null,
+          2
         ],
         "points": 63,
         "pointsHome": 35,
@@ -7886,7 +7886,7 @@
           2,
           null,
           "doubt",
-          null,
+          2,
           2
         ],
         "points": 18,
@@ -7933,10 +7933,10 @@
         "playedAway": 3,
         "fitness": [
           0,
-          "doubt",
-          "injured",
-          2,
-          null
+          null,
+          null,
+          null,
+          2
         ],
         "points": 14,
         "pointsHome": 6,
@@ -8565,7 +8565,7 @@
           2,
           6,
           2,
-          null,
+          2,
           2
         ],
         "points": 52,
@@ -9147,9 +9147,9 @@
         "playedAway": 8,
         "fitness": [
           -5,
-          "doubt",
           "injured",
-          2,
+          "injured",
+          "doubt",
           2
         ],
         "points": 23,
@@ -10022,7 +10022,7 @@
           6,
           6,
           null,
-          null
+          2
         ],
         "points": 45,
         "pointsHome": 16,
@@ -10222,7 +10222,7 @@
           10,
           2,
           2,
-          2,
+          null,
           2
         ],
         "points": 66,
@@ -10518,9 +10518,7 @@
         "fitness": [
           2,
           6,
-          6,
-          null,
-          null
+          6
         ],
         "points": 14,
         "pointsHome": 6,
@@ -10600,8 +10598,8 @@
           2,
           "sanctioned",
           2,
-          2,
-          10
+          null,
+          2
         ],
         "points": 41,
         "pointsHome": 21,
@@ -11564,7 +11562,7 @@
           6,
           -2,
           6,
-          "injured"
+          null
         ],
         "points": 48,
         "pointsHome": 8,
@@ -12550,8 +12548,8 @@
           6,
           6,
           6,
-          null,
-          6
+          6,
+          2
         ],
         "points": 70,
         "pointsHome": 30,
@@ -13538,8 +13536,8 @@
           2,
           2,
           2,
-          null,
-          2
+          2,
+          null
         ],
         "points": 24,
         "pointsHome": 16,
@@ -14366,8 +14364,8 @@
         ]
       }
     },
-    "update": 1766273095,
-    "etag": 52153645,
+    "update": 1766287629,
+    "etag": 3552833390,
     "scoreID": 1
   },
   "meta": {
