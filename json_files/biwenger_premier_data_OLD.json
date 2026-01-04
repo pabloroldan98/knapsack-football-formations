@@ -286,74 +286,6 @@
         "type": "round",
         "games": [
           {
-            "id": 46701,
-            "date": 1767461400,
-            "status": "finished",
-            "home": {
-              "id": 102,
-              "name": "AFC Bournemouth",
-              "slug": "afc-bournemouth",
-              "score": 2
-            },
-            "away": {
-              "id": 112,
-              "name": "Arsenal",
-              "slug": "arsenal-fc",
-              "score": 3
-            }
-          },
-          {
-            "id": 46692,
-            "date": 1767452400,
-            "status": "finished",
-            "home": {
-              "id": 412,
-              "name": "Wolverhampton",
-              "slug": "wolverhampton",
-              "score": 3
-            },
-            "away": {
-              "id": 101,
-              "name": "West Ham United",
-              "slug": "west-ham-united",
-              "score": 0
-            }
-          },
-          {
-            "id": 46699,
-            "date": 1767452400,
-            "status": "finished",
-            "home": {
-              "id": 270,
-              "name": "Brighton & Hove Albion",
-              "slug": "brighton-hove-albion",
-              "score": 2
-            },
-            "away": {
-              "id": 107,
-              "name": "Burnley",
-              "slug": "burnley-fc",
-              "score": 0
-            }
-          },
-          {
-            "id": 46700,
-            "date": 1767443400,
-            "status": "finished",
-            "home": {
-              "id": 468,
-              "name": "Aston Villa",
-              "slug": "aston-villa",
-              "score": 3
-            },
-            "away": {
-              "id": 633,
-              "name": "Nottingham Forest",
-              "slug": "nottingham-forest",
-              "score": 1
-            }
-          },
-          {
             "id": 46695,
             "date": 1767529800,
             "status": "preview",
@@ -368,6 +300,23 @@
               "name": "Manchester United",
               "slug": "manchester-united",
               "score": null
+            }
+          },
+          {
+            "id": 46701,
+            "date": 1767461400,
+            "status": "finished",
+            "home": {
+              "id": 102,
+              "name": "AFC Bournemouth",
+              "slug": "afc-bournemouth",
+              "score": 2
+            },
+            "away": {
+              "id": 112,
+              "name": "Arsenal",
+              "slug": "arsenal-fc",
+              "score": 3
             }
           },
           {
@@ -439,6 +388,40 @@
             }
           },
           {
+            "id": 46692,
+            "date": 1767452400,
+            "status": "finished",
+            "home": {
+              "id": 412,
+              "name": "Wolverhampton",
+              "slug": "wolverhampton",
+              "score": 3
+            },
+            "away": {
+              "id": 101,
+              "name": "West Ham United",
+              "slug": "west-ham-united",
+              "score": 0
+            }
+          },
+          {
+            "id": 46699,
+            "date": 1767452400,
+            "status": "finished",
+            "home": {
+              "id": 270,
+              "name": "Brighton & Hove Albion",
+              "slug": "brighton-hove-albion",
+              "score": 2
+            },
+            "away": {
+              "id": 107,
+              "name": "Burnley",
+              "slug": "burnley-fc",
+              "score": 0
+            }
+          },
+          {
             "id": 46696,
             "date": 1767547800,
             "status": "preview",
@@ -453,6 +436,23 @@
               "name": "Chelsea",
               "slug": "chelsea-fc",
               "score": null
+            }
+          },
+          {
+            "id": 46700,
+            "date": 1767443400,
+            "status": "finished",
+            "home": {
+              "id": 468,
+              "name": "Aston Villa",
+              "slug": "aston-villa",
+              "score": 3
+            },
+            "away": {
+              "id": 633,
+              "name": "Nottingham Forest",
+              "slug": "nottingham-forest",
+              "score": 1
             }
           }
         ],
@@ -1195,6 +1195,10 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -5409,11 +5413,7 @@
         "playedHome": 1,
         "playedAway": 0,
         "fitness": [
-          2,
-          null,
-          null,
-          null,
-          null
+          2
         ],
         "points": 2,
         "pointsHome": 2,
@@ -5822,7 +5822,10 @@
         "playedAway": 1,
         "fitness": [
           null,
-          3
+          3,
+          null,
+          null,
+          null
         ],
         "points": 3,
         "pointsHome": 0,
@@ -6843,7 +6846,10 @@
         "playedAway": 1,
         "fitness": [
           null,
-          3
+          3,
+          null,
+          null,
+          null
         ],
         "points": 3,
         "pointsHome": 0,
@@ -7517,14 +7523,14 @@
         "playedHome": 10,
         "playedAway": 10,
         "fitness": [
-          20,
+          19,
           2,
           3,
           4,
           5
         ],
-        "points": 98,
-        "pointsHome": 70,
+        "points": 97,
+        "pointsHome": 69,
         "pointsAway": 28,
         "pointsLastSeason": 152
       },
@@ -10551,14 +10557,14 @@
         "playedHome": 10,
         "playedAway": 10,
         "fitness": [
-          6,
+          5,
           3,
           2,
           18,
           19
         ],
-        "points": 109,
-        "pointsHome": 51,
+        "points": 108,
+        "pointsHome": 50,
         "pointsAway": 58,
         "pointsLastSeason": 203
       },
@@ -10673,15 +10679,15 @@
         "playedHome": 5,
         "playedAway": 6,
         "fitness": [
-          5,
+          6,
           3,
           4,
           3,
           null
         ],
-        "points": 34,
+        "points": 35,
         "pointsHome": 18,
-        "pointsAway": 16,
+        "pointsAway": 17,
         "pointsLastSeason": 145
       },
       "34481": {
@@ -10747,15 +10753,15 @@
         "playedHome": 10,
         "playedAway": 10,
         "fitness": [
-          -1,
+          0,
           9,
           4,
           5,
           8
         ],
-        "points": 68,
+        "points": 69,
         "pointsHome": 39,
-        "pointsAway": 29,
+        "pointsAway": 30,
         "pointsLastSeason": 222
       },
       "22785": {
@@ -14749,14 +14755,14 @@
         "playedHome": 7,
         "playedAway": 7,
         "fitness": [
-          11,
+          10,
           4,
           6,
           5,
           7
         ],
-        "points": 80,
-        "pointsHome": 44,
+        "points": 79,
+        "pointsHome": 43,
         "pointsAway": 36,
         "pointsLastSeason": 259
       },
@@ -15353,8 +15359,8 @@
         ]
       }
     },
-    "update": 1767502810,
-    "etag": 2205185861,
+    "update": 1767497898,
+    "etag": 4174239633,
     "scoreID": 3
   },
   "meta": {
