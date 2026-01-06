@@ -15,8 +15,8 @@
         "kind": "SofaScore"
       }
     ],
-    "social": [],
-    "config": [],
+    "social": {},
+    "config": {},
     "season": {
       "id": 2020,
       "name": "2019/2020",
@@ -979,8 +979,8 @@
         "nextGames": []
       }
     },
-    "update": 1767585163,
-    "etag": 2062808740,
+    "update": 1767656370,
+    "etag": 818115656,
     "scoreID": 1
   },
   "meta": {
@@ -2164,7 +2164,8 @@
         "reviewAppInternalFlow": true,
         "prebidSandbox": true,
         "recentSeasons": [
-          15
+          15,
+          58
         ],
         "seasonalEvent": "christmas",
         "footballGround": "snow"
@@ -2550,7 +2551,7 @@
             "kind": "SofaScore"
           }
         ],
-        "config": []
+        "config": {}
       },
       {
         "id": 41,
@@ -2572,6 +2573,31 @@
         }
       },
       {
+        "id": 58,
+        "name": "Supercopa de España",
+        "slug": "supercopa",
+        "sport": "football",
+        "currency": "€",
+        "scores": [
+          {
+            "id": 1,
+            "name": "AS.com",
+            "kind": "as"
+          },
+          {
+            "id": 2,
+            "name": "SofaScore",
+            "kind": "SofaScore"
+          },
+          {
+            "id": 3,
+            "name": "AS.com and SofaScore average",
+            "kind": "Average"
+          }
+        ],
+        "config": {}
+      },
+      {
         "id": 52,
         "name": "Europa League",
         "slug": "europa-league",
@@ -2586,7 +2612,7 @@
             "kind": "SofaScore"
           }
         ],
-        "config": []
+        "config": {}
       }
     ]
   }
