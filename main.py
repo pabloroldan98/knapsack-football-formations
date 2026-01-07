@@ -1129,6 +1129,7 @@ if __name__ == "__main__":
     #
     # ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
     #
+    # # jornada_selected = jornadas_dict["jornada_XX"]
     # new_current_players = get_current_players_wrapper("laliga", is_biwenger=False, no_fixtures=True, nerf_penalty_boost=True)  # , forced_matches=jornada_selected)
     #
     # from collections import defaultdict
