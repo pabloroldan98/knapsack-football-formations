@@ -352,6 +352,29 @@
             }
           },
           {
+            "id": 46304,
+            "date": 1768136400,
+            "status": "preview",
+            "home": {
+              "id": 70,
+              "name": "Rayo Vallecano",
+              "slug": "rayo-vallecano",
+              "score": null
+            },
+            "away": {
+              "id": 465,
+              "name": "Mallorca",
+              "slug": "mallorca",
+              "score": null
+            },
+            "round": {
+              "id": 4787,
+              "name": "Round 19 (postponed)",
+              "short": "R19",
+              "part": 2
+            }
+          },
+          {
             "id": 46307,
             "date": 1768066200,
             "status": "finished",
@@ -366,6 +389,29 @@
               "name": "Osasuna",
               "slug": "osasuna",
               "score": 0
+            },
+            "round": {
+              "id": 4787,
+              "name": "Round 19 (postponed)",
+              "short": "R19",
+              "part": 2
+            }
+          },
+          {
+            "id": 46306,
+            "date": 1768144500,
+            "status": "preview",
+            "home": {
+              "id": 10,
+              "name": "Levante",
+              "slug": "levante",
+              "score": null
+            },
+            "away": {
+              "id": 7,
+              "name": "Espanyol",
+              "slug": "espanyol",
+              "score": null
             },
             "round": {
               "id": 4787,
@@ -412,52 +458,6 @@
               "name": "Betis",
               "slug": "betis",
               "score": 1
-            },
-            "round": {
-              "id": 4787,
-              "name": "Round 19 (postponed)",
-              "short": "R19",
-              "part": 2
-            }
-          },
-          {
-            "id": 46304,
-            "date": 1768136400,
-            "status": "preview",
-            "home": {
-              "id": 70,
-              "name": "Rayo Vallecano",
-              "slug": "rayo-vallecano",
-              "score": null
-            },
-            "away": {
-              "id": 465,
-              "name": "Mallorca",
-              "slug": "mallorca",
-              "score": null
-            },
-            "round": {
-              "id": 4787,
-              "name": "Round 19 (postponed)",
-              "short": "R19",
-              "part": 2
-            }
-          },
-          {
-            "id": 46306,
-            "date": 1768144500,
-            "status": "preview",
-            "home": {
-              "id": 10,
-              "name": "Levante",
-              "slug": "levante",
-              "score": null
-            },
-            "away": {
-              "id": 7,
-              "name": "Espanyol",
-              "slug": "espanyol",
-              "score": null
             },
             "round": {
               "id": 4787,
@@ -935,11 +935,11 @@
         "playedHome": 2,
         "playedAway": 2,
         "fitness": [
+          2,
           0,
           0,
           null,
-          null,
-          2
+          null
         ],
         "points": 4,
         "pointsHome": 0,
@@ -1287,9 +1287,9 @@
         "fitness": [
           6,
           6,
+          6,
           2,
-          10,
-          6
+          10
         ],
         "points": 98,
         "pointsHome": 72,
@@ -1960,10 +1960,10 @@
         "playedAway": 9,
         "fitness": [
           2,
+          2,
           10,
           -2,
-          6,
-          2
+          6
         ],
         "points": 66,
         "pointsHome": 52,
@@ -1983,11 +1983,11 @@
         "playedHome": 7,
         "playedAway": 9,
         "fitness": [
+          6,
           2,
           13,
           2,
-          null,
-          6
+          null
         ],
         "points": 81,
         "pointsHome": 47,
@@ -2089,8 +2089,8 @@
           2,
           2,
           2,
-          -2,
-          2
+          2,
+          -2
         ],
         "points": 20,
         "pointsHome": 8,
@@ -2112,10 +2112,10 @@
         "playedAway": 8,
         "statusChange": 1768082407,
         "fitness": [
-          "injured",
+          "doubt",
+          "doubt",
           "injured",
           0,
-          null,
           null
         ],
         "points": 44,
@@ -2468,8 +2468,8 @@
         "fitness": [
           2,
           2,
-          null,
           2,
+          null,
           2
         ],
         "points": 65,
@@ -2647,8 +2647,8 @@
         "fitness": [
           null,
           null,
-          2,
           null,
+          2,
           null
         ],
         "points": 26,
@@ -2669,7 +2669,7 @@
         "playedHome": 3,
         "playedAway": 4,
         "fitness": [
-          "discarded",
+          null,
           "discarded",
           "discarded",
           "discarded",
@@ -2693,8 +2693,8 @@
         "playedHome": 2,
         "playedAway": 1,
         "fitness": [
-          2,
           null,
+          2,
           null,
           null,
           null
@@ -2872,9 +2872,9 @@
         "playedAway": 7,
         "fitness": [
           6,
+          6,
           10,
           2,
-          6,
           6
         ],
         "points": 82,
@@ -3435,9 +3435,9 @@
         "fitness": [
           2,
           2,
+          2,
           "sanctioned",
-          -2,
-          2
+          -2
         ],
         "points": 48,
         "pointsHome": 24,
@@ -3511,10 +3511,10 @@
         "playedAway": 7,
         "fitness": [
           2,
+          2,
           null,
           2,
-          6,
-          2
+          6
         ],
         "points": 49,
         "pointsHome": 31,
@@ -3633,11 +3633,11 @@
         "playedHome": 8,
         "playedAway": 8,
         "fitness": [
+          6,
           -2,
           2,
           2,
-          2,
-          6
+          2
         ],
         "points": 30,
         "pointsHome": 18,
@@ -3657,10 +3657,10 @@
         "playedHome": 10,
         "playedAway": 9,
         "fitness": [
-          0,
           1,
           0,
           1,
+          0,
           1
         ],
         "points": 17,
@@ -3755,11 +3755,11 @@
         "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          2,
           -2,
           10,
           2,
-          6,
-          2
+          6
         ],
         "points": 66,
         "pointsHome": 42,
@@ -4252,11 +4252,11 @@
         "playedHome": 5,
         "playedAway": 4,
         "fitness": [
+          10,
           2,
           "injured",
           "injured",
-          6,
-          10
+          6
         ],
         "points": 30,
         "pointsHome": 14,
@@ -4328,11 +4328,11 @@
         "playedHome": 10,
         "playedAway": 9,
         "fitness": [
+          2,
           0,
           0,
           2,
-          6,
-          2
+          6
         ],
         "points": 59,
         "pointsHome": 33,
@@ -4754,10 +4754,10 @@
         "playedHome": 0,
         "playedAway": 3,
         "fitness": [
+          null,
           "injured",
           "injured",
           2,
-          null,
           null
         ],
         "points": 6,
@@ -4927,11 +4927,11 @@
         "playedHome": 4,
         "playedAway": 2,
         "fitness": [
+          0,
           "sanctioned",
           -6,
           null,
-          null,
-          0
+          null
         ],
         "points": -6,
         "pointsHome": -6,
@@ -5154,9 +5154,9 @@
         "playedHome": 4,
         "playedAway": 5,
         "fitness": [
+          6,
           "doubt",
           2,
-          6,
           6,
           6
         ],
@@ -5631,10 +5631,10 @@
         "playedHome": 9,
         "playedAway": 7,
         "fitness": [
+          2,
           null,
           2,
           0,
-          2,
           2
         ],
         "points": 32,
@@ -5708,11 +5708,11 @@
         "playedHome": 10,
         "playedAway": 8,
         "fitness": [
+          2,
           6,
           13,
           2,
-          13,
-          2
+          13
         ],
         "points": 101,
         "pointsHome": 77,
@@ -5962,10 +5962,10 @@
         "statusChange": 1767031224,
         "fitness": [
           "injured",
+          "injured",
           11,
           null,
-          10,
-          null
+          10
         ],
         "points": 51,
         "pointsHome": 35,
@@ -6012,11 +6012,11 @@
         "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          "sanctioned",
           2,
           9,
           6,
-          9,
-          null
+          9
         ],
         "points": 70,
         "pointsHome": 53,
@@ -6245,11 +6245,11 @@
         "playedHome": 6,
         "playedAway": 6,
         "fitness": [
+          null,
           2,
           6,
           2,
-          2,
-          null
+          2
         ],
         "points": 48,
         "pointsHome": 24,
@@ -6802,8 +6802,8 @@
           2,
           2,
           2,
-          -2,
-          2
+          2,
+          -2
         ],
         "points": 40,
         "pointsHome": 24,
@@ -6922,11 +6922,11 @@
         "playedHome": 6,
         "playedAway": 6,
         "fitness": [
+          null,
           2,
           null,
           6,
-          2,
-          null
+          2
         ],
         "points": 22,
         "pointsHome": 10,
@@ -7126,11 +7126,11 @@
         "playedAway": 5,
         "statusChange": 1768082413,
         "fitness": [
+          "doubt",
           null,
           6,
           2,
-          0,
-          null
+          0
         ],
         "points": 24,
         "pointsHome": 18,
@@ -7397,11 +7397,11 @@
         "playedHome": 7,
         "playedAway": 3,
         "fitness": [
+          null,
           0,
           2,
           0,
-          2,
-          null
+          2
         ],
         "points": 22,
         "pointsHome": 18,
@@ -7751,11 +7751,11 @@
         "playedAway": 9,
         "statusChange": 1767611055,
         "fitness": [
+          "injured",
           2,
           2,
           2,
-          2,
-          null
+          2
         ],
         "points": 60,
         "pointsHome": 26,
@@ -7803,7 +7803,7 @@
         "statusChange": 1768064406,
         "fitness": [
           2,
-          "injured",
+          null,
           "injured",
           "injured",
           0
@@ -8105,9 +8105,9 @@
         "fitness": [
           2,
           2,
+          2,
           0,
-          6,
-          2
+          6
         ],
         "points": 16,
         "pointsHome": 14,
@@ -8278,10 +8278,10 @@
         "playedHome": 9,
         "playedAway": 7,
         "fitness": [
+          2,
           null,
           0,
           null,
-          2,
           2
         ],
         "points": 20,
@@ -8459,10 +8459,10 @@
         "playedAway": 8,
         "fitness": [
           2,
+          2,
           6,
           10,
-          -2,
-          2
+          -2
         ],
         "points": 36,
         "pointsHome": 20,
@@ -8627,10 +8627,10 @@
         "playedHome": 10,
         "playedAway": 8,
         "fitness": [
+          6,
           2,
           6,
           "injured",
-          6,
           6
         ],
         "points": 71,
@@ -8751,9 +8751,9 @@
         "playedAway": 5,
         "statusChange": 1767628811,
         "fitness": [
+          "injured",
           2,
           null,
-          "injured",
           "injured",
           "injured"
         ],
@@ -8945,11 +8945,11 @@
         "playedHome": 10,
         "playedAway": 8,
         "fitness": [
+          6,
           2,
           6,
           2,
-          10,
-          6
+          10
         ],
         "points": 54,
         "pointsHome": 34,
@@ -9318,11 +9318,11 @@
         "playedHome": 7,
         "playedAway": 8,
         "fitness": [
+          2,
           10,
           14,
           2,
-          null,
-          2
+          null
         ],
         "points": 62,
         "pointsHome": 42,
@@ -9465,11 +9465,11 @@
         "playedHome": 4,
         "playedAway": 3,
         "fitness": [
+          2,
           null,
           null,
           null,
-          null,
-          2
+          null
         ],
         "points": 26,
         "pointsHome": 20,
@@ -11116,10 +11116,10 @@
         "playedHome": 6,
         "playedAway": 6,
         "fitness": [
-          null,
-          null,
-          null,
           2,
+          null,
+          null,
+          null,
           2
         ],
         "points": 33,
@@ -11189,11 +11189,11 @@
         "playedHome": 9,
         "playedAway": 8,
         "fitness": [
+          9,
           6,
           2,
           2,
-          6,
-          9
+          6
         ],
         "points": 53,
         "pointsHome": 29,
@@ -11396,11 +11396,11 @@
         "playedAway": 8,
         "statusChange": 1767801616,
         "fitness": [
+          "injured",
           2,
           6,
           6,
-          16,
-          null
+          16
         ],
         "points": 94,
         "pointsHome": 53,
@@ -11796,11 +11796,11 @@
         "playedHome": 7,
         "playedAway": 6,
         "fitness": [
+          null,
           0,
           null,
           0,
-          2,
-          null
+          2
         ],
         "points": 50,
         "pointsHome": 36,
@@ -12153,11 +12153,11 @@
         "playedHome": 1,
         "playedAway": 0,
         "fitness": [
-          "injured",
+          2,
+          "doubt",
           "injured",
           null,
-          null,
-          2
+          null
         ],
         "points": 2,
         "pointsHome": 2,
@@ -12980,9 +12980,9 @@
         "playedAway": 8,
         "fitness": [
           2,
-          6,
-          6,
           2,
+          6,
+          6,
           2
         ],
         "points": 28,
@@ -13121,10 +13121,10 @@
         "playedHome": 3,
         "playedAway": 3,
         "fitness": [
-          null,
-          null,
-          null,
           2,
+          null,
+          null,
+          null,
           2
         ],
         "points": 14,
@@ -13750,11 +13750,11 @@
         "playedHome": 1,
         "playedAway": 4,
         "fitness": [
+          2,
           null,
           0,
           6,
-          null,
-          2
+          null
         ],
         "points": 12,
         "pointsHome": 0,
@@ -14404,8 +14404,8 @@
         ]
       }
     },
-    "update": 1768111210,
-    "etag": 304532777,
+    "update": 1768103453,
+    "etag": 1528499337,
     "scoreID": 1
   },
   "meta": {
