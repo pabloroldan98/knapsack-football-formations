@@ -15,8 +15,8 @@
         "kind": "SofaScore"
       }
     ],
-    "social": [],
-    "config": [],
+    "social": {},
+    "config": {},
     "season": {
       "id": 2020,
       "name": "2019/2020",
@@ -979,14 +979,34 @@
         "nextGames": []
       }
     },
-    "update": 1768447698,
-    "etag": 2111429352,
+    "update": 1768520434,
+    "etag": 3036474368,
     "scoreID": 1
   },
   "meta": {
     "config": {
       "ads": {
         "mobile": {
+          "sections": {
+            "round": {
+              "sponsor": {
+                "type": "gpt",
+                "platform": [
+                  "android",
+                  "ios"
+                ],
+                "location": {
+                  "country": [
+                    "CO",
+                    "PE"
+                  ]
+                },
+                "block": "/1030375/bwg:round-sponsor",
+                "sizes": "[320, 50]",
+                "className": "collapsed"
+              }
+            }
+          },
           "header": {
             "type": "gpt",
             "block": "/7811748/biwenger_mob/%section%",
@@ -2160,12 +2180,11 @@
         "safeFrame": false,
         "randomInterstitial": false,
         "reviewApp": true,
-        "reviewAppAllUsers": "Math.random() < 0.0005",
+        "reviewAppAllUsers": "Math.random() < 0.10",
         "reviewAppInternalFlow": true,
         "prebidSandbox": true,
         "recentSeasons": [
           15,
-          58,
           59
         ]
       },
@@ -2550,7 +2569,7 @@
             "kind": "SofaScore"
           }
         ],
-        "config": []
+        "config": {}
       },
       {
         "id": 41,
@@ -2570,31 +2589,6 @@
             "playoffs": 8
           }
         }
-      },
-      {
-        "id": 58,
-        "name": "Supercopa de España",
-        "slug": "supercopa",
-        "sport": "football",
-        "currency": "€",
-        "scores": [
-          {
-            "id": 1,
-            "name": "AS.com",
-            "kind": "as"
-          },
-          {
-            "id": 2,
-            "name": "SofaScore",
-            "kind": "SofaScore"
-          },
-          {
-            "id": 3,
-            "name": "AS.com and SofaScore average",
-            "kind": "Average"
-          }
-        ],
-        "config": []
       },
       {
         "id": 59,
@@ -2619,7 +2613,7 @@
             "kind": "Average"
           }
         ],
-        "config": []
+        "config": {}
       },
       {
         "id": 52,
@@ -2636,7 +2630,7 @@
             "kind": "SofaScore"
           }
         ],
-        "config": []
+        "config": {}
       }
     ]
   }
