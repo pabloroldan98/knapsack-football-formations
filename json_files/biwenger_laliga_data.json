@@ -362,40 +362,6 @@
             }
           },
           {
-            "id": 46315,
-            "date": 1768662900,
-            "status": "finished",
-            "home": {
-              "id": 465,
-              "name": "Mallorca",
-              "slug": "mallorca",
-              "score": 3
-            },
-            "away": {
-              "id": 1,
-              "name": "Athletic",
-              "slug": "athletic",
-              "score": 2
-            }
-          },
-          {
-            "id": 46312,
-            "date": 1768654800,
-            "status": "finished",
-            "home": {
-              "id": 15,
-              "name": "Real Madrid",
-              "slug": "real-madrid",
-              "score": 2
-            },
-            "away": {
-              "id": 10,
-              "name": "Levante",
-              "slug": "levante",
-              "score": 0
-            }
-          },
-          {
             "id": 46317,
             "date": 1768741200,
             "status": "preview",
@@ -413,6 +379,23 @@
             }
           },
           {
+            "id": 46315,
+            "date": 1768662900,
+            "status": "finished",
+            "home": {
+              "id": 465,
+              "name": "Mallorca",
+              "slug": "mallorca",
+              "score": 3
+            },
+            "away": {
+              "id": 1,
+              "name": "Athletic",
+              "slug": "athletic",
+              "score": 2
+            }
+          },
+          {
             "id": 46319,
             "date": 1768749300,
             "status": "preview",
@@ -427,6 +410,23 @@
               "name": "Alavés",
               "slug": "alaves",
               "score": null
+            }
+          },
+          {
+            "id": 46312,
+            "date": 1768654800,
+            "status": "finished",
+            "home": {
+              "id": 15,
+              "name": "Real Madrid",
+              "slug": "real-madrid",
+              "score": 2
+            },
+            "away": {
+              "id": 10,
+              "name": "Levante",
+              "slug": "levante",
+              "score": 0
             }
           },
           {
@@ -512,12 +512,10 @@
         "position": 2,
         "price": 5160000,
         "fantasyPrice": 14000000,
-        "status": "sanctioned",
+        "status": "ok",
         "priceIncrement": 80000,
-        "statusInfo": "Direct red.",
         "playedHome": 10,
         "playedAway": 9,
-        "statusChange": 1768680005,
         "fitness": [
           -4,
           6,
@@ -997,14 +995,11 @@
         ],
         "price": 5060000,
         "fantasyPrice": 22000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Undetermined discomfort.",
         "iconHero": "i/p/hero/27591.png",
         "playedHome": 7,
         "playedAway": 7,
-        "extraStatus": "warned",
-        "statusChange": 1768680009,
         "fitness": [
           2,
           6,
@@ -7828,7 +7823,7 @@
           2,
           2,
           2,
-          null
+          "doubt"
         ],
         "points": 24,
         "pointsHome": 12,
@@ -14374,8 +14369,8 @@
         ]
       }
     },
-    "update": 1768691871,
-    "etag": 1884580005,
+    "update": 1768705562,
+    "etag": 2481152092,
     "scoreID": 1
   },
   "meta": {
