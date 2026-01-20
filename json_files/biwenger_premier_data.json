@@ -171,7 +171,7 @@
           "id": 4543,
           "name": "Round 22",
           "short": "R22",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4544,
@@ -276,191 +276,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4543,
-        "name": "Round 22",
-        "short": "R22",
-        "status": "active",
-        "end": 1768928400,
-        "type": "round",
-        "games": [
-          {
-            "id": 46720,
-            "date": 1768852800,
-            "status": "finished",
-            "home": {
-              "id": 270,
-              "name": "Brighton & Hove Albion",
-              "slug": "brighton-hove-albion",
-              "score": 1
-            },
-            "away": {
-              "id": 102,
-              "name": "AFC Bournemouth",
-              "slug": "afc-bournemouth",
-              "score": 1
-            }
-          },
-          {
-            "id": 46721,
-            "date": 1768753800,
-            "status": "finished",
-            "home": {
-              "id": 468,
-              "name": "Aston Villa",
-              "slug": "aston-villa",
-              "score": 0
-            },
-            "away": {
-              "id": 109,
-              "name": "Everton",
-              "slug": "everton-fc",
-              "score": 1
-            }
-          },
-          {
-            "id": 46712,
-            "date": 1768744800,
-            "status": "finished",
-            "home": {
-              "id": 412,
-              "name": "Wolverhampton",
-              "slug": "wolverhampton",
-              "score": 0
-            },
-            "away": {
-              "id": 269,
-              "name": "Newcastle",
-              "slug": "newcastle",
-              "score": 0
-            }
-          },
-          {
-            "id": 46716,
-            "date": 1768671000,
-            "status": "finished",
-            "home": {
-              "id": 633,
-              "name": "Nottingham Forest",
-              "slug": "nottingham-forest",
-              "score": 0
-            },
-            "away": {
-              "id": 112,
-              "name": "Arsenal",
-              "slug": "arsenal-fc",
-              "score": 0
-            }
-          },
-          {
-            "id": 46713,
-            "date": 1768662000,
-            "status": "finished",
-            "home": {
-              "id": 104,
-              "name": "Sunderland",
-              "slug": "sunderland",
-              "score": 2
-            },
-            "away": {
-              "id": 99,
-              "name": "Crystal Palace",
-              "slug": "crystal-palace",
-              "score": 1
-            }
-          },
-          {
-            "id": 46714,
-            "date": 1768662000,
-            "status": "finished",
-            "home": {
-              "id": 94,
-              "name": "Tottenham",
-              "slug": "tottenham",
-              "score": 1
-            },
-            "away": {
-              "id": 101,
-              "name": "West Ham United",
-              "slug": "west-ham-united",
-              "score": 2
-            }
-          },
-          {
-            "id": 46717,
-            "date": 1768662000,
-            "status": "finished",
-            "home": {
-              "id": 105,
-              "name": "Liverpool",
-              "slug": "liverpool-fc",
-              "score": 1
-            },
-            "away": {
-              "id": 107,
-              "name": "Burnley",
-              "slug": "burnley-fc",
-              "score": 1
-            }
-          },
-          {
-            "id": 46718,
-            "date": 1768662000,
-            "status": "finished",
-            "home": {
-              "id": 477,
-              "name": "Leeds United",
-              "slug": "leeds-united",
-              "score": 1
-            },
-            "away": {
-              "id": 414,
-              "name": "Fulham",
-              "slug": "fulham",
-              "score": 0
-            }
-          },
-          {
-            "id": 46719,
-            "date": 1768662000,
-            "status": "finished",
-            "home": {
-              "id": 95,
-              "name": "Chelsea",
-              "slug": "chelsea-fc",
-              "score": 2
-            },
-            "away": {
-              "id": 591,
-              "name": "Brentford FC",
-              "slug": "brentford-fc",
-              "score": 0
-            }
-          },
-          {
-            "id": 46715,
-            "date": 1768653000,
-            "status": "finished",
-            "home": {
-              "id": 111,
-              "name": "Manchester United",
-              "slug": "manchester-united",
-              "score": 2
-            },
-            "away": {
-              "id": 108,
-              "name": "Manchester City",
-              "slug": "manchester-city",
-              "score": 0
-            }
-          }
-        ],
-        "pool": {
-          "id": 596927
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "2279": {
         "id": 2279,
@@ -1066,6 +882,24 @@
         "pointsAway": 36,
         "pointsLastSeason": 71
       },
+      "39822": {
+        "id": 39822,
+        "name": "Alex Tóth",
+        "slug": "alex-toth",
+        "teamID": 102,
+        "position": 3,
+        "price": 650000,
+        "fantasyPrice": 9000000,
+        "status": "ok",
+        "priceIncrement": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "fitness": [],
+        "points": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "27949": {
         "id": 27949,
         "name": "Isak",
@@ -1348,7 +1182,6 @@
           null,
           null,
           null,
-          null,
           null
         ],
         "points": 0,
@@ -1508,10 +1341,12 @@
         "position": 3,
         "price": 4730000,
         "fantasyPrice": 17000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 140000,
+        "statusInfo": "Adductor discomfort.",
         "playedHome": 9,
         "playedAway": 10,
+        "statusChange": 1768914031,
         "fitness": [
           null,
           6,
@@ -1750,10 +1585,12 @@
         "position": 2,
         "price": 180000,
         "fantasyPrice": 12000000,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 0,
+        "statusInfo": "Left ankle fracture. Estimated return: Mid-April.",
         "playedHome": 2,
         "playedAway": 1,
+        "statusChange": 1768914008,
         "fitness": [
           2,
           null,
@@ -2595,12 +2432,10 @@
         "position": 2,
         "price": 580000,
         "fantasyPrice": 16000000,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Knee injury. Estimated return: Mid-February.",
         "playedHome": 6,
         "playedAway": 4,
-        "statusChange": 1764932400,
         "fitness": [
           "injured",
           "injured",
@@ -2837,12 +2672,10 @@
         "position": 2,
         "price": 1140000,
         "fantasyPrice": 17000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 20000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -2983,12 +2816,10 @@
         "position": 4,
         "price": 580000,
         "fantasyPrice": 8000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -3057,12 +2888,12 @@
         "position": 2,
         "price": 280000,
         "fantasyPrice": 8000000,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": 0,
         "statusInfo": "Groin injury.",
         "playedHome": 3,
         "playedAway": 4,
-        "statusChange": 1767798003,
+        "statusChange": 1768914009,
         "fitness": [
           "injured",
           "injured",
@@ -3131,12 +2962,10 @@
         "position": 2,
         "price": 150000,
         "fantasyPrice": 8000000,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Muscle injury. Estimated return: Early February.",
         "playedHome": 1,
         "playedAway": 2,
-        "statusChange": 1764068400,
         "fitness": [
           "injured",
           "injured",
@@ -3639,12 +3468,10 @@
         "position": 2,
         "price": 3050000,
         "fantasyPrice": 25000000,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -40000,
-        "statusInfo": "Knee injury.",
         "playedHome": 7,
         "playedAway": 7,
-        "statusChange": 1765537200,
         "fitness": [
           "injured",
           "injured",
@@ -3715,12 +3542,10 @@
         "position": 4,
         "price": 1550000,
         "fantasyPrice": 10000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Leg discomfort.",
         "playedHome": 10,
         "playedAway": 9,
-        "statusChange": 1768572014,
         "fitness": [
           "doubt",
           3,
@@ -4244,12 +4069,10 @@
         "position": 2,
         "price": 680000,
         "fantasyPrice": 17000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -4490,10 +4313,12 @@
         "position": 3,
         "price": 2850000,
         "fantasyPrice": 20000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -30000,
+        "statusInfo": "Muscle injury.",
         "playedHome": 11,
         "playedAway": 11,
+        "statusChange": 1768914014,
         "fitness": [
           4,
           5,
@@ -5129,8 +4954,6 @@
         "fitness": [
           null,
           null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -5146,12 +4969,10 @@
         "position": 3,
         "price": 220000,
         "fantasyPrice": 9000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 4,
         "playedAway": 2,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -5604,12 +5425,10 @@
         "position": 3,
         "price": 390000,
         "fantasyPrice": 18000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 2,
         "playedAway": 3,
-        "statusChange": 1766476830,
         "fitness": [
           "discarded",
           "discarded",
@@ -5989,12 +5808,10 @@
         "position": 3,
         "price": 2710000,
         "fantasyPrice": 18000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 270000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 6,
         "playedAway": 7,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -6225,12 +6042,10 @@
         "position": 4,
         "price": 6000000,
         "fantasyPrice": 25000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 30000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -6275,12 +6090,10 @@
         "position": 4,
         "price": 2400000,
         "fantasyPrice": 22000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 7,
         "playedAway": 5,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -6325,12 +6138,10 @@
         "position": 3,
         "price": 3070000,
         "fantasyPrice": 36000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -6401,12 +6212,10 @@
         "position": 2,
         "price": 360000,
         "fantasyPrice": 20000000,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Hamstring injury. Estimated return: End of January.",
         "playedHome": 0,
         "playedAway": 0,
-        "statusChange": 1761300000,
         "fitness": [
           "injured",
           "injured",
@@ -6673,7 +6482,7 @@
         "fantasyPrice": 24000000,
         "status": "injured",
         "priceIncrement": -20000,
-        "statusInfo": "Hamstring injury. Estimated return: Early February.",
+        "statusInfo": "Hamstring injury. Estimated return: End of January.",
         "playedHome": 9,
         "playedAway": 9,
         "statusChange": 1768572007,
@@ -6889,10 +6698,12 @@
         "position": 2,
         "price": 1290000,
         "fantasyPrice": 17000000,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -10000,
+        "statusInfo": "Hamstring injury. Estimated return: End of February.",
         "playedHome": 5,
         "playedAway": 7,
+        "statusChange": 1768914030,
         "fitness": [
           null,
           2,
@@ -7106,12 +6917,10 @@
         "position": 4,
         "price": 530000,
         "fantasyPrice": 30000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Disease.",
         "playedHome": 8,
         "playedAway": 6,
-        "statusChange": 1768572035,
         "fitness": [
           "doubt",
           null,
@@ -7676,10 +7485,12 @@
         "position": 3,
         "price": 3400000,
         "fantasyPrice": 24000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Knee injury.",
         "playedHome": 11,
         "playedAway": 11,
+        "statusChange": 1768914016,
         "fitness": [
           3,
           1,
@@ -8350,12 +8161,10 @@
         "position": 2,
         "price": 2160000,
         "fantasyPrice": 13000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Hamstring injury.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1768572017,
         "fitness": [
           "doubt",
           "injured",
@@ -9950,7 +9759,7 @@
         "fantasyPrice": 12000000,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Injury to the foot.",
+        "statusInfo": "Foot injury. Estimated return: End of February.",
         "playedHome": 1,
         "playedAway": 2,
         "statusChange": 1768392005,
@@ -10387,10 +10196,12 @@
         "position": 2,
         "price": 2090000,
         "fantasyPrice": 18000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -20000,
+        "statusInfo": "Fever.",
         "playedHome": 8,
         "playedAway": 10,
+        "statusChange": 1768914030,
         "fitness": [
           null,
           2,
@@ -10847,12 +10658,10 @@
         "position": 2,
         "price": 1010000,
         "fantasyPrice": 19000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 4,
         "playedAway": 5,
-        "statusChange": 1765882800,
         "fitness": [
           "discarded",
           "discarded",
@@ -11041,10 +10850,12 @@
         "position": 3,
         "price": 3840000,
         "fantasyPrice": 21000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -40000,
+        "statusInfo": "Muscle discomfort in the thigh.",
         "playedHome": 10,
         "playedAway": 9,
+        "statusChange": 1768914029,
         "fitness": [
           null,
           4,
@@ -11401,12 +11212,10 @@
         "position": 4,
         "price": 1450000,
         "fantasyPrice": 38000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 30000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 5,
         "playedAway": 5,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -11523,12 +11332,10 @@
         "position": 3,
         "price": 1680000,
         "fantasyPrice": 22000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 6,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -12691,10 +12498,12 @@
         "position": 3,
         "price": 480000,
         "fantasyPrice": 22000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Knee injury.",
         "playedHome": 6,
         "playedAway": 6,
+        "statusChange": 1768914019,
         "fitness": [
           1,
           "injured",
@@ -12739,12 +12548,10 @@
         "position": 3,
         "price": 430000,
         "fantasyPrice": 15000000,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Hamstring injury.",
         "playedHome": 4,
         "playedAway": 7,
-        "statusChange": 1768572022,
         "fitness": [
           "doubt",
           "injured",
@@ -12789,12 +12596,10 @@
         "position": 4,
         "price": 2740000,
         "fantasyPrice": 11000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 40000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 4,
         "playedAway": 5,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -12863,12 +12668,10 @@
         "position": 4,
         "price": 9490000,
         "fantasyPrice": 64000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 90000,
-        "statusInfo": "Called up for the Africa Cup.",
         "playedHome": 8,
         "playedAway": 6,
-        "statusChange": 1765796400,
         "fitness": [
           "discarded",
           "discarded",
@@ -13009,10 +12812,12 @@
         "position": 3,
         "price": 1000000,
         "fantasyPrice": 17000000,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 0,
+        "statusInfo": "Muscle injury.",
         "playedHome": 8,
         "playedAway": 11,
+        "statusChange": 1768914023,
         "fitness": [
           2,
           2,
@@ -13467,10 +13272,12 @@
         "position": 2,
         "price": 1130000,
         "fantasyPrice": 14000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 20000,
+        "statusInfo": "Hamstring discomfort.",
         "playedHome": 3,
         "playedAway": 8,
+        "statusChange": 1768914017,
         "fitness": [
           6,
           4,
@@ -13525,30 +13332,6 @@
         ],
         "points": 1,
         "pointsHome": 1,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "37919": {
-        "id": 37919,
-        "name": "Pembélé",
-        "slug": "t-pembele",
-        "teamID": null,
-        "position": 2,
-        "price": 150000,
-        "fantasyPrice": 8000000,
-        "status": "ok",
-        "priceIncrement": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "fitness": [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
-        "points": 0,
-        "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -13704,10 +13487,12 @@
         "position": 3,
         "price": 1410000,
         "fantasyPrice": 8000000,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -10000,
+        "statusInfo": "Groin discomfort.",
         "playedHome": 8,
         "playedAway": 9,
+        "statusChange": 1768914019,
         "fitness": [
           null,
           6,
@@ -15062,12 +14847,12 @@
         "position": 4,
         "price": 1140000,
         "fantasyPrice": 12000000,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury. Estimated return: Mid-January.",
+        "statusInfo": "Muscle injury.",
         "playedHome": 8,
         "playedAway": 7,
-        "statusChange": 1767603623,
+        "statusChange": 1768914029,
         "fitness": [
           "injured",
           "injured",
@@ -15088,12 +14873,10 @@
         "position": 2,
         "price": 420000,
         "fantasyPrice": 13000000,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Clause in the transfer (cannot face Arsenal).",
         "playedHome": 3,
         "playedAway": 2,
-        "statusChange": 1768572013,
         "fitness": [
           "discarded",
           null,
@@ -15550,7 +15333,7 @@
       }
     },
     "update": 1768971610,
-    "etag": 4162287705,
+    "etag": 1452565272,
     "scoreID": 3
   },
   "meta": {
