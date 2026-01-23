@@ -623,11 +623,11 @@ def get_players_data(
                     """
                     if use_buffer:
                         time.sleep(0.25)
-                    # player_name = ""
+                    player_name = ""
 
                     # Attempt #1: "player_name" via api
                     try:
-                        player_name = get_player_name(p)
+                        player_name = get_player_name(p, use_proxies=use_proxies)
                         return player_name
                     except:
                         pass
@@ -635,7 +635,7 @@ def get_players_data(
                     # Attempt #2: "player_name" via Selenium
                     if use_selenium:
                         try:
-                            player_name = get_player_name_selenium(p, use_proxies=use_proxies)
+                            player_name = get_player_name_selenium(p)
                             return player_name
                         except:
                             pass
@@ -659,7 +659,7 @@ def get_players_data(
                         reason = "element not found"
                         extra = ""
                         # use_selenium = True
-                        use_proxies = True
+                        # use_proxies = True
                     elif isinstance(e, CustomTimeoutException):
                         sleep_s = 1
                         reason = "timeout"
@@ -669,7 +669,7 @@ def get_players_data(
                         reason = "connection"
                         extra = f"({type(e).__name__})"
                     print(
-                        f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
+                        f"Retrying to fetch sofascore player name ({p}) due to {reason} error {extra} "
                         f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
                     )
                     time.sleep(sleep_s)
@@ -743,7 +743,7 @@ def get_players_data(
                             reason = "element not found"
                             extra = ""
                             # use_selenium = True
-                            use_proxies = True
+                            # use_proxies = True
                         elif isinstance(e, CustomTimeoutException):
                             sleep_s = 1
                             reason = "timeout"

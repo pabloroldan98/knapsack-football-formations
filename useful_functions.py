@@ -722,7 +722,6 @@ def get_working_proxy(
 
     tried = 0
     for proxy in proxy_list:
-        print(proxy)
         if max_proxies and tried >= max_proxies:
             break
         tried += 1
