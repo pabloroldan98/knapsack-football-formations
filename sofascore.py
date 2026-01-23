@@ -381,6 +381,77 @@ def get_player_page_average_rating(player_url):
     return None
 
 
+def get_player_name(player_url, headers=None):
+    """
+    Given a SofaScore player URL like:
+        https://www.sofascore.com/player/unai-marrero/1094782
+        get https://www.sofascore.com/api/v1/player/1094782
+    This function:
+      1) Extracts the player_id (e.g. 1094782)
+      2) Fetches the player's 'name' data
+    """
+    # 1) Extract the player ID from the URL via regex or string split
+    match = re.search(r"/player/[^/]+/(\d+)$", player_url)
+    if not match:
+        print(f"Could not extract player_id from URL: {player_url}")
+        return None
+    player_id = match.group(1)
+
+    # 2) Fetch seasons info: /api/v1/player/{player_id}/last-year-summary
+    player_api_url = f"https://www.sofascore.com/api/v1/player/{player_id}"
+    if not headers:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/91.0.4472.124 Safari/537.36"
+            )
+        }
+    # resp = requests.get(player_api_url, headers=headers, verify=False)
+    resp = tls_requests.get(player_api_url, headers=headers, verify=False)
+    # if resp.status_code == 403: # If blocked by too many calls
+    #     print(f"Status: {resp.status_code} , trying with no headers")
+    #     time.sleep(30)
+    #     return get_player_average_rating(player_api_url, headers=None)
+    if resp.status_code != 200:
+        # Raise your custom exception if HTTP status is not 200
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_api_url}")
+    data = resp.json()
+
+    # Safely get the player name (returns "" if not found)
+    player_name = (data.get("player") or {}).get("name", "")
+    return player_name
+
+
+def get_player_page_name(player_url, headers=None):
+    """
+    Just tries to find an <h2> (like your Selenium code: "(//h2)[1]")
+    """
+    if not headers:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/91.0.4472.124 Safari/537.36"
+            )
+        }
+    # resp = requests.get(p, headers=headers, verify=False)
+    resp = tls_requests.get(player_url, headers=headers, verify=False)
+    if resp.status_code != 200:
+        # Raise your custom exception if HTTP status is not 200
+        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
+
+    sp = BeautifulSoup(resp.text, "html.parser")
+    h2_tag = sp.find("h2")
+    if h2_tag:
+        try:
+            player_name = h2_tag.get_text(strip=True)
+            return player_name
+        except:
+            pass
+    return ""
+
+
 def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
@@ -569,25 +640,30 @@ def get_players_data(
             timeout_retries = 3
 
             while timeout_retries > 0:
-                def scrape_players_name_task():
+                def scrape_players_name_task(use_buffer=False):
                     """
-                    Just tries to find an <h2> (like your Selenium code: "(//h2)[1]")
+                    1) Try to find the player > name via API.
+                    2) If not found, try to find an <h2> (like your Selenium code: "(//h2)[1]").
                     """
+                    if use_buffer:
+                        time.sleep(1)
                     player_name = ""
-                    # resp = requests.get(p, headers=headers, verify=False)
-                    resp = tls_requests.get(p, headers=headers, verify=False)
-                    if resp.status_code != 200:
-                        # Raise your custom exception if HTTP status is not 200
-                        raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {p}")
 
-                    sp = BeautifulSoup(resp.text, "html.parser")
-                    h2_tag = sp.find("h2")
-                    if h2_tag:
-                        try:
-                            player_name = h2_tag.get_text(strip=True)
-                        except:
-                            pass
-                    return player_name
+                    # Attempt #1: "player_name" via api
+                    try:
+                        player_name = get_player_name(p)
+                        return player_name
+                    except:
+                        pass
+
+                    # Attempt #2: "player_name" via Selenium
+                    try:
+                        player_name = get_player_page_name(p)
+                        return player_name
+                    except:
+                        pass
+
+                    return player_name  # If all fails, return ""
 
                 try:
                     player_name = run_with_timeout(MAX_WAIT_TIME, scrape_players_name_task)
