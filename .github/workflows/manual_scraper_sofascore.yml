@@ -20,13 +20,13 @@ jobs:
           - bundesliga
           - ligueone
           - segunda
-          - champions
-          - europaleague
-          - conference
-          # - mundialito
-          # - mundial
-          # - eurocopa
-          # - copaamerica
+#          - champions
+#          - europaleague
+#          - conference
+#          - mundialito
+#          - mundial
+#          - eurocopa
+#          - copaamerica
 
     steps:
       - name: Enable Debug Logging
@@ -61,8 +61,137 @@ jobs:
             csv_files/*sofascore_${{ matrix.league }}*.csv
             json_files/*sofascore_${{ matrix.league }}*.json
 
+  run-tasks-firsthalf:
+    runs-on: ubuntu-latest
+#    runs-on: ubuntu-22.04
+#    timeout-minutes: 360  # Set the job timeout to 6 hours (360 minutes)
+    timeout-minutes: 60  # Set the job timeout 60 minutes
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+#          - laliga
+#          - premier
+#          - seriea
+#          - bundesliga
+#          - ligueone
+#          - segunda
+          - champions
+          - europaleague
+          - conference
+#          - mundialito
+#          - mundial
+#          - eurocopa
+#          - copaamerica
+
+    steps:
+      - name: Enable Debug Logging
+        run: |
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # Ensure the checkout action doesn't persist credentials
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tasks (${{ matrix.league }})
+        run: |
+          python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_firsthalf.py
+
+      - name: Upload DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: sofascore-data-${{ matrix.league }}
+          path: |
+            csv_files/*sofascore_${{ matrix.league }}*.csv
+            json_files/*sofascore_${{ matrix.league }}*.json
+
+  run-tasks-secondhalf:
+    needs: run-tasks-firsthalf
+    runs-on: ubuntu-latest
+#    runs-on: ubuntu-22.04
+#    timeout-minutes: 360  # Set the job timeout to 6 hours (360 minutes)
+    timeout-minutes: 60  # Set the job timeout 60 minutes
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      matrix:
+        league:
+#          - laliga
+#          - premier
+#          - seriea
+#          - bundesliga
+#          - ligueone
+#          - segunda
+          - champions
+          - europaleague
+          - conference
+#          - mundialito
+#          - mundial
+#          - eurocopa
+#          - copaamerica
+
+    steps:
+      - name: Enable Debug Logging
+        run: |
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false # Ensure the checkout action doesn't persist credentials
+
+      - name: Download SofaScore DATA artifact
+        uses: actions/download-artifact@v4
+        with:
+#          name: sofascore-data
+          pattern: sofascore-data-*
+          merge-multiple: true
+          -path: data_files/sofascore/
+
+      - name: Move SofaScore DATA files to root csv_files and json_files directories
+        run: |
+          mv -f data_files/sofascore/*.csv csv_files/ 2>/dev/null || true
+          mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
+          rm -rf data_files/sofascore
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tasks (${{ matrix.league }})
+        run: |
+          python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_secondhalf.py
+
+      - name: Upload DATA files as artifact (${{ matrix.league }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: sofascore-data-${{ matrix.league }}
+          path: |
+            csv_files/*sofascore_${{ matrix.league }}*.csv
+            json_files/*sofascore_${{ matrix.league }}*.json
+
   commit-and-push:
-    needs: run-tasks
+    needs: [run-tasks, run-tasks-firsthalf, run-tasks-secondhalf]
     runs-on: ubuntu-latest
     timeout-minutes: 30  # Set the job timeout to 30 minutes
     steps:

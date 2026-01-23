@@ -102,11 +102,12 @@ def get_players_ratings_list(
         file_name="sofascore_players_ratings",
         team_links=None,
         backup_files=True,
-        force_scrape=False
+        force_scrape=False,
+        select_half: int | None = None,
 ):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    teams_data_dict = get_players_data(write_file, file_name, team_links, backup_files=backup_files, force_scrape=force_scrape)
+    teams_data_dict = get_players_data(write_file, file_name, team_links, backup_files=backup_files, force_scrape=force_scrape, select_half=select_half,)
     players_ratings_list = []
     for team_name, players_ratings in teams_data_dict.items():
         if isinstance(players_ratings, str):
@@ -526,12 +527,22 @@ def get_players_data(
         file_name="sofascore_players_ratings",
         team_links=None,
         backup_files=True,
-        force_scrape=False
+        force_scrape=False,
+        select_half: int | None = None,
 ):
-    if not force_scrape:
+    existing_data = {}
+
+    # Normal caching behavior only when scraping everything (select_half=None)
+    if select_half is None and not force_scrape:
         data = read_dict_data(file_name)
         if data:
             return data
+
+    # If we are scraping halves, we may want to merge with existing file
+    if select_half in (1, 2):
+        data = read_dict_data(file_name)
+        if isinstance(data, dict):
+            existing_data = data
 
     if not team_links:
         competition = competition_from_filename(file_name)
@@ -547,6 +558,15 @@ def get_players_data(
     # team_links = {
     #     '0': ['León', 'https://www.sofascore.com/team/football/club-leon/36534'],
     # }
+    # If we're doing half selection, split deterministically (based on the idx)
+    if select_half in (1, 2):
+        items = sorted(team_links.items(), key=lambda kv: int(kv[0]))  # sort by numeric idx
+
+        mid = len(items) // 2
+        selected_items = items[:mid] if select_half == 1 else items[mid:]
+
+        team_links = dict(selected_items)
+        print(f"[select_half={select_half}] Teams selected: {len(team_links)} / {len(items)}")
 
     print()
     team_players_paths = dict()
@@ -768,6 +788,15 @@ def get_players_data(
             # write_dict_data(teams_with_players_ratings, file_name + "_" + str(j))
             overwrite_dict_data(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
         j += 1
+
+    # If we are scraping halves, merge into any existing data
+    if select_half in (1, 2) and existing_data:
+        for team_name, players_dict in teams_with_players_ratings.items():
+            if team_name not in existing_data or not isinstance(existing_data[team_name], dict):
+                existing_data[team_name] = {}
+            existing_data[team_name].update(players_dict)
+
+        teams_with_players_ratings = existing_data
 
     if write_file:
         # write_dict_data(teams_with_players_ratings, file_name)
