@@ -169,7 +169,7 @@ def get_team_links_from_league(league_url):
     return team_data
 
 
-def get_player_average_rating_selenium(player_url):
+def get_player_average_rating_selenium_short(player_url):
     print("Fallback rating")
     driver = create_driver(keep_alive=False)
     wait = WebDriverWait(driver, 15)  # Reusable WebDriverWait
@@ -269,7 +269,7 @@ def get_player_last_year_rating(player_url, headers=None):
     return average_rating
 
 
-def get_player_statistics_rating(player_url):
+def get_player_last_tournament_rating_selenium(player_url):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -390,7 +390,7 @@ def get_player_average_rating(player_url, headers=None):
     return average_rating
 
 
-def get_player_page_average_rating(player_url):
+def get_player_average_rating_selenium(player_url):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -442,6 +442,7 @@ def get_player_name(player_url, headers=None):
     #     time.sleep(30)
     #     return get_player_average_rating(player_api_url, headers=None)
     if resp.status_code != 200:
+        print(resp.text)
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_api_url}")
     data = resp.json()
@@ -450,14 +451,13 @@ def get_player_name(player_url, headers=None):
     player_name = (data.get("player") or {}).get("name")
 
     if not player_name:
-        print(resp.text)
         # Raise a CustomMissingException exception if no name was fetched
         raise CustomMissingException("No name was fetched")
 
     return player_name
 
 
-def get_player_page_name(player_url, headers=None):
+def get_player_name_selenium(player_url, headers=None):
     """
     Just tries to find an <h2> (like your Selenium code: "(//h2)[1]")
     """
@@ -467,6 +467,7 @@ def get_player_page_name(player_url, headers=None):
     # resp = requests.get(p, headers=headers, verify=False)
     resp = tls_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
+        print(resp.text)
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
 
@@ -479,7 +480,6 @@ def get_player_page_name(player_url, headers=None):
         except:
             pass
 
-    print(resp.text)
     # Raise a CustomMissingException exception if no name was fetched
     raise CustomMissingException("No name was fetched")
 
@@ -602,13 +602,13 @@ def get_players_data(
             timeout_retries = 3
 
             while timeout_retries > 0:
-                def scrape_players_name_task(use_buffer=False):
+                def scrape_players_name_task(use_buffer=True):
                     """
                     1) Try to find the player > name via API.
                     2) If not found, try to find an <h2> (like your Selenium code: "(//h2)[1]").
                     """
                     if use_buffer:
-                        time.sleep(1)
+                        time.sleep(0.25)
                     # player_name = ""
 
                     # Attempt #1: "player_name" via api
@@ -618,12 +618,12 @@ def get_players_data(
                     except:
                         pass
 
-                    # Attempt #2: "player_name" via Selenium
-                    try:
-                        player_name = get_player_page_name(p)
-                        return player_name
-                    except:
-                        pass
+                    # # Attempt #2: "player_name" via Selenium
+                    # try:
+                    #     player_name = get_player_name_selenium(p)
+                    #     return player_name
+                    # except:
+                    #     pass
 
                     # return player_name  # If all fails, return ""
                     # Raise a CustomMissingException exception if no name was fetched
@@ -640,7 +640,7 @@ def get_players_data(
                         break
                     # Different behavior depending on the exception
                     if isinstance(e, CustomMissingException):
-                        sleep_s = 300
+                        sleep_s = 60
                         reason = "element not found"
                         extra = ""
                     elif isinstance(e, CustomTimeoutException):
@@ -663,7 +663,7 @@ def get_players_data(
                 timeout_retries = 3
 
                 while timeout_retries > 0:
-                    def scrape_players_rating_task(use_buffer=False):
+                    def scrape_players_rating_task(use_buffer=True):
                         """
                         1) Try to find the <span role="meter" aria-valuenow="...">
                            (Summary last 12 months).
@@ -672,22 +672,22 @@ def get_players_data(
                            apply *0.95.
                         """
                         if use_buffer:
-                            time.sleep(1)
+                            time.sleep(0.25)
                         average_rating = float(6.0)
 
-                        # # Attempt #1: "Summary (last 12 months)"
-                        # try:
-                        #     average_rating = float(get_player_page_average_rating(p))
-                        #     return average_rating
-                        # except:
-                        #     pass
-
-                        # Attempt #2: "last-year-summary" via api
+                        # Attempt #1: "last-year-summary" via api
                         try:
                             average_rating = float(get_player_average_rating(p))
                             return average_rating
                         except:
                             pass
+
+                        # # Attempt #2: "Summary (last 12 months)" via Selenium
+                        # try:
+                        #     average_rating = float(get_player_average_rating_selenium(p))
+                        #     return average_rating
+                        # except:
+                        #     pass
 
                         # Attempt #3: "Average Sofascore Rating" fallback
                         # Find the rating of the last year he played
@@ -700,8 +700,8 @@ def get_players_data(
                         # # Attempt #4: "Average Sofascore Rating" fallback
                         # # Find the rating of the last tournament
                         # try:
-                        #     average_rating = float(get_player_statistics_rating(p))
-                        #     # average_rating = get_player_average_rating_selenium(p)
+                        #     average_rating = float(get_player_last_tournament_rating_selenium(p))
+                        #     # average_rating = get_player_average_rating_selenium_short(p)
                         # except Exception as e:
                         #     print(f"Error while getting average rating for player {p}: {e}")
                         #     print(f"Exception type: {type(e).__name__}")
@@ -722,7 +722,7 @@ def get_players_data(
                             break
                         # Different behavior depending on the exception
                         if isinstance(e, CustomMissingException):
-                            sleep_s = 300
+                            sleep_s = 60
                             reason = "element not found"
                             extra = ""
                         elif isinstance(e, CustomTimeoutException):
