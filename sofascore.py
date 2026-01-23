@@ -450,6 +450,7 @@ def get_player_name(player_url, headers=None):
     player_name = (data.get("player") or {}).get("name")
 
     if not player_name:
+        print(resp.text)
         # Raise a CustomMissingException exception if no name was fetched
         raise CustomMissingException("No name was fetched")
 
@@ -478,6 +479,7 @@ def get_player_page_name(player_url, headers=None):
         except:
             pass
 
+    print(resp.text)
     # Raise a CustomMissingException exception if no name was fetched
     raise CustomMissingException("No name was fetched")
 
@@ -638,7 +640,7 @@ def get_players_data(
                         break
                     # Different behavior depending on the exception
                     if isinstance(e, CustomMissingException):
-                        sleep_s = 60
+                        sleep_s = 300
                         reason = "element not found"
                         extra = ""
                     elif isinstance(e, CustomTimeoutException):
@@ -651,7 +653,7 @@ def get_players_data(
                         extra = f"({type(e).__name__})"
                     print(
                         f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
-                        f"({timeout_retries} retry left)"
+                        f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
                     )
                     time.sleep(sleep_s)
 
@@ -720,7 +722,7 @@ def get_players_data(
                             break
                         # Different behavior depending on the exception
                         if isinstance(e, CustomMissingException):
-                            sleep_s = 60
+                            sleep_s = 300
                             reason = "element not found"
                             extra = ""
                         elif isinstance(e, CustomTimeoutException):
@@ -733,7 +735,7 @@ def get_players_data(
                             extra = f"({type(e).__name__})"
                         print(
                             f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
-                            f"({timeout_retries} retry left)"
+                            f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
                         )
                         time.sleep(sleep_s)
                 if player_name != "":
