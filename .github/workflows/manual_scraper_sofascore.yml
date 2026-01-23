@@ -62,7 +62,7 @@ jobs:
             json_files/*sofascore_${{ matrix.league }}*.json
 
   run-tasks-firsthalf:
-#    needs: run-tasks
+#    needs: run-tasks  # No hace falta y no da problemas de concurrencia porque aunque se descargue algunos a medias, los que hace upload son de los que van por halfs
     runs-on: ubuntu-latest
 #    runs-on: ubuntu-22.04
 #    timeout-minutes: 360  # Set the job timeout to 6 hours (360 minutes)
