@@ -22,6 +22,7 @@ import copy
 from pprint import pprint
 import ast
 import time
+import random
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
@@ -31,6 +32,67 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 
 # Maximum wait time for player data (in seconds)
 MAX_WAIT_TIME = 2 * 60  # 2 minutes (120 seconds)
+
+# random header pool
+HEADER_POOL = [
+    # Your current one (Chrome 91 / Windows)
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/91.0.4472.124 Safari/537.36"
+        )
+    },
+
+    # Chrome / Windows (newer-ish)
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+    },
+
+    # Chrome / macOS
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+    },
+
+    # Chrome / Linux
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+    },
+
+    # Firefox / Windows
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) "
+            "Gecko/20100101 Firefox/121.0"
+        )
+    },
+
+    # Safari / macOS
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/17.1 Safari/605.1.15"
+        )
+    },
+]
+
+
+def pick_headers():
+    # copy() so you don't accidentally mutate the pool entry later
+    return random.choice(HEADER_POOL).copy()
 
 
 def get_players_ratings_list(
@@ -67,13 +129,7 @@ def fix_team_data(team_data):
 
 def get_team_links_from_league(league_url):
     # We do a direct HTTP GET
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
-    }
+    headers = pick_headers()
     # response = requests.get(league_url, headers=headers, verify=False)
     response = tls_requests.get(league_url, headers=headers, verify=False)
     html = response.text
@@ -161,13 +217,7 @@ def get_player_last_year_rating(player_url, headers=None):
     # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/match-type/overall
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/match-type/overall"
     if not headers:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
-        }
+        headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
@@ -240,13 +290,7 @@ def get_player_statistics_rating(player_url):
 
     # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/seasons
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/seasons"
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
-    }
+    headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
@@ -314,13 +358,7 @@ def get_player_average_rating(player_url, headers=None):
     # 2) Fetch seasons info: /api/v1/player/{player_id}/last-year-summary
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/last-year-summary"
     if not headers:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
-        }
+        headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
@@ -357,13 +395,7 @@ def get_player_page_average_rating(player_url):
     This function:
       1) Try to find the <span role="meter" aria-valuenow="..."> (Summary last 12 months).
     """
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
-    }
+    headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
     resp = tls_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
@@ -400,13 +432,7 @@ def get_player_name(player_url, headers=None):
     # 2) Fetch seasons info: /api/v1/player/{player_id}/last-year-summary
     player_api_url = f"https://www.sofascore.com/api/v1/player/{player_id}"
     if not headers:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
-        }
+        headers = pick_headers()
     # resp = requests.get(player_api_url, headers=headers, verify=False)
     resp = tls_requests.get(player_api_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
@@ -418,8 +444,13 @@ def get_player_name(player_url, headers=None):
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_api_url}")
     data = resp.json()
 
-    # Safely get the player name (returns "" if not found)
-    player_name = (data.get("player") or {}).get("name", "")
+    # Safely get the player name (returns None if not found)
+    player_name = (data.get("player") or {}).get("name")
+
+    if not player_name:
+        # Raise a ValueError exception if no name was fetched
+        raise ValueError("No name was fetched")
+
     return player_name
 
 
@@ -427,14 +458,9 @@ def get_player_page_name(player_url, headers=None):
     """
     Just tries to find an <h2> (like your Selenium code: "(//h2)[1]")
     """
+    print("Fallback name")
     if not headers:
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/91.0.4472.124 Safari/537.36"
-            )
-        }
+        headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
     resp = tls_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
@@ -449,7 +475,9 @@ def get_player_page_name(player_url, headers=None):
             return player_name
         except:
             pass
-    return ""
+
+    # Raise a ValueError exception if no name was fetched
+    raise ValueError("No name was fetched")
 
 
 def competition_from_filename(file_name: str) -> str:
@@ -506,13 +534,7 @@ def get_players_data(
 
     print()
     team_players_paths = dict()
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
-    }
+    headers = pick_headers()
 
     for key, value in team_links.items():
         team_name = value[0]
@@ -629,12 +651,23 @@ def get_players_data(
                     break  # Break if successful
                 except (CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
                     timeout_retries -= 1
-                    print(f"Retrying to fetch sofascore player rating ({p}) due to timeout/connection error... "
-                          f"({timeout_retries} retry left)")
-                    time.sleep(1)
                     if timeout_retries <= 0:
                         print("Failed to fetch rating after several attempts.")
                         break
+                    # Different behavior depending on the exception
+                    if isinstance(e, CustomTimeoutException):
+                        sleep_s = 1
+                        reason = "timeout"
+                        extra = f"(waited {MAX_WAIT_TIME}s)"
+                    else:
+                        sleep_s = 2
+                        reason = "connection"
+                        extra = f"({type(e).__name__})"
+                    print(
+                        f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
+                        f"({timeout_retries} retry left)"
+                    )
+                    time.sleep(sleep_s)
 
             # 2) Attempt player name with timeouts
             timeout_retries = 3
@@ -676,12 +709,23 @@ def get_players_data(
                     break
                 except (CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
                     timeout_retries -= 1
-                    print(f"Retrying to fetch sofascore player name ({p}) due to timeout/connection error... "
-                          f"({timeout_retries} retry left)")
-                    time.sleep(1)
                     if timeout_retries <= 0:
-                        print("Failed to fetch player name after several attempts.")
+                        print("Failed to fetch name after several attempts.")
                         break
+                    # Different behavior depending on the exception
+                    if isinstance(e, CustomTimeoutException):
+                        sleep_s = 1
+                        reason = "timeout"
+                        extra = f"(waited {MAX_WAIT_TIME}s)"
+                    else:
+                        sleep_s = 2
+                        reason = "connection"
+                        extra = f"({type(e).__name__})"
+                    print(
+                        f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
+                        f"({timeout_retries} retry left)"
+                    )
+                    time.sleep(sleep_s)
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
 
         if backup_files:
