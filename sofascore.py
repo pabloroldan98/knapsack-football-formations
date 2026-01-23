@@ -195,7 +195,7 @@ def normalize_year(year_raw):
     return year_raw
 
 
-def get_player_last_year_rating(player_url, headers=None):
+def get_player_last_year_rating(player_url, headers=None, use_proxies=False):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -221,7 +221,11 @@ def get_player_last_year_rating(player_url, headers=None):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    if use_proxies:
+        working_proxy = get_working_proxy(player_url)
+        resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+    else:
+        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -340,7 +344,7 @@ def get_player_last_tournament_rating_selenium(player_url):
     return average_rating
 
 
-def get_player_average_rating(player_url, headers=None):
+def get_player_average_rating(player_url, headers=None, use_proxies=False):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -362,7 +366,11 @@ def get_player_average_rating(player_url, headers=None):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    if use_proxies:
+        working_proxy = get_working_proxy(player_url)
+        resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+    else:
+        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -415,7 +423,7 @@ def get_player_average_rating_selenium(player_url):
     return None
 
 
-def get_player_name(player_url, headers=None):
+def get_player_name(player_url, headers=None, use_proxies=False):
     """
     Given a SofaScore player URL like:
         https://www.sofascore.com/player/unai-marrero/1094782
@@ -436,13 +444,17 @@ def get_player_name(player_url, headers=None):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(player_api_url, headers=headers, verify=False)
-    resp = tls_requests.get(player_api_url, headers=headers, verify=False)
+    if use_proxies:
+        working_proxy = get_working_proxy(player_url)
+        resp = tls_requests.get(player_api_url, headers=headers, verify=False, proxy=working_proxy)
+    else:
+        resp = tls_requests.get(player_api_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
     #     return get_player_average_rating(player_api_url, headers=None)
     if resp.status_code != 200:
-        print(resp.text)
+        # print(resp.text)
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_api_url}")
     data = resp.json()
@@ -467,7 +479,7 @@ def get_player_name_selenium(player_url, headers=None):
     # resp = requests.get(p, headers=headers, verify=False)
     resp = tls_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
-        print(resp.text)
+        # print(resp.text)
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
 
@@ -597,12 +609,14 @@ def get_players_data(
     for team_name, player_paths in team_players_paths.items():
         players_ratings = {}
         for p in player_paths:
+            use_selenium = False
+            use_proxies = False
             print('Extracting player data from: %s ...' % p)
             # 1) Attempt player name with timeouts + fallbacks
             timeout_retries = 3
 
             while timeout_retries > 0:
-                def scrape_players_name_task(use_buffer=True):
+                def scrape_players_name_task(use_buffer=False):
                     """
                     1) Try to find the player > name via API.
                     2) If not found, try to find an <h2> (like your Selenium code: "(//h2)[1]").
@@ -618,12 +632,13 @@ def get_players_data(
                     except:
                         pass
 
-                    # # Attempt #2: "player_name" via Selenium
-                    # try:
-                    #     player_name = get_player_name_selenium(p)
-                    #     return player_name
-                    # except:
-                    #     pass
+                    # Attempt #2: "player_name" via Selenium
+                    if use_selenium:
+                        try:
+                            player_name = get_player_name_selenium(p, use_proxies=use_proxies)
+                            return player_name
+                        except:
+                            pass
 
                     # return player_name  # If all fails, return ""
                     # Raise a CustomMissingException exception if no name was fetched
@@ -640,9 +655,11 @@ def get_players_data(
                         break
                     # Different behavior depending on the exception
                     if isinstance(e, CustomMissingException):
-                        sleep_s = 60
+                        sleep_s = 0
                         reason = "element not found"
                         extra = ""
+                        # use_selenium = True
+                        use_proxies = True
                     elif isinstance(e, CustomTimeoutException):
                         sleep_s = 1
                         reason = "timeout"
@@ -663,7 +680,7 @@ def get_players_data(
                 timeout_retries = 3
 
                 while timeout_retries > 0:
-                    def scrape_players_rating_task(use_buffer=True):
+                    def scrape_players_rating_task(use_buffer=False):
                         """
                         1) Try to find the <span role="meter" aria-valuenow="...">
                            (Summary last 12 months).
@@ -677,7 +694,7 @@ def get_players_data(
 
                         # Attempt #1: "last-year-summary" via api
                         try:
-                            average_rating = float(get_player_average_rating(p))
+                            average_rating = float(get_player_average_rating(p, use_proxies=use_proxies))
                             return average_rating
                         except:
                             pass
@@ -692,7 +709,7 @@ def get_players_data(
                         # Attempt #3: "Average Sofascore Rating" fallback
                         # Find the rating of the last year he played
                         try:
-                            average_rating = float(get_player_last_year_rating(p))
+                            average_rating = float(get_player_last_year_rating(p, use_proxies=use_proxies))
                             return average_rating
                         except:
                             pass
@@ -703,10 +720,10 @@ def get_players_data(
                         #     average_rating = float(get_player_last_tournament_rating_selenium(p))
                         #     # average_rating = get_player_average_rating_selenium_short(p)
                         # except Exception as e:
-                        #     print(f"Error while getting average rating for player {p}: {e}")
-                        #     print(f"Exception type: {type(e).__name__}")
-                        #     import traceback
-                        #     traceback.print_exc()
+                        #     # print(f"Error while getting average rating for player {p}: {e}")
+                        #     # print(f"Exception type: {type(e).__name__}")
+                        #     # import traceback
+                        #     # traceback.print_exc()
                         #     pass
 
                         return average_rating  # If all fails, return 6.0
@@ -722,9 +739,11 @@ def get_players_data(
                             break
                         # Different behavior depending on the exception
                         if isinstance(e, CustomMissingException):
-                            sleep_s = 60
+                            sleep_s = 0
                             reason = "element not found"
                             extra = ""
+                            # use_selenium = True
+                            use_proxies = True
                         elif isinstance(e, CustomTimeoutException):
                             sleep_s = 1
                             reason = "timeout"
@@ -778,3 +797,5 @@ def get_players_data(
 # for p in result:
 #     print(p)
 #     print(p.sofascore_rating)
+
+# print(get_player_name("https://www.sofascore.com/es/football/player/vinicius-junior/868812"))

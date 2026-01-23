@@ -687,54 +687,67 @@ def create_driver(keep_alive=True):
     return webdriver.Chrome(keep_alive=keep_alive, options=chrome_options)
 
 
+def _normalize_proxy(p: str) -> str:
+    p = (p or "").strip()
+    if not p:
+        return p
+    return p if "://" in p else f"http://{p}"  # tls_requests needs scheme
+
+
+def _is_sofascore_challenge(text: str) -> bool:
+    try:
+        data = json.loads(text)
+        return isinstance(data, dict) and data.get("error", {}).get("reason") == "challenge"
+    except Exception:
+        return False
+
+
 def get_working_proxy(
-        target_url: str,
-        headers: dict | None = None,
-        max_proxies: int | None = None,
-        timeout: float = 5.0
+    target_url: str,
+    headers: dict | None = None,
+    max_proxies: int | None = 100,
+    timeout: float = 6.0,
 ) -> str:
     """
-    Fetches a fresh list of public proxies, tests them against `target_url`
-    using the supplied `headers`, and returns the first proxy that works.
-
-    :param target_url: The URL to test connectivity through the proxy.
-    :param headers:    (Optional) A dict of headers to send with each test request.
-    :param max_proxies:(Optional) Max number of proxies to try (None = all).
-    :param timeout:    Request timeout in seconds.
-    :return:           A working proxy string in "IP:port" format.
-    :raises RuntimeError: If no proxy succeeds.
+    Returns a working proxy string like "http://IP:port".
+    Tests proxies from free-proxy-list.net against target_url using tls_requests.
     """
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    # 1) Fetch and parse the raw proxy list
-    # html = requests.get("https://free-proxy-list.net/", verify=False).text
     html = tls_requests.get("https://free-proxy-list.net/", verify=False).text
     soup = BeautifulSoup(html, "html.parser")
     raw = soup.find("textarea", {"class": "form-control"}).get_text()
     lines = raw.splitlines()[2:]  # skip header lines
     proxy_list = [line.strip() for line in lines if line.strip()]
 
-    # 2) Test each proxy
-    for idx, proxy in enumerate(proxy_list):
-        if max_proxies and idx >= max_proxies:
+    tried = 0
+    for proxy in proxy_list:
+        print(proxy)
+        if max_proxies and tried >= max_proxies:
             break
+        tried += 1
+
+        proxy = _normalize_proxy(proxy)
+
         try:
-            # resp = requests.get(
             resp = tls_requests.get(
                 target_url,
-                proxies={"https": proxy},
+                proxy=proxy,               # <-- IMPORTANT: use `proxy=...` not proxies dict
                 headers=headers or {},
+                verify=False,
                 timeout=timeout,
-                verify=False
             )
-            body = resp.text.lstrip()
-            # only accept if status 200 and body starts with an HTML doctype
-            if resp.status_code == 200 and body.startswith("<!DOCTYPE html"):
+
+            text = (resp.text or "").lstrip()
+
+            # Accept any HTTP 200 that isn't the SofaScore "challenge" JSON
+            if resp.status_code == 200 and not _is_sofascore_challenge(text) and text.startswith("<!DOCTYPE html"):
                 return proxy
+
         except Exception:
             continue
 
-    raise RuntimeError("No working proxy found")
+    raise RuntimeError(f"No working proxy found (tried {tried})")
 
 
 # Define a custom exception for timeout
