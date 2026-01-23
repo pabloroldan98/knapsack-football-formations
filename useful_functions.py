@@ -748,6 +748,12 @@ class CustomConnectionException(Exception):
     pass
 
 
+# Define a custom exception for not found elements
+class CustomMissingException(Exception):
+    """Custom exception for missing elements."""
+    pass
+
+
 # A wrapper to run each iteration with a timeout
 def run_with_timeout(timeout, task):
     with stopit.ThreadingTimeout(timeout) as to_ctx:

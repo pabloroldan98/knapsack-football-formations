@@ -26,7 +26,9 @@ import random
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
-    run_with_timeout, CustomTimeoutException, CustomConnectionException, find_manual_similar_string, get_working_proxy
+    run_with_timeout, CustomTimeoutException, CustomConnectionException, CustomMissingException, \
+    find_manual_similar_string, get_working_proxy
+
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -448,8 +450,8 @@ def get_player_name(player_url, headers=None):
     player_name = (data.get("player") or {}).get("name")
 
     if not player_name:
-        # Raise a ValueError exception if no name was fetched
-        raise ValueError("No name was fetched")
+        # Raise a CustomMissingException exception if no name was fetched
+        raise CustomMissingException("No name was fetched")
 
     return player_name
 
@@ -476,8 +478,8 @@ def get_player_page_name(player_url, headers=None):
         except:
             pass
 
-    # Raise a ValueError exception if no name was fetched
-    raise ValueError("No name was fetched")
+    # Raise a CustomMissingException exception if no name was fetched
+    raise CustomMissingException("No name was fetched")
 
 
 def competition_from_filename(file_name: str) -> str:
@@ -593,83 +595,8 @@ def get_players_data(
     for team_name, player_paths in team_players_paths.items():
         players_ratings = {}
         for p in player_paths:
-            # 1) Attempt rating with timeouts + fallback
-            average_rating = float(6.0)
-            timeout_retries = 3
-
-            while timeout_retries > 0:
-                def scrape_players_rating_task(use_buffer=False):
-                    """
-                    1) Try to find the <span role="meter" aria-valuenow="...">
-                       (Summary last 12 months).
-                    2) If not found, try to find "Average Sofascore Rating"
-                       then look for the <span role="meter"> near it,
-                       apply *0.95.
-                    """
-                    if use_buffer:
-                        time.sleep(1)
-                    average_rating = float(6.0)
-
-                    # # Attempt #1: "Summary (last 12 months)"
-                    # try:
-                    #     average_rating = float(get_player_page_average_rating(p))
-                    #     return average_rating
-                    # except:
-                    #     pass
-
-                    # Attempt #2: "last-year-summary" via api
-                    try:
-                        average_rating = float(get_player_average_rating(p))
-                        return average_rating
-                    except:
-                        pass
-
-                    # Attempt #3: "Average Sofascore Rating" fallback
-                    # Find the rating of the last year he played
-                    try:
-                        average_rating = float(get_player_last_year_rating(p))
-                        return average_rating
-                    except:
-                        pass
-
-                    # # Attempt #4: "Average Sofascore Rating" fallback
-                    # # Find the rating of the last tournament
-                    # try:
-                    #     average_rating = float(get_player_statistics_rating(p))
-                    #     # average_rating = get_player_average_rating_selenium(p)
-                    # except Exception as e:
-                    #     print(f"Error while getting average rating for player {p}: {e}")
-                    #     print(f"Exception type: {type(e).__name__}")
-                    #     import traceback
-                    #     traceback.print_exc()
-                    #     pass
-
-                    return average_rating  # If all fails, return 6.0
-
-                try:
-                    average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
-                    break  # Break if successful
-                except (CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
-                    timeout_retries -= 1
-                    if timeout_retries <= 0:
-                        print("Failed to fetch rating after several attempts.")
-                        break
-                    # Different behavior depending on the exception
-                    if isinstance(e, CustomTimeoutException):
-                        sleep_s = 1
-                        reason = "timeout"
-                        extra = f"(waited {MAX_WAIT_TIME}s)"
-                    else:
-                        sleep_s = 2
-                        reason = "connection"
-                        extra = f"({type(e).__name__})"
-                    print(
-                        f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
-                        f"({timeout_retries} retry left)"
-                    )
-                    time.sleep(sleep_s)
-
-            # 2) Attempt player name with timeouts
+            print('Extracting player data from: %s ...' % p)
+            # 1) Attempt player name with timeouts + fallbacks
             timeout_retries = 3
 
             while timeout_retries > 0:
@@ -680,7 +607,7 @@ def get_players_data(
                     """
                     if use_buffer:
                         time.sleep(1)
-                    player_name = ""
+                    # player_name = ""
 
                     # Attempt #1: "player_name" via api
                     try:
@@ -696,24 +623,25 @@ def get_players_data(
                     except:
                         pass
 
-                    return player_name  # If all fails, return ""
+                    # return player_name  # If all fails, return ""
+                    # Raise a CustomMissingException exception if no name was fetched
+                    raise CustomMissingException("No name was fetched")
 
                 try:
                     player_name = run_with_timeout(MAX_WAIT_TIME, scrape_players_name_task)
-                    print('Extracting player data from %s ...' % player_name)
-                    print(average_rating)
-                    if player_name != "":
-                        player_name = find_manual_similar_string(player_name)
-                        # players_ratings[player_name] = average_rating
-                        players_ratings[player_name] = average_rating if average_rating != 0 else float(6.0)
+                    print(player_name)
                     break
-                except (CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
+                except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
                     timeout_retries -= 1
                     if timeout_retries <= 0:
                         print("Failed to fetch name after several attempts.")
                         break
                     # Different behavior depending on the exception
-                    if isinstance(e, CustomTimeoutException):
+                    if isinstance(e, CustomMissingException):
+                        sleep_s = 60
+                        reason = "element not found"
+                        extra = ""
+                    elif isinstance(e, CustomTimeoutException):
                         sleep_s = 1
                         reason = "timeout"
                         extra = f"(waited {MAX_WAIT_TIME}s)"
@@ -726,6 +654,93 @@ def get_players_data(
                         f"({timeout_retries} retry left)"
                     )
                     time.sleep(sleep_s)
+
+            if player_name != "":
+                # 2) Attempt rating with timeouts + fallback
+                average_rating = float(6.0)
+                timeout_retries = 3
+
+                while timeout_retries > 0:
+                    def scrape_players_rating_task(use_buffer=False):
+                        """
+                        1) Try to find the <span role="meter" aria-valuenow="...">
+                           (Summary last 12 months).
+                        2) If not found, try to find "Average Sofascore Rating"
+                           then look for the <span role="meter"> near it,
+                           apply *0.95.
+                        """
+                        if use_buffer:
+                            time.sleep(1)
+                        average_rating = float(6.0)
+
+                        # # Attempt #1: "Summary (last 12 months)"
+                        # try:
+                        #     average_rating = float(get_player_page_average_rating(p))
+                        #     return average_rating
+                        # except:
+                        #     pass
+
+                        # Attempt #2: "last-year-summary" via api
+                        try:
+                            average_rating = float(get_player_average_rating(p))
+                            return average_rating
+                        except:
+                            pass
+
+                        # Attempt #3: "Average Sofascore Rating" fallback
+                        # Find the rating of the last year he played
+                        try:
+                            average_rating = float(get_player_last_year_rating(p))
+                            return average_rating
+                        except:
+                            pass
+
+                        # # Attempt #4: "Average Sofascore Rating" fallback
+                        # # Find the rating of the last tournament
+                        # try:
+                        #     average_rating = float(get_player_statistics_rating(p))
+                        #     # average_rating = get_player_average_rating_selenium(p)
+                        # except Exception as e:
+                        #     print(f"Error while getting average rating for player {p}: {e}")
+                        #     print(f"Exception type: {type(e).__name__}")
+                        #     import traceback
+                        #     traceback.print_exc()
+                        #     pass
+
+                        return average_rating  # If all fails, return 6.0
+
+                    try:
+                        average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
+                        print(average_rating)
+                        break  # Break if successful
+                    except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
+                        timeout_retries -= 1
+                        if timeout_retries <= 0:
+                            print("Failed to fetch rating after several attempts.")
+                            break
+                        # Different behavior depending on the exception
+                        if isinstance(e, CustomMissingException):
+                            sleep_s = 60
+                            reason = "element not found"
+                            extra = ""
+                        elif isinstance(e, CustomTimeoutException):
+                            sleep_s = 1
+                            reason = "timeout"
+                            extra = f"(waited {MAX_WAIT_TIME}s)"
+                        else:
+                            sleep_s = 2
+                            reason = "connection"
+                            extra = f"({type(e).__name__})"
+                        print(
+                            f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
+                            f"({timeout_retries} retry left)"
+                        )
+                        time.sleep(sleep_s)
+                if player_name != "":
+                    player_name = find_manual_similar_string(player_name)
+                    # players_ratings[player_name] = average_rating
+                    players_ratings[player_name] = average_rating if average_rating != 0 else float(6.0)
+
         teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
 
         if backup_files:
