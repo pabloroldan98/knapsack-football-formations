@@ -62,6 +62,7 @@ jobs:
             json_files/*sofascore_${{ matrix.league }}*.json
 
   run-tasks-firsthalf:
+#    needs: run-tasks
     runs-on: ubuntu-latest
 #    runs-on: ubuntu-22.04
 #    timeout-minutes: 360  # Set the job timeout to 6 hours (360 minutes)
@@ -185,6 +186,7 @@ jobs:
       - name: Upload DATA files as artifact (${{ matrix.league }})
         uses: actions/upload-artifact@v4
         with:
+          overwrite: true
           name: sofascore-data-${{ matrix.league }}
           path: |
             csv_files/*sofascore_${{ matrix.league }}*.csv
