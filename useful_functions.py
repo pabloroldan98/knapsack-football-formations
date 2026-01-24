@@ -416,6 +416,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Paris Saint-Germain": "PSG",
         "Paris SG": "PSG",
         "Psg": "PSG",
+        "Paris": "PSG",
         "Seattle Sounders": "Seattle",
         "S. Sounders": "Seattle",
         "Seattle Sounders FC": "Seattle",
@@ -451,8 +452,10 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Bodoe Glimt": "Bodø/Glimt",
         "FC København": "Copenhagen",
         "FC Kobenhavn": "Copenhagen",
-        "Karabakh Agdam": "Qarabag",
+        "Karabakh Agdam": "Qarabag FK",
+        "Qarabag": "Qarabag FK",
         "St Gillis": "Saint-Gilloise",
+        "Union SG": "Saint-Gilloise",
         "Paphos": "Pafos",
         "Wolves": "Wolverhampton",
         "Wolverhampton Wanderers": "Wolverhampton",
@@ -470,6 +473,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Burgos Club de Fútbol": "Burgos CF",
         "Olympiakos": "Olympiacos",
         "Slavia Praha": "Slavia Prag",
+        "Sporting CP": "Sporting Portugal",
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string
