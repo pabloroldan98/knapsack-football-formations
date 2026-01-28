@@ -331,7 +331,7 @@
           {
             "id": 47902,
             "date": 1769954400,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 48,
               "name": "Lyon",
@@ -348,7 +348,7 @@
           {
             "id": 47895,
             "date": 1769962500,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 46,
               "name": "Nice",
@@ -365,7 +365,7 @@
           {
             "id": 47896,
             "date": 1769962500,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 61,
               "name": "Angers",
@@ -382,7 +382,7 @@
           {
             "id": 47900,
             "date": 1769962500,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 43,
               "name": "Toulouse",
@@ -413,7 +413,10 @@
               "score": null
             }
           }
-        ]
+        ],
+        "pool": {
+          "id": 598494
+        }
       }
     ],
     "players": {
@@ -1256,6 +1259,10 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -1427,8 +1434,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
           null,
           null,
           null
@@ -2690,7 +2695,9 @@
         "fitness": [
           8,
           4,
-          12
+          12,
+          null,
+          null
         ],
         "points": 24,
         "pointsHome": 12,
@@ -3289,8 +3296,8 @@
           null,
           1,
           5,
-          null,
-          1
+          1,
+          null
         ],
         "points": 16,
         "pointsHome": 8,
@@ -4872,6 +4879,8 @@
         "fitness": [
           null,
           3,
+          null,
+          null,
           null
         ],
         "points": 3,
@@ -5089,10 +5098,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -5174,6 +5179,31 @@
         "pointsHome": 39,
         "pointsAway": 28,
         "pointsLastSeason": 158
+      },
+      "5125": {
+        "id": 5125,
+        "name": "Guilbert",
+        "slug": "guilbert",
+        "teamID": 47,
+        "position": 2,
+        "price": 510000,
+        "fantasyPrice": 8000000,
+        "number": 2,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "fitness": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "points": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "34602": {
         "id": 34602,
@@ -5690,7 +5720,10 @@
         "playedAway": 0,
         "fitness": [
           4,
-          3
+          3,
+          null,
+          null,
+          null
         ],
         "points": 7,
         "pointsHome": 7,
@@ -8896,10 +8929,7 @@
         "playedAway": 1,
         "fitness": [
           null,
-          0,
-          null,
-          null,
-          null
+          0
         ],
         "points": 0,
         "pointsHome": 0,
@@ -13955,9 +13985,7 @@
         "fitness": [
           null,
           null,
-          2,
-          null,
-          null
+          2
         ],
         "points": 2,
         "pointsHome": 2,
@@ -14364,7 +14392,7 @@
       }
     },
     "update": 1769659210,
-    "etag": 3126064796,
+    "etag": 3205345938,
     "scoreID": 3
   },
   "meta": {
