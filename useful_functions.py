@@ -379,6 +379,8 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Youssef": "Yusi Enríquez",
         "Tai Abed Kassus": "Tay Abed",
         "Tai Abed": "Tay Abed",
+        "Syver Skundberg Skeide": "Syver Skeide",
+        "David Daiber": "David Santos Daiber",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
