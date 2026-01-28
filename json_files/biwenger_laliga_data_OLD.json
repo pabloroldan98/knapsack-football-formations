@@ -318,7 +318,193 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [],
+    "activeEvents": [
+      {
+        "id": 4505,
+        "name": "Round 22",
+        "short": "R22",
+        "status": "pending",
+        "start": 1769803200,
+        "end": 1769803200,
+        "type": "round",
+        "games": [
+          {
+            "id": 46331,
+            "date": 1769803200,
+            "status": "preview",
+            "home": {
+              "id": 7,
+              "name": "Espanyol",
+              "slug": "espanyol",
+              "score": null
+            },
+            "away": {
+              "id": 91,
+              "name": "Alavés",
+              "slug": "alaves",
+              "score": null
+            }
+          },
+          {
+            "id": 46333,
+            "date": 1769864400,
+            "status": "preview",
+            "home": {
+              "id": 779,
+              "name": "Real Oviedo",
+              "slug": "real-oviedo",
+              "score": null
+            },
+            "away": {
+              "id": 289,
+              "name": "Girona",
+              "slug": "girona",
+              "score": null
+            }
+          },
+          {
+            "id": 46339,
+            "date": 1769872500,
+            "status": "preview",
+            "home": {
+              "id": 93,
+              "name": "Osasuna",
+              "slug": "osasuna",
+              "score": null
+            },
+            "away": {
+              "id": 19,
+              "name": "Villarreal",
+              "slug": "villarreal",
+              "score": null
+            }
+          },
+          {
+            "id": 46336,
+            "date": 1769880600,
+            "status": "preview",
+            "home": {
+              "id": 10,
+              "name": "Levante",
+              "slug": "levante",
+              "score": null
+            },
+            "away": {
+              "id": 2,
+              "name": "Atlético",
+              "slug": "atletico",
+              "score": null
+            }
+          },
+          {
+            "id": 46338,
+            "date": 1769889600,
+            "status": "preview",
+            "home": {
+              "id": 75,
+              "name": "Elche",
+              "slug": "elche",
+              "score": null
+            },
+            "away": {
+              "id": 3,
+              "name": "Barcelona",
+              "slug": "barcelona",
+              "score": null
+            }
+          },
+          {
+            "id": 46332,
+            "date": 1769950800,
+            "status": "preview",
+            "home": {
+              "id": 15,
+              "name": "Real Madrid",
+              "slug": "real-madrid",
+              "score": null
+            },
+            "away": {
+              "id": 70,
+              "name": "Rayo Vallecano",
+              "slug": "rayo-vallecano",
+              "score": null
+            }
+          },
+          {
+            "id": 46334,
+            "date": 1769958900,
+            "status": "preview",
+            "home": {
+              "id": 87,
+              "name": "Betis",
+              "slug": "betis",
+              "score": null
+            },
+            "away": {
+              "id": 18,
+              "name": "Valencia",
+              "slug": "valencia",
+              "score": null
+            }
+          },
+          {
+            "id": 46337,
+            "date": 1769967000,
+            "status": "preview",
+            "home": {
+              "id": 8,
+              "name": "Getafe",
+              "slug": "getafe",
+              "score": null
+            },
+            "away": {
+              "id": 5,
+              "name": "Celta",
+              "slug": "celta",
+              "score": null
+            }
+          },
+          {
+            "id": 46340,
+            "date": 1769976000,
+            "status": "pending",
+            "home": {
+              "id": 1,
+              "name": "Athletic",
+              "slug": "athletic",
+              "score": null
+            },
+            "away": {
+              "id": 13,
+              "name": "Real Sociedad",
+              "slug": "real-sociedad",
+              "score": null
+            }
+          },
+          {
+            "id": 46335,
+            "date": 1770062400,
+            "status": "pending",
+            "home": {
+              "id": 465,
+              "name": "Mallorca",
+              "slug": "mallorca",
+              "score": null
+            },
+            "away": {
+              "id": 17,
+              "name": "Sevilla",
+              "slug": "sevilla",
+              "score": null
+            }
+          }
+        ],
+        "pool": {
+          "id": 598480
+        },
+        "probableLineups": true
+      }
+    ],
     "players": {
       "17731": {
         "id": 17731,
@@ -829,11 +1015,14 @@
         "price": 4360000,
         "fantasyPrice": 22000000,
         "number": 10,
-        "status": "warned",
+        "status": "doubt",
         "priceIncrement": -40000,
+        "statusInfo": "Trauma with contusion to the right foot.",
         "iconHero": "i/p/hero/27591.png",
         "playedHome": 7,
         "playedAway": 8,
+        "extraStatus": "warned",
+        "statusChange": 1769619621,
         "fitness": [
           6,
           2,
@@ -883,13 +1072,11 @@
         "price": 3110000,
         "fantasyPrice": 11000000,
         "number": 24,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
         "iconHero": "i/p/hero/19141.png",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1769410823,
         "fitness": [
           "injured",
           14,
@@ -2042,6 +2229,25 @@
         "pointsAway": 4,
         "pointsLastSeason": 26
       },
+      "39885": {
+        "id": 39885,
+        "name": "Ángel Pérez",
+        "slug": "angel-perez",
+        "teamID": 91,
+        "position": 4,
+        "price": 160000,
+        "fantasyPrice": 7000000,
+        "number": 0,
+        "status": "ok",
+        "priceIncrement": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "fitness": [],
+        "points": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "18398": {
         "id": 18398,
         "name": "Budimir",
@@ -2929,12 +3135,10 @@
         "price": 600000,
         "fantasyPrice": 8000000,
         "number": 3,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Injury in the soleus of the right leg. Estimated return: early February.",
         "playedHome": 5,
         "playedAway": 4,
-        "statusChange": 1769342418,
         "fitness": [
           "doubt",
           "injured",
@@ -3312,12 +3516,12 @@
         "price": 1020000,
         "fantasyPrice": 14000000,
         "number": 5,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -20000,
-        "statusInfo": "Sprain of the medial collateral ligament of his left knee. Estimated return: Mid-February.",
+        "statusInfo": "Sprain of the medial collateral ligament of his left knee.",
         "playedHome": 10,
         "playedAway": 9,
-        "statusChange": 1768831225,
+        "statusChange": 1769601625,
         "fitness": [
           "injured",
           2,
@@ -4697,12 +4901,10 @@
         "price": 260000,
         "fantasyPrice": 7000000,
         "number": 2,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Sprained ankle.",
         "playedHome": 4,
         "playedAway": 1,
-        "statusChange": 1769367619,
         "fitness": [
           "doubt",
           "doubt",
@@ -5896,12 +6098,12 @@
         "price": 1150000,
         "fantasyPrice": 8000000,
         "number": 2,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
+        "statusInfo": "Muscle injury. Estimated return: Mid-February.",
         "playedHome": 8,
         "playedAway": 8,
-        "statusChange": 1769410825,
+        "statusChange": 1769608812,
         "fitness": [
           "injured",
           "doubt",
@@ -5981,7 +6183,7 @@
         "statusInfo": "Shoulder surgery. Estimated return: Mid-March.",
         "playedHome": 5,
         "playedAway": 4,
-        "statusChange": 1767031224,
+        "statusChange": 1767006000,
         "fitness": [
           "injured",
           "injured",
@@ -8991,12 +9193,10 @@
         "price": 520000,
         "fantasyPrice": 9000000,
         "number": 8,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Injury to the adductor of his left leg.",
         "playedHome": 7,
         "playedAway": 8,
-        "statusChange": 1769367612,
         "fitness": [
           "doubt",
           "doubt",
@@ -9045,7 +9245,7 @@
         "number": 4,
         "status": "doubt",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle discomfort.",
+        "statusInfo": "Hamstring discomfort.",
         "playedHome": 3,
         "playedAway": 4,
         "statusChange": 1769367620,
@@ -11634,12 +11834,12 @@
         "price": 710000,
         "fantasyPrice": 7000000,
         "number": 3,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury in the soleus of his left leg.",
+        "statusInfo": "Muscle injury in the soleus of his left leg. Estimated return: Indefinite return.",
         "playedHome": 10,
         "playedAway": 9,
-        "statusChange": 1769367621,
+        "statusChange": 1769623218,
         "fitness": [
           "doubt",
           2,
@@ -11661,10 +11861,12 @@
         "price": 3000000,
         "fantasyPrice": 17000000,
         "number": 21,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -50000,
+        "statusInfo": "Discomfort in the clavicle.",
         "playedHome": 9,
         "playedAway": 9,
+        "statusChange": 1769619614,
         "fitness": [
           null,
           null,
@@ -13512,12 +13714,10 @@
         "price": 290000,
         "fantasyPrice": 8000000,
         "number": 5,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Ruptured external meniscus of the right knee. Estimated return: Early March.",
         "playedHome": 5,
         "playedAway": 6,
-        "statusChange": 1765018800,
         "fitness": [
           "injured",
           "injured",
@@ -14800,7 +15000,7 @@
       }
     },
     "update": 1769666410,
-    "etag": 2853482272,
+    "etag": 3025319403,
     "scoreID": 1
   },
   "meta": {
