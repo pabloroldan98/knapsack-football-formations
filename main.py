@@ -723,7 +723,7 @@ if __name__ == "__main__":
     worthy_players_og = worthy_players.copy()
 
     purged_players = worthy_players.copy()
-    # purged_players = purge_everything(purged_players, probability_threshold=None, fixture_filter=False)
+    # purged_players = purge_everything(purged_players, probability_threshold=0.0, fixture_filter=False)
     purged_players = purge_everything(purged_players, probability_threshold=0.65, fixture_filter=True)
     worthy_players = purged_players.copy()
 
@@ -768,7 +768,7 @@ if __name__ == "__main__":
 
 
     # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-    # best_full_teams(needed_purge, possible_formations, 250, speed_up=False, verbose=2)
+    # best_full_teams(needed_purge, possible_formations, 300, speed_up=False, verbose=2)
 
 
 
