@@ -96,6 +96,18 @@
           "name": "Group stage, round 8",
           "short": "GS8",
           "status": "finished"
+        },
+        {
+          "id": 4826,
+          "name": "Round of 32 (home)",
+          "short": "Round of 32 (home)",
+          "status": "pending"
+        },
+        {
+          "id": 4827,
+          "name": "Round of 32 (away)",
+          "short": "Round of 32 (away)",
+          "status": "pending"
         }
       ],
       "previous": {
@@ -104,7 +116,155 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [],
+    "activeEvents": [
+      {
+        "id": 4826,
+        "name": "Round of 32 (home)",
+        "short": "Round of 32 (home)",
+        "status": "pending",
+        "start": 1771350300,
+        "end": 1771350300,
+        "type": "round",
+        "games": [
+          {
+            "id": 50280,
+            "date": 1771350300,
+            "status": "pending",
+            "home": {
+              "id": 434,
+              "name": "Galatasaray",
+              "slug": "galatasaray",
+              "score": null
+            },
+            "away": {
+              "id": 38,
+              "name": "Juventus",
+              "slug": "juventus",
+              "score": null
+            }
+          },
+          {
+            "id": 50281,
+            "date": 1771358400,
+            "status": "pending",
+            "home": {
+              "id": 33,
+              "name": "Borussia Dortmund",
+              "slug": "borussia-dortmund",
+              "score": null
+            },
+            "away": {
+              "id": 492,
+              "name": "Atalanta",
+              "slug": "atalanta",
+              "score": null
+            }
+          },
+          {
+            "id": 50282,
+            "date": 1771358400,
+            "status": "pending",
+            "home": {
+              "id": 176,
+              "name": "Monaco",
+              "slug": "monaco",
+              "score": null
+            },
+            "away": {
+              "id": 80,
+              "name": "PSG",
+              "slug": "psg",
+              "score": null
+            }
+          },
+          {
+            "id": 50283,
+            "date": 1771358400,
+            "status": "pending",
+            "home": {
+              "id": 32,
+              "name": "Benfica",
+              "slug": "benfica",
+              "score": null
+            },
+            "away": {
+              "id": 39,
+              "name": "Real Madrid",
+              "slug": "real-madrid",
+              "score": null
+            }
+          },
+          {
+            "id": 50284,
+            "date": 1771436700,
+            "status": "pending",
+            "home": {
+              "id": 299,
+              "name": "Qarabag FK",
+              "slug": "qarabag-fk",
+              "score": null
+            },
+            "away": {
+              "id": 620,
+              "name": "Newcastle",
+              "slug": "newcastle",
+              "score": null
+            }
+          },
+          {
+            "id": 50285,
+            "date": 1771444800,
+            "status": "pending",
+            "home": {
+              "id": 301,
+              "name": "Olympiacos",
+              "slug": "olympiacos",
+              "score": null
+            },
+            "away": {
+              "id": 37,
+              "name": "Bayer Leverkusen",
+              "slug": "bayer-leverkusen",
+              "score": null
+            }
+          },
+          {
+            "id": 50286,
+            "date": 1771444800,
+            "status": "pending",
+            "home": {
+              "id": 81,
+              "name": "Brujas",
+              "slug": "club-brugge",
+              "score": null
+            },
+            "away": {
+              "id": 29,
+              "name": "Atlético de Madrid",
+              "slug": "atletico-de-madrid",
+              "score": null
+            }
+          },
+          {
+            "id": 50287,
+            "date": 1771444800,
+            "status": "pending",
+            "home": {
+              "id": 781,
+              "name": "Bodø/Glimt",
+              "slug": "bodoglimt",
+              "score": null
+            },
+            "away": {
+              "id": 430,
+              "name": "Inter",
+              "slug": "inter",
+              "score": null
+            }
+          }
+        ]
+      }
+    ],
     "players": {
       "3020": {
         "id": 3020,
@@ -15423,10 +15583,7 @@
         "playedAway": 1,
         "fitness": [
           null,
-          2,
-          null,
-          null,
-          null
+          2
         ],
         "points": 2,
         "pointsHome": 0,
@@ -17393,12 +17550,10 @@
         "price": 720000,
         "fantasyPrice": 15000000,
         "number": 52,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Hamstring problems",
         "playedHome": 2,
         "playedAway": 1,
-        "statusChange": 1765969200,
         "fitness": [
           "injured",
           "injured",
@@ -20353,12 +20508,10 @@
         "price": 200000,
         "fantasyPrice": 8000000,
         "number": 27,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Not Injury Related problems",
         "playedHome": 2,
         "playedAway": 0,
-        "statusChange": 1769677224,
         "fitness": [
           null,
           "injured",
@@ -21127,9 +21280,6 @@
         "statusChange": 1769281216,
         "fitness": [
           "injured",
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -22676,9 +22826,6 @@
         "playedAway": 0,
         "fitness": [
           null,
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -22876,7 +23023,7 @@
         "number": 2,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Undisclosed problems",
+        "statusInfo": "Hip problems",
         "playedHome": 0,
         "playedAway": 3,
         "statusChange": 1769281217,
@@ -24164,9 +24311,6 @@
         "playedAway": 0,
         "fitness": [
           null,
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -24182,18 +24326,12 @@
         "position": 4,
         "price": 200000,
         "fantasyPrice": 7000000,
-        "number": 0,
+        "number": 17,
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 0,
         "playedAway": 0,
-        "fitness": [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
+        "fitness": [],
         "points": 0,
         "pointsHome": 0,
         "pointsAway": 0,
@@ -27575,7 +27713,23 @@
         "id": 29,
         "name": "Atlético de Madrid",
         "slug": "atletico-de-madrid",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50286,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 81,
+              "score": null
+            },
+            "away": {
+              "id": 29,
+              "score": null
+            }
+          }
+        ]
       },
       "31": {
         "id": 31,
@@ -27587,13 +27741,45 @@
         "id": 32,
         "name": "Benfica",
         "slug": "benfica",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50283,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 32,
+              "score": null
+            },
+            "away": {
+              "id": 39,
+              "score": null
+            }
+          }
+        ]
       },
       "33": {
         "id": 33,
         "name": "Borussia Dortmund",
         "slug": "borussia-dortmund",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50281,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 33,
+              "score": null
+            },
+            "away": {
+              "id": 492,
+              "score": null
+            }
+          }
+        ]
       },
       "36": {
         "id": 36,
@@ -27605,19 +27791,67 @@
         "id": 37,
         "name": "Bayer Leverkusen",
         "slug": "bayer-leverkusen",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50285,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 301,
+              "score": null
+            },
+            "away": {
+              "id": 37,
+              "score": null
+            }
+          }
+        ]
       },
       "38": {
         "id": 38,
         "name": "Juventus",
         "slug": "juventus",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50280,
+            "date": 1771350300,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 434,
+              "score": null
+            },
+            "away": {
+              "id": 38,
+              "score": null
+            }
+          }
+        ]
       },
       "39": {
         "id": 39,
         "name": "Real Madrid",
         "slug": "real-madrid",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50283,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 32,
+              "score": null
+            },
+            "away": {
+              "id": 39,
+              "score": null
+            }
+          }
+        ]
       },
       "63": {
         "id": 63,
@@ -27629,13 +27863,45 @@
         "id": 80,
         "name": "PSG",
         "slug": "psg",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50282,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 176,
+              "score": null
+            },
+            "away": {
+              "id": 80,
+              "score": null
+            }
+          }
+        ]
       },
       "81": {
         "id": 81,
         "name": "Club Brugge",
         "slug": "club-brugge",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50286,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 81,
+              "score": null
+            },
+            "away": {
+              "id": 29,
+              "score": null
+            }
+          }
+        ]
       },
       "84": {
         "id": 84,
@@ -27653,7 +27919,23 @@
         "id": 176,
         "name": "Monaco",
         "slug": "monaco",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50282,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 176,
+              "score": null
+            },
+            "away": {
+              "id": 80,
+              "score": null
+            }
+          }
+        ]
       },
       "276": {
         "id": 276,
@@ -27665,7 +27947,23 @@
         "id": 299,
         "name": "Qarabag FK",
         "slug": "qarabag-fk",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50284,
+            "date": 1771436700,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 299,
+              "score": null
+            },
+            "away": {
+              "id": 620,
+              "score": null
+            }
+          }
+        ]
       },
       "300": {
         "id": 300,
@@ -27677,41 +27975,137 @@
         "id": 301,
         "name": "Olympiacos",
         "slug": "olympiacos",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50285,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 301,
+              "score": null
+            },
+            "away": {
+              "id": 37,
+              "score": null
+            }
+          }
+        ]
       },
       "430": {
         "id": 430,
         "name": "Inter",
         "slug": "inter",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50287,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 781,
+              "score": null
+            },
+            "away": {
+              "id": 430,
+              "score": null
+            }
+          }
+        ]
       },
       "434": {
         "id": 434,
         "name": "Galatasaray",
         "slug": "galatasaray",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50280,
+            "date": 1771350300,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 434,
+              "score": null
+            },
+            "away": {
+              "id": 38,
+              "score": null
+            }
+          }
+        ]
       },
       "492": {
         "id": 492,
         "name": "Atalanta",
         "slug": "atalanta",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50281,
+            "date": 1771358400,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 33,
+              "score": null
+            },
+            "away": {
+              "id": 492,
+              "score": null
+            }
+          }
+        ]
       },
       "620": {
         "id": 620,
         "name": "Newcastle",
         "slug": "newcastle",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50284,
+            "date": 1771436700,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 299,
+              "score": null
+            },
+            "away": {
+              "id": 620,
+              "score": null
+            }
+          }
+        ]
       },
       "781": {
         "id": 781,
         "name": "Bodø/Glimt",
         "slug": "bodoglimt",
-        "nextGames": []
+        "nextGames": [
+          {
+            "id": 50287,
+            "date": 1771444800,
+            "round": {
+              "id": 4826
+            },
+            "home": {
+              "id": 781,
+              "score": null
+            },
+            "away": {
+              "id": 430,
+              "score": null
+            }
+          }
+        ]
       }
     },
-    "update": 1769832010,
-    "etag": 3876433285,
+    "update": 1769814143,
+    "etag": 1803117668,
     "scoreID": 3
   },
   "meta": {
