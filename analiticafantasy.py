@@ -189,10 +189,12 @@ class AnaliticaFantasyScraper:
                 player_name = find_manual_similar_string(player_name)
 
                 chance_int = player.get("c", None)  # e.g. 40
-                chance_fraction = chance_int / 100.0 if chance_int else None  # Convert to fraction, e.g. 40 -> 0.40
+                chance_fraction = chance_int / 100.0 if chance_int is not None else None  # Convert to fraction, e.g. 40 -> 0.40
+                # chance_fraction = chance_int / 100.0 if chance_int else None  # Convert to fraction, e.g. 40 -> 0.40
                 price = player.get("fmv", None)
                 price_trend = player.get("fs", None)
-                form = ((price / (price - price_trend)) - 1) * 100 if (price and price_trend and price != price_trend) else None
+                form = ((price / (price - price_trend)) - 1) * 100 if (price is not None and price_trend is not None and price != price_trend) else None
+                # form = ((price / (price - price_trend)) - 1) * 100 if (price and price_trend and price != price_trend) else None
                 position = None
 
                 if team_name and player_name:
@@ -207,15 +209,15 @@ class AnaliticaFantasyScraper:
 
                     # match_dict[team_name][player_name] = chance_fraction
                     # Sin los ifs salian duplicados como "Lewandowski" y "Robert Lewandowski"
-                    if price:
+                    if price is not None:
                         match_dict["prices"][team_name][player_name] = price
-                    if position:
+                    if position is not None:
                         match_dict["positions"][team_name][player_name] = position
-                    if form:
+                    if form is not None:
                         match_dict["forms"][team_name][player_name] = form
-                    if chance_fraction:
+                    if chance_fraction is not None:
                         match_dict["start_probabilities"][team_name][player_name] = chance_fraction
-                    if price_trend:
+                    if price_trend is not None:
                         match_dict["price_trends"][team_name][player_name] = price_trend
 
         # home_players = lineups_data.get("homeLineup", {}).get("players", [])
