@@ -260,6 +260,91 @@
         "type": "round",
         "games": [
           {
+            "id": 47912,
+            "date": 1770579900,
+            "status": "finished",
+            "home": {
+              "id": 49,
+              "name": "Paris Saint-Germain",
+              "slug": "paris-saint-germain",
+              "score": 5
+            },
+            "away": {
+              "id": 54,
+              "name": "Marseille",
+              "slug": "marseille",
+              "score": 0
+            }
+          },
+          {
+            "id": 47904,
+            "date": 1770567300,
+            "status": "finished",
+            "home": {
+              "id": 61,
+              "name": "Angers",
+              "slug": "angers",
+              "score": 1
+            },
+            "away": {
+              "id": 43,
+              "name": "Toulouse",
+              "slug": "toulouse",
+              "score": 0
+            }
+          },
+          {
+            "id": 47908,
+            "date": 1770567300,
+            "status": "finished",
+            "home": {
+              "id": 638,
+              "name": "Auxerre",
+              "slug": "auxerre",
+              "score": 0
+            },
+            "away": {
+              "id": 776,
+              "name": "Paris FC",
+              "slug": "paris-fc",
+              "score": 0
+            }
+          },
+          {
+            "id": 47909,
+            "date": 1770567300,
+            "status": "finished",
+            "home": {
+              "id": 684,
+              "name": "Le Havre",
+              "slug": "le-havre",
+              "score": 2
+            },
+            "away": {
+              "id": 286,
+              "name": "Strasbourg",
+              "slug": "strasbourg",
+              "score": 1
+            }
+          },
+          {
+            "id": 47911,
+            "date": 1770559200,
+            "status": "finished",
+            "home": {
+              "id": 46,
+              "name": "Nice",
+              "slug": "nice",
+              "score": 0
+            },
+            "away": {
+              "id": 45,
+              "name": "Monaco",
+              "slug": "monaco",
+              "score": 0
+            }
+          },
+          {
             "id": 47906,
             "date": 1770494700,
             "status": "finished",
@@ -274,23 +359,6 @@
               "name": "Lyon",
               "slug": "lyon",
               "score": 1
-            }
-          },
-          {
-            "id": 47911,
-            "date": 1770559200,
-            "status": "preview",
-            "home": {
-              "id": 46,
-              "name": "Nice",
-              "slug": "nice",
-              "score": null
-            },
-            "away": {
-              "id": 45,
-              "name": "Monaco",
-              "slug": "monaco",
-              "score": null
             }
           },
           {
@@ -311,57 +379,6 @@
             }
           },
           {
-            "id": 47904,
-            "date": 1770567300,
-            "status": "preview",
-            "home": {
-              "id": 61,
-              "name": "Angers",
-              "slug": "angers",
-              "score": null
-            },
-            "away": {
-              "id": 43,
-              "name": "Toulouse",
-              "slug": "toulouse",
-              "score": null
-            }
-          },
-          {
-            "id": 47908,
-            "date": 1770567300,
-            "status": "preview",
-            "home": {
-              "id": 638,
-              "name": "Auxerre",
-              "slug": "auxerre",
-              "score": null
-            },
-            "away": {
-              "id": 776,
-              "name": "Paris FC",
-              "slug": "paris-fc",
-              "score": null
-            }
-          },
-          {
-            "id": 47909,
-            "date": 1770567300,
-            "status": "preview",
-            "home": {
-              "id": 684,
-              "name": "Le Havre",
-              "slug": "le-havre",
-              "score": null
-            },
-            "away": {
-              "id": 286,
-              "name": "Strasbourg",
-              "slug": "strasbourg",
-              "score": null
-            }
-          },
-          {
             "id": 47907,
             "date": 1770480000,
             "status": "finished",
@@ -376,23 +393,6 @@
               "name": "Rennais",
               "slug": "rennais",
               "score": 1
-            }
-          },
-          {
-            "id": 47912,
-            "date": 1770579900,
-            "status": "preview",
-            "home": {
-              "id": 49,
-              "name": "Paris Saint-Germain",
-              "slug": "paris-saint-germain",
-              "score": null
-            },
-            "away": {
-              "id": 54,
-              "name": "Marseille",
-              "slug": "marseille",
-              "score": null
             }
           },
           {
@@ -531,17 +531,17 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 9,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          2,
           5,
           3,
           5,
-          4,
-          5
+          4
         ],
-        "points": 55,
+        "points": 57,
         "pointsHome": 23,
-        "pointsAway": 32,
+        "pointsAway": 34,
         "pointsLastSeason": 120
       },
       "4836": {
@@ -606,17 +606,17 @@
         "status": "unknown",
         "priceIncrement": -30000,
         "playedHome": 7,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          3,
           null,
           null,
           null,
-          null,
-          5
+          null
         ],
-        "points": 39,
+        "points": 42,
         "pointsHome": 27,
-        "pointsAway": 12,
+        "pointsAway": 15,
         "pointsLastSeason": 33
       },
       "38898": {
@@ -633,11 +633,11 @@
         "playedHome": 5,
         "playedAway": 7,
         "fitness": [
+          null,
           2,
           null,
           0,
-          -6,
-          2
+          -6
         ],
         "points": 26,
         "pointsHome": 11,
@@ -657,7 +657,13 @@
         "priceIncrement": -50000,
         "playedHome": 0,
         "playedAway": 0,
-        "fitness": [],
+        "fitness": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "points": 0,
         "pointsHome": 0,
         "pointsAway": 0,
@@ -680,8 +686,8 @@
           null,
           null,
           null,
-          6,
-          null
+          null,
+          6
         ],
         "points": 9,
         "pointsHome": 0,
@@ -777,11 +783,11 @@
         "playedHome": 9,
         "playedAway": 8,
         "fitness": [
+          null,
           1,
           1,
           4,
-          5,
-          2
+          5
         ],
         "points": 59,
         "pointsHome": 47,
@@ -902,8 +908,8 @@
         "playedHome": 4,
         "playedAway": 6,
         "fitness": [
-          -2,
           null,
+          -2,
           null,
           null,
           null
@@ -975,17 +981,17 @@
         "status": "unknown",
         "priceIncrement": -50000,
         "playedHome": 9,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          2,
           4,
           7,
           4,
-          3,
           3
         ],
-        "points": 66,
+        "points": 68,
         "pointsHome": 35,
-        "pointsAway": 31,
+        "pointsAway": 33,
         "pointsLastSeason": null
       },
       "32489": {
@@ -1125,17 +1131,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "playedHome": 4,
-        "playedAway": 2,
+        "playedAway": 3,
         "fitness": [
+          3,
           2,
-          null,
           null,
           null,
           null
         ],
-        "points": 22,
+        "points": 25,
         "pointsHome": 11,
-        "pointsAway": 11,
+        "pointsAway": 14,
         "pointsLastSeason": null
       },
       "14594": {
@@ -1174,17 +1180,17 @@
         "number": 0,
         "status": "ok",
         "priceIncrement": -10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
           3,
+          3,
           1,
           0,
-          0,
-          3
+          0
         ],
-        "points": 26,
-        "pointsHome": 17,
+        "points": 29,
+        "pointsHome": 20,
         "pointsAway": 9,
         "pointsLastSeason": 36
       },
@@ -1228,8 +1234,8 @@
         "playedAway": 8,
         "fitness": [
           null,
+          null,
           0,
-          2,
           2,
           2
         ],
@@ -1274,17 +1280,17 @@
         "number": 2,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 4,
+        "playedHome": 5,
         "playedAway": 8,
         "fitness": [
+          2,
           14,
           -1,
           -1,
-          null,
-          5
+          null
         ],
-        "points": 37,
-        "pointsHome": 21,
+        "points": 39,
+        "pointsHome": 23,
         "pointsAway": 16,
         "pointsLastSeason": 138
       },
@@ -1304,8 +1310,6 @@
         "fitness": [
           8,
           3,
-          null,
-          null,
           null
         ],
         "points": 11,
@@ -1350,17 +1354,17 @@
         "status": "unknown",
         "priceIncrement": 20000,
         "playedHome": 5,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          3,
           1,
           3,
           3,
-          4,
-          null
+          4
         ],
-        "points": 32,
+        "points": 35,
         "pointsHome": 12,
-        "pointsAway": 20,
+        "pointsAway": 23,
         "pointsLastSeason": null
       },
       "37441": {
@@ -1374,17 +1378,17 @@
         "number": 25,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 6,
+        "playedHome": 7,
         "playedAway": 7,
         "fitness": [
+          3,
           null,
           3,
           1,
-          null,
-          -3
+          null
         ],
-        "points": 15,
-        "pointsHome": 8,
+        "points": 18,
+        "pointsHome": 11,
         "pointsAway": 7,
         "pointsLastSeason": null
       },
@@ -1442,7 +1446,7 @@
         "id": 39461,
         "name": "Amadou Cissé",
         "slug": "amadou-cisse",
-        "teamID": 286,
+        "teamID": null,
         "position": 2,
         "price": 200000,
         "fantasyPrice": 7000000,
@@ -1452,6 +1456,8 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
           null,
           null,
           null
@@ -1572,17 +1578,17 @@
         "number": 7,
         "status": "ok",
         "priceIncrement": 40000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 6,
         "fitness": [
+          3,
           6,
           3,
           8,
-          -1,
-          4
+          -1
         ],
-        "points": 45,
-        "pointsHome": 35,
+        "points": 48,
+        "pointsHome": 38,
         "pointsAway": 10,
         "pointsLastSeason": null
       },
@@ -1675,10 +1681,10 @@
         "playedHome": 8,
         "playedAway": 5,
         "fitness": [
+          null,
           10,
           1,
           7,
-          null,
           null
         ],
         "points": 70,
@@ -1779,7 +1785,7 @@
           null,
           null,
           null,
-          2
+          null
         ],
         "points": 51,
         "pointsHome": 34,
@@ -1823,17 +1829,17 @@
         "status": "unknown",
         "priceIncrement": 30000,
         "playedHome": 10,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          3,
           6,
           4,
           10,
-          0,
-          null
+          0
         ],
-        "points": 125,
+        "points": 128,
         "pointsHome": 89,
-        "pointsAway": 36,
+        "pointsAway": 39,
         "pointsLastSeason": 183
       },
       "30513": {
@@ -1847,17 +1853,17 @@
         "number": 93,
         "status": "unknown",
         "priceIncrement": -40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 9,
         "fitness": [
+          10,
           4,
           9,
           5,
-          null,
-          4
+          null
         ],
-        "points": 87,
-        "pointsHome": 60,
+        "points": 97,
+        "pointsHome": 70,
         "pointsAway": 27,
         "pointsLastSeason": 61
       },
@@ -1925,9 +1931,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
-          null,
           null,
           null
         ],
@@ -2000,11 +2003,11 @@
         "playedHome": 10,
         "playedAway": 10,
         "fitness": [
+          null,
           4,
           5,
           6,
-          7,
-          3
+          7
         ],
         "points": 80,
         "pointsHome": 40,
@@ -2125,10 +2128,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -2172,14 +2171,17 @@
         "number": 8,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 1,
         "fitness": [
+          8,
           7,
-          5
+          5,
+          null,
+          null
         ],
-        "points": 12,
-        "pointsHome": 7,
+        "points": 20,
+        "pointsHome": 15,
         "pointsAway": 5,
         "pointsLastSeason": null
       },
@@ -2318,17 +2320,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 7,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          2,
           5,
           5,
           2,
-          3,
-          null
+          3
         ],
-        "points": 41,
+        "points": 43,
         "pointsHome": 25,
-        "pointsAway": 16,
+        "pointsAway": 18,
         "pointsLastSeason": null
       },
       "5038": {
@@ -2368,17 +2370,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 9,
-        "playedAway": 6,
+        "playedAway": 7,
         "fitness": [
+          4,
           null,
           2,
           null,
-          1,
-          6
+          1
         ],
-        "points": 69,
+        "points": 73,
         "pointsHome": 49,
-        "pointsAway": 20,
+        "pointsAway": 24,
         "pointsLastSeason": null
       },
       "30606": {
@@ -2418,17 +2420,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "playedHome": 8,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          3,
           0,
           null,
           5,
-          -3,
-          3
+          -3
         ],
-        "points": 44,
+        "points": 47,
         "pointsHome": 28,
-        "pointsAway": 16,
+        "pointsAway": 19,
         "pointsLastSeason": 54
       },
       "9905": {
@@ -2517,17 +2519,17 @@
         "number": 29,
         "status": "unknown",
         "priceIncrement": 40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 8,
         "fitness": [
           4,
+          4,
           11,
           14,
-          3,
           3
         ],
-        "points": 124,
-        "pointsHome": 85,
+        "points": 128,
+        "pointsHome": 89,
         "pointsAway": 39,
         "pointsLastSeason": 249
       },
@@ -2620,7 +2622,11 @@
         "playedHome": 0,
         "playedAway": 1,
         "fitness": [
-          4
+          null,
+          4,
+          null,
+          null,
+          null
         ],
         "points": 4,
         "pointsHome": 0,
@@ -2639,17 +2645,17 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 11,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          6,
           8,
           5,
           12,
-          10,
-          8
+          10
         ],
-        "points": 104,
+        "points": 110,
         "pointsHome": 61,
-        "pointsAway": 43,
+        "pointsAway": 49,
         "pointsLastSeason": 173
       },
       "34022": {
@@ -2664,17 +2670,17 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          3,
           7,
           8,
           7,
-          0,
-          4
+          0
         ],
-        "points": 121,
+        "points": 124,
         "pointsHome": 78,
-        "pointsAway": 43,
+        "pointsAway": 46,
         "pointsLastSeason": 171
       },
       "19022": {
@@ -2713,17 +2719,17 @@
         "number": 24,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 8,
         "fitness": [
+          2,
           5,
           4,
           4,
-          null,
-          4
+          null
         ],
-        "points": 64,
-        "pointsHome": 36,
+        "points": 66,
+        "pointsHome": 38,
         "pointsAway": 28,
         "pointsLastSeason": null
       },
@@ -2769,8 +2775,8 @@
           null,
           null,
           null,
-          3,
-          null
+          null,
+          3
         ],
         "points": 20,
         "pointsHome": 8,
@@ -2814,17 +2820,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 9,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          3,
           null,
           6,
           3,
-          -1,
-          2
+          -1
         ],
-        "points": 45,
+        "points": 48,
         "pointsHome": 26,
-        "pointsAway": 19,
+        "pointsAway": 22,
         "pointsLastSeason": 154
       },
       "39013": {
@@ -2863,13 +2869,13 @@
         "number": 15,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 3,
         "fitness": [
+          0,
           null,
           null,
           2,
-          null,
           null
         ],
         "points": 9,
@@ -2888,17 +2894,17 @@
         "number": 2,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          7,
           10,
           6,
           -2,
-          3,
-          4
+          3
         ],
-        "points": 58,
-        "pointsHome": 39,
+        "points": 65,
+        "pointsHome": 46,
         "pointsAway": 19,
         "pointsLastSeason": 100
       },
@@ -2938,17 +2944,17 @@
         "number": 0,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
           1,
+          1,
           3,
           0,
-          1,
-          0
+          1
         ],
-        "points": 22,
-        "pointsHome": 15,
+        "points": 23,
+        "pointsHome": 16,
         "pointsAway": 7,
         "pointsLastSeason": 60
       },
@@ -2964,11 +2970,17 @@
         "status": "unknown",
         "priceIncrement": 70000,
         "playedHome": 0,
-        "playedAway": 0,
-        "fitness": [],
-        "points": 0,
+        "playedAway": 1,
+        "fitness": [
+          1,
+          null,
+          null,
+          null,
+          null
+        ],
+        "points": 1,
         "pointsHome": 0,
-        "pointsAway": 0,
+        "pointsAway": 1,
         "pointsLastSeason": null
       },
       "38019": {
@@ -2988,8 +3000,8 @@
           null,
           null,
           null,
-          3,
-          null
+          null,
+          3
         ],
         "points": 24,
         "pointsHome": 11,
@@ -3007,17 +3019,17 @@
         "number": 92,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 9,
         "fitness": [
+          6,
           4,
           3,
           4,
-          null,
-          -2
+          null
         ],
-        "points": 58,
-        "pointsHome": 40,
+        "points": 64,
+        "pointsHome": 46,
         "pointsAway": 18,
         "pointsLastSeason": 129
       },
@@ -3134,7 +3146,13 @@
         "priceIncrement": -70000,
         "playedHome": 0,
         "playedAway": 0,
-        "fitness": [],
+        "fitness": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "points": 0,
         "pointsHome": 0,
         "pointsAway": 0,
@@ -3152,17 +3170,17 @@
         "status": "ok",
         "priceIncrement": -30000,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          2,
           3,
           2,
           5,
-          3,
-          10
+          3
         ],
-        "points": 87,
+        "points": 89,
         "pointsHome": 36,
-        "pointsAway": 51,
+        "pointsAway": 53,
         "pointsLastSeason": 128
       },
       "38032": {
@@ -3201,17 +3219,17 @@
         "number": 19,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 8,
         "fitness": [
+          6,
           1,
           4,
           3,
-          null,
-          3
+          null
         ],
-        "points": 58,
-        "pointsHome": 38,
+        "points": 64,
+        "pointsHome": 44,
         "pointsAway": 20,
         "pointsLastSeason": null
       },
@@ -3226,17 +3244,17 @@
         "number": 4,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 3,
+        "playedHome": 4,
         "playedAway": 1,
         "fitness": [
+          5,
           1,
           3,
           null,
-          null,
           null
         ],
-        "points": 14,
-        "pointsHome": 11,
+        "points": 19,
+        "pointsHome": 16,
         "pointsAway": 3,
         "pointsLastSeason": 102
       },
@@ -3276,17 +3294,17 @@
         "number": 78,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 2,
         "fitness": [
+          2,
           4,
           null,
           null,
-          2,
-          null
+          2
         ],
-        "points": 9,
-        "pointsHome": 2,
+        "points": 11,
+        "pointsHome": 4,
         "pointsAway": 7,
         "pointsLastSeason": null
       },
@@ -3352,13 +3370,13 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 8,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          0,
           null,
           null,
           null,
-          null,
-          0
+          null
         ],
         "points": 37,
         "pointsHome": 20,
@@ -3452,17 +3470,17 @@
         "status": "unknown",
         "priceIncrement": 30000,
         "playedHome": 5,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          8,
           5,
           3,
           4,
-          null,
-          3
+          null
         ],
-        "points": 39,
+        "points": 47,
         "pointsHome": 30,
-        "pointsAway": 9,
+        "pointsAway": 17,
         "pointsLastSeason": 172
       },
       "38378": {
@@ -3501,17 +3519,17 @@
         "number": 14,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 4,
+        "playedHome": 5,
         "playedAway": 7,
         "fitness": [
+          3,
           5,
           3,
           8,
-          15,
-          12
+          15
         ],
-        "points": 67,
-        "pointsHome": 28,
+        "points": 70,
+        "pointsHome": 31,
         "pointsAway": 39,
         "pointsLastSeason": 215
       },
@@ -3529,6 +3547,7 @@
         "playedHome": 0,
         "playedAway": 1,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -3553,6 +3572,10 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -3572,17 +3595,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          4,
           2,
           5,
           11,
-          2,
-          4
+          2
         ],
-        "points": 99,
+        "points": 103,
         "pointsHome": 54,
-        "pointsAway": 45,
+        "pointsAway": 49,
         "pointsLastSeason": 168
       },
       "10053": {
@@ -3603,7 +3626,7 @@
           null,
           null,
           null,
-          3
+          null
         ],
         "points": 79,
         "pointsHome": 50,
@@ -3624,11 +3647,11 @@
         "playedHome": 5,
         "playedAway": 8,
         "fitness": [
+          null,
           3,
           null,
           0,
-          2,
-          5
+          2
         ],
         "points": 29,
         "pointsHome": 12,
@@ -3674,11 +3697,11 @@
         "playedHome": 6,
         "playedAway": 5,
         "fitness": [
+          null,
           2,
           3,
           5,
-          null,
-          8
+          null
         ],
         "points": 45,
         "pointsHome": 34,
@@ -3721,17 +3744,17 @@
         "number": 16,
         "status": "ok",
         "priceIncrement": -70000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 9,
         "fitness": [
+          11,
           5,
           11,
           10,
-          9,
-          -4
+          9
         ],
-        "points": 106,
-        "pointsHome": 53,
+        "points": 117,
+        "pointsHome": 64,
         "pointsAway": 53,
         "pointsLastSeason": 193
       },
@@ -3746,13 +3769,17 @@
         "number": 27,
         "status": "unknown",
         "priceIncrement": -30000,
-        "playedHome": 0,
+        "playedHome": 1,
         "playedAway": 0,
         "fitness": [
+          5,
+          null,
+          null,
+          null,
           null
         ],
-        "points": 0,
-        "pointsHome": 0,
+        "points": 5,
+        "pointsHome": 5,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -3767,17 +3794,17 @@
         "number": 31,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 2,
+        "playedHome": 3,
         "playedAway": 2,
         "fitness": [
+          3,
           1,
           7,
           -6,
-          4,
-          null
+          4
         ],
-        "points": 6,
-        "pointsHome": 5,
+        "points": 9,
+        "pointsHome": 8,
         "pointsAway": 1,
         "pointsLastSeason": null
       },
@@ -3795,14 +3822,14 @@
         "playedHome": 8,
         "playedAway": 9,
         "fitness": [
-          14,
+          13,
           2,
           4,
           null,
           3
         ],
-        "points": 110,
-        "pointsHome": 72,
+        "points": 109,
+        "pointsHome": 71,
         "pointsAway": 38,
         "pointsLastSeason": null
       },
@@ -3842,17 +3869,17 @@
         "number": 42,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 8,
         "fitness": [
+          4,
           2,
           3,
           null,
-          2,
-          null
+          2
         ],
-        "points": 49,
-        "pointsHome": 29,
+        "points": 53,
+        "pointsHome": 33,
         "pointsAway": 20,
         "pointsLastSeason": 105
       },
@@ -3893,17 +3920,17 @@
         "status": "ok",
         "priceIncrement": -130000,
         "playedHome": 8,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          2,
           null,
           null,
           8,
-          9,
-          10
+          9
         ],
-        "points": 81,
+        "points": 83,
         "pointsHome": 44,
-        "pointsAway": 37,
+        "pointsAway": 39,
         "pointsLastSeason": null
       },
       "39019": {
@@ -3918,13 +3945,13 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 8,
-        "playedAway": 6,
+        "playedAway": 7,
         "fitness": [
+          0,
           4,
           null,
           null,
-          -6,
-          2
+          -6
         ],
         "points": 53,
         "pointsHome": 17,
@@ -4017,17 +4044,17 @@
         "number": 27,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 5,
+        "playedHome": 6,
         "playedAway": 0,
         "fitness": [
+          3,
           null,
           3,
           null,
-          2,
-          null
+          2
         ],
-        "points": 7,
-        "pointsHome": 7,
+        "points": 10,
+        "pointsHome": 10,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -4071,9 +4098,9 @@
         "playedAway": 3,
         "fitness": [
           null,
+          null,
           3,
           1,
-          null,
           null
         ],
         "points": 45,
@@ -4193,14 +4220,17 @@
         "status": "unknown",
         "priceIncrement": -70000,
         "playedHome": 1,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          1,
           2,
-          14
+          14,
+          null,
+          null
         ],
-        "points": 16,
+        "points": 17,
         "pointsHome": 14,
-        "pointsAway": 2,
+        "pointsAway": 3,
         "pointsLastSeason": null
       },
       "30514": {
@@ -4239,9 +4269,10 @@
         "number": 41,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 1,
         "fitness": [
+          0,
           null,
           null,
           -2,
@@ -4343,9 +4374,9 @@
         "fitness": [
           null,
           null,
+          null,
           5,
-          1,
-          -1
+          1
         ],
         "points": 34,
         "pointsHome": 18,
@@ -4393,9 +4424,9 @@
         "fitness": [
           null,
           null,
+          null,
           7,
-          9,
-          3
+          9
         ],
         "points": 67,
         "pointsHome": 49,
@@ -4439,17 +4470,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 3,
-        "playedAway": 3,
+        "playedAway": 4,
         "fitness": [
+          -5,
           1,
           4,
           5,
-          3,
-          null
+          3
         ],
-        "points": 24,
+        "points": 19,
         "pointsHome": 13,
-        "pointsAway": 11,
+        "pointsAway": 6,
         "pointsLastSeason": 136
       },
       "38233": {
@@ -4491,11 +4522,11 @@
         "playedHome": 8,
         "playedAway": 7,
         "fitness": [
+          null,
           3,
           2,
           7,
-          0,
-          null
+          0
         ],
         "points": 34,
         "pointsHome": 15,
@@ -4516,11 +4547,11 @@
         "playedHome": 8,
         "playedAway": 6,
         "fitness": [
+          null,
           5,
           3,
           null,
-          3,
-          0
+          3
         ],
         "points": 37,
         "pointsHome": 26,
@@ -4563,17 +4594,17 @@
         "number": 13,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          4,
           3,
           null,
           4,
-          null,
-          5
+          null
         ],
-        "points": 83,
-        "pointsHome": 54,
+        "points": 87,
+        "pointsHome": 58,
         "pointsAway": 29,
         "pointsLastSeason": null
       },
@@ -4614,17 +4645,17 @@
         "status": "ok",
         "priceIncrement": 20000,
         "playedHome": 9,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          -4,
           4,
           2,
           2,
-          3,
-          5
+          3
         ],
-        "points": 66,
+        "points": 62,
         "pointsHome": 36,
-        "pointsAway": 30,
+        "pointsAway": 26,
         "pointsLastSeason": 53
       },
       "24083": {
@@ -4668,9 +4699,9 @@
         "fitness": [
           null,
           null,
-          14,
           null,
-          1
+          14,
+          null
         ],
         "points": 68,
         "pointsHome": 55,
@@ -4738,17 +4769,17 @@
         "number": 23,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 0,
+        "playedHome": 1,
         "playedAway": 1,
         "fitness": [
+          5,
           null,
           0,
           null,
-          null,
           null
         ],
-        "points": 0,
-        "pointsHome": 0,
+        "points": 5,
+        "pointsHome": 5,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -4820,7 +4851,7 @@
           null,
           null,
           null,
-          4
+          null
         ],
         "points": 26,
         "pointsHome": 13,
@@ -4838,13 +4869,17 @@
         "number": 9,
         "status": "unknown",
         "priceIncrement": -40000,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 0,
         "fitness": [
-          4
+          -1,
+          4,
+          null,
+          null,
+          null
         ],
-        "points": 4,
-        "pointsHome": 4,
+        "points": 3,
+        "pointsHome": 3,
         "pointsAway": 0,
         "pointsLastSeason": 67
       },
@@ -4880,17 +4915,17 @@
         "number": 4,
         "status": "unknown",
         "priceIncrement": -40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 8,
         "fitness": [
+          3,
           null,
           null,
           6,
-          6,
-          9
+          6
         ],
-        "points": 88,
-        "pointsHome": 60,
+        "points": 91,
+        "pointsHome": 63,
         "pointsAway": 28,
         "pointsLastSeason": 139
       },
@@ -4906,17 +4941,17 @@
         "status": "unknown",
         "priceIncrement": -30000,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          6,
           6,
           9,
           6,
-          5,
           5
         ],
-        "points": 77,
+        "points": 83,
         "pointsHome": 43,
-        "pointsAway": 34,
+        "pointsAway": 40,
         "pointsLastSeason": 92
       },
       "38188": {
@@ -5029,11 +5064,11 @@
         "playedHome": 8,
         "playedAway": 9,
         "fitness": [
+          null,
           0,
           3,
           5,
-          11,
-          12
+          11
         ],
         "points": 105,
         "pointsHome": 54,
@@ -5054,8 +5089,11 @@
         "playedHome": 1,
         "playedAway": 1,
         "fitness": [
+          null,
           0,
-          2
+          2,
+          null,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -5076,11 +5114,11 @@
         "playedHome": 10,
         "playedAway": 7,
         "fitness": [
+          null,
           2,
           3,
           null,
-          5,
-          3
+          5
         ],
         "points": 49,
         "pointsHome": 20,
@@ -5123,17 +5161,17 @@
         "number": 14,
         "status": "ok",
         "priceIncrement": -20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 8,
         "fitness": [
+          4,
           1,
           5,
           null,
-          3,
-          1
+          3
         ],
-        "points": 61,
-        "pointsHome": 43,
+        "points": 65,
+        "pointsHome": 47,
         "pointsAway": 18,
         "pointsLastSeason": 117
       },
@@ -5179,7 +5217,7 @@
           null,
           null,
           null,
-          2,
+          null,
           2
         ],
         "points": 31,
@@ -5198,14 +5236,14 @@
         "number": 9,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 10,
         "fitness": [
+          0,
           null,
           0,
           1,
-          0,
-          8
+          0
         ],
         "points": 57,
         "pointsHome": 34,
@@ -5249,13 +5287,13 @@
         "status": "unknown",
         "priceIncrement": 50000,
         "playedHome": 5,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          0,
           2,
           18,
           9,
-          2,
-          null
+          2
         ],
         "points": 56,
         "pointsHome": 27,
@@ -5301,11 +5339,11 @@
         "playedHome": 8,
         "playedAway": 7,
         "fitness": [
+          null,
           11,
           7,
           6,
-          null,
-          7
+          null
         ],
         "points": 78,
         "pointsHome": 50,
@@ -5448,17 +5486,17 @@
         "number": 12,
         "status": "unknown",
         "priceIncrement": -160000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 9,
         "fitness": [
+          10,
           4,
           3,
           5,
-          null,
-          2
+          null
         ],
-        "points": 108,
-        "pointsHome": 56,
+        "points": 118,
+        "pointsHome": 66,
         "pointsAway": 52,
         "pointsLastSeason": 29
       },
@@ -5477,10 +5515,10 @@
         "playedAway": 5,
         "fitness": [
           null,
+          null,
           2,
           7,
-          null,
-          0
+          null
         ],
         "points": 28,
         "pointsHome": 14,
@@ -5501,11 +5539,11 @@
         "playedHome": 2,
         "playedAway": 3,
         "fitness": [
+          null,
           2,
           2,
           13,
-          1,
-          null
+          1
         ],
         "points": 21,
         "pointsHome": 3,
@@ -5651,11 +5689,11 @@
         "playedHome": 10,
         "playedAway": 10,
         "fitness": [
+          null,
           4,
           4,
           2,
-          7,
-          4
+          7
         ],
         "points": 81,
         "pointsHome": 42,
@@ -5701,11 +5739,11 @@
         "playedHome": 8,
         "playedAway": 6,
         "fitness": [
+          null,
           4,
           null,
           null,
-          null,
-          2
+          null
         ],
         "points": 58,
         "pointsHome": 35,
@@ -5724,13 +5762,13 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 6,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          0,
           null,
           null,
           null,
-          null,
-          12
+          null
         ],
         "points": 70,
         "pointsHome": 35,
@@ -5799,17 +5837,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 8,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          -6,
           3,
           4,
           4,
-          1,
-          6
+          1
         ],
-        "points": 45,
+        "points": 39,
         "pointsHome": 39,
-        "pointsAway": 6,
+        "pointsAway": 0,
         "pointsLastSeason": 120
       },
       "16038": {
@@ -5829,8 +5867,7 @@
           null,
           0,
           4,
-          3,
-          null
+          3
         ],
         "points": 7,
         "pointsHome": 7,
@@ -5876,11 +5913,11 @@
         "playedHome": 6,
         "playedAway": 10,
         "fitness": [
+          null,
           3,
           3,
           null,
-          null,
-          12
+          null
         ],
         "points": 56,
         "pointsHome": 32,
@@ -5899,17 +5936,17 @@
         "status": "unknown",
         "priceIncrement": 20000,
         "playedHome": 9,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          3,
           4,
           4,
           9,
-          3,
           3
         ],
-        "points": 84,
+        "points": 87,
         "pointsHome": 38,
-        "pointsAway": 46,
+        "pointsAway": 49,
         "pointsLastSeason": null
       },
       "24316": {
@@ -5949,17 +5986,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 7,
-        "playedAway": 4,
+        "playedAway": 5,
         "fitness": [
+          3,
           11,
           3,
           null,
-          2,
           2
         ],
-        "points": 37,
+        "points": 40,
         "pointsHome": 24,
-        "pointsAway": 13,
+        "pointsAway": 16,
         "pointsLastSeason": null
       },
       "37421": {
@@ -5999,17 +6036,17 @@
         "status": "ok",
         "priceIncrement": 20000,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          3,
           14,
           3,
           13,
-          null,
-          7
+          null
         ],
-        "points": 174,
+        "points": 177,
         "pointsHome": 115,
-        "pointsAway": 59,
+        "pointsAway": 62,
         "pointsLastSeason": null
       },
       "38401": {
@@ -6027,10 +6064,10 @@
         "playedAway": 9,
         "fitness": [
           null,
+          null,
           6,
           5,
-          -1,
-          4
+          -1
         ],
         "points": 75,
         "pointsHome": 37,
@@ -6098,17 +6135,17 @@
         "number": 21,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 6,
         "fitness": [
           2,
-          null,
           2,
           null,
-          6
+          2,
+          null
         ],
-        "points": 42,
-        "pointsHome": 28,
+        "points": 44,
+        "pointsHome": 30,
         "pointsAway": 14,
         "pointsLastSeason": null
       },
@@ -6173,17 +6210,17 @@
         "number": 45,
         "status": "unknown",
         "priceIncrement": -40000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
+          12,
           4,
           4,
           3,
-          2,
-          1
+          2
         ],
-        "points": 103,
-        "pointsHome": 64,
+        "points": 115,
+        "pointsHome": 76,
         "pointsAway": 39,
         "pointsLastSeason": 150
       },
@@ -6224,17 +6261,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 2,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
-          null,
+          -2,
           null,
           null,
           null,
           null
         ],
-        "points": 14,
+        "points": 12,
         "pointsHome": 3,
-        "pointsAway": 11,
+        "pointsAway": 9,
         "pointsLastSeason": null
       },
       "38464": {
@@ -6349,17 +6386,17 @@
         "status": "unknown",
         "priceIncrement": 20000,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          3,
           1,
           3,
           -1,
-          null,
-          3
+          null
         ],
-        "points": 61,
+        "points": 64,
         "pointsHome": 35,
-        "pointsAway": 26,
+        "pointsAway": 29,
         "pointsLastSeason": null
       },
       "29341": {
@@ -6399,17 +6436,17 @@
         "status": "unknown",
         "priceIncrement": 120000,
         "playedHome": 10,
-        "playedAway": 10,
+        "playedAway": 11,
         "fitness": [
+          -2,
           -2,
           15,
           3,
-          8,
-          0
+          8
         ],
-        "points": 118,
+        "points": 116,
         "pointsHome": 45,
-        "pointsAway": 73,
+        "pointsAway": 71,
         "pointsLastSeason": null
       },
       "39951": {
@@ -6424,11 +6461,17 @@
         "status": "unknown",
         "priceIncrement": -40000,
         "playedHome": 0,
-        "playedAway": 0,
-        "fitness": [],
-        "points": 0,
+        "playedAway": 1,
+        "fitness": [
+          3,
+          null,
+          null,
+          null,
+          null
+        ],
+        "points": 3,
         "pointsHome": 0,
-        "pointsAway": 0,
+        "pointsAway": 3,
         "pointsLastSeason": null
       },
       "4748": {
@@ -6467,17 +6510,17 @@
         "number": 3,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
           4,
           4,
+          4,
           -4,
-          2,
-          3
+          2
         ],
-        "points": 52,
-        "pointsHome": 19,
+        "points": 56,
+        "pointsHome": 23,
         "pointsAway": 33,
         "pointsLastSeason": 52
       },
@@ -6567,17 +6610,17 @@
         "number": 87,
         "status": "unknown",
         "priceIncrement": -50000,
-        "playedHome": 6,
+        "playedHome": 7,
         "playedAway": 5,
         "fitness": [
+          6,
           4,
           null,
           null,
-          2,
-          null
+          2
         ],
-        "points": 88,
-        "pointsHome": 39,
+        "points": 94,
+        "pointsHome": 45,
         "pointsAway": 49,
         "pointsLastSeason": 213
       },
@@ -6717,17 +6760,17 @@
         "number": 92,
         "status": "unknown",
         "priceIncrement": -20000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          6,
           5,
           12,
           -2,
-          8,
-          5
+          8
         ],
-        "points": 94,
-        "pointsHome": 42,
+        "points": 100,
+        "pointsHome": 48,
         "pointsAway": 52,
         "pointsLastSeason": 206
       },
@@ -6768,17 +6811,17 @@
         "status": "unknown",
         "priceIncrement": -40000,
         "playedHome": 11,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          7,
           5,
           4,
           2,
-          0,
-          2
+          0
         ],
-        "points": 77,
+        "points": 84,
         "pointsHome": 54,
-        "pointsAway": 23,
+        "pointsAway": 30,
         "pointsLastSeason": 62
       },
       "24087": {
@@ -6793,13 +6836,13 @@
         "status": "unknown",
         "priceIncrement": -60000,
         "playedHome": 10,
-        "playedAway": 10,
+        "playedAway": 11,
         "fitness": [
+          0,
           1,
           3,
           3,
-          0,
-          3
+          0
         ],
         "points": 39,
         "pointsHome": 23,
@@ -6867,17 +6910,17 @@
         "number": 7,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 10,
         "fitness": [
+          4,
           2,
           null,
           3,
-          5,
-          4
+          5
         ],
-        "points": 41,
-        "pointsHome": 17,
+        "points": 45,
+        "pointsHome": 21,
         "pointsAway": 24,
         "pointsLastSeason": 143
       },
@@ -6918,17 +6961,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 4,
-        "playedAway": 3,
+        "playedAway": 4,
         "fitness": [
+          4,
           null,
           1,
           11,
-          2,
           2
         ],
-        "points": 22,
+        "points": 26,
         "pointsHome": 17,
-        "pointsAway": 5,
+        "pointsAway": 9,
         "pointsLastSeason": null
       },
       "37775": {
@@ -6948,8 +6991,8 @@
           null,
           null,
           null,
-          2,
-          3
+          null,
+          2
         ],
         "points": 8,
         "pointsHome": 3,
@@ -6968,12 +7011,12 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 10,
-        "playedAway": 10,
+        "playedAway": 11,
         "fitness": [
+          0,
           0,
           3,
           3,
-          1,
           1
         ],
         "points": 30,
@@ -6993,17 +7036,17 @@
         "status": "unknown",
         "priceIncrement": 30000,
         "playedHome": 6,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          3,
           4,
           18,
           9,
-          3,
-          4
+          3
         ],
-        "points": 70,
+        "points": 73,
         "pointsHome": 34,
-        "pointsAway": 36,
+        "pointsAway": 39,
         "pointsLastSeason": null
       },
       "35783": {
@@ -7017,17 +7060,17 @@
         "number": 28,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 7,
         "fitness": [
+          4,
           null,
           6,
           4,
-          8,
-          null
+          8
         ],
-        "points": 56,
-        "pointsHome": 37,
+        "points": 60,
+        "pointsHome": 41,
         "pointsAway": 19,
         "pointsLastSeason": 50
       },
@@ -7068,17 +7111,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 8,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          2,
           null,
           3,
           6,
-          4,
-          3
+          4
         ],
-        "points": 76,
+        "points": 78,
         "pointsHome": 44,
-        "pointsAway": 32,
+        "pointsAway": 34,
         "pointsLastSeason": 65
       },
       "35704": {
@@ -7092,17 +7135,17 @@
         "number": 7,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 9,
         "fitness": [
+          10,
           null,
           4,
           4,
-          null,
-          3
+          null
         ],
-        "points": 86,
-        "pointsHome": 51,
+        "points": 96,
+        "pointsHome": 61,
         "pointsAway": 35,
         "pointsLastSeason": 107
       },
@@ -7117,17 +7160,17 @@
         "number": 37,
         "status": "unknown",
         "priceIncrement": 20000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 9,
         "fitness": [
           5,
+          5,
           8,
           null,
-          -2,
-          0
+          -2
         ],
-        "points": 65,
-        "pointsHome": 26,
+        "points": 70,
+        "pointsHome": 31,
         "pointsAway": 39,
         "pointsLastSeason": null
       },
@@ -7142,13 +7185,17 @@
         "number": 32,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 0,
         "fitness": [
-          3
+          3,
+          3,
+          null,
+          null,
+          null
         ],
-        "points": 3,
-        "pointsHome": 3,
+        "points": 6,
+        "pointsHome": 6,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -7188,17 +7235,17 @@
         "number": 19,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 8,
         "fitness": [
+          15,
           5,
           null,
           null,
-          null,
-          10
+          null
         ],
-        "points": 73,
-        "pointsHome": 35,
+        "points": 88,
+        "pointsHome": 50,
         "pointsAway": 38,
         "pointsLastSeason": 232
       },
@@ -7216,11 +7263,11 @@
         "playedHome": 8,
         "playedAway": 6,
         "fitness": [
+          null,
           4,
           4,
           3,
-          1,
-          null
+          1
         ],
         "points": 39,
         "pointsHome": 25,
@@ -7266,11 +7313,11 @@
         "playedHome": 2,
         "playedAway": 3,
         "fitness": [
+          null,
           3,
           3,
           1,
-          9,
-          3
+          9
         ],
         "points": 19,
         "pointsHome": 12,
@@ -7291,11 +7338,11 @@
         "playedHome": 5,
         "playedAway": 7,
         "fitness": [
+          null,
           1,
           null,
           2,
-          null,
-          1
+          null
         ],
         "points": 19,
         "pointsHome": 8,
@@ -7313,17 +7360,17 @@
         "number": 5,
         "status": "ok",
         "priceIncrement": -40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 10,
         "fitness": [
+          10,
           3,
           5,
           5,
-          2,
-          3
+          2
         ],
-        "points": 78,
-        "pointsHome": 49,
+        "points": 88,
+        "pointsHome": 59,
         "pointsAway": 29,
         "pointsLastSeason": 95
       },
@@ -7439,17 +7486,17 @@
         "status": "unknown",
         "priceIncrement": 30000,
         "playedHome": 6,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
           4,
-          null,
+          4,
           null,
           null,
           null
         ],
-        "points": 53,
+        "points": 57,
         "pointsHome": 35,
-        "pointsAway": 18,
+        "pointsAway": 22,
         "pointsLastSeason": 54
       },
       "10135": {
@@ -7489,17 +7536,17 @@
         "status": "unknown",
         "priceIncrement": 20000,
         "playedHome": 6,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          -4,
           3,
           3,
           5,
-          null,
-          2
+          null
         ],
-        "points": 67,
+        "points": 63,
         "pointsHome": 21,
-        "pointsAway": 46,
+        "pointsAway": 42,
         "pointsLastSeason": 128
       },
       "31053": {
@@ -7513,17 +7560,17 @@
         "number": 21,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 7,
         "fitness": [
+          4,
           null,
           6,
           4,
-          3,
-          4
+          3
         ],
-        "points": 65,
-        "pointsHome": 30,
+        "points": 69,
+        "pointsHome": 34,
         "pointsAway": 35,
         "pointsLastSeason": 61
       },
@@ -7541,10 +7588,10 @@
         "playedHome": 1,
         "playedAway": 2,
         "fitness": [
+          null,
           7,
           5,
           6,
-          null,
           null
         ],
         "points": 18,
@@ -7563,17 +7610,17 @@
         "number": 10,
         "status": "ok",
         "priceIncrement": 20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          -1,
           2,
           2,
           5,
-          null,
-          19
+          null
         ],
-        "points": 95,
-        "pointsHome": 57,
+        "points": 94,
+        "pointsHome": 56,
         "pointsAway": 38,
         "pointsLastSeason": 176
       },
@@ -7639,17 +7686,17 @@
         "status": "ok",
         "priceIncrement": 20000,
         "playedHome": 5,
-        "playedAway": 6,
+        "playedAway": 7,
         "fitness": [
+          8,
           6,
           4,
           null,
-          null,
-          4
+          null
         ],
-        "points": 56,
+        "points": 64,
         "pointsHome": 31,
-        "pointsAway": 25,
+        "pointsAway": 33,
         "pointsLastSeason": 186
       },
       "19319": {
@@ -7688,17 +7735,17 @@
         "number": 27,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 6,
+        "playedHome": 7,
         "playedAway": 6,
         "fitness": [
           3,
+          3,
           5,
           1,
-          2,
-          4
+          2
         ],
-        "points": 37,
-        "pointsHome": 26,
+        "points": 40,
+        "pointsHome": 29,
         "pointsAway": 11,
         "pointsLastSeason": null
       },
@@ -7713,17 +7760,17 @@
         "number": 36,
         "status": "ok",
         "priceIncrement": 10000,
-        "playedHome": 5,
+        "playedHome": 6,
         "playedAway": 6,
         "fitness": [
+          2,
           null,
           null,
           null,
-          0,
-          null
+          0
         ],
-        "points": 16,
-        "pointsHome": 8,
+        "points": 18,
+        "pointsHome": 10,
         "pointsAway": 8,
         "pointsLastSeason": 3
       },
@@ -7763,17 +7810,17 @@
         "number": 21,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 6,
+        "playedHome": 7,
         "playedAway": 6,
         "fitness": [
+          3,
           null,
           0,
           null,
-          5,
-          2
+          5
         ],
-        "points": 37,
-        "pointsHome": 13,
+        "points": 40,
+        "pointsHome": 16,
         "pointsAway": 24,
         "pointsLastSeason": 17
       },
@@ -7863,17 +7910,17 @@
         "number": 21,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
+          7,
           8,
           6,
           -3,
-          2,
           2
         ],
-        "points": 78,
-        "pointsHome": 35,
+        "points": 85,
+        "pointsHome": 42,
         "pointsAway": 43,
         "pointsLastSeason": 151
       },
@@ -7913,17 +7960,17 @@
         "number": 27,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 10,
         "fitness": [
+          15,
           4,
           3,
           null,
-          2,
-          14
+          2
         ],
-        "points": 73,
-        "pointsHome": 38,
+        "points": 88,
+        "pointsHome": 53,
         "pointsAway": 35,
         "pointsLastSeason": 75
       },
@@ -7938,17 +7985,17 @@
         "number": 7,
         "status": "unknown",
         "priceIncrement": -20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          2,
           1,
           5,
           5,
-          8,
-          5
+          8
         ],
-        "points": 68,
-        "pointsHome": 40,
+        "points": 70,
+        "pointsHome": 42,
         "pointsAway": 28,
         "pointsLastSeason": 102
       },
@@ -7988,17 +8035,17 @@
         "number": 6,
         "status": "unknown",
         "priceIncrement": 20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          6,
           11,
           3,
           3,
-          11,
-          4
+          11
         ],
-        "points": 63,
-        "pointsHome": 34,
+        "points": 69,
+        "pointsHome": 40,
         "pointsAway": 29,
         "pointsLastSeason": 90
       },
@@ -8014,15 +8061,16 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "playedHome": 2,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          3,
           2,
           2,
           13
         ],
-        "points": 17,
+        "points": 20,
         "pointsHome": 4,
-        "pointsAway": 13,
+        "pointsAway": 16,
         "pointsLastSeason": null
       },
       "32044": {
@@ -8040,10 +8088,10 @@
         "playedAway": 6,
         "fitness": [
           null,
+          null,
           8,
           null,
-          null,
-          0
+          null
         ],
         "points": 64,
         "pointsHome": 30,
@@ -8065,10 +8113,10 @@
         "playedAway": 9,
         "fitness": [
           null,
+          null,
           3,
           12,
-          3,
-          null
+          3
         ],
         "points": 77,
         "pointsHome": 49,
@@ -8086,15 +8134,17 @@
         "number": 19,
         "status": "unknown",
         "priceIncrement": -50000,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 1,
         "fitness": [
+          4,
           5,
           5,
+          null,
           null
         ],
-        "points": 10,
-        "pointsHome": 5,
+        "points": 14,
+        "pointsHome": 9,
         "pointsAway": 5,
         "pointsLastSeason": null
       },
@@ -8110,17 +8160,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 5,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          2,
           null,
           null,
           2,
-          6,
-          null
+          6
         ],
-        "points": 41,
+        "points": 43,
         "pointsHome": 17,
-        "pointsAway": 24,
+        "pointsAway": 26,
         "pointsLastSeason": null
       },
       "33448": {
@@ -8234,17 +8284,17 @@
         "number": 0,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
+          3,
           0,
           1,
           1,
-          3,
-          0
+          3
         ],
-        "points": 20,
-        "pointsHome": 14,
+        "points": 23,
+        "pointsHome": 17,
         "pointsAway": 6,
         "pointsLastSeason": 34
       },
@@ -8265,8 +8315,8 @@
           null,
           null,
           null,
-          3,
-          7
+          null,
+          3
         ],
         "points": 36,
         "pointsHome": 21,
@@ -8360,17 +8410,17 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "playedHome": 9,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          3,
           2,
           7,
           2,
-          2,
-          5
+          2
         ],
-        "points": 82,
+        "points": 85,
         "pointsHome": 42,
-        "pointsAway": 40,
+        "pointsAway": 43,
         "pointsLastSeason": null
       },
       "19007": {
@@ -8385,15 +8435,17 @@
         "status": "unknown",
         "priceIncrement": -110000,
         "playedHome": 2,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          2,
           5,
           3,
-          3
+          3,
+          null
         ],
-        "points": 11,
+        "points": 13,
         "pointsHome": 8,
-        "pointsAway": 3,
+        "pointsAway": 5,
         "pointsLastSeason": 109
       },
       "39729": {
@@ -8410,15 +8462,14 @@
         "playedHome": 0,
         "playedAway": 1,
         "fitness": [
-          -4,
-          null,
+          -2,
           null,
           null,
           null
         ],
-        "points": -4,
+        "points": -2,
         "pointsHome": 0,
-        "pointsAway": -4,
+        "pointsAway": -2,
         "pointsLastSeason": null
       },
       "25055": {
@@ -8433,17 +8484,17 @@
         "status": "unknown",
         "priceIncrement": 20000,
         "playedHome": 11,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          6,
           11,
           3,
           4,
-          2,
-          6
+          2
         ],
-        "points": 104,
+        "points": 110,
         "pointsHome": 61,
-        "pointsAway": 43,
+        "pointsAway": 49,
         "pointsLastSeason": 224
       },
       "32059": {
@@ -8485,15 +8536,15 @@
         "playedHome": 9,
         "playedAway": 10,
         "fitness": [
-          1,
+          2,
           -1,
           5,
           2,
           4
         ],
-        "points": 59,
+        "points": 60,
         "pointsHome": 45,
-        "pointsAway": 14,
+        "pointsAway": 15,
         "pointsLastSeason": 198
       },
       "5617": {
@@ -8510,14 +8561,14 @@
         "playedHome": 11,
         "playedAway": 9,
         "fitness": [
-          6,
+          7,
           7,
           5,
           10,
           6
         ],
-        "points": 119,
-        "pointsHome": 74,
+        "points": 120,
+        "pointsHome": 75,
         "pointsAway": 45,
         "pointsLastSeason": 75
       },
@@ -8608,17 +8659,17 @@
         "status": "ok",
         "priceIncrement": 20000,
         "playedHome": 7,
-        "playedAway": 6,
+        "playedAway": 7,
         "fitness": [
+          3,
           15,
           null,
           null,
-          9,
-          null
+          9
         ],
-        "points": 69,
+        "points": 72,
         "pointsHome": 39,
-        "pointsAway": 30,
+        "pointsAway": 33,
         "pointsLastSeason": 3
       },
       "24076": {
@@ -8633,17 +8684,17 @@
         "status": "ok",
         "priceIncrement": -30000,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          4,
           7,
           7,
           4,
-          3,
-          4
+          3
         ],
-        "points": 78,
+        "points": 82,
         "pointsHome": 47,
-        "pointsAway": 31,
+        "pointsAway": 35,
         "pointsLastSeason": null
       },
       "38486": {
@@ -8660,14 +8711,14 @@
         "playedHome": 10,
         "playedAway": 9,
         "fitness": [
-          5,
+          4,
           6,
           5,
           5,
           null
         ],
-        "points": 103,
-        "pointsHome": 58,
+        "points": 102,
+        "pointsHome": 57,
         "pointsAway": 45,
         "pointsLastSeason": null
       },
@@ -8737,6 +8788,7 @@
         "fitness": [
           null,
           null,
+          null,
           5
         ],
         "points": 5,
@@ -8759,10 +8811,10 @@
         "playedAway": 8,
         "fitness": [
           null,
+          null,
           3,
           2,
-          4,
-          2
+          4
         ],
         "points": 53,
         "pointsHome": 31,
@@ -8781,17 +8833,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 8,
-        "playedAway": 6,
+        "playedAway": 7,
         "fitness": [
+          2,
           null,
           null,
           3,
-          1,
-          null
+          1
         ],
-        "points": 38,
+        "points": 40,
         "pointsHome": 23,
-        "pointsAway": 15,
+        "pointsAway": 17,
         "pointsLastSeason": null
       },
       "38026": {
@@ -8833,10 +8885,10 @@
         "playedHome": 9,
         "playedAway": 6,
         "fitness": [
+          null,
           4,
           null,
           1,
-          3,
           3
         ],
         "points": 37,
@@ -8860,8 +8912,8 @@
         "fitness": [
           null,
           null,
-          1,
           null,
+          1,
           null
         ],
         "points": 5,
@@ -8881,17 +8933,17 @@
         "status": "unknown",
         "priceIncrement": -50000,
         "playedHome": 9,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          1,
           7,
           9,
           null,
-          1,
-          7
+          1
         ],
-        "points": 80,
+        "points": 81,
         "pointsHome": 32,
-        "pointsAway": 48,
+        "pointsAway": 49,
         "pointsLastSeason": 123
       },
       "4878": {
@@ -8905,17 +8957,17 @@
         "number": 5,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 4,
+        "playedHome": 5,
         "playedAway": 6,
         "fitness": [
+          9,
           6,
           null,
           3,
-          4,
-          null
+          4
         ],
-        "points": 54,
-        "pointsHome": 24,
+        "points": 63,
+        "pointsHome": 33,
         "pointsAway": 30,
         "pointsLastSeason": 149
       },
@@ -8931,17 +8983,17 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 8,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          11,
           3,
           17,
           6,
-          2,
-          3
+          2
         ],
-        "points": 64,
+        "points": 75,
         "pointsHome": 38,
-        "pointsAway": 26,
+        "pointsAway": 37,
         "pointsLastSeason": null
       },
       "39790": {
@@ -8984,10 +9036,10 @@
         "playedAway": 8,
         "fitness": [
           null,
+          null,
           2,
           1,
-          5,
-          null
+          5
         ],
         "points": 50,
         "pointsHome": 25,
@@ -9006,13 +9058,13 @@
         "status": "unknown",
         "priceIncrement": -40000,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          0,
           16,
           4,
           11,
-          0,
-          14
+          0
         ],
         "points": 177,
         "pointsHome": 94,
@@ -9036,8 +9088,8 @@
           null,
           null,
           null,
-          3,
-          null
+          null,
+          3
         ],
         "points": 24,
         "pointsHome": 8,
@@ -9130,17 +9182,17 @@
         "number": 39,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 2,
         "fitness": [
+          11,
           6,
           null,
           null,
-          null,
-          0
+          null
         ],
-        "points": 10,
-        "pointsHome": 4,
+        "points": 21,
+        "pointsHome": 15,
         "pointsAway": 6,
         "pointsLastSeason": 42
       },
@@ -9155,7 +9207,7 @@
         "number": 0,
         "status": "unknown",
         "priceIncrement": 30000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 11,
         "fitness": [
           3,
@@ -9164,8 +9216,8 @@
           3,
           3
         ],
-        "points": 48,
-        "pointsHome": 25,
+        "points": 51,
+        "pointsHome": 28,
         "pointsAway": 23,
         "pointsLastSeason": 84
       },
@@ -9186,8 +9238,8 @@
           null,
           null,
           null,
-          4,
-          null
+          null,
+          4
         ],
         "points": 26,
         "pointsHome": 19,
@@ -9310,9 +9362,9 @@
         "fitness": [
           null,
           null,
+          null,
           0,
-          10,
-          5
+          10
         ],
         "points": 63,
         "pointsHome": 46,
@@ -9336,8 +9388,8 @@
           null,
           null,
           null,
-          4,
-          null
+          null,
+          4
         ],
         "points": 11,
         "pointsHome": 7,
@@ -9406,17 +9458,17 @@
         "status": "unknown",
         "priceIncrement": 50000,
         "playedHome": 10,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          2,
           6,
           null,
           1,
-          2,
-          4
+          2
         ],
-        "points": 49,
+        "points": 51,
         "pointsHome": 30,
-        "pointsAway": 19,
+        "pointsAway": 21,
         "pointsLastSeason": 143
       },
       "38334": {
@@ -9431,17 +9483,17 @@
         "status": "unknown",
         "priceIncrement": 10000,
         "playedHome": 9,
-        "playedAway": 10,
+        "playedAway": 11,
         "fitness": [
+          5,
           1,
           10,
           3,
-          5,
           5
         ],
-        "points": 84,
+        "points": 89,
         "pointsHome": 43,
-        "pointsAway": 41,
+        "pointsAway": 46,
         "pointsLastSeason": null
       },
       "22340": {
@@ -9458,9 +9510,9 @@
         "playedHome": 6,
         "playedAway": 7,
         "fitness": [
+          null,
           3,
           20,
-          3,
           3,
           3
         ],
@@ -9511,6 +9563,7 @@
           null,
           null,
           null,
+          null,
           2
         ],
         "points": 2,
@@ -9533,10 +9586,7 @@
         "playedAway": 1,
         "fitness": [
           2,
-          4,
-          null,
-          null,
-          null
+          4
         ],
         "points": 6,
         "pointsHome": 2,
@@ -9585,8 +9635,8 @@
           null,
           null,
           null,
-          0,
-          3
+          null,
+          0
         ],
         "points": 62,
         "pointsHome": 39,
@@ -9654,17 +9704,17 @@
         "number": 99,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 8,
         "fitness": [
+          2,
           null,
           null,
           null,
-          null,
-          11
+          null
         ],
-        "points": 69,
-        "pointsHome": 30,
+        "points": 71,
+        "pointsHome": 32,
         "pointsAway": 39,
         "pointsLastSeason": null
       },
@@ -9680,17 +9730,17 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "playedHome": 9,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          4,
           1,
           null,
           null,
-          null,
-          3
+          null
         ],
-        "points": 68,
+        "points": 72,
         "pointsHome": 35,
-        "pointsAway": 33,
+        "pointsAway": 37,
         "pointsLastSeason": 199
       },
       "27049": {
@@ -9754,15 +9804,17 @@
         "number": 8,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 2,
         "fitness": [
+          5,
           2,
           2,
-          4
+          4,
+          null
         ],
-        "points": 8,
-        "pointsHome": 2,
+        "points": 13,
+        "pointsHome": 7,
         "pointsAway": 6,
         "pointsLastSeason": 6
       },
@@ -9977,11 +10029,11 @@
         "playedHome": 8,
         "playedAway": 5,
         "fitness": [
+          null,
           3,
           6,
           null,
-          null,
-          9
+          null
         ],
         "points": 87,
         "pointsHome": 66,
@@ -9999,17 +10051,17 @@
         "number": 22,
         "status": "ok",
         "priceIncrement": 20000,
-        "playedHome": 2,
+        "playedHome": 3,
         "playedAway": 3,
         "fitness": [
+          2,
           null,
           1,
           4,
-          5,
-          3
+          5
         ],
-        "points": 17,
-        "pointsHome": 9,
+        "points": 19,
+        "pointsHome": 11,
         "pointsAway": 8,
         "pointsLastSeason": 83
       },
@@ -10075,17 +10127,17 @@
         "status": "ok",
         "priceIncrement": -10000,
         "playedHome": 6,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          6,
           1,
           2,
           3,
-          1,
-          2
+          1
         ],
-        "points": 25,
+        "points": 31,
         "pointsHome": 11,
-        "pointsAway": 14,
+        "pointsAway": 20,
         "pointsLastSeason": 68
       },
       "9277": {
@@ -10150,17 +10202,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          1,
           3,
           1,
           0,
-          0,
           0
         ],
-        "points": 27,
+        "points": 28,
         "pointsHome": 19,
-        "pointsAway": 8,
+        "pointsAway": 9,
         "pointsLastSeason": 61
       },
       "38208": {
@@ -10302,6 +10354,7 @@
           null,
           null,
           null,
+          null,
           2
         ],
         "points": 2,
@@ -10323,11 +10376,11 @@
         "playedHome": 3,
         "playedAway": 2,
         "fitness": [
+          null,
           2,
           4,
           null,
-          9,
-          3
+          9
         ],
         "points": 22,
         "pointsHome": 17,
@@ -10398,11 +10451,7 @@
         "playedHome": 0,
         "playedAway": 1,
         "fitness": [
-          5,
-          null,
-          null,
-          null,
-          null
+          5
         ],
         "points": 5,
         "pointsHome": 0,
@@ -10445,17 +10494,17 @@
         "number": 25,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 6,
         "fitness": [
+          15,
           14,
           null,
           7,
-          4,
-          null
+          4
         ],
-        "points": 83,
-        "pointsHome": 32,
+        "points": 98,
+        "pointsHome": 47,
         "pointsAway": 51,
         "pointsLastSeason": 158
       },
@@ -10470,17 +10519,17 @@
         "number": 10,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 5,
+        "playedHome": 6,
         "playedAway": 7,
         "fitness": [
+          21,
           3,
           5,
           20,
-          15,
-          null
+          15
         ],
-        "points": 83,
-        "pointsHome": 46,
+        "points": 104,
+        "pointsHome": 67,
         "pointsAway": 37,
         "pointsLastSeason": 300
       },
@@ -10498,11 +10547,11 @@
         "playedHome": 5,
         "playedAway": 6,
         "fitness": [
+          null,
           5,
           3,
           5,
-          null,
-          2
+          null
         ],
         "points": 49,
         "pointsHome": 26,
@@ -10646,17 +10695,17 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "playedHome": 9,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          4,
           5,
           8,
           3,
-          3,
-          4
+          3
         ],
-        "points": 71,
+        "points": 75,
         "pointsHome": 39,
-        "pointsAway": 32,
+        "pointsAway": 36,
         "pointsLastSeason": null
       },
       "34464": {
@@ -10720,17 +10769,17 @@
         "number": 4,
         "status": "unknown",
         "priceIncrement": -40000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          7,
           8,
           5,
           2,
-          null,
-          5
+          null
         ],
-        "points": 97,
-        "pointsHome": 47,
+        "points": 104,
+        "pointsHome": 54,
         "pointsAway": 50,
         "pointsLastSeason": 12
       },
@@ -10773,11 +10822,11 @@
         "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          null,
           7,
           2,
           3,
-          2,
-          3
+          2
         ],
         "points": 98,
         "pointsHome": 58,
@@ -10821,17 +10870,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 10,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          1,
           7,
           5,
           10,
-          4,
-          12
+          4
         ],
-        "points": 121,
+        "points": 122,
         "pointsHome": 80,
-        "pointsAway": 41,
+        "pointsAway": 42,
         "pointsLastSeason": 206
       },
       "27535": {
@@ -10921,17 +10970,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 2,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          5,
           3,
           16,
           3,
-          null,
           null
         ],
-        "points": 22,
+        "points": 27,
         "pointsHome": 6,
-        "pointsAway": 16,
+        "pointsAway": 21,
         "pointsLastSeason": null
       },
       "37626": {
@@ -10975,8 +11024,8 @@
         "fitness": [
           null,
           null,
-          0,
           null,
+          0,
           null
         ],
         "points": 5,
@@ -11051,8 +11100,8 @@
           null,
           null,
           null,
-          3,
-          null
+          null,
+          3
         ],
         "points": 3,
         "pointsHome": 3,
@@ -11120,17 +11169,17 @@
         "number": 0,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
           1,
-          0,
+          1,
           0,
           0,
           0
         ],
-        "points": 13,
-        "pointsHome": 10,
+        "points": 14,
+        "pointsHome": 11,
         "pointsAway": 3,
         "pointsLastSeason": 42
       },
@@ -11196,17 +11245,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 9,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          8,
           6,
           4,
           -1,
-          7,
-          null
+          7
         ],
-        "points": 54,
+        "points": 62,
         "pointsHome": 35,
-        "pointsAway": 19,
+        "pointsAway": 27,
         "pointsLastSeason": 84
       },
       "27242": {
@@ -11221,13 +11270,13 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          0,
           1,
           3,
           3,
-          0,
-          3
+          0
         ],
         "points": 30,
         "pointsHome": 16,
@@ -11245,17 +11294,17 @@
         "number": 35,
         "status": "ok",
         "priceIncrement": 20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 8,
         "fitness": [
+          3,
           1,
           2,
           1,
-          1,
           1
         ],
-        "points": 49,
-        "pointsHome": 37,
+        "points": 52,
+        "pointsHome": 40,
         "pointsAway": 12,
         "pointsLastSeason": 4
       },
@@ -11302,7 +11351,7 @@
           null,
           null,
           null,
-          8
+          null
         ],
         "points": 30,
         "pointsHome": 15,
@@ -11321,10 +11370,13 @@
         "status": "unknown",
         "priceIncrement": -110000,
         "playedHome": 1,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          0,
           4,
-          4
+          4,
+          null,
+          null
         ],
         "points": 8,
         "pointsHome": 4,
@@ -11345,14 +11397,14 @@
         "playedHome": 11,
         "playedAway": 9,
         "fitness": [
-          14,
+          12,
           14,
           2,
           4,
           null
         ],
-        "points": 105,
-        "pointsHome": 67,
+        "points": 103,
+        "pointsHome": 65,
         "pointsAway": 38,
         "pointsLastSeason": 88
       },
@@ -11418,17 +11470,17 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "playedHome": 11,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          2,
           6,
           5,
           5,
-          4,
-          5
+          4
         ],
-        "points": 69,
+        "points": 71,
         "pointsHome": 40,
-        "pointsAway": 29,
+        "pointsAway": 31,
         "pointsLastSeason": 36
       },
       "32654": {
@@ -11470,9 +11522,9 @@
         "playedHome": 5,
         "playedAway": 3,
         "fitness": [
-          2,
-          2,
           null,
+          2,
+          2,
           null,
           null
         ],
@@ -11493,17 +11545,17 @@
         "status": "ok",
         "priceIncrement": -10000,
         "playedHome": 5,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          3,
           6,
           3,
           5,
-          5,
-          3
+          5
         ],
-        "points": 34,
+        "points": 37,
         "pointsHome": 20,
-        "pointsAway": 14,
+        "pointsAway": 17,
         "pointsLastSeason": 46
       },
       "38865": {
@@ -11542,17 +11594,17 @@
         "number": 14,
         "status": "unknown",
         "priceIncrement": 60000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
           3,
+          3,
           6,
           10,
-          13,
-          3
+          13
         ],
-        "points": 110,
-        "pointsHome": 62,
+        "points": 113,
+        "pointsHome": 65,
         "pointsAway": 48,
         "pointsLastSeason": 95
       },
@@ -11585,7 +11637,7 @@
         "id": 38347,
         "name": "Rayane Messi",
         "slug": "rayane-messi",
-        "teamID": null,
+        "teamID": 286,
         "position": 4,
         "price": 290000,
         "fantasyPrice": 8000000,
@@ -11595,6 +11647,8 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
+          null,
           null,
           null,
           null
@@ -11671,8 +11725,7 @@
           null,
           2,
           0,
-          0,
-          null
+          0
         ],
         "points": 2,
         "pointsHome": 2,
@@ -11768,6 +11821,7 @@
         "playedHome": 1,
         "playedAway": 2,
         "fitness": [
+          null,
           3,
           3,
           3
@@ -11791,10 +11845,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -11867,9 +11917,9 @@
         "playedAway": 7,
         "fitness": [
           null,
+          null,
           2,
           2,
-          1,
           1
         ],
         "points": 38,
@@ -11894,8 +11944,8 @@
           null,
           null,
           null,
-          1,
-          null
+          null,
+          1
         ],
         "points": 3,
         "pointsHome": 0,
@@ -11916,11 +11966,11 @@
         "playedHome": 7,
         "playedAway": 7,
         "fitness": [
+          null,
           1,
           2,
           null,
-          3,
-          0
+          3
         ],
         "points": 30,
         "pointsHome": 16,
@@ -11964,17 +12014,17 @@
         "status": "unknown",
         "priceIncrement": -40000,
         "playedHome": 8,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          2,
           2,
           0,
           4,
-          5,
-          3
+          5
         ],
-        "points": 55,
+        "points": 57,
         "pointsHome": 32,
-        "pointsAway": 23,
+        "pointsAway": 25,
         "pointsLastSeason": 42
       },
       "35011": {
@@ -12013,17 +12063,17 @@
         "number": 20,
         "status": "unknown",
         "priceIncrement": -10000,
-        "playedHome": 5,
+        "playedHome": 6,
         "playedAway": 5,
         "fitness": [
+          5,
           9,
           7,
           3,
-          3,
-          1
+          3
         ],
-        "points": 45,
-        "pointsHome": 19,
+        "points": 50,
+        "pointsHome": 24,
         "pointsAway": 26,
         "pointsLastSeason": 114
       },
@@ -12039,17 +12089,17 @@
         "status": "unknown",
         "priceIncrement": -40000,
         "playedHome": 10,
-        "playedAway": 10,
+        "playedAway": 11,
         "fitness": [
+          4,
           3,
           3,
           11,
-          4,
-          3
+          4
         ],
-        "points": 82,
+        "points": 86,
         "pointsHome": 46,
-        "pointsAway": 36,
+        "pointsAway": 40,
         "pointsLastSeason": null
       },
       "2659": {
@@ -12064,17 +12114,17 @@
         "status": "unknown",
         "priceIncrement": 40000,
         "playedHome": 7,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          3,
           1,
           0,
           17,
-          2,
-          9
+          2
         ],
-        "points": 66,
+        "points": 69,
         "pointsHome": 33,
-        "pointsAway": 33,
+        "pointsAway": 36,
         "pointsLastSeason": null
       },
       "34729": {
@@ -12089,17 +12139,17 @@
         "status": "unknown",
         "priceIncrement": 50000,
         "playedHome": 4,
-        "playedAway": 4,
+        "playedAway": 5,
         "fitness": [
+          2,
           null,
           2,
           null,
-          null,
-          3
+          null
         ],
-        "points": 39,
+        "points": 41,
         "pointsHome": 22,
-        "pointsAway": 17,
+        "pointsAway": 19,
         "pointsLastSeason": 183
       },
       "39850": {
@@ -12118,9 +12168,7 @@
         "fitness": [
           3,
           2,
-          2,
-          null,
-          null
+          2
         ],
         "points": 7,
         "pointsHome": 2,
@@ -12192,6 +12240,9 @@
         "playedAway": 0,
         "fitness": [
           null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -12238,14 +12289,10 @@
         "playedHome": 1,
         "playedAway": 0,
         "fitness": [
-          12,
-          null,
-          null,
-          null,
-          null
+          11
         ],
-        "points": 12,
-        "pointsHome": 12,
+        "points": 11,
+        "pointsHome": 11,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -12338,14 +12385,14 @@
         "playedHome": 10,
         "playedAway": 8,
         "fitness": [
-          2,
+          3,
           null,
           null,
           6,
           5
         ],
-        "points": 113,
-        "pointsHome": 75,
+        "points": 114,
+        "pointsHome": 76,
         "pointsAway": 38,
         "pointsLastSeason": null
       },
@@ -12360,17 +12407,17 @@
         "number": 8,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 10,
         "fitness": [
+          7,
           3,
           5,
           -3,
-          3,
-          2
+          3
         ],
-        "points": 42,
-        "pointsHome": 23,
+        "points": 49,
+        "pointsHome": 30,
         "pointsAway": 19,
         "pointsLastSeason": 43
       },
@@ -12460,17 +12507,17 @@
         "number": 9,
         "status": "unknown",
         "priceIncrement": 40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 7,
         "fitness": [
+          2,
           1,
           0,
           0,
-          2,
-          3
+          2
         ],
-        "points": 31,
-        "pointsHome": 20,
+        "points": 33,
+        "pointsHome": 22,
         "pointsAway": 11,
         "pointsLastSeason": 61
       },
@@ -12485,17 +12532,17 @@
         "number": 24,
         "status": "unknown",
         "priceIncrement": 20000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 8,
         "fitness": [
+          6,
           12,
           3,
           2,
-          1,
-          null
+          1
         ],
-        "points": 68,
-        "pointsHome": 39,
+        "points": 74,
+        "pointsHome": 45,
         "pointsAway": 29,
         "pointsLastSeason": 85
       },
@@ -12515,9 +12562,9 @@
         "fitness": [
           null,
           null,
+          null,
           3,
-          2,
-          null
+          2
         ],
         "points": 9,
         "pointsHome": 9,
@@ -12535,16 +12582,17 @@
         "number": 11,
         "status": "unknown",
         "priceIncrement": -80000,
-        "playedHome": 2,
+        "playedHome": 3,
         "playedAway": 2,
         "fitness": [
+          -2,
           8,
           0,
           10,
           11
         ],
-        "points": 29,
-        "pointsHome": 19,
+        "points": 27,
+        "pointsHome": 17,
         "pointsAway": 10,
         "pointsLastSeason": 39
       },
@@ -12610,11 +12658,13 @@
         "status": "unknown",
         "priceIncrement": -170000,
         "playedHome": 0,
-        "playedAway": 0,
-        "fitness": [],
-        "points": 0,
+        "playedAway": 1,
+        "fitness": [
+          2
+        ],
+        "points": 2,
         "pointsHome": 0,
-        "pointsAway": 0,
+        "pointsAway": 2,
         "pointsLastSeason": null
       },
       "32314": {
@@ -12628,17 +12678,17 @@
         "number": 26,
         "status": "ok",
         "priceIncrement": 20000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 9,
         "fitness": [
+          2,
           5,
           5,
           2,
-          0,
-          null
+          0
         ],
-        "points": 47,
-        "pointsHome": 25,
+        "points": 49,
+        "pointsHome": 27,
         "pointsAway": 22,
         "pointsLastSeason": null
       },
@@ -12653,15 +12703,17 @@
         "number": 17,
         "status": "ok",
         "priceIncrement": -30000,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 2,
         "fitness": [
+          6,
           1,
           2,
-          2
+          2,
+          null
         ],
-        "points": 5,
-        "pointsHome": 2,
+        "points": 11,
+        "pointsHome": 8,
         "pointsAway": 3,
         "pointsLastSeason": null
       },
@@ -12676,17 +12728,17 @@
         "number": 10,
         "status": "unknown",
         "priceIncrement": 20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 9,
         "fitness": [
+          2,
           7,
           11,
           null,
-          5,
-          7
+          5
         ],
-        "points": 119,
-        "pointsHome": 62,
+        "points": 121,
+        "pointsHome": 64,
         "pointsAway": 57,
         "pointsLastSeason": 156
       },
@@ -12729,11 +12781,11 @@
         "playedHome": 5,
         "playedAway": 3,
         "fitness": [
+          null,
           13,
           null,
           null,
-          3,
-          null
+          3
         ],
         "points": 32,
         "pointsHome": 26,
@@ -12776,17 +12828,17 @@
         "number": 29,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 1,
+        "playedHome": 2,
         "playedAway": 1,
         "fitness": [
+          15,
           1,
-          null,
           null,
           null,
           null
         ],
-        "points": 4,
-        "pointsHome": 3,
+        "points": 19,
+        "pointsHome": 18,
         "pointsAway": 1,
         "pointsLastSeason": null
       },
@@ -12802,17 +12854,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 10,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
           1,
           1,
+          1,
           3,
-          0,
           0
         ],
-        "points": 21,
+        "points": 22,
         "pointsHome": 10,
-        "pointsAway": 11,
+        "pointsAway": 12,
         "pointsLastSeason": null
       },
       "19310": {
@@ -12832,8 +12884,8 @@
           null,
           null,
           null,
-          4,
-          2
+          null,
+          4
         ],
         "points": 27,
         "pointsHome": 11,
@@ -12852,17 +12904,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 2,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          7,
           0,
           6,
           1,
-          3,
-          null
+          3
         ],
-        "points": 15,
+        "points": 22,
         "pointsHome": 6,
-        "pointsAway": 9,
+        "pointsAway": 16,
         "pointsLastSeason": null
       },
       "19571": {
@@ -12876,15 +12928,16 @@
         "number": 32,
         "status": "unknown",
         "priceIncrement": 0,
-        "playedHome": 0,
+        "playedHome": 1,
         "playedAway": 2,
         "fitness": [
+          3,
           4,
           null,
           6
         ],
-        "points": 10,
-        "pointsHome": 0,
+        "points": 13,
+        "pointsHome": 3,
         "pointsAway": 10,
         "pointsLastSeason": 63
       },
@@ -12931,7 +12984,7 @@
           null,
           null,
           null,
-          2
+          null
         ],
         "points": 52,
         "pointsHome": 29,
@@ -13052,14 +13105,14 @@
         "playedHome": 11,
         "playedAway": 10,
         "fitness": [
-          9,
+          8,
           10,
           3,
           3,
           3
         ],
-        "points": 122,
-        "pointsHome": 56,
+        "points": 121,
+        "pointsHome": 55,
         "pointsAway": 66,
         "pointsLastSeason": null
       },
@@ -13175,17 +13228,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "playedHome": 7,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          7,
           5,
           2,
           null,
-          1,
-          8
+          1
         ],
-        "points": 49,
+        "points": 56,
         "pointsHome": 23,
-        "pointsAway": 26,
+        "pointsAway": 33,
         "pointsLastSeason": 168
       },
       "4814": {
@@ -13202,14 +13255,14 @@
         "playedHome": 11,
         "playedAway": 9,
         "fitness": [
-          -2,
+          0,
           7,
           3,
           0,
           13
         ],
-        "points": 93,
-        "pointsHome": 45,
+        "points": 95,
+        "pointsHome": 47,
         "pointsAway": 48,
         "pointsLastSeason": 195
       },
@@ -13228,9 +13281,9 @@
         "playedAway": 8,
         "fitness": [
           null,
+          null,
           2,
           1,
-          2,
           2
         ],
         "points": 26,
@@ -13275,17 +13328,17 @@
         "status": "ok",
         "priceIncrement": 30000,
         "playedHome": 8,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          -5,
           5,
           7,
           13,
-          1,
-          2
+          1
         ],
-        "points": 73,
+        "points": 68,
         "pointsHome": 26,
-        "pointsAway": 47,
+        "pointsAway": 42,
         "pointsLastSeason": null
       },
       "39991": {
@@ -13301,7 +13354,13 @@
         "priceIncrement": -40000,
         "playedHome": 0,
         "playedAway": 0,
-        "fitness": [],
+        "fitness": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "points": 0,
         "pointsHome": 0,
         "pointsAway": 0,
@@ -13343,17 +13402,17 @@
         "number": 20,
         "status": "ok",
         "priceIncrement": 20000,
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 8,
         "fitness": [
+          4,
           3,
           12,
           4,
-          null,
           null
         ],
-        "points": 62,
-        "pointsHome": 31,
+        "points": 66,
+        "pointsHome": 35,
         "pointsAway": 31,
         "pointsLastSeason": 87
       },
@@ -13419,17 +13478,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 4,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
+          6,
           3,
           5,
           1,
-          -1,
-          4
+          -1
         ],
-        "points": 27,
+        "points": 33,
         "pointsHome": 12,
-        "pointsAway": 15,
+        "pointsAway": 21,
         "pointsLastSeason": null
       },
       "39007": {
@@ -13471,11 +13530,11 @@
         "playedHome": 5,
         "playedAway": 3,
         "fitness": [
+          null,
           3,
           null,
           null,
-          3,
-          -2
+          3
         ],
         "points": 23,
         "pointsHome": 13,
@@ -13644,17 +13703,17 @@
         "status": "unknown",
         "priceIncrement": 70000,
         "playedHome": 8,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          5,
           null,
           8,
           7,
-          2,
-          5
+          2
         ],
-        "points": 109,
+        "points": 114,
         "pointsHome": 63,
-        "pointsAway": 46,
+        "pointsAway": 51,
         "pointsLastSeason": 73
       },
       "25438": {
@@ -13669,17 +13728,17 @@
         "status": "unknown",
         "priceIncrement": 0,
         "playedHome": 4,
-        "playedAway": 7,
+        "playedAway": 8,
         "fitness": [
+          2,
           6,
           7,
           1,
-          null,
-          4
+          null
         ],
-        "points": 43,
+        "points": 45,
         "pointsHome": 14,
-        "pointsAway": 29,
+        "pointsAway": 31,
         "pointsLastSeason": 161
       },
       "27402": {
@@ -13693,17 +13752,17 @@
         "number": 17,
         "status": "unknown",
         "priceIncrement": -190000,
-        "playedHome": 8,
+        "playedHome": 9,
         "playedAway": 11,
         "fitness": [
           6,
-          9,
-          9,
           6,
-          7
+          9,
+          9,
+          6
         ],
-        "points": 166,
-        "pointsHome": 71,
+        "points": 172,
+        "pointsHome": 77,
         "pointsAway": 95,
         "pointsLastSeason": 221
       },
@@ -13724,8 +13783,8 @@
           null,
           null,
           null,
-          -1,
-          3
+          null,
+          -1
         ],
         "points": 39,
         "pointsHome": 20,
@@ -13743,17 +13802,17 @@
         "number": 33,
         "status": "unknown",
         "priceIncrement": -60000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 11,
         "fitness": [
+          3,
           6,
           2,
           6,
-          2,
-          0
+          2
         ],
-        "points": 93,
-        "pointsHome": 50,
+        "points": 96,
+        "pointsHome": 53,
         "pointsAway": 43,
         "pointsLastSeason": 142
       },
@@ -13768,17 +13827,17 @@
         "number": 51,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 6,
+        "playedHome": 7,
         "playedAway": 8,
         "fitness": [
+          4,
           3,
           null,
           8,
-          4,
-          3
+          4
         ],
-        "points": 66,
-        "pointsHome": 39,
+        "points": 70,
+        "pointsHome": 43,
         "pointsAway": 27,
         "pointsLastSeason": 139
       },
@@ -13796,6 +13855,7 @@
         "playedHome": 1,
         "playedAway": 1,
         "fitness": [
+          null,
           null,
           3,
           4
@@ -13869,11 +13929,11 @@
         "playedHome": 9,
         "playedAway": 10,
         "fitness": [
+          null,
           2,
           5,
           2,
-          5,
-          3
+          5
         ],
         "points": 44,
         "pointsHome": 31,
@@ -13892,17 +13952,17 @@
         "status": "ok",
         "priceIncrement": 160000,
         "playedHome": 11,
-        "playedAway": 8,
+        "playedAway": 9,
         "fitness": [
+          2,
           7,
           8,
           12,
-          1,
-          19
+          1
         ],
-        "points": 136,
+        "points": 138,
         "pointsHome": 83,
-        "pointsAway": 53,
+        "pointsAway": 55,
         "pointsLastSeason": 162
       },
       "27429": {
@@ -13966,17 +14026,17 @@
         "number": 14,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
+          7,
           5,
           2,
           1,
-          2,
-          5
+          2
         ],
-        "points": 87,
-        "pointsHome": 38,
+        "points": 94,
+        "pointsHome": 45,
         "pointsAway": 49,
         "pointsLastSeason": 87
       },
@@ -13991,17 +14051,17 @@
         "number": 8,
         "status": "unknown",
         "priceIncrement": 10000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 8,
         "fitness": [
+          3,
           null,
           0,
           3,
-          3,
-          0
+          3
         ],
-        "points": 41,
-        "pointsHome": 17,
+        "points": 44,
+        "pointsHome": 20,
         "pointsAway": 24,
         "pointsLastSeason": 114
       },
@@ -14068,6 +14128,7 @@
           null,
           null,
           null,
+          null,
           2
         ],
         "points": 2,
@@ -14083,13 +14144,13 @@
         "slug": "toulouse",
         "nextGames": [
           {
-            "id": 47904,
-            "date": 1770567300,
+            "id": 47918,
+            "date": 1771164000,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 61,
+              "id": 684,
               "score": null
             },
             "away": {
@@ -14105,17 +14166,17 @@
         "slug": "monaco",
         "nextGames": [
           {
-            "id": 47911,
-            "date": 1770559200,
+            "id": 47916,
+            "date": 1771013100,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 46,
+              "id": 45,
               "score": null
             },
             "away": {
-              "id": 45,
+              "id": 47,
               "score": null
             }
           }
@@ -14127,17 +14188,17 @@
         "slug": "nice",
         "nextGames": [
           {
-            "id": 47911,
-            "date": 1770559200,
+            "id": 47921,
+            "date": 1771184700,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 46,
+              "id": 48,
               "score": null
             },
             "away": {
-              "id": 45,
+              "id": 46,
               "score": null
             }
           }
@@ -14193,17 +14254,17 @@
         "slug": "paris-saint-germain",
         "nextGames": [
           {
-            "id": 47912,
-            "date": 1770579900,
+            "id": 47914,
+            "date": 1771005600,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 49,
+              "id": 51,
               "score": null
             },
             "away": {
-              "id": 54,
+              "id": 49,
               "score": null
             }
           }
@@ -14281,17 +14342,17 @@
         "slug": "marseille",
         "nextGames": [
           {
-            "id": 47912,
-            "date": 1770579900,
+            "id": 47920,
+            "date": 1771084800,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 49,
+              "id": 54,
               "score": null
             },
             "away": {
-              "id": 54,
+              "id": 286,
               "score": null
             }
           }
@@ -14325,17 +14386,17 @@
         "slug": "angers",
         "nextGames": [
           {
-            "id": 47904,
-            "date": 1770567300,
+            "id": 47915,
+            "date": 1771172100,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 61,
+              "id": 56,
               "score": null
             },
             "away": {
-              "id": 43,
+              "id": 61,
               "score": null
             }
           }
@@ -14347,13 +14408,13 @@
         "slug": "strasbourg",
         "nextGames": [
           {
-            "id": 47909,
-            "date": 1770567300,
+            "id": 47920,
+            "date": 1771084800,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 684,
+              "id": 54,
               "score": null
             },
             "away": {
@@ -14413,17 +14474,17 @@
         "slug": "auxerre",
         "nextGames": [
           {
-            "id": 47908,
-            "date": 1770567300,
+            "id": 47917,
+            "date": 1771172100,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 638,
+              "id": 53,
               "score": null
             },
             "away": {
-              "id": 776,
+              "id": 638,
               "score": null
             }
           }
@@ -14435,17 +14496,17 @@
         "slug": "le-havre",
         "nextGames": [
           {
-            "id": 47909,
-            "date": 1770567300,
+            "id": 47918,
+            "date": 1771164000,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
               "id": 684,
               "score": null
             },
             "away": {
-              "id": 286,
+              "id": 43,
               "score": null
             }
           }
@@ -14457,25 +14518,25 @@
         "slug": "paris-fc",
         "nextGames": [
           {
-            "id": 47908,
-            "date": 1770567300,
+            "id": 47913,
+            "date": 1771099500,
             "round": {
-              "id": 4660
+              "id": 4661
             },
             "home": {
-              "id": 638,
+              "id": 776,
               "score": null
             },
             "away": {
-              "id": 776,
+              "id": 478,
               "score": null
             }
           }
         ]
       }
     },
-    "update": 1770609610,
-    "etag": 2765397325,
+    "update": 1770598246,
+    "etag": 331679536,
     "scoreID": 3
   },
   "meta": {
