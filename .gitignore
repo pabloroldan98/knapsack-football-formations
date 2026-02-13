@@ -8,7 +8,6 @@ venv/
 # IntelliJ IDEA / PyCharm
 .idea
 *.iml
-misc.xml
 
 # macOS files
 .DS_Store
@@ -21,3 +20,17 @@ Thumbs.db
 
 # Temporary files
 *.tmp
+
+# Ignore buildozer files
+.buildozer/
+# Ignore vscode files
+.vscode/
+# Ignore virtual environment files
+.venv/
+# Ignore environment files
+.env/
+# Ignore local environment files
+.env.local/
+
+# Ignore this json file
+json_files/00_elo_ratings_champions_data.json
