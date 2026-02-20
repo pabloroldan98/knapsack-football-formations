@@ -481,11 +481,13 @@
     function enterApp() {
       document.getElementById('loading').style.display = 'flex';
       document.getElementById('landing').classList.add('hidden');
+      const mode = "landing";
       let path;
       if (window.location.protocol === "file:") { path = `app/index.html`; }
       else { path = `app/`; }
       const target = new URL(path, window.location.href);
-      // propagate language to the new app
+      console.log("Redirecting to:", target.toString());
+      // propagate language to the app path
       target.searchParams.set("lang", LANG);
       setTimeout(() => { window.location.href = target.toString(); }, 200);
     }

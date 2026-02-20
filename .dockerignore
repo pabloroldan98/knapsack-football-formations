@@ -1,0 +1,21 @@
+# No copiar al contenedor (solo necesitamos backend + json_files)
+.git
+.venv
+.env
+.env.*
+*.pyc
+__pycache__
+.cursor
+.idea
+*.md
+app/
+index.html
+img/
+data/
+*.docx
+terminals
+node_modules
+
+# Streamlit y export no son necesarios para la API
+# streamlit_app.py
+# export_players_json.py

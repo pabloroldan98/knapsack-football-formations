@@ -1,0 +1,48 @@
+name: Deploy frontend to IONOS
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "index.html"
+      - "ads.txt"
+      - "img/**"
+      - "app/**"
+      - ".github/workflows/deploy-ionos-frontend.yml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Upload frontend to IONOS via SFTP
+        env:
+          IONOS_HOST: ${{ secrets.IONOS_HOST }}
+          IONOS_USER: ${{ secrets.IONOS_USER }}
+          IONOS_PASS: ${{ secrets.IONOS_PASS }}
+          IONOS_PORT: ${{ secrets.IONOS_PORT }}
+        run: |
+          lftp -u "$IONOS_USER","$IONOS_PASS" sftp://$IONOS_HOST:$IONOS_PORT <<'EOF'
+          set sftp:auto-confirm yes
+          cd /public
+
+          # Landing page
+          put -O . index.html
+
+          # AdSense
+          put -O . ads.txt
+
+          # Imágenes
+          mirror -R --delete ./img ./img
+
+          # Aplicación (HTML + CSS + JS)
+          mirror -R --delete ./app ./app
+
+          bye
+          EOF

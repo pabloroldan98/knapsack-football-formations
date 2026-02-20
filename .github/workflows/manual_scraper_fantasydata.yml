@@ -22,6 +22,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
       - name: Run Biwenger Scraper
         run: python -u ./scraping_tasks/scrape_biwenger.py
 
@@ -50,6 +53,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
       - name: Run LaLigaFantasy Scraper
         run: python -u ./scraping_tasks/scrape_laligafantasy.py
@@ -98,6 +104,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
 #      - name: Run FutbolFantasy Scraper
 #        run: python -u ./scraping_tasks/scrape_futbolfantasy.py
 
@@ -133,6 +142,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
       - name: Run AnaliticaFantasy Scraper
         run: python -u ./scraping_tasks/scrape_analiticafantasy.py
 
@@ -161,6 +173,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
       - name: Run JornadaPerfecta Scraper
         run: python -u ./scraping_tasks/scrape_jornadaperfecta.py
@@ -191,6 +206,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
       - name: Run Pundit Scraper
         run: python -u ./scraping_tasks/scrape_pundit.py
 
@@ -219,6 +237,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
       - name: Run Scout Scraper
         run: python -u ./scraping_tasks/scrape_scout.py
@@ -249,6 +270,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
       - name: Run RotoWire Scraper
         run: python -u ./scraping_tasks/scrape_rotowire.py
 
@@ -277,6 +301,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
       - name: Run SportsGambler Scraper
         run: python -u ./scraping_tasks/scrape_sportsgambler.py

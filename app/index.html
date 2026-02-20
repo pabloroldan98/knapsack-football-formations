@@ -3,146 +3,357 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora Fantasy</title>
+  <meta name="description" content="Calculadora Fantasy - Optimiza tu equipo de LaLiga Fantasy y Biwenger con IA">
   <meta name="theme-color" content="#0e1117">
   <meta name="msapplication-navbutton-color" content="#0e1117">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="#0e1117">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
-<!--  <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <link rel="icon" type="image/png" href="../logo.png">
+  <link rel="apple-touch-icon" type="image/png" href="../logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
+
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
-  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app" crossorigin>
-  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app">
-<!--  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>-->
-<!--  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">-->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-QXF4YKPSMD');
   </script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      background: rgb(14, 17, 23);
-      color: rgb(14, 17, 23);
-      overflow: hidden;
-      color-scheme: dark;
-      -webkit-text-size-adjust: none;
-    }
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
 
-    body {
-      position: relative;
-    }
-
-    .wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: rgb(14, 17, 23);
-    }
-
-    .hidetop, .hideleft, .hideright,
-    .hidetopleft, .hidetopright, .hidefooter {
-      position: absolute;
-      background: rgb(14, 17, 23);
-      z-index: 2;
-    }
-
-    .hidetop     { width: 100%; height: 5px; left: 0; top: 0; }
-    .hideleft    { width: 5px; height: 100%; left: 0; top: 0; }
-    .hideright   { width: 5px; height: 100%; right: 0; top: 0; }
-    .hidetopleft { width: 10px; height: 10px; left: 0; top: 0; }
-    .hidetopright{ width: 10px; height: 10px; right: 0; top: 0; }
-    .hidefooter  { width: 100%; height: 40px; left: 0; bottom: 0; }
-
-    .logo {
-      position: fixed;
-      top: 35px;
-      right: 50px;
-      z-index: 10;
-    }
-
-    .logo img {
-      height: 40px;
-    }
-
-    .iframe-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh;
-      background: rgb(14, 17, 23); /* Fallback color */
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      zoom: 1;
-    }
-
-    iframe.loaded {
-      opacity: 1;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="wrapper">
-    <div class="iframe-container">
-      <iframe id="appFrame" allowfullscreen class="" ></iframe>
-<!--      <iframe-->
-<!--        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"-->
-<!--        allowfullscreen-->
-<!--        onload="this.classList.add('loaded')">-->
-<!--      </iframe>-->
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <span id="loadingText">Cargando jugadores...</span>
+  </div>
+
+  <!-- Sidebar toggle (mobile) -->
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Menu">&#9776;</button>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <img src="../logo.png" alt="Logo" class="sidebar-logo">
+      <button id="sidebarClose" class="sidebar-close">&times;</button>
+    </div>
+
+    <h3 class="sidebar-section-title" data-i18n="sb.options">Opciones</h3>
+
+    <!-- Language -->
+    <label class="sidebar-label" data-i18n="sb.lang">Idioma</label>
+    <div class="lang-buttons">
+      <button id="btnLangES" class="lang-btn active" onclick="setLang('es')">Espa&ntilde;ol</button>
+      <button id="btnLangEN" class="lang-btn" onclick="setLang('en')">English</button>
+    </div>
+
+    <!-- Competition -->
+    <label class="sidebar-label" data-i18n="sb.competition">Competici&oacute;n</label>
+    <select id="selCompetition" class="sidebar-select"></select>
+
+    <!-- App -->
+    <label class="sidebar-label" data-i18n="sb.app">Aplicaci&oacute;n</label>
+    <select id="selApp" class="sidebar-select">
+      <option value="biwenger">Biwenger</option>
+    </select>
+
+    <!-- Penalties -->
+    <label class="sidebar-label" data-i18n="sb.penalties">&iquest;Te importan los penaltis?</label>
+    <select id="selPenalties" class="sidebar-select">
+      <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+      <option value="no" data-i18n-opt="opt.no">No</option>
+    </select>
+
+    <!-- Sort -->
+    <label class="sidebar-label" data-i18n="sb.sort_by">Ordenar por</label>
+    <select id="selSort" class="sidebar-select">
+      <option value="score" data-i18n-opt="sort.score">Puntuaci&oacute;n</option>
+      <option value="worth" data-i18n-opt="sort.worth">Rentabilidad</option>
+      <option value="price" data-i18n-opt="sort.price">Precio</option>
+      <option value="form" data-i18n-opt="sort.form">Forma</option>
+      <option value="fixture" data-i18n-opt="sort.fixture">Partido</option>
+      <option value="startprobability" data-i18n-opt="sort.startprobability">Probabilidad</option>
+      <option value="position" data-i18n-opt="sort.position">Posici&oacute;n</option>
+    </select>
+
+    <!-- Use start prob with worth -->
+    <div id="worthProbContainer">
+      <label class="sidebar-label sidebar-label-small" data-i18n="sb.use_start_prob_with_value">
+        Utilizar '% Titular' con Rentabilidad
+      </label>
+      <select id="selWorthProb" class="sidebar-select">
+        <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+        <option value="no" data-i18n-opt="opt.no">No</option>
+      </select>
+    </div>
+
+    <!-- Jornada (LaLiga only) -->
+    <div id="jornadaContainer" style="display:none">
+      <label class="sidebar-label" data-i18n="sb.jornada">Jornada</label>
+      <select id="selJornada" class="sidebar-select"></select>
+
+      <label class="sidebar-label" data-i18n="sb.num_jornadas">Jornadas a considerar</label>
+      <select id="selNumJornadas" class="sidebar-select">
+        <option value="1" data-i18n-opt="num.one">Una jornada</option>
+        <option value="2" data-i18n-opt="num.two">Dos jornadas</option>
+        <option value="3" data-i18n-opt="num.three">Tres jornadas</option>
+      </select>
+    </div>
+
+    <!-- Ignore form -->
+    <label class="sidebar-label" data-i18n="sb.ignore_form">&iquest;Ignorar forma?</label>
+    <select id="selIgnoreForm" class="sidebar-select">
+      <option value="no" data-i18n-opt="opt.no">No</option>
+      <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+    </select>
+
+    <!-- Ignore fixtures -->
+    <label class="sidebar-label" data-i18n="sb.ignore_fixtures">&iquest;Ignorar dificultad partido?</label>
+    <select id="selIgnoreFixtures" class="sidebar-select">
+      <option value="no" data-i18n-opt="opt.no">No</option>
+      <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+    </select>
+
+    <!-- Load button -->
+    <button id="btnLoadPlayers" class="btn-primary" data-i18n="btn.load_players" style="margin-top:16px">
+      Cargar Jugadores
+    </button>
+  </aside>
+
+  <!-- Main content -->
+  <main id="mainContent" class="main-content">
+    <!-- Top bar -->
+    <header class="top-bar">
+      <h1 id="appTitle" data-i18n="app.title">Calculadora Fantasy &#129302;</h1>
+      <img src="../logo.png" alt="Logo" class="top-logo">
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="budget" data-i18n="tab.best11_budget">&#128176; Mejores 11s con presupuesto</button>
+      <button class="tab" data-tab="my11" data-i18n="tab.my_best11">&#9917; Mi mejor 11 posible</button>
+      <button class="tab" data-tab="players" data-i18n="tab.players_list">&#128203; Lista de jugadores</button>
+      <button class="tab" data-tab="market" data-i18n="tab.my_market">&#128200; Analizar mi mercado</button>
+    </nav>
+
+    <!-- Tab: Budget -->
+    <section id="tab-budget" class="tab-content active">
+      <h2 data-i18n="h.budget11">Mejores 11s dentro de tu presupuesto</h2>
+
+      <!-- Locked / Excluded expander -->
+      <details class="expander">
+        <summary data-i18n="blind.header">Blindar o Excluir jugadores</summary>
+        <div class="expander-content">
+          <h4 data-i18n="blind.title">&#128274; Jugadores blindados</h4>
+          <p class="caption" data-i18n="blind.caption1">Estos jugadores estar&aacute;n s&iacute; o s&iacute; en todos los equipos calculados</p>
+          <div class="search-add-row">
+            <input type="text" id="blindedSearch" class="search-input" placeholder="Buscar jugador..." list="blindedDatalist">
+            <datalist id="blindedDatalist"></datalist>
+            <button class="btn-small" onclick="addBlindedPlayer()" data-i18n="blind.add">A&ntilde;adir</button>
+          </div>
+          <div id="blindedList" class="player-chips"></div>
+          <p id="blindedTotal" class="caption" style="display:none"></p>
+
+          <h4 data-i18n="ban.title" style="margin-top:12px">&#128683; Jugadores excluidos</h4>
+          <p class="caption" data-i18n="ban.caption">Estos jugadores no estar&aacute;n bajo ning&uacute;n concepto en ning&uacute;n equipo</p>
+          <div class="search-add-row">
+            <input type="text" id="bannedSearch" class="search-input" placeholder="Buscar jugador..." list="bannedDatalist">
+            <datalist id="bannedDatalist"></datalist>
+            <button class="btn-small" onclick="addBannedPlayer()" data-i18n="ban.add">A&ntilde;adir</button>
+          </div>
+          <div id="bannedList" class="player-chips"></div>
+        </div>
+      </details>
+
+      <!-- Budget -->
+      <div class="input-group">
+        <label data-i18n="sb.budget.max">Presupuesto m&aacute;ximo disponible</label>
+        <input type="number" id="budgetInput" class="sidebar-select" value="200" step="1" min="-1">
+        <p class="caption" data-i18n="sb.budget.hint">Pon -1 si quieres presupuesto ilimitado</p>
+      </div>
+
+      <!-- Extra filters -->
+      <details class="expander" open>
+        <summary data-i18n="sb.extra_filters">Filtros adicionales</summary>
+        <div class="expander-content">
+          <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
+          <select id="budgetFixtureFilter" class="sidebar-select">
+            <option value="no" data-i18n-opt="opt.no">No</option>
+            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+          </select>
+          <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
+          <input type="range" id="budgetMinProb" min="0" max="100" value="65" class="range-input">
+          <span id="budgetMinProbVal">65%</span>
+        </div>
+      </details>
+
+      <!-- Premium formations -->
+      <label class="checkbox-label">
+        <input type="checkbox" id="budgetPremium">
+        <span data-i18n="sb.premium_formations">Formaciones Premium</span>
+      </label>
+
+      <button id="btnCalcBudget" class="btn-primary btn-calc" data-i18n="btn.calc11">Calcular 11s</button>
+
+      <div id="budgetResults" class="results-container"></div>
+    </section>
+
+    <!-- Tab: My Best 11 -->
+    <section id="tab-my11" class="tab-content">
+      <h2 data-i18n="h.my_best11">Selecciona Jugadores para tu 11 ideal</h2>
+      <p class="caption" data-i18n="cap.add_all">A&ntilde;ade a todos los jugadores de tu equipo para calcular tu 11 ideal</p>
+
+      <div class="search-add-row">
+        <input type="text" id="my11Search" class="search-input" placeholder="Buscar jugador..." list="my11Datalist">
+        <datalist id="my11Datalist"></datalist>
+        <button class="btn-small" onclick="addMy11Player()" data-i18n="btn.add">A&ntilde;adir</button>
+      </div>
+
+      <div id="my11SelectedList" class="selected-players-list"></div>
+
+      <details class="expander" open>
+        <summary data-i18n="filters.complete_more">Filtros adicionales</summary>
+        <div class="expander-content">
+          <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
+          <select id="my11FixtureFilter" class="sidebar-select">
+            <option value="no" data-i18n-opt="opt.no">No</option>
+            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+          </select>
+          <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
+          <input type="range" id="my11MinProb" min="0" max="100" value="65" class="range-input">
+          <span id="my11MinProbVal">65%</span>
+        </div>
+      </details>
+
+      <label class="checkbox-label">
+        <input type="checkbox" id="my11Premium">
+        <span data-i18n="sb.premium_formations">Formaciones Premium</span>
+      </label>
+
+      <button id="btnCalcMy11" class="btn-primary btn-calc" data-i18n="btn.ready">Listo</button>
+
+      <div id="my11Results" class="results-container"></div>
+    </section>
+
+    <!-- Tab: Players List -->
+    <section id="tab-players" class="tab-content">
+      <h2 data-i18n="h.players_list">Lista de Jugadores Actualizada</h2>
+      <p class="caption" data-i18n="players.legend">
+        &middot; <b>Jugador</b> (Posici&oacute;n, Equipo): Precio - <b>Puntuaci&oacute;n</b>
+      </p>
+
+      <details class="expander">
+        <summary data-i18n="filters.more">Filtros adicionales</summary>
+        <div class="expander-content">
+          <label data-i18n="filters.fixture">Filtrar por dificultad</label>
+          <select id="playersFixtureFilter" class="sidebar-select">
+            <option value="no" data-i18n-opt="opt.no">No</option>
+            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+          </select>
+
+          <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
+          <input type="range" id="playersMinProb" min="0" max="100" value="0" class="range-input">
+          <span id="playersMinProbVal">0%</span>
+
+          <label data-i18n="filters.price">Precio (M)</label>
+          <div class="range-dual">
+            <input type="number" id="playersMinPrice" class="sidebar-select small-input" value="0" min="0">
+            <span>-</span>
+            <input type="number" id="playersMaxPrice" class="sidebar-select small-input" value="999" min="0">
+          </div>
+
+          <label data-i18n="filters.position">Filtrar por posici&oacute;n</label>
+          <div class="position-filters">
+            <label class="checkbox-label"><input type="checkbox" id="filterGK" checked> <span data-i18n="pos.gk">Portero</span></label>
+            <label class="checkbox-label"><input type="checkbox" id="filterDEF" checked> <span data-i18n="pos.def">Defensa</span></label>
+            <label class="checkbox-label"><input type="checkbox" id="filterMID" checked> <span data-i18n="pos.mid">Mediocentro</span></label>
+            <label class="checkbox-label"><input type="checkbox" id="filterATT" checked> <span data-i18n="pos.att">Delantero</span></label>
+          </div>
+
+          <label data-i18n="filters.teams">Filtrar por equipos</label>
+          <select id="filterTeams" class="sidebar-select" multiple></select>
+        </div>
+      </details>
+
+      <div id="playersCount" class="players-count"></div>
+      <div id="playersList" class="players-list"></div>
+
+      <div class="copy-buttons">
+        <button class="btn-small" onclick="copyPlayerNames()" data-i18n="btn.copy_players">&#128203; Copiar jugadores</button>
+        <button class="btn-small" onclick="copyPlayersFull()" data-i18n="btn.copy_players_full">&#128203; Copiar (datos completos)</button>
+      </div>
+    </section>
+
+    <!-- Tab: Market -->
+    <section id="tab-market" class="tab-content">
+      <h2 data-i18n="h.market">Selecciona los Jugadores de tu mercado</h2>
+      <p class="caption" data-i18n="cap.market">Selecciona los Jugadores que han salido en tu mercado para compararlos</p>
+
+      <div class="search-add-row">
+        <input type="text" id="marketSearch" class="search-input" placeholder="Buscar jugador..." list="marketDatalist">
+        <datalist id="marketDatalist"></datalist>
+        <button class="btn-small" onclick="addMarketPlayer()" data-i18n="btn.add">A&ntilde;adir</button>
+      </div>
+
+      <details class="expander">
+        <summary data-i18n="filters.complete_more">Filtros adicionales</summary>
+        <div class="expander-content">
+          <label data-i18n="filters.fixture">Filtrar por dificultad</label>
+          <select id="marketFixtureFilter" class="sidebar-select">
+            <option value="no" data-i18n-opt="opt.no">No</option>
+            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
+          </select>
+          <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
+          <input type="range" id="marketMinProb" min="0" max="100" value="0" class="range-input">
+          <span id="marketMinProbVal">0%</span>
+        </div>
+      </details>
+
+      <div id="marketCount" class="players-count"></div>
+      <div id="marketSelectedList" class="selected-players-list"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&#128233; <span data-i18n="footer.contact">Contacto</span>:
+        <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
+      </p>
+    </footer>
+  </main>
+
+  <!-- Cookie Consent Banner (Google Ads requirement) -->
+  <div id="cookieConsent" class="cookie-consent">
+    <div class="cookie-text">
+      <span id="cookieText">Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.</span>
+      <a href="#" onclick="openPrivacyFromApp()" id="cookiePrivacyLink" style="color:var(--accent)">Política de Privacidad</a>
+    </div>
+    <div class="cookie-buttons">
+      <button class="btn-small" onclick="acceptCookies()" id="cookieAccept">Aceptar</button>
+      <button class="btn-small" onclick="rejectCookies()" id="cookieReject" style="opacity:.7">Rechazar</button>
     </div>
   </div>
 
-  <script>
-    // Build the iframe URL dynamically, copying ?lang=... (and any other params)
-    document.addEventListener('DOMContentLoaded', function () {
-      const BASE = "https://calculadorafantasy.streamlit.app/~/+/?embed=true";
-      const pageParams = new URLSearchParams(window.location.search);
-      const url = new URL(BASE);
+  <!-- Privacy Policy Modal -->
+  <div id="privacyModal" class="privacy-modal">
+    <div class="privacy-content">
+      <h2 id="privacyTitle">Política de Privacidad</h2>
+      <p id="privacyP1">En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
+        Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
+      <p id="privacyP2">Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad.
+        Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.</p>
+      <p id="privacyP3">Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
+        <a href="mailto:calculadora.fantasy@gmail.com" style="color:var(--accent)">calculadora.fantasy@gmail.com</a>.</p>
+      <button class="btn-primary" onclick="closePrivacyFromApp()" id="privacyClose" style="margin-top:12px">Cerrar</button>
+    </div>
+  </div>
 
-      // Forward all page params (so ?lang=en reaches Streamlit)
-      for (const [k, v] of pageParams.entries()) {
-        url.searchParams.set(k, v);
-      }
-      // Ensure embed=true remains set
-      url.searchParams.set('embed', 'true');
-
-      const iframe = document.getElementById('appFrame');
-      iframe.src = url.toString();
-      // optional: fade-in when loaded
-      iframe.onload = () => iframe.classList.add('loaded');
-    });
-
-    // Optional: keep iframe in sync if the page URL changes (back/forward)
-    window.addEventListener('popstate', function () {
-      const BASE = "https://calculadorafantasy.streamlit.app/~/+/?embed=true";
-      const url = new URL(BASE);
-      const q = new URLSearchParams(window.location.search);
-      for (const [k, v] of q.entries()) url.searchParams.set(k, v);
-      url.searchParams.set('embed', 'true');
-      const iframe = document.getElementById('appFrame');
-      if (iframe && iframe.src !== url.toString()) iframe.src = url.toString();
-    });
-  </script>
+  <script src="js/app.js"></script>
 </body>
 </html>

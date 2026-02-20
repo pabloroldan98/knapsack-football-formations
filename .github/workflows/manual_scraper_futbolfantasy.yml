@@ -42,6 +42,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Pre-load TLS client (suppress download progress)
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
       - name: Run tasks (${{ matrix.league }})
         run: |
           python -u ./scraping_tasks/futbolfantasy_scrapers/scrape_futbolfantasy_${{ matrix.league }}.py
