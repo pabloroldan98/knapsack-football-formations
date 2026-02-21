@@ -182,16 +182,82 @@ const bannedNames = new Set();
 const my11Names = new Set();
 const my11Locked = new Set();
 const marketNames = new Set();
+const selectedTeamsFilter = new Set();
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 function t(key) { return (I18N[LANG] || I18N.es)[key] || key; }
 
-function showLoading(text) {
+function showLoading(text, withProgress = false) {
   const el = document.getElementById('loadingOverlay');
   document.getElementById('loadingText').textContent = text || t('loading.players');
+  const progContainer = document.getElementById('progressContainer');
+  const progBar = document.getElementById('progressBar');
+  const progPct = document.getElementById('progressPct');
+
+  if (withProgress) {
+    progContainer.style.display = 'flex';
+    progBar.style.width = '0%';
+    progPct.textContent = '0%';
+  } else {
+    progContainer.style.display = 'none';
+  }
   el.classList.add('visible');
 }
-function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
+
+function hideLoading() {
+  setProgress(100);
+  setTimeout(() => {
+    document.getElementById('loadingOverlay').classList.remove('visible');
+    document.getElementById('progressContainer').style.display = 'none';
+  }, 350);
+}
+
+function setProgress(pct) {
+  const bar = document.getElementById('progressBar');
+  const label = document.getElementById('progressPct');
+  if (bar) bar.style.width = Math.round(pct) + '%';
+  if (label) label.textContent = Math.round(pct) + '%';
+}
+
+async function apiPostSSE(path, body) {
+  const resp = await fetch(API_BASE + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let result = null;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const payload = JSON.parse(line.slice(6));
+      if (payload.type === 'progress') {
+        setProgress(payload.percent);
+      } else if (payload.type === 'result') {
+        result = payload.data;
+      }
+    }
+  }
+
+  if (buffer.startsWith('data: ')) {
+    const payload = JSON.parse(buffer.slice(6));
+    if (payload.type === 'result') result = payload.data;
+  }
+
+  return result;
+}
 
 function showToast(msg) {
   let toast = document.querySelector('.toast');
@@ -205,20 +271,32 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('visible'), 2000);
 }
 
-function getArrowClass(val) {
-  if (val >= 1.03) return 'arrow-strong-up';
-  if (val >= 1.01) return 'arrow-up';
-  if (val >= 0.99) return 'arrow-flat';
-  if (val >= 0.97) return 'arrow-down';
-  return 'arrow-strong-down';
+function getArrowStyle(val, minVal = 0.96, maxVal = 1.05) {
+  let angle;
+  if (val >= maxVal) angle = 90;
+  else if (val <= minVal) angle = -90;
+  else if (val >= 1) angle = ((val - 1) / (maxVal - 1)) * 90;
+  else angle = ((val - 1) / (1 - minVal)) * 90;
+
+  let r, g;
+  if (val >= maxVal) { r = 0; g = 255; }
+  else if (val <= minVal) { r = 255; g = 0; }
+  else if (val >= 1) {
+    const ratio = (val - 1) / (maxVal - 1);
+    r = Math.round(255 * (1 - ratio));
+    g = 255;
+  } else {
+    const ratio = (val - minVal) / (1 - minVal);
+    r = 255;
+    g = Math.round(255 * ratio);
+  }
+
+  return { rotation: -angle, color: `rgb(${r},${g},0)` };
 }
 
-function getArrowEmoji(val) {
-  if (val >= 1.03) return '⬆️';
-  if (val >= 1.01) return '↗️';
-  if (val >= 0.99) return '➡️';
-  if (val >= 0.97) return '↘️';
-  return '⬇️';
+function renderArrow(val) {
+  const { rotation, color } = getArrowStyle(val);
+  return `<span class="arrow-indicator" style="color:${color};transform:rotate(${rotation}deg);display:inline-block">→</span>`;
 }
 
 function normalize(str) {
@@ -322,11 +400,11 @@ function renderPlayerCard(p, options = {}) {
     </div>
     <div class="player-stats">
       <div class="stat">
-        <div class="stat-arrow"><span class="arrow-indicator ${getArrowClass(p.form)}"></span></div>
+        <div class="stat-arrow">${renderArrow(p.form)}</div>
         <div>${t('player.form')}</div>
       </div>
       <div class="stat">
-        <div class="stat-arrow"><span class="arrow-indicator ${getArrowClass(p.fixture)}"></span></div>
+        <div class="stat-arrow">${renderArrow(p.fixture)}</div>
         <div>${t('player.fixture')}</div>
       </div>
       <div class="stat">
@@ -386,8 +464,8 @@ function renderFormationResult(fr) {
       <div class="player-info"><span class="player-name">${lockIcon}${pl.name}</span>
       <span class="player-details">${pl.position} · ${pl.team} · ${pl.price}M · <b>${pl.show_value} pts</b></span></div>
       <div class="player-stats">
-        <div class="stat"><span class="arrow-indicator ${getArrowClass(pl.form)}"></span><div>${t('player.form')}</div></div>
-        <div class="stat"><span class="arrow-indicator ${getArrowClass(pl.fixture)}"></span><div>${t('player.fixture')}</div></div>
+        <div class="stat">${renderArrow(pl.form)}<div>${t('player.form')}</div></div>
+        <div class="stat">${renderArrow(pl.fixture)}<div>${t('player.fixture')}</div></div>
         <div class="stat"><div class="stat-value">${(pl.start_probability * 100).toFixed(0)}%</div><div>${t('player.titular')}</div></div>
       </div>
     </div>`;
@@ -478,6 +556,8 @@ async function loadCompetitions() {
     }
     sel.addEventListener('change', onCompetitionChange);
     onCompetitionChange();
+    // Auto-load players on first visit
+    loadPlayers();
   } catch (e) {
     console.error('Error loading competitions:', e);
   }
@@ -535,7 +615,10 @@ function updateBudgetInput() {
 }
 
 // ─── Load Players ───────────────────────────────────────────────────────────
+let _isLoadingPlayers = false;
 async function loadPlayers() {
+  if (_isLoadingPlayers) return;
+  _isLoadingPlayers = true;
   const comp = document.getElementById('selCompetition').value;
   const app = document.getElementById('selApp').value;
   const ignoreForm = document.getElementById('selIgnoreForm').value === 'yes';
@@ -558,15 +641,9 @@ async function loadPlayers() {
     isTournament = data.is_tournament;
     teamsList = data.teams;
 
-    // Update teams filter
-    const teamsSelect = document.getElementById('filterTeams');
-    teamsSelect.innerHTML = '';
-    for (const team of teamsList) {
-      const opt = document.createElement('option');
-      opt.value = team;
-      opt.textContent = team;
-      teamsSelect.appendChild(opt);
-    }
+    // Update teams filter datalist
+    selectedTeamsFilter.clear();
+    updateTeamsDatalist();
 
     // Update all datalists
     updateAllDatalists();
@@ -574,6 +651,10 @@ async function loadPlayers() {
     // Render players tab
     renderPlayersTab();
     renderMarketTab();
+
+    // Update price slider range
+    const maxPlayerPrice = Math.max(...allPlayers.map(p => p.price), 1);
+    updatePriceSliderRange(maxPlayerPrice);
 
     hideLoading();
     showToast(`${allPlayers.length} ${t('toast.loaded')}`);
@@ -585,7 +666,8 @@ async function loadPlayers() {
   } catch (e) {
     hideLoading();
     console.error('Error loading players:', e);
-    alert('Error cargando jugadores. Asegúrate de que el servidor API está corriendo.');
+  } finally {
+    _isLoadingPlayers = false;
   }
 }
 
@@ -602,13 +684,13 @@ function getFilteredPlayers() {
 
   const fixtureFilter = document.getElementById('playersFixtureFilter').value === 'yes';
   const minProb = parseInt(document.getElementById('playersMinProb').value) / 100;
-  const minPrice = parseFloat(document.getElementById('playersMinPrice').value) || 0;
-  const maxPrice = parseFloat(document.getElementById('playersMaxPrice').value) || 99999;
+  const minPrice = parseFloat(document.getElementById('priceRangeMin').value) || 0;
+  const maxPrice = parseFloat(document.getElementById('priceRangeMax').value) || 99999;
   const filterGK = document.getElementById('filterGK').checked;
   const filterDEF = document.getElementById('filterDEF').checked;
   const filterMID = document.getElementById('filterMID').checked;
   const filterATT = document.getElementById('filterATT').checked;
-  const selectedTeams = Array.from(document.getElementById('filterTeams').selectedOptions).map(o => o.value);
+  const selectedTeams = [...selectedTeamsFilter];
 
   let filtered = allPlayers.filter(p => {
     if (p.price < minPrice || p.price > maxPrice) return false;
@@ -654,7 +736,7 @@ function renderPlayersTab() {
 }
 
 // ─── Tab: Budget ────────────────────────────────────────────────────────────
-function addBlindedPlayer() {
+function tryAddBlinded() {
   const input = document.getElementById('blindedSearch');
   const name = input.value.trim();
   if (!name) return;
@@ -664,10 +746,11 @@ function addBlindedPlayer() {
   bannedNames.delete(name);
   input.value = '';
   renderBlindedList();
+  renderBannedList();
   updateAllDatalists();
 }
 
-function addBannedPlayer() {
+function tryAddBanned() {
   const input = document.getElementById('bannedSearch');
   const name = input.value.trim();
   if (!name) return;
@@ -677,7 +760,12 @@ function addBannedPlayer() {
   blindedNames.delete(name);
   input.value = '';
   renderBannedList();
+  renderBlindedList();
   updateAllDatalists();
+}
+
+function _formatPrice(val) {
+  return divideMillions ? parseFloat(val.toFixed(1)) + 'M' : Math.round(val) + 'M';
 }
 
 function renderBlindedList() {
@@ -691,12 +779,12 @@ function renderBlindedList() {
     totalPrice += p.price;
     const chip = document.createElement('span');
     chip.className = 'player-chip';
-    chip.innerHTML = `🔒 ${name} (${p.price}M) <span class="remove-chip" onclick="removeBlinded('${name.replace(/'/g, "\\'")}')">&times;</span>`;
+    chip.innerHTML = `🔒 ${name} (${_formatPrice(p.price)}) <span class="remove-chip" onclick="removeBlinded('${name.replace(/'/g, "\\'")}')">&times;</span>`;
     container.appendChild(chip);
   }
   if (blindedNames.size > 0) {
     totalEl.style.display = 'block';
-    totalEl.textContent = `💰 Total: ${totalPrice}M`;
+    totalEl.textContent = `💰 Total: ${_formatPrice(totalPrice)}`;
   } else {
     totalEl.style.display = 'none';
   }
@@ -715,6 +803,47 @@ function renderBannedList() {
 
 function removeBlinded(name) { blindedNames.delete(name); renderBlindedList(); updateAllDatalists(); }
 function removeBanned(name) { bannedNames.delete(name); renderBannedList(); updateAllDatalists(); }
+
+// ─── Teams filter (chips) ───────────────────────────────────────────────────
+function updateTeamsDatalist() {
+  const dl = document.getElementById('filterTeamsDatalist');
+  dl.innerHTML = '';
+  for (const team of teamsList) {
+    if (selectedTeamsFilter.has(team)) continue;
+    const opt = document.createElement('option');
+    opt.value = team;
+    dl.appendChild(opt);
+  }
+}
+
+function tryAddTeamFilter() {
+  const input = document.getElementById('filterTeamsSearch');
+  const val = input.value.trim();
+  if (!val || !teamsList.includes(val) || selectedTeamsFilter.has(val)) return;
+  selectedTeamsFilter.add(val);
+  input.value = '';
+  renderTeamChips();
+  updateTeamsDatalist();
+  renderPlayersTab();
+}
+
+function removeTeamFilter(team) {
+  selectedTeamsFilter.delete(team);
+  renderTeamChips();
+  updateTeamsDatalist();
+  renderPlayersTab();
+}
+
+function renderTeamChips() {
+  const container = document.getElementById('filterTeamsChips');
+  container.innerHTML = '';
+  for (const team of selectedTeamsFilter) {
+    const chip = document.createElement('span');
+    chip.className = 'player-chip';
+    chip.innerHTML = `${team} <span class="remove-chip" onclick="removeTeamFilter('${team.replace(/'/g, "\\'")}')">&times;</span>`;
+    container.appendChild(chip);
+  }
+}
 
 async function calculateBudget() {
   if (allPlayers.length === 0) { alert(t('warn.load_first')); return; }
@@ -738,9 +867,9 @@ async function calculateBudget() {
   let formations = [[3,4,3],[3,5,2],[4,3,3],[4,4,2],[4,5,1],[5,3,2],[5,4,1]];
   if (premium) formations = formations.concat([[3,3,4],[3,6,1],[4,2,4],[4,6,0],[5,2,3]]);
 
-  showLoading(t('loading.calculating'));
+  showLoading(t('loading.calculating'), true);
   try {
-    const data = await apiPost('/api/calculate', {
+    const data = await apiPostSSE('/api/calculate-stream', {
       competition: comp, app, ignore_form: ignoreForm,
       ignore_fixtures: ignoreFixtures, ignore_penalties: ignorePenalties,
       jornada_key: jornadaKey, num_jornadas: numJornadas,
@@ -752,7 +881,7 @@ async function calculateBudget() {
     const container = document.getElementById('budgetResults');
     container.innerHTML = '';
 
-    if (data.error) {
+    if (!data || data.error) {
       container.innerHTML = `<p class="caption">${t('warn.not_enough')}</p>`;
     } else if (data.formations.length === 0) {
       container.innerHTML = `<p class="caption">${t('warn.not_enough')}</p>`;
@@ -827,9 +956,9 @@ async function calculateMy11() {
   let formations = [[3,4,3],[3,5,2],[4,3,3],[4,4,2],[4,5,1],[5,3,2],[5,4,1]];
   if (premium) formations = formations.concat([[3,3,4],[3,6,1],[4,2,4],[4,6,0],[5,2,3]]);
 
-  showLoading(t('loading.calculating'));
+  showLoading(t('loading.calculating'), true);
   try {
-    const data = await apiPost('/api/calculate', {
+    const data = await apiPostSSE('/api/calculate-stream', {
       competition: comp, app, ignore_form: ignoreForm,
       ignore_fixtures: ignoreFixtures, ignore_penalties: ignorePenalties,
       jornada_key: jornadaKey, num_jornadas: numJornadas,
@@ -842,7 +971,7 @@ async function calculateMy11() {
     const container = document.getElementById('my11Results');
     container.innerHTML = '';
 
-    if (data.error || data.formations.length === 0) {
+    if (!data || data.error || data.formations.length === 0) {
       container.innerHTML = `<p class="caption">${t('warn.not_enough')}</p>`;
     } else {
       for (const fr of data.formations) {
@@ -963,6 +1092,11 @@ function initSidebar() {
 }
 
 // ─── Range input live update ────────────────────────────────────────────────
+function updateRangeRightFill(input) {
+  const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
+  input.style.background = `linear-gradient(to right, var(--bg-input) 0%, var(--bg-input) ${pct}%, var(--accent) ${pct}%, var(--accent) 100%)`;
+}
+
 function initRangeInputs() {
   const ranges = [
     ['budgetMinProb', 'budgetMinProbVal'],
@@ -974,9 +1108,52 @@ function initRangeInputs() {
     const input = document.getElementById(inputId);
     const span = document.getElementById(spanId);
     if (input && span) {
-      input.addEventListener('input', () => { span.textContent = input.value + '%'; });
+      input.addEventListener('input', () => {
+        span.textContent = input.value + '%';
+        updateRangeRightFill(input);
+      });
+      updateRangeRightFill(input);
     }
   }
+}
+
+function initPriceRangeSlider() {
+  const minEl = document.getElementById('priceRangeMin');
+  const maxEl = document.getElementById('priceRangeMax');
+  const fill = document.getElementById('priceRangeFill');
+  const minLabel = document.getElementById('priceMinLabel');
+  const maxLabel = document.getElementById('priceMaxLabel');
+  if (!minEl || !maxEl) return;
+
+  function update() {
+    let lo = parseInt(minEl.value);
+    let hi = parseInt(maxEl.value);
+    if (lo > hi) { minEl.value = hi; lo = hi; }
+    if (hi < lo) { maxEl.value = lo; hi = lo; }
+    const rangeMax = parseInt(minEl.max) || 500;
+    const leftPct = (lo / rangeMax) * 100;
+    const rightPct = (hi / rangeMax) * 100;
+    fill.style.left = leftPct + '%';
+    fill.style.width = (rightPct - leftPct) + '%';
+    minLabel.textContent = lo + 'M';
+    maxLabel.textContent = hi + 'M';
+  }
+
+  minEl.addEventListener('input', update);
+  maxEl.addEventListener('input', update);
+  update();
+}
+
+function updatePriceSliderRange(maxPrice) {
+  const step = maxPrice > 50 ? 1 : 0.1;
+  const minEl = document.getElementById('priceRangeMin');
+  const maxEl = document.getElementById('priceRangeMax');
+  if (!minEl || !maxEl) return;
+  const roundedMax = Math.ceil(maxPrice);
+  minEl.max = roundedMax; maxEl.max = roundedMax;
+  minEl.step = step; maxEl.step = step;
+  minEl.value = 0; maxEl.value = roundedMax;
+  initPriceRangeSlider();
 }
 
 // ─── Event listeners ────────────────────────────────────────────────────────
@@ -990,10 +1167,25 @@ function initEventListeners() {
 
   // Sort/filter changes -> re-render lists
   const reRenderTriggers = ['selSort', 'selWorthProb', 'playersFixtureFilter', 'playersMinProb',
-    'playersMinPrice', 'playersMaxPrice', 'filterGK', 'filterDEF', 'filterMID', 'filterATT', 'filterTeams'];
+    'priceRangeMin', 'priceRangeMax', 'filterGK', 'filterDEF', 'filterMID', 'filterATT'];
   for (const id of reRenderTriggers) {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('change', renderPlayersTab);
+    if (el) el.addEventListener('input', renderPlayersTab);
+  }
+
+  // Sidebar settings that require reloading players
+  const reloadTriggers = ['selCompetition', 'selApp', 'selJornada', 'selNumJornadas',
+    'selIgnoreForm', 'selIgnoreFixtures', 'selPenalties'];
+  for (const id of reloadTriggers) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', () => {
+      if (allPlayers.length > 0) {
+        allPlayers = [];
+        renderPlayersTab();
+        renderMarketTab();
+      }
+      loadPlayers();
+    });
   }
 
   // Market filter changes
@@ -1011,11 +1203,17 @@ function initEventListeners() {
     document.getElementById('worthProbContainer').style.display = isWorth ? 'block' : 'none';
   });
 
-  // Enter key on search inputs
-  document.getElementById('blindedSearch').addEventListener('keydown', e => { if (e.key === 'Enter') addBlindedPlayer(); });
-  document.getElementById('bannedSearch').addEventListener('keydown', e => { if (e.key === 'Enter') addBannedPlayer(); });
+  // Auto-add on datalist selection (input event fires when user picks from datalist)
+  document.getElementById('blindedSearch').addEventListener('input', tryAddBlinded);
+  document.getElementById('bannedSearch').addEventListener('input', tryAddBanned);
+  document.getElementById('filterTeamsSearch').addEventListener('input', tryAddTeamFilter);
+
+  // Enter key on search inputs (fallback)
+  document.getElementById('blindedSearch').addEventListener('keydown', e => { if (e.key === 'Enter') tryAddBlinded(); });
+  document.getElementById('bannedSearch').addEventListener('keydown', e => { if (e.key === 'Enter') tryAddBanned(); });
   document.getElementById('my11Search').addEventListener('keydown', e => { if (e.key === 'Enter') addMy11Player(); });
   document.getElementById('marketSearch').addEventListener('keydown', e => { if (e.key === 'Enter') addMarketPlayer(); });
+  document.getElementById('filterTeamsSearch').addEventListener('keydown', e => { if (e.key === 'Enter') tryAddTeamFilter(); });
 }
 
 // ─── Cookie Consent / Privacy ───────────────────────────────────────────────
@@ -1090,6 +1288,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initSidebar();
   initRangeInputs();
+  initPriceRangeSlider();
   initEventListeners();
   initCookieConsent();
   loadCompetitions();

@@ -2,14 +2,19 @@
 FastAPI backend for Calculadora Fantasy.
 Replaces Streamlit with a REST API that the HTML/JS frontend calls.
 """
+import asyncio
 import copy
 import hashlib
+import json
 import os
+import queue
+import threading
 import time
 from typing import Optional, List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -352,6 +357,187 @@ def calculate(req: CalculateRequest):
         })
 
     return {"formations": formations_out}
+
+
+# ─── SSE endpoint: real-time knapsack progress ───────────────────────────────
+
+@app.post("/api/calculate-stream")
+async def calculate_stream(req: CalculateRequest):
+    """Same as /api/calculate but streams progress via Server-Sent Events."""
+    is_biwenger = (req.app == "biwenger")
+    is_tournament = req.competition in [
+        "mundialito", "champions", "europaleague", "conference",
+        "mundial", "eurocopa", "copaamerica",
+    ]
+    divide_millions = (not is_tournament) and is_biwenger
+
+    key = _cache_key(req.competition, is_biwenger, req.ignore_form,
+                     req.ignore_fixtures, req.ignore_penalties,
+                     req.jornada_key, req.num_jornadas)
+
+    all_players = _get_cached(key)
+    if all_players is None:
+        all_players = _load_players(
+            req.competition, is_biwenger, req.ignore_form,
+            req.ignore_fixtures, req.ignore_penalties,
+            req.jornada_key, req.num_jornadas,
+        )
+        _set_cached(key, all_players)
+
+    if req.selected_player_names is not None:
+        working = [copy.deepcopy(p) for p in all_players
+                   if p.name in set(req.selected_player_names)]
+    else:
+        working = copy.deepcopy(all_players)
+
+    banned = set(req.banned_names)
+    working = [p for p in working if p.name not in banned]
+
+    filtered = purge_everything(working, probability_threshold=req.min_prob,
+                                fixture_filter=req.use_fixture_filter)
+    filtered_names = {p.name for p in filtered}
+    blinded = set(req.blinded_names)
+
+    working = [
+        p for p in working
+        if (p.name in filtered_names
+            and req.min_prob <= p.start_probability <= req.max_prob)
+        or p.name in blinded
+    ]
+
+    for p in working:
+        if p.name in blinded:
+            p.value = max(1000, p.value * 1000)
+            p.start_probability = 10
+            p.form = 10
+            p.fixture = 10
+
+    if len(working) < 11:
+        async def _empty():
+            yield f"data: {json.dumps({'type': 'result', 'data': {'error': 'not_enough_players', 'formations': []}})}\n\n"
+        return StreamingResponse(_empty(), media_type="text/event-stream")
+
+    working.sort(key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team))
+    needed = working[:200]
+
+    budget = req.budget
+    if req.selected_player_names is not None:
+        budget = -1
+
+    if budget <= 0 or budget >= 100000:
+        budget = 1
+        for p in needed:
+            p.price = 0
+
+    progress_q: queue.Queue = queue.Queue()
+
+    def _run_knapsack():
+        """Runs in a background thread; pushes progress to the queue."""
+        try:
+            total_ops = [0]
+            completed = [0]
+            last_pct = [-1]
+
+            def _on_progress(n):
+                completed[0] += n
+                if total_ops[0] > 0:
+                    pct = int((completed[0] / total_ops[0]) * 100)
+                    if pct > last_pct[0]:
+                        last_pct[0] = pct
+                        progress_q.put(("progress", min(pct, 99)))
+
+            from group_knapsack import filter_players_knapsack, players_preproc
+            precomputed = []
+            for formation in req.formations:
+                fl = filter_players_knapsack(needed, formation)
+                if req.speed_up:
+                    if any(x >= 6 for x in formation):
+                        fl = fl[:90]
+                    elif any(x >= 5 for x in formation):
+                        fl = fl[:100]
+                    elif any(x >= 4 for x in formation):
+                        fl = fl[:150]
+                pv, pw, pi = players_preproc(fl, formation)
+                ops = sum(len(g) for g in pw[1:]) if len(pw) > 1 else 0
+                total_ops[0] += ops
+                precomputed.append((formation, fl, pv, pw, pi))
+
+            from MCKP import knapsack_multichoice_onepick
+            results = []
+            for formation, fl, pv, pw, pi in precomputed:
+                if not pv or not pw or not pi:
+                    continue
+                score, comb_result = knapsack_multichoice_onepick(
+                    pw, pv, budget, verbose=True, update_master=_on_progress,
+                )
+                idxs = []
+                for ci in comb_result:
+                    for orig_idx in pi[ci[0]][ci[1]]:
+                        idxs.append(orig_idx)
+                result_players = [fl[i] for i in idxs]
+                results.append((formation, score, result_players))
+
+            results.sort(key=lambda x: x[1], reverse=True)
+            progress_q.put(("done", results))
+        except Exception as exc:
+            progress_q.put(("error", str(exc)))
+
+    async def _event_generator():
+        thread = threading.Thread(target=_run_knapsack, daemon=True)
+        thread.start()
+
+        while True:
+            try:
+                msg = progress_q.get_nowait()
+            except queue.Empty:
+                await asyncio.sleep(0.05)
+                if not thread.is_alive() and progress_q.empty():
+                    break
+                continue
+
+            kind, payload = msg
+            if kind == "error":
+                yield f"data: {json.dumps({'type': 'result', 'data': {'error': payload, 'formations': []}})}\n\n"
+                break
+            elif kind == "progress":
+                yield f"data: {json.dumps({'type': 'progress', 'percent': payload})}\n\n"
+            elif kind == "done":
+                raw_results = payload
+                orig_map = {p.name: p for p in all_players}
+                formations_out = []
+                for formation, score, players in raw_results:
+                    if score == -1:
+                        continue
+                    actual = [orig_map.get(p.name, p) for p in players]
+                    actual_score = sum(p.show_value for p in actual)
+                    actual_price = sum(p.price for p in actual)
+                    show_price = round(actual_price / 10, 1) if divide_millions else actual_price
+                    result_names = {p.name for p in actual}
+                    missing = [n for n in req.blinded_names if n not in result_names]
+                    lines = {"GK": [], "DEF": [], "MID": [], "ATT": []}
+                    for pl in actual:
+                        d = player_to_dict(pl, divide_millions)
+                        d["is_blinded"] = pl.name in blinded
+                        lines[pl.position].append(d)
+                    formations_out.append({
+                        "formation": formation,
+                        "score": actual_score,
+                        "total_price": show_price,
+                        "lines": lines,
+                        "players": [player_to_dict(pl, divide_millions) for pl in actual],
+                        "missing_blinded": missing,
+                    })
+                yield f"data: {json.dumps({'type': 'progress', 'percent': 100})}\n\n"
+                yield f"data: {json.dumps({'type': 'result', 'data': {'formations': formations_out}})}\n\n"
+                break
+
+        thread.join(timeout=1)
+
+    return StreamingResponse(
+        _event_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ─── Static files (serve frontend) ───────────────────────────────────────────

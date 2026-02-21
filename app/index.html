@@ -31,8 +31,16 @@
 <body>
   <!-- Loading overlay -->
   <div id="loadingOverlay" class="loading-overlay">
-    <div class="spinner"></div>
-    <span id="loadingText">Cargando jugadores...</span>
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <span id="loadingText">Cargando jugadores...</span>
+      <div id="progressContainer" class="progress-container" style="display:none">
+        <div class="progress-track">
+          <div id="progressBar" class="progress-fill"></div>
+        </div>
+        <span id="progressPct" class="progress-pct">0%</span>
+      </div>
+    </div>
   </div>
 
   <!-- Sidebar toggle (mobile) -->
@@ -150,25 +158,22 @@
       <!-- Locked / Excluded expander -->
       <details class="expander">
         <summary data-i18n="blind.header">Blindar o Excluir jugadores</summary>
-        <div class="expander-content">
-          <h4 data-i18n="blind.title">&#128274; Jugadores blindados</h4>
-          <p class="caption" data-i18n="blind.caption1">Estos jugadores estar&aacute;n s&iacute; o s&iacute; en todos los equipos calculados</p>
-          <div class="search-add-row">
-            <input type="text" id="blindedSearch" class="search-input" placeholder="Buscar jugador..." list="blindedDatalist">
+        <div class="expander-content blind-ban-row">
+          <div class="blind-ban-col">
+            <h4 data-i18n="blind.title">&#128274; Blindados</h4>
+            <p class="caption" data-i18n="blind.caption1">Estar&aacute;n s&iacute; o s&iacute; en todos los equipos</p>
+            <input type="text" id="blindedSearch" class="search-input" placeholder="Buscar jugador..." list="blindedDatalist" autocomplete="off" style="margin-bottom:6px">
             <datalist id="blindedDatalist"></datalist>
-            <button class="btn-small" onclick="addBlindedPlayer()" data-i18n="blind.add">A&ntilde;adir</button>
+            <div id="blindedList" class="player-chips"></div>
+            <p id="blindedTotal" class="caption" style="display:none"></p>
           </div>
-          <div id="blindedList" class="player-chips"></div>
-          <p id="blindedTotal" class="caption" style="display:none"></p>
-
-          <h4 data-i18n="ban.title" style="margin-top:12px">&#128683; Jugadores excluidos</h4>
-          <p class="caption" data-i18n="ban.caption">Estos jugadores no estar&aacute;n bajo ning&uacute;n concepto en ning&uacute;n equipo</p>
-          <div class="search-add-row">
-            <input type="text" id="bannedSearch" class="search-input" placeholder="Buscar jugador..." list="bannedDatalist">
+          <div class="blind-ban-col">
+            <h4 data-i18n="ban.title">&#128683; Excluidos</h4>
+            <p class="caption" data-i18n="ban.caption">No estar&aacute;n en ning&uacute;n equipo</p>
+            <input type="text" id="bannedSearch" class="search-input" placeholder="Buscar jugador..." list="bannedDatalist" autocomplete="off" style="margin-bottom:6px">
             <datalist id="bannedDatalist"></datalist>
-            <button class="btn-small" onclick="addBannedPlayer()" data-i18n="ban.add">A&ntilde;adir</button>
+            <div id="bannedList" class="player-chips"></div>
           </div>
-          <div id="bannedList" class="player-chips"></div>
         </div>
       </details>
 
@@ -263,10 +268,15 @@
           <span id="playersMinProbVal">0%</span>
 
           <label data-i18n="filters.price">Precio (M)</label>
-          <div class="range-dual">
-            <input type="number" id="playersMinPrice" class="sidebar-select small-input" value="0" min="0">
-            <span>-</span>
-            <input type="number" id="playersMaxPrice" class="sidebar-select small-input" value="999" min="0">
+          <div class="dual-range-container">
+            <div class="dual-range-track"></div>
+            <div id="priceRangeFill" class="dual-range-fill"></div>
+            <input type="range" id="priceRangeMin" min="0" max="500" value="0" step="1">
+            <input type="range" id="priceRangeMax" min="0" max="500" value="500" step="1">
+          </div>
+          <div class="dual-range-values">
+            <span id="priceMinLabel">0M</span>
+            <span id="priceMaxLabel">500M</span>
           </div>
 
           <label data-i18n="filters.position">Filtrar por posici&oacute;n</label>
@@ -278,7 +288,9 @@
           </div>
 
           <label data-i18n="filters.teams">Filtrar por equipos</label>
-          <select id="filterTeams" class="sidebar-select" multiple></select>
+          <input type="text" id="filterTeamsSearch" class="search-input" placeholder="Buscar equipo..." list="filterTeamsDatalist" autocomplete="off" style="margin-bottom:6px">
+          <datalist id="filterTeamsDatalist"></datalist>
+          <div id="filterTeamsChips" class="player-chips"></div>
         </div>
       </details>
 

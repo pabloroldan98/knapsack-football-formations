@@ -20,7 +20,20 @@ possible_formations = [
     [5, 4, 1],
 ]
 
-STREAMLIT_ACTIVE = st.runtime.exists()
+try:
+    STREAMLIT_ACTIVE = st.runtime.exists()
+except Exception:
+    STREAMLIT_ACTIVE = False
+
+
+def _parse_formation(formation):
+    """Extract GK/DEF/MID/ATT counts from a formation list."""
+    if len(formation) == 3:
+        return 1, formation[0], formation[1], formation[2]
+    elif len(formation) == 4:
+        return formation[0], formation[1], formation[2], formation[3]
+    else:
+        return 1, formation[0], sum(formation[1:-1]), formation[-1]
 
 
 def filter_players_knapsack(players_list, formation):
@@ -37,48 +50,25 @@ def filter_players_knapsack(players_list, formation):
     Returns:
         List of filtered players sorted by descending .value
     """
-    result_players = copy.deepcopy(players_list)
+    max_gk, max_def, max_mid, max_att = _parse_formation(formation)
 
-    if len(formation) == 3:
-        max_gk = 1
-        max_def = formation[0]
-        max_mid = formation[1]
-        max_att = formation[2]
-    elif len(formation) == 4:
-        max_gk = formation[0]
-        max_def = formation[1]
-        max_mid = formation[2]
-        max_att = formation[3]
-    else:
-        max_gk = 1
-        max_def = formation[0]
-        max_mid = sum(formation[1:-1])
-        max_att = formation[-1]
+    max_limits = {"GK": max_gk, "DEF": max_def, "MID": max_mid, "ATT": max_att}
+    excluded_positions = {pos for pos, limit in max_limits.items() if limit == 0}
 
-    max_limits = {
-        "GK": max_gk,
-        "DEF": max_def,
-        "MID": max_mid,
-        "ATT": max_att
-    }
-
-    # Group players by (position, price)
     buckets = defaultdict(lambda: defaultdict(list))
-    for p in result_players:
+    for p in players_list:
+        if p.position in excluded_positions:
+            continue
         buckets[p.position][p.price].append(p)
 
-    # Filter each bucket by top N value
     filtered_players = []
     for position, price_dict in buckets.items():
         limit = max_limits.get(position)
-        for price, group in price_dict.items():
-            if limit is None:
-                # No limit for this position, keep all
-                filtered_players.extend(group)
-            else:
-                # Keep up to `limit` players with highest .value
-                top_n = heapq.nlargest(limit, group, key=lambda pl: pl.value)
-                filtered_players.extend(top_n)
+        if limit is None or limit == 0:
+            continue
+        for group in price_dict.values():
+            top_n = heapq.nlargest(limit, group, key=lambda pl: pl.value)
+            filtered_players.extend(top_n)
 
     # Sort all by descending value
     filtered_players.sort(key=lambda pl: pl.value, reverse=True)
@@ -92,36 +82,38 @@ def filter_players_knapsack(players_list, formation):
 def best_full_teams(players_list, formations=possible_formations, budget=300, speed_up=True, translator=None, verbose=1):
     super_verbose = bool(verbose-1)
     verbose = bool(verbose)
-    # players_by_group = sorted(players_list, key=lambda x: x.get_group())
     if budget <= 0 or budget >= 100000:
         budget = 1
         for player in players_list:
             player.price = 0
 
+    def _apply_speed_limit(plist, formation):
+        if not speed_up:
+            return plist
+        if any(x >= 6 for x in formation):
+            return plist[:90]
+        if any(x >= 5 for x in formation):
+            return plist[:100]
+        if any(x >= 4 for x in formation):
+            return plist[:150]
+        return plist
+
+    # Precompute everything in a single pass (avoid filtering twice per formation)
     total_global_operations = 0
-    precomputed_ops = []
+    precomputed = []
     for formation in formations:
         filtered_players_list = filter_players_knapsack(players_list, formation)
-        if speed_up:
-            if any(x >= 4 for x in formation):
-                filtered_players_list = filtered_players_list[:150]
-            if any(x >= 5 for x in formation):
-                # filtered_players_list = filtered_players_list[:110]
-                filtered_players_list = filtered_players_list[:100]
-            if any(x >= 6 for x in formation):
-                filtered_players_list = filtered_players_list[:90]
-        _, _, players_comb_indexes = players_preproc(filtered_players_list, formation)
-        ops = sum(len(group) for group in players_comb_indexes[1:])
+        filtered_players_list = _apply_speed_limit(filtered_players_list, formation)
+        players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
+        ops = sum(len(group) for group in players_comb_indexes[1:]) if len(players_comb_indexes) > 1 else 0
         total_global_operations += ops
-        precomputed_ops.append((formation, filtered_players_list, ops))
+        precomputed.append((formation, filtered_players_list, players_values, players_prices, players_comb_indexes))
 
-    # Create the master progress bar
     update_master = None
     if STREAMLIT_ACTIVE:
         progress_text = st.empty()
         progress_bar = st.progress(0.0)
 
-        # fallback label if no translator provided
         _label = (translator("loader.knapsack_progress") if callable(translator) else "Calculando mejores combinaciones")
         def make_update_master(total_ops):
             completed = 0
@@ -130,39 +122,23 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
                 nonlocal completed, last_percent
                 completed += n
                 percent = int((completed / total_ops) * 100)
-                # Only update the UI if we’ve crossed a new 1% threshold
                 if percent > last_percent:
                     progress_bar.progress(completed / total_ops)
-                    # progress_text.text(f"Calculando mejores combinaciones: {completed} / {total_ops}")
-                    # progress_text.text(f"Calculando mejores combinaciones: {percent} %")
                     progress_text.text(f"{_label}: {percent} %")
                     last_percent = percent
             return update
         update_master = make_update_master(total_global_operations)
 
-    # master_pbar = tqdm(total=total_global_operations, desc="Overall Progress", disable=verbose>=3)
-
     formation_score_players = []
-    for formation in formations:
-        filtered_players_list = filter_players_knapsack(players_list, formation)
-        if speed_up:
-            if any(x >= 4 for x in formation):
-                filtered_players_list = filtered_players_list[:150]
-            if any(x >= 5 for x in formation):
-                # filtered_players_list = filtered_players_list[:110]
-                filtered_players_list = filtered_players_list[:100]
-            if any(x >= 6 for x in formation):
-                filtered_players_list = filtered_players_list[:90]
-
-        # players_values, players_prices, players_comb_indexes = players_preproc(players_list, formation)
-        players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
+    for formation, filtered_players_list, players_values, players_prices, players_comb_indexes in precomputed:
+        if not players_values or not players_prices or not players_comb_indexes:
+            continue
 
         score, comb_result_indexes = knapsack_multichoice_onepick(
             players_prices,
             players_values,
             budget,
             verbose=super_verbose,
-            # master_pbar=master_pbar,
             update_master=update_master,
         )
 
@@ -171,15 +147,8 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
             for winning_i in players_comb_indexes[comb_index[0]][comb_index[1]]:
                 result_indexes.append(winning_i)
 
-        result_players = []
-        for res_index in result_indexes:
-            # result_players.append(players_list[res_index])
-            result_players.append(filtered_players_list[res_index])
-
+        result_players = [filtered_players_list[i] for i in result_indexes]
         formation_score_players.append((formation, score, result_players))
-
-        # print_best_full_teams(formation_score_players)
-    # master_pbar.close()
 
     formation_score_players_by_score = sorted(formation_score_players, key=lambda tup: tup[1], reverse=True)
 
@@ -204,58 +173,29 @@ def print_best_full_teams(best_results_teams):
 
 
 def players_preproc(players_list, formation):
-    if len(formation) == 3:
-        max_gk = 1
-        max_def = formation[0]
-        max_mid = formation[1]
-        max_att = formation[2]
-    elif len(formation) == 4:
-        max_gk = formation[0]
-        max_def = formation[1]
-        max_mid = formation[2]
-        max_att = formation[3]
-    else:
-        max_gk = 1
-        max_def = formation[0]
-        max_mid = sum(formation[1:-1])
-        max_att = formation[-1]
+    max_gk, max_def, max_mid, max_att = _parse_formation(formation)
+    positions = ["GK", "DEF", "MID", "ATT"]
+    requirements = [max_gk, max_def, max_mid, max_att]
 
-    gk_values, gk_weights, gk_indexes = generate_group(players_list, "GK")
-    gk_comb_values, gk_comb_weights, gk_comb_indexes = group_preproc(gk_values, gk_weights, gk_indexes, max_gk)
+    all_values = []
+    all_weights = []
+    all_indexes = []
 
-    def_values, def_weights, def_indexes = generate_group(players_list, "DEF")
-    def_comb_values, def_comb_weights, def_comb_indexes = group_preproc(def_values, def_weights, def_indexes, max_def)
+    for pos, req in zip(positions, requirements):
+        if req <= 0:
+            continue
+        g_v, g_w, g_i = generate_group(players_list, pos)
+        cv, cw, ci = group_preproc(g_v, g_w, g_i, req)
+        if not cv or not cw or not ci:
+            return [], [], []
+        all_values.append(cv)
+        all_weights.append(cw)
+        all_indexes.append(ci)
 
-    mid_values, mid_weights, mid_indexes = generate_group(players_list, "MID")
-    mid_comb_values, mid_comb_weights, mid_comb_indexes = group_preproc(mid_values, mid_weights, mid_indexes, max_mid)
+    if not all_values:
+        return [], [], []
 
-    att_values, att_weights, att_indexes = generate_group(players_list, "ATT")
-    att_comb_values, att_comb_weights, att_comb_indexes = group_preproc(att_values, att_weights, att_indexes, max_att)
-
-    result_comb_values = [gk_comb_values, def_comb_values, mid_comb_values, att_comb_values]
-    result_comb_weights = [gk_comb_weights, def_comb_weights, mid_comb_weights, att_comb_weights]
-    result_comb_indexes = [gk_comb_indexes, def_comb_indexes, mid_comb_indexes, att_comb_indexes]
-
-    result_comb_values, result_comb_weights, result_comb_indexes = remove_zero_combinations(result_comb_values, result_comb_weights, result_comb_indexes)
-
-    return result_comb_values, result_comb_weights, result_comb_indexes
-
-
-def remove_zero_combinations(values_combinations, weights_combinations, indexes_combinations):
-    # Create copies of the lists to avoid modifying the originals
-    values_combinations_copy = values_combinations.copy()
-    weights_combinations_copy = weights_combinations.copy()
-    indexes_combinations_copy = indexes_combinations.copy()
-
-    # Identify indices of sublists in values_combinations that are entirely zeros
-    indices_to_delete = [i for i, sublist in enumerate(values_combinations_copy) if sublist and all(x == 0 for x in sublist)]
-
-    # Remove the sublists from the copied lists based on indices
-    values_combinations_copy = [sublist for i, sublist in enumerate(values_combinations_copy) if i not in indices_to_delete]
-    weights_combinations_copy = [sublist for i, sublist in enumerate(weights_combinations_copy) if i not in indices_to_delete]
-    indexes_combinations_copy = [sublist for i, sublist in enumerate(indexes_combinations_copy) if i not in indices_to_delete]
-
-    return values_combinations_copy, weights_combinations_copy, indexes_combinations_copy
+    return all_values, all_weights, all_indexes
 
 
 def generate_group(full_list, group):
@@ -271,21 +211,17 @@ def generate_group(full_list, group):
 
 
 def group_preproc(group_values, group_weights, initial_indexes, r):
+    if r <= 0 or not initial_indexes:
+        return [], [], []
     comb_values = list(itertools.combinations(group_values, r))
     comb_weights = list(itertools.combinations(group_weights, r))
     comb_indexes = list(itertools.combinations(initial_indexes, r))
 
-    group_comb_values = []
-    for value_combinations in comb_values:
-        values_added = sum(list(value_combinations))
-        group_comb_values.append(values_added)
-
-    group_comb_weights = []
-    for weight_combinations in comb_weights:
-        weights_added = sum(list(weight_combinations))
-        group_comb_weights.append(weights_added)
-
-    return group_comb_values, group_comb_weights, comb_indexes
+    return (
+        [sum(c) for c in comb_values],
+        [sum(c) for c in comb_weights],
+        comb_indexes,
+    )
 
 
 def best_transfers(past_team, players_list, n_transfers, formations=possible_formations, budget=300, n_results=5, verbose=True, by_n_transfers=False):
@@ -419,6 +355,3 @@ def get_real_score(formation_fakescore_players, players_list):
                 realscore_team.append(player)
                 break
     return realscore, realscore_team
-
-
-
