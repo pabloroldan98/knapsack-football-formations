@@ -64,6 +64,8 @@ const I18N = {
     "btn.copy_players": "📋 Copiar jugadores",
     "btn.copy_players_full": "📋 Copiar (datos completos)",
     "footer.contact": "Contacto",
+    "footer.privacy": "Política de Privacidad",
+    "footer.cookies": "Preferencias de cookies",
     "player.form": "Forma", "player.fixture": "Partido", "player.titular": "Titular",
     "formations.name": "Formación", "formations.points": "puntos",
     "formations.see_all": "Ver todos los jugadores utilizados",
@@ -142,6 +144,8 @@ const I18N = {
     "btn.copy_players": "📋 Copy players",
     "btn.copy_players_full": "📋 Copy players (full data)",
     "footer.contact": "Contact",
+    "footer.privacy": "Privacy Policy",
+    "footer.cookies": "Cookie preferences",
     "player.form": "Form", "player.fixture": "Fixture", "player.titular": "Start",
     "formations.name": "Formation", "formations.points": "points",
     "formations.see_all": "See all players used",
@@ -1206,6 +1210,8 @@ function initEventListeners() {
   // Auto-add on datalist selection (input event fires when user picks from datalist)
   document.getElementById('blindedSearch').addEventListener('input', tryAddBlinded);
   document.getElementById('bannedSearch').addEventListener('input', tryAddBanned);
+  document.getElementById('my11Search').addEventListener('input', addMy11Player);
+  document.getElementById('marketSearch').addEventListener('input', addMarketPlayer);
   document.getElementById('filterTeamsSearch').addEventListener('input', tryAddTeamFilter);
 
   // Enter key on search inputs (fallback)
@@ -1260,6 +1266,12 @@ function openPrivacyFromApp() {
 
 function closePrivacyFromApp() {
   document.getElementById('privacyModal')?.classList.remove('visible');
+}
+
+function resetCookieConsent() {
+  localStorage.removeItem('cookie_consent');
+  const banner = document.getElementById('cookieConsent');
+  if (banner) banner.classList.remove('hidden');
 }
 
 function applyCookieI18N() {

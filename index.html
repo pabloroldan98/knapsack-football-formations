@@ -13,15 +13,9 @@
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
-  <link rel="preconnect" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true" crossorigin>
-  <link rel="dns-prefetch" href="https://calculadorafantasy.streamlit.app/~/+/?embed=true">
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QXF4YKPSMD');
-  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
+  <!-- Google Analytics loaded ONLY after cookie consent (via JS) -->
   <style>
     * {
       margin: 0;
@@ -262,6 +256,61 @@
     border-radius: 50%; animation: spin 0.9s linear infinite; margin-right: 10px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Cookie consent banner */
+  .cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #1a1f2e; border-top: 1px solid rgba(255,255,255,.1);
+    padding: 14px 24px; z-index: 10000;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    animation: cookieSlideUp .4s ease;
+  }
+  .cookie-banner.hidden { display: none; }
+  .cookie-banner-text { flex: 1; font-size: .85rem; color: rgba(255,255,255,.7); }
+  .cookie-banner-text a { color: rgb(255,76,76); }
+  .cookie-banner-buttons { display: flex; gap: 8px; }
+  .cookie-btn {
+    padding: 6px 16px; border-radius: 6px; border: none; cursor: pointer;
+    font-size: .85rem; color: #fff; transition: background .2s;
+  }
+  .cookie-btn-accept { background: rgb(255,76,76); }
+  .cookie-btn-accept:hover { background: rgb(200,50,50); }
+  .cookie-btn-reject { background: rgba(255,255,255,.1); }
+  .cookie-btn-reject:hover { background: rgba(255,255,255,.2); }
+  @keyframes cookieSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* Privacy modal (improved) */
+  .privacy-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.8); z-index: 10001;
+    padding: 2rem; overflow: auto;
+  }
+  .privacy-overlay.visible {
+    display: flex; align-items: center; justify-content: center;
+  }
+  .privacy-box {
+    max-width: 700px; width: 100%;
+    background: #1a1f2e; border: 1px solid rgba(255,255,255,.1);
+    border-radius: 8px; padding: 28px;
+  }
+  .privacy-box h2 { margin-bottom: 12px; }
+  .privacy-box p { margin-bottom: 10px; font-size: .92rem; color: rgba(255,255,255,.85); line-height: 1.5; }
+  .privacy-box a { color: rgb(255,76,76); }
+  .privacy-close-btn {
+    margin-top: 12px; padding: 10px 20px;
+    background: rgb(255,76,76); border: none; border-radius: 6px;
+    color: #fff; cursor: pointer; font-size: .9rem;
+  }
+  .privacy-close-btn:hover { background: rgb(200,50,50); }
+
+  .footer-links { margin-top: 6px; font-size: .85rem; }
+  .footer-links a { color: rgba(255,255,255,.7); text-decoration: underline; }
+  .footer-links a:hover { color: rgb(255,76,76); }
+  .footer-sep { margin: 0 6px; opacity: .4; }
   </style>
 </head>
 <body>
@@ -300,27 +349,43 @@
       </div>
 
       <footer>
-        <p id="t-footer">
+        <p>
           📩 <span id="t-contact-label">Contacto</span>:
-          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a> |
-          <a href="#" onclick="openPrivacy()" style="color: rgba(255,255,255,0.7);" id="t-privacy-link">Política de Privacidad</a>
+          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
+        </p>
+        <p class="footer-links">
+          <a href="#" onclick="openPrivacy(); return false" id="t-privacy-link">Política de Privacidad</a>
+          <span class="footer-sep">|</span>
+          <a href="#" onclick="resetCookieConsent(); return false" id="t-cookie-prefs-link">Preferencias de cookies</a>
         </p>
       </footer>
+    </div>
 
-      <!-- Privacy modal -->
-      <div id="privacyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; padding:2rem; overflow:auto;">
-        <div style="max-width:800px; margin:auto; background:#1e1e1e; padding:2rem; border-radius:8px;">
-          <h2 id="t-privacy-title">Política de Privacidad</h2>
-          <p id="t-privacy-p1">
-            En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
-            Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.
-          </p>
-          <p id="t-privacy-p2">
-            Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
-            <a href="mailto:calculadora.fantasy@gmail.com" style="color:rgb(255,76,76);">calculadora.fantasy@gmail.com</a>.
-          </p>
-          <button onclick="closePrivacy()" id="t-privacy-close" style="margin-top:1rem; padding:10px 20px; background:rgb(255, 76, 76); border:none; border-radius:6px; color:white; cursor:pointer;">Cerrar</button>
-        </div>
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+      <div class="cookie-banner-text">
+        <span id="t-cookie-text">Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.</span>
+        <a href="#" onclick="openPrivacy(); return false" id="t-cookie-privacy-link">Política de Privacidad</a>
+      </div>
+      <div class="cookie-banner-buttons">
+        <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" id="t-cookie-accept">Aceptar</button>
+        <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()" id="t-cookie-reject">Rechazar</button>
+      </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="privacy-overlay">
+      <div class="privacy-box">
+        <h2 id="t-privacy-title">Política de Privacidad</h2>
+        <p id="t-privacy-p1">En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
+          Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
+        <p id="t-privacy-p2">Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad.
+          Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.</p>
+        <p id="t-privacy-p3">Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio.
+          Estos datos no están vinculados a información personal identificable.</p>
+        <p id="t-privacy-p4">Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
+          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>.</p>
+        <button class="privacy-close-btn" onclick="closePrivacy()" id="t-privacy-close">Cerrar</button>
       </div>
     </div>
 
@@ -348,10 +413,17 @@
         enter: "Empezar a calcular",
         contact_label: "Contacto",
         privacy_link: "Política de Privacidad",
+        cookie_prefs: "Preferencias de cookies",
         privacy_title: "Política de Privacidad",
         privacy_p1: "En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.",
-        privacy_p2: "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
+        privacy_p2: "Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad. Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.",
+        privacy_p3: "Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio. Estos datos no están vinculados a información personal identificable.",
+        privacy_p4: "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
         privacy_close: "Cerrar",
+        cookie_text: "Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.",
+        cookie_privacy: "Política de Privacidad",
+        cookie_accept: "Aceptar",
+        cookie_reject: "Rechazar",
         loading: "Cargando jugadores…",
         slides: [
           { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.",            img: "img/presupuesto.png" },
@@ -366,10 +438,17 @@
         enter: "Start calculating",
         contact_label: "Contact",
         privacy_link: "Privacy Policy",
+        cookie_prefs: "Cookie preferences",
         privacy_title: "Privacy Policy",
         privacy_p1: "At Fantasy Calculator we respect your privacy and are committed to protecting your personal data. This site does not collect personal data without your consent and does not share information with third parties except when legally required.",
-        privacy_p2: "For more information or to exercise your rights of access, rectification or erasure, write to",
+        privacy_p2: "We use Google Analytics for traffic analysis and Google AdSense for advertising. These services may use cookies. You can manage your cookie preferences at any time.",
+        privacy_p3: "We may store anonymous usage data (configuration preferences, competitions viewed) to improve the service. This data is not linked to personally identifiable information.",
+        privacy_p4: "For more information or to exercise your rights of access, rectification or erasure, write to",
         privacy_close: "Close",
+        cookie_text: "This site uses cookies to improve your experience and show relevant ads.",
+        cookie_privacy: "Privacy Policy",
+        cookie_accept: "Accept",
+        cookie_reject: "Reject",
         loading: "Loading players…",
         slides: [
           { title: "💰 Best lineups by budget",     desc: "Compute the best possible lineup based on your available budget.",   img: "img/budget.png" },
@@ -410,13 +489,21 @@
       // Footer & privacy
       document.getElementById("t-contact-label").textContent = T.contact_label;
       document.getElementById("t-privacy-link").textContent = T.privacy_link;
+      document.getElementById("t-cookie-prefs-link").textContent = T.cookie_prefs;
       document.getElementById("t-privacy-title").textContent = T.privacy_title;
       document.getElementById("t-privacy-p1").textContent = T.privacy_p1;
-      // p2 is text + email link
-      const p2 = document.getElementById("t-privacy-p2");
-      p2.firstChild && p2.removeChild(p2.firstChild);
-      p2.insertAdjacentText("afterbegin", T.privacy_p2 + " ");
+      document.getElementById("t-privacy-p2").textContent = T.privacy_p2;
+      document.getElementById("t-privacy-p3").textContent = T.privacy_p3;
+      const p4 = document.getElementById("t-privacy-p4");
+      p4.firstChild && p4.removeChild(p4.firstChild);
+      p4.insertAdjacentText("afterbegin", T.privacy_p4 + " ");
       document.getElementById("t-privacy-close").textContent = T.privacy_close;
+
+      // Cookie banner
+      document.getElementById("t-cookie-text").textContent = T.cookie_text;
+      document.getElementById("t-cookie-privacy-link").textContent = T.cookie_privacy;
+      document.getElementById("t-cookie-accept").textContent = T.cookie_accept;
+      document.getElementById("t-cookie-reject").textContent = T.cookie_reject;
 
       // Loading overlay
       document.getElementById("t-loading").textContent = T.loading;
@@ -501,8 +588,51 @@
       }
     });
 
-    function openPrivacy() { document.getElementById('privacyModal').style.display = 'block'; }
-    function closePrivacy() { document.getElementById('privacyModal').style.display = 'none'; }
+    // --- Privacy modal ---------------------------------------------------------
+    function openPrivacy() { document.getElementById('privacyModal').classList.add('visible'); }
+    function closePrivacy() { document.getElementById('privacyModal').classList.remove('visible'); }
+
+    // --- Cookie consent --------------------------------------------------------
+    function initCookieConsent() {
+      const consent = localStorage.getItem('cookie_consent');
+      if (consent) {
+        document.getElementById('cookieBanner').classList.add('hidden');
+        if (consent === 'accepted') enableAnalytics();
+      }
+    }
+
+    function acceptCookies() {
+      localStorage.setItem('cookie_consent', 'accepted');
+      document.getElementById('cookieBanner').classList.add('hidden');
+      enableAnalytics();
+    }
+
+    function rejectCookies() {
+      localStorage.setItem('cookie_consent', 'rejected');
+      document.getElementById('cookieBanner').classList.add('hidden');
+    }
+
+    function resetCookieConsent() {
+      localStorage.removeItem('cookie_consent');
+      document.getElementById('cookieBanner').classList.remove('hidden');
+    }
+
+    function enableAnalytics() {
+      if (window.gtag) return;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD';
+      document.head.appendChild(s);
+      s.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-QXF4YKPSMD');
+      };
+    }
+
+    initCookieConsent();
   </script>
 </body>
 </html>

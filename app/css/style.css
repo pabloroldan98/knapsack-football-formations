@@ -185,7 +185,8 @@ html, body {
 .input-group label { font-size: .88rem; display: block; margin-bottom: 4px; }
 
 .search-input {
-  flex: 1; padding: 8px 12px; border-radius: var(--radius);
+  width: 100%; box-sizing: border-box;
+  padding: 8px 12px; border-radius: var(--radius);
   border: 1px solid var(--border); background: var(--bg-input);
   color: var(--text); font-size: .88rem; outline: none;
 }
@@ -305,9 +306,7 @@ html, body {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 12px; border-radius: var(--radius);
   background: var(--bg-card); border: 1px solid var(--border);
-  transition: border-color .2s;
 }
-.player-card:hover { border-color: var(--accent); }
 .player-card .player-img {
   width: 44px; height: 44px; object-fit: contain; border-radius: 50%;
   background: #222; flex-shrink: 0;
@@ -329,6 +328,33 @@ html, body {
 }
 .player-card .stat-arrow { font-size: 1.1rem; line-height: 1; }
 
+/* Player card action buttons */
+.player-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.player-card .btn-lock {
+  padding: 4px 10px; border-radius: var(--radius); font-size: .78rem;
+  border: 1px solid var(--border); background: #1C2130; color: var(--text);
+  cursor: pointer; transition: border-color .2s, background .2s;
+}
+.player-card .btn-lock:hover {
+  border-color: var(--accent); background: rgba(255,76,76,.1);
+}
+.player-card .btn-lock.locked {
+  background: #1C2130; border-color: var(--border);
+}
+.player-card .btn-lock.locked:hover {
+  border-color: var(--accent); background: rgba(255,76,76,.1);
+}
+.player-card .btn-remove {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: #1C2130;
+  color: var(--red); font-size: .9rem; cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.player-card .btn-remove:hover {
+  border-color: var(--red); background: rgba(255,76,76,.1);
+}
+
 /* Selected players list (My11 / Market) */
 .selected-players-list { margin: 12px 0; }
 .selected-player-row {
@@ -336,18 +362,6 @@ html, body {
   padding: 6px 8px; border-bottom: 1px solid var(--border);
 }
 .selected-player-row .player-info { flex: 1; font-size: .85rem; }
-.selected-player-row .btn-lock {
-  padding: 3px 8px; border-radius: 5px; font-size: .75rem;
-  border: 1px solid var(--border); background: var(--bg-input);
-  color: var(--text); cursor: pointer;
-}
-.selected-player-row .btn-lock.locked {
-  background: rgba(255,76,76,.2); border-color: var(--accent);
-}
-.selected-player-row .btn-remove {
-  cursor: pointer; color: var(--red); font-size: 1rem; background: none;
-  border: none;
-}
 
 /* ── Formation results ───────────────────────────────────────────────────── */
 .results-container { margin-top: 20px; }
@@ -399,6 +413,10 @@ html, body {
   font-size: .85rem; color: var(--text-muted);
 }
 .app-footer a { color: var(--text-muted); }
+.footer-links { margin-top: 6px; }
+.footer-links a { text-decoration: underline; }
+.footer-links a:hover { color: var(--accent); }
+.footer-sep { margin: 0 8px; opacity: .4; }
 
 .caption { font-size: .8rem; color: var(--text-muted); margin: 4px 0; }
 

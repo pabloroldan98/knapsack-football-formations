@@ -14,16 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QXF4YKPSMD');
-  </script>
-
-  <!-- Google AdSense -->
+  <!-- Google AdSense (ads load independently; Analytics loads only after cookie consent via JS) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="css/style.css">
@@ -215,11 +206,8 @@
       <h2 data-i18n="h.my_best11">Selecciona Jugadores para tu 11 ideal</h2>
       <p class="caption" data-i18n="cap.add_all">A&ntilde;ade a todos los jugadores de tu equipo para calcular tu 11 ideal</p>
 
-      <div class="search-add-row">
-        <input type="text" id="my11Search" class="search-input" placeholder="Buscar jugador..." list="my11Datalist">
-        <datalist id="my11Datalist"></datalist>
-        <button class="btn-small" onclick="addMy11Player()" data-i18n="btn.add">A&ntilde;adir</button>
-      </div>
+      <input type="text" id="my11Search" class="search-input" placeholder="Buscar jugador..." list="my11Datalist" autocomplete="off" style="margin-bottom:6px">
+      <datalist id="my11Datalist"></datalist>
 
       <div id="my11SelectedList" class="selected-players-list"></div>
 
@@ -308,11 +296,8 @@
       <h2 data-i18n="h.market">Selecciona los Jugadores de tu mercado</h2>
       <p class="caption" data-i18n="cap.market">Selecciona los Jugadores que han salido en tu mercado para compararlos</p>
 
-      <div class="search-add-row">
-        <input type="text" id="marketSearch" class="search-input" placeholder="Buscar jugador..." list="marketDatalist">
-        <datalist id="marketDatalist"></datalist>
-        <button class="btn-small" onclick="addMarketPlayer()" data-i18n="btn.add">A&ntilde;adir</button>
-      </div>
+      <input type="text" id="marketSearch" class="search-input" placeholder="Buscar jugador..." list="marketDatalist" autocomplete="off" style="margin-bottom:6px">
+      <datalist id="marketDatalist"></datalist>
 
       <details class="expander">
         <summary data-i18n="filters.complete_more">Filtros adicionales</summary>
@@ -336,6 +321,11 @@
     <footer class="app-footer">
       <p>&#128233; <span data-i18n="footer.contact">Contacto</span>:
         <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
+      </p>
+      <p class="footer-links">
+        <a href="#" onclick="openPrivacyFromApp(); return false" data-i18n="footer.privacy">Política de Privacidad</a>
+        <span class="footer-sep">|</span>
+        <a href="#" onclick="resetCookieConsent(); return false" data-i18n="footer.cookies">Preferencias de cookies</a>
       </p>
     </footer>
   </main>
