@@ -90,6 +90,16 @@ const I18N = {
     "privacy.close": "Cerrar",
     "cap.lock_note": "Nota: 'Blindar' jugadores obliga a que estén sí o sí en todos los equipos calculados",
     "cap.same_as_list": "Nota: es lo mismo que la 'Lista de jugadores', pero solo para los jugadores que selecciones",
+    "squad.title": "Plantillas guardadas",
+    "squad.save": "Guardar plantilla",
+    "squad.name_placeholder": "Nombre de la plantilla",
+    "squad.empty": "No hay plantillas guardadas",
+    "squad.load": "Cargar",
+    "squad.delete": "Borrar",
+    "squad.saved_ok": "Plantilla guardada",
+    "squad.deleted_ok": "Plantilla borrada",
+    "squad.loaded_ok": "Plantilla cargada",
+    "squad.players_count": "jugadores",
   },
   en: {
     "app.title": "Fantasy Calculator 🤖",
@@ -171,6 +181,16 @@ const I18N = {
     "privacy.close": "Close",
     "cap.lock_note": "Note: 'Locking' players forces them into all calculated teams",
     "cap.same_as_list": "Note: same as the 'Players list' but only for the players you select",
+    "squad.title": "Saved squads",
+    "squad.save": "Save squad",
+    "squad.name_placeholder": "Squad name",
+    "squad.empty": "No saved squads",
+    "squad.load": "Load",
+    "squad.delete": "Delete",
+    "squad.saved_ok": "Squad saved",
+    "squad.deleted_ok": "Squad deleted",
+    "squad.loaded_ok": "Squad loaded",
+    "squad.players_count": "players",
   }
 };
 
@@ -196,6 +216,123 @@ const my11Names = new Set();
 const my11Locked = new Set();
 const marketNames = new Set();
 const selectedTeamsFilter = new Set();
+
+// ─── LocalStorage persistence ───────────────────────────────────────────────
+const LS_STATE_KEY = 'cf_app_state';
+
+function persistState() {
+  try {
+    const state = {
+      blinded: [...blindedNames],
+      banned: [...bannedNames],
+      my11: [...my11Names],
+      my11Locked: [...my11Locked],
+      market: [...marketNames],
+      teamsFilter: [...selectedTeamsFilter],
+      filters: _collectFilters(),
+    };
+    localStorage.setItem(LS_STATE_KEY, JSON.stringify(state));
+  } catch (_) {}
+}
+
+function _collectFilters() {
+  const val = id => document.getElementById(id)?.value ?? null;
+  const chk = id => document.getElementById(id)?.checked ?? null;
+  return {
+    selCompetition: val('selCompetition'),
+    selApp: val('selApp'),
+    selPenalties: val('selPenalties'),
+    selSort: val('selSort'),
+    selWorthProb: val('selWorthProb'),
+    selJornada: val('selJornada'),
+    selNumJornadas: val('selNumJornadas'),
+    selIgnoreForm: val('selIgnoreForm'),
+    selIgnoreFixtures: val('selIgnoreFixtures'),
+    budgetInput: val('budgetInput'),
+    budgetFixtureFilter: val('budgetFixtureFilter'),
+    budgetMinProb: val('budgetMinProb'),
+    budgetPremium: chk('budgetPremium'),
+    my11FixtureFilter: val('my11FixtureFilter'),
+    my11MinProb: val('my11MinProb'),
+    my11Premium: chk('my11Premium'),
+    playersFixtureFilter: val('playersFixtureFilter'),
+    playersMinProb: val('playersMinProb'),
+    filterGK: chk('filterGK'),
+    filterDEF: chk('filterDEF'),
+    filterMID: chk('filterMID'),
+    filterATT: chk('filterATT'),
+    marketFixtureFilter: val('marketFixtureFilter'),
+    marketMinProb: val('marketMinProb'),
+  };
+}
+
+function restoreState() {
+  try {
+    const raw = localStorage.getItem(LS_STATE_KEY);
+    if (!raw) return;
+    const state = JSON.parse(raw);
+
+    if (state.blinded) state.blinded.forEach(n => blindedNames.add(n));
+    if (state.banned) state.banned.forEach(n => bannedNames.add(n));
+    if (state.my11) state.my11.forEach(n => my11Names.add(n));
+    if (state.my11Locked) state.my11Locked.forEach(n => my11Locked.add(n));
+    if (state.market) state.market.forEach(n => marketNames.add(n));
+    if (state.teamsFilter) state.teamsFilter.forEach(n => selectedTeamsFilter.add(n));
+
+    if (state.filters) _applyFilters(state.filters);
+  } catch (_) {}
+}
+
+function _applyFilters(f) {
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el && v !== null && v !== undefined) el.value = v; };
+  const setChk = (id, v) => { const el = document.getElementById(id); if (el && v !== null && v !== undefined) el.checked = v; };
+
+  setVal('selCompetition', f.selCompetition);
+  setVal('selApp', f.selApp);
+  setVal('selPenalties', f.selPenalties);
+  setVal('selSort', f.selSort);
+  setVal('selWorthProb', f.selWorthProb);
+  setVal('selJornada', f.selJornada);
+  setVal('selNumJornadas', f.selNumJornadas);
+  setVal('selIgnoreForm', f.selIgnoreForm);
+  setVal('selIgnoreFixtures', f.selIgnoreFixtures);
+  setVal('budgetInput', f.budgetInput);
+  setVal('budgetFixtureFilter', f.budgetFixtureFilter);
+  setVal('budgetMinProb', f.budgetMinProb);
+  setChk('budgetPremium', f.budgetPremium);
+  setVal('my11FixtureFilter', f.my11FixtureFilter);
+  setVal('my11MinProb', f.my11MinProb);
+  setChk('my11Premium', f.my11Premium);
+  setVal('playersFixtureFilter', f.playersFixtureFilter);
+  setVal('playersMinProb', f.playersMinProb);
+  setChk('filterGK', f.filterGK);
+  setChk('filterDEF', f.filterDEF);
+  setChk('filterMID', f.filterMID);
+  setChk('filterATT', f.filterATT);
+  setVal('marketFixtureFilter', f.marketFixtureFilter);
+  setVal('marketMinProb', f.marketMinProb);
+
+  // Update range labels
+  const bmpEl = document.getElementById('budgetMinProbVal');
+  if (bmpEl && f.budgetMinProb !== null) bmpEl.textContent = f.budgetMinProb + '%';
+  const m11pEl = document.getElementById('my11MinProbVal');
+  if (m11pEl && f.my11MinProb !== null) m11pEl.textContent = f.my11MinProb + '%';
+  const ppEl = document.getElementById('playersMinProbVal');
+  if (ppEl && f.playersMinProb !== null) ppEl.textContent = f.playersMinProb + '%';
+  const mmpEl = document.getElementById('marketMinProbVal');
+  if (mmpEl && f.marketMinProb !== null) mmpEl.textContent = f.marketMinProb + '%';
+
+  // Worth prob container visibility
+  const isWorth = f.selSort === 'worth';
+  const wpc = document.getElementById('worthProbContainer');
+  if (wpc) wpc.style.display = isWorth ? 'block' : 'none';
+
+  // Re-apply range visual fills
+  for (const id of ['budgetMinProb', 'my11MinProb', 'playersMinProb', 'marketMinProb']) {
+    const el = document.getElementById(id);
+    if (el) updateRangeRightFill(el);
+  }
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 function t(key) { return (I18N[LANG] || I18N.es)[key] || key; }
@@ -541,6 +678,7 @@ function setLang(lang) {
   // Re-render visible content
   renderPlayersTab();
   renderMarketTab();
+  renderSquadList();
 }
 
 function initLang() {
@@ -568,8 +706,9 @@ async function loadCompetitions() {
       sel.appendChild(opt);
     }
     sel.addEventListener('change', onCompetitionChange);
+    // Restore persisted state (filters + player Sets) before first load
+    restoreState();
     onCompetitionChange();
-    // Auto-load players on first visit
     loadPlayers();
   } catch (e) {
     console.error('Error loading competitions:', e);
@@ -629,6 +768,7 @@ function updateBudgetInput() {
 
 // ─── Load Players ───────────────────────────────────────────────────────────
 let _isLoadingPlayers = false;
+let _hasLoadedOnce = false;
 async function loadPlayers() {
   if (_isLoadingPlayers) return;
   _isLoadingPlayers = true;
@@ -655,15 +795,20 @@ async function loadPlayers() {
     isTournament = data.is_tournament;
     teamsList = data.teams;
 
-    // Update teams filter datalist
-    selectedTeamsFilter.clear();
+    // Only clear teams on reloads, not the initial load with restored state
+    if (_hasLoadedOnce) selectedTeamsFilter.clear();
+    _hasLoadedOnce = true;
     updateTeamsDatalist();
+    renderTeamChips();
 
     // Update all datalists
     updateAllDatalists();
 
-    // Render players tab
+    // Render all tabs that depend on player data (includes restored Sets)
+    renderBlindedList();
+    renderBannedList();
     renderPlayersTab();
+    renderMy11List();
     renderMarketTab();
 
     // Update price slider range
@@ -762,6 +907,7 @@ function tryAddBlinded() {
   renderBlindedList();
   renderBannedList();
   updateAllDatalists();
+  persistState();
 }
 
 function tryAddBanned() {
@@ -776,6 +922,7 @@ function tryAddBanned() {
   renderBannedList();
   renderBlindedList();
   updateAllDatalists();
+  persistState();
 }
 
 function _formatPrice(val) {
@@ -815,8 +962,8 @@ function renderBannedList() {
   }
 }
 
-function removeBlinded(name) { blindedNames.delete(name); renderBlindedList(); updateAllDatalists(); }
-function removeBanned(name) { bannedNames.delete(name); renderBannedList(); updateAllDatalists(); }
+function removeBlinded(name) { blindedNames.delete(name); renderBlindedList(); updateAllDatalists(); persistState(); }
+function removeBanned(name) { bannedNames.delete(name); renderBannedList(); updateAllDatalists(); persistState(); }
 
 // ─── Teams filter (chips) ───────────────────────────────────────────────────
 function updateTeamsDatalist() {
@@ -837,6 +984,7 @@ function tryAddTeamFilter() {
   selectedTeamsFilter.add(val);
   input.value = '';
   renderTeamChips();
+  persistState();
   updateTeamsDatalist();
   renderPlayersTab();
 }
@@ -845,6 +993,7 @@ function removeTeamFilter(team) {
   selectedTeamsFilter.delete(team);
   renderTeamChips();
   updateTeamsDatalist();
+  persistState();
   renderPlayersTab();
 }
 
@@ -924,6 +1073,7 @@ function addMy11Player() {
   input.value = '';
   renderMy11List();
   updateAllDatalists();
+  persistState();
 }
 
 function renderMy11List() {
@@ -939,17 +1089,97 @@ function renderMy11List() {
   for (const p of players) {
     const card = renderPlayerCard(p, {
       showRemove: true,
-      removeCallback: (name) => { my11Names.delete(name); my11Locked.delete(name); renderMy11List(); updateAllDatalists(); },
+      removeCallback: (name) => { my11Names.delete(name); my11Locked.delete(name); renderMy11List(); updateAllDatalists(); persistState(); },
       showLock: true,
       lockCallback: (name) => {
         if (my11Locked.has(name)) my11Locked.delete(name);
         else my11Locked.add(name);
         renderMy11List();
+        persistState();
       },
       isLocked: my11Locked.has(p.name),
     });
     container.appendChild(card);
   }
+}
+
+// ─── Squad localStorage management ──────────────────────────────────────────
+const SQUAD_STORAGE_KEY = 'cf_saved_squads';
+
+function _getSavedSquads() {
+  try { return JSON.parse(localStorage.getItem(SQUAD_STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function _setSavedSquads(squads) {
+  localStorage.setItem(SQUAD_STORAGE_KEY, JSON.stringify(squads));
+}
+
+function saveSquad() {
+  if (my11Names.size === 0) return;
+  const input = document.getElementById('squadNameInput');
+  let name = input.value.trim();
+  if (!name) {
+    const now = new Date();
+    name = `${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  }
+  const squads = _getSavedSquads();
+  const existing = squads.findIndex(s => s.name === name);
+  const entry = { name, players: [...my11Names], date: new Date().toISOString() };
+  if (existing >= 0) squads[existing] = entry;
+  else squads.unshift(entry);
+  _setSavedSquads(squads);
+  input.value = '';
+  renderSquadList();
+  showToast(t('squad.saved_ok'));
+}
+
+function loadSquad(index) {
+  const squads = _getSavedSquads();
+  const squad = squads[index];
+  if (!squad) return;
+  my11Names.clear();
+  my11Locked.clear();
+  for (const name of squad.players) my11Names.add(name);
+  renderMy11List();
+  updateAllDatalists();
+  persistState();
+  showToast(`${t('squad.loaded_ok')} (${squad.players.length} ${t('squad.players_count')})`);
+}
+
+function deleteSquad(index) {
+  const squads = _getSavedSquads();
+  squads.splice(index, 1);
+  _setSavedSquads(squads);
+  renderSquadList();
+  showToast(t('squad.deleted_ok'));
+}
+
+function renderSquadList() {
+  const container = document.getElementById('squadList');
+  if (!container) return;
+  const squads = _getSavedSquads();
+  if (squads.length === 0) {
+    container.innerHTML = `<p class="squad-empty">${t('squad.empty')}</p>`;
+    return;
+  }
+  container.innerHTML = '';
+  squads.forEach((sq, i) => {
+    const d = new Date(sq.date);
+    const dateStr = d.toLocaleDateString();
+    const el = document.createElement('div');
+    el.className = 'squad-item';
+    el.innerHTML = `
+      <div class="squad-item-info">
+        <div class="squad-item-name">${sq.name}</div>
+        <div class="squad-item-meta">${sq.players.length} ${t('squad.players_count')} · ${dateStr}</div>
+      </div>
+      <div class="squad-item-actions">
+        <button class="btn-small" onclick="loadSquad(${i})">${t('squad.load')}</button>
+        <button class="btn-small" onclick="deleteSquad(${i})">${t('squad.delete')}</button>
+      </div>`;
+    container.appendChild(el);
+  });
 }
 
 async function calculateMy11() {
@@ -1013,6 +1243,7 @@ function addMarketPlayer() {
   input.value = '';
   renderMarketTab();
   updateAllDatalists();
+  persistState();
 }
 
 function renderMarketTab() {
@@ -1051,7 +1282,7 @@ function renderMarketTab() {
   for (const p of filtered) {
     const card = renderPlayerCard(p, {
       showRemove: true,
-      removeCallback: (name) => { marketNames.delete(name); renderMarketTab(); updateAllDatalists(); },
+      removeCallback: (name) => { marketNames.delete(name); renderMarketTab(); updateAllDatalists(); persistState(); },
     });
     container.appendChild(card);
   }
@@ -1232,6 +1463,22 @@ function initEventListeners() {
   document.getElementById('my11Search').addEventListener('keydown', e => { if (e.key === 'Enter') addMy11Player(); });
   document.getElementById('marketSearch').addEventListener('keydown', e => { if (e.key === 'Enter') addMarketPlayer(); });
   document.getElementById('filterTeamsSearch').addEventListener('keydown', e => { if (e.key === 'Enter') tryAddTeamFilter(); });
+
+  // Persist all filter changes to localStorage
+  const allFilterIds = [
+    'selCompetition', 'selApp', 'selPenalties', 'selSort', 'selWorthProb',
+    'selJornada', 'selNumJornadas', 'selIgnoreForm', 'selIgnoreFixtures',
+    'budgetInput', 'budgetFixtureFilter', 'budgetMinProb', 'budgetPremium',
+    'my11FixtureFilter', 'my11MinProb', 'my11Premium',
+    'playersFixtureFilter', 'playersMinProb', 'priceRangeMin', 'priceRangeMax',
+    'filterGK', 'filterDEF', 'filterMID', 'filterATT',
+    'marketFixtureFilter', 'marketMinProb',
+  ];
+  for (const id of allFilterIds) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', persistState);
+    if (el && (el.type === 'range' || el.type === 'number')) el.addEventListener('input', persistState);
+  }
 }
 
 // ─── Cookie Consent / Privacy ───────────────────────────────────────────────
@@ -1335,6 +1582,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPriceRangeSlider();
   initEventListeners();
   initCookieConsent();
+  renderSquadList();
   loadCompetitions();
 
   // Initial worth prob visibility

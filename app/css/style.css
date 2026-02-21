@@ -520,6 +520,27 @@ select[multiple] option:checked {
   .tab { font-size: .72rem; padding: 6px 8px; }
 }
 
+/* ── Squad save/load ─────────────────────────────────────────────────────── */
+.squad-save-row {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 10px;
+}
+.squad-save-row .search-input { flex: 1; }
+.btn-squad-save { white-space: nowrap; }
+
+.squad-list { display: flex; flex-direction: column; gap: 6px; }
+.squad-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px 12px;
+}
+.squad-item-info { flex: 1; min-width: 0; }
+.squad-item-name { font-weight: 600; font-size: .9rem; }
+.squad-item-meta { font-size: .78rem; color: rgba(255,255,255,.5); }
+.squad-item-actions { display: flex; gap: 6px; }
+.squad-item-actions .btn-small { font-size: .78rem; padding: 4px 10px; }
+
+.squad-empty { font-size: .85rem; color: rgba(255,255,255,.45); font-style: italic; }
+
 /* Desktop wide screens */
 @media (min-width: 1400px) {
   .main-content { max-width: 1100px; }

@@ -221,6 +221,18 @@
       <input type="text" id="my11Search" class="search-input" placeholder="Buscar jugador..." list="my11Datalist" autocomplete="off" style="margin-bottom:6px">
       <datalist id="my11Datalist"></datalist>
 
+      <!-- Squad save/load -->
+      <details class="expander">
+        <summary data-i18n="squad.title">Plantillas guardadas</summary>
+        <div class="expander-content">
+          <div class="squad-save-row">
+            <input type="text" id="squadNameInput" class="search-input" placeholder="Nombre de la plantilla" data-i18n="squad.name_placeholder" maxlength="40">
+            <button class="btn-small btn-squad-save" onclick="saveSquad()" data-i18n="squad.save">Guardar plantilla</button>
+          </div>
+          <div id="squadList" class="squad-list"></div>
+        </div>
+      </details>
+
       <div id="my11SelectedList" class="selected-players-list"></div>
 
       <details class="expander" open>
