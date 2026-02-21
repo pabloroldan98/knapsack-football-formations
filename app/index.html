@@ -14,7 +14,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
 
-  <!-- Google AdSense (ads load independently; Analytics loads only after cookie consent via JS) -->
+  <!-- Google Consent Mode v2 — must be BEFORE any Google tag -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+  </script>
+  <!-- Google AdSense (respects Consent Mode state) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="css/style.css">
@@ -350,7 +362,9 @@
         Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
       <p id="privacyP2">Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad.
         Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.</p>
-      <p id="privacyP3">Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
+      <p id="privacyP3">Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio.
+        Estos datos no están vinculados a información personal identificable.</p>
+      <p id="privacyP4">Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
         <a href="mailto:calculadora.fantasy@gmail.com" style="color:var(--accent)">calculadora.fantasy@gmail.com</a>.</p>
       <button class="btn-primary" onclick="closePrivacyFromApp()" id="privacyClose" style="margin-top:12px">Cerrar</button>
     </div>

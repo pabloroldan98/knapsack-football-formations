@@ -85,7 +85,8 @@ const I18N = {
     "privacy.title": "Política de Privacidad",
     "privacy.p1": "En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.",
     "privacy.p2": "Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad. Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.",
-    "privacy.p3": "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
+    "privacy.p3": "Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio. Estos datos no están vinculados a información personal identificable.",
+    "privacy.p4": "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
     "privacy.close": "Cerrar",
     "cap.lock_note": "Nota: 'Blindar' jugadores obliga a que estén sí o sí en todos los equipos calculados",
     "cap.same_as_list": "Nota: es lo mismo que la 'Lista de jugadores', pero solo para los jugadores que selecciones",
@@ -165,7 +166,8 @@ const I18N = {
     "privacy.title": "Privacy Policy",
     "privacy.p1": "At Calculadora Fantasy we respect your privacy and are committed to protecting your personal data. This website does not collect personal data without your consent and does not share information with third parties except as required by law.",
     "privacy.p2": "We use Google Analytics for traffic analysis and Google AdSense for advertising. These services may use cookies. You can manage your cookie preferences at any time.",
-    "privacy.p3": "For more information or to exercise your rights of access, rectification, or deletion, write to us at",
+    "privacy.p3": "We may store anonymous usage data (configuration preferences, competitions viewed) to improve the service. This data is not linked to personally identifiable information.",
+    "privacy.p4": "For more information or to exercise your rights of access, rectification, or deletion, write to us at",
     "privacy.close": "Close",
     "cap.lock_note": "Note: 'Locking' players forces them into all calculated teams",
     "cap.same_as_list": "Note: same as the 'Players list' but only for the players you select",
@@ -1239,19 +1241,39 @@ function initCookieConsent() {
   const consent = localStorage.getItem('cookie_consent');
   if (consent) {
     banner.classList.add('hidden');
-    if (consent === 'accepted') enableAnalytics();
+    if (consent === 'accepted') {
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'analytics_storage': 'granted'
+      });
+      enableAnalytics();
+    }
   }
 }
 
 function acceptCookies() {
   localStorage.setItem('cookie_consent', 'accepted');
   document.getElementById('cookieConsent')?.classList.add('hidden');
+  gtag('consent', 'update', {
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted',
+    'analytics_storage': 'granted'
+  });
   enableAnalytics();
 }
 
 function rejectCookies() {
   localStorage.setItem('cookie_consent', 'rejected');
   document.getElementById('cookieConsent')?.classList.add('hidden');
+  gtag('consent', 'update', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied'
+  });
 }
 
 function enableAnalytics() {
@@ -1289,16 +1311,16 @@ function applyCookieI18N() {
     cookieText: 'cookie.text', cookiePrivacyLink: 'cookie.privacy',
     cookieAccept: 'cookie.accept', cookieReject: 'cookie.reject',
     privacyTitle: 'privacy.title', privacyP1: 'privacy.p1',
-    privacyP2: 'privacy.p2', privacyClose: 'privacy.close',
+    privacyP2: 'privacy.p2', privacyP3: 'privacy.p3',
+    privacyClose: 'privacy.close',
   };
   for (const [elId, key] of Object.entries(ids)) {
     const el = document.getElementById(elId);
     if (el) el.textContent = t(key);
   }
-  // Privacy P3 has a link inside
-  const p3 = document.getElementById('privacyP3');
-  if (p3) {
-    p3.innerHTML = `${t('privacy.p3')} <a href="mailto:calculadora.fantasy@gmail.com" style="color:var(--accent)">calculadora.fantasy@gmail.com</a>.`;
+  const p4 = document.getElementById('privacyP4');
+  if (p4) {
+    p4.innerHTML = `${t('privacy.p4')} <a href="mailto:calculadora.fantasy@gmail.com" style="color:var(--accent)">calculadora.fantasy@gmail.com</a>.`;
   }
 }
 

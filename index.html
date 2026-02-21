@@ -13,9 +13,20 @@
   <link rel="apple-touch-icon-precomposed" type="image/png" href="logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-7891666149137266">
-  <!-- Google AdSense -->
+  <!-- Google Consent Mode v2 — must be BEFORE any Google tag -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+  </script>
+  <!-- Google AdSense (respects Consent Mode state) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
-  <!-- Google Analytics loaded ONLY after cookie consent (via JS) -->
   <style>
     * {
       margin: 0;
@@ -597,19 +608,39 @@
       const consent = localStorage.getItem('cookie_consent');
       if (consent) {
         document.getElementById('cookieBanner').classList.add('hidden');
-        if (consent === 'accepted') enableAnalytics();
+        if (consent === 'accepted') {
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted',
+            'analytics_storage': 'granted'
+          });
+          enableAnalytics();
+        }
       }
     }
 
     function acceptCookies() {
       localStorage.setItem('cookie_consent', 'accepted');
       document.getElementById('cookieBanner').classList.add('hidden');
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'analytics_storage': 'granted'
+      });
       enableAnalytics();
     }
 
     function rejectCookies() {
       localStorage.setItem('cookie_consent', 'rejected');
       document.getElementById('cookieBanner').classList.add('hidden');
+      gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
+      });
     }
 
     function resetCookieConsent() {
