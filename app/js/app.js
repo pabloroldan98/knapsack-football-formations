@@ -238,6 +238,7 @@ function persistState() {
 function _collectFilters() {
   const val = id => document.getElementById(id)?.value ?? null;
   const chk = id => document.getElementById(id)?.checked ?? null;
+  const rad = name => document.querySelector(`input[name="${name}"]:checked`)?.value ?? null;
   return {
     selCompetition: val('selCompetition'),
     selApp: val('selApp'),
@@ -249,19 +250,19 @@ function _collectFilters() {
     selIgnoreForm: val('selIgnoreForm'),
     selIgnoreFixtures: val('selIgnoreFixtures'),
     budgetInput: val('budgetInput'),
-    budgetFixtureFilter: val('budgetFixtureFilter'),
+    budgetFixtureFilter: rad('budgetFixtureFilter'),
     budgetMinProb: val('budgetMinProb'),
     budgetPremium: chk('budgetPremium'),
-    my11FixtureFilter: val('my11FixtureFilter'),
+    my11FixtureFilter: rad('my11FixtureFilter'),
     my11MinProb: val('my11MinProb'),
     my11Premium: chk('my11Premium'),
-    playersFixtureFilter: val('playersFixtureFilter'),
+    playersFixtureFilter: rad('playersFixtureFilter'),
     playersMinProb: val('playersMinProb'),
     filterGK: chk('filterGK'),
     filterDEF: chk('filterDEF'),
     filterMID: chk('filterMID'),
     filterATT: chk('filterATT'),
-    marketFixtureFilter: val('marketFixtureFilter'),
+    marketFixtureFilter: rad('marketFixtureFilter'),
     marketMinProb: val('marketMinProb'),
   };
 }
@@ -286,6 +287,7 @@ function restoreState() {
 function _applyFilters(f) {
   const setVal = (id, v) => { const el = document.getElementById(id); if (el && v !== null && v !== undefined) el.value = v; };
   const setChk = (id, v) => { const el = document.getElementById(id); if (el && v !== null && v !== undefined) el.checked = v; };
+  const setRad = (name, v) => { if (v === null || v === undefined) return; const el = document.querySelector(`input[name="${name}"][value="${v}"]`); if (el) el.checked = true; };
 
   setVal('selCompetition', f.selCompetition);
   setVal('selApp', f.selApp);
@@ -297,19 +299,19 @@ function _applyFilters(f) {
   setVal('selIgnoreForm', f.selIgnoreForm);
   setVal('selIgnoreFixtures', f.selIgnoreFixtures);
   setVal('budgetInput', f.budgetInput);
-  setVal('budgetFixtureFilter', f.budgetFixtureFilter);
+  setRad('budgetFixtureFilter', f.budgetFixtureFilter);
   setVal('budgetMinProb', f.budgetMinProb);
   setChk('budgetPremium', f.budgetPremium);
-  setVal('my11FixtureFilter', f.my11FixtureFilter);
+  setRad('my11FixtureFilter', f.my11FixtureFilter);
   setVal('my11MinProb', f.my11MinProb);
   setChk('my11Premium', f.my11Premium);
-  setVal('playersFixtureFilter', f.playersFixtureFilter);
+  setRad('playersFixtureFilter', f.playersFixtureFilter);
   setVal('playersMinProb', f.playersMinProb);
   setChk('filterGK', f.filterGK);
   setChk('filterDEF', f.filterDEF);
   setChk('filterMID', f.filterMID);
   setChk('filterATT', f.filterATT);
-  setVal('marketFixtureFilter', f.marketFixtureFilter);
+  setRad('marketFixtureFilter', f.marketFixtureFilter);
   setVal('marketMinProb', f.marketMinProb);
 
   // Update range labels
@@ -841,7 +843,7 @@ function updateAllDatalists() {
 function getFilteredPlayers() {
   if (allPlayers.length === 0) return [];
 
-  const fixtureFilter = document.getElementById('playersFixtureFilter').value === 'yes';
+  const fixtureFilter = document.querySelector('input[name="playersFixtureFilter"]:checked')?.value === 'yes';
   const minProb = parseInt(document.getElementById('playersMinProb').value) / 100;
   const minPrice = parseFloat(document.getElementById('priceRangeMin').value) || 0;
   const maxPrice = parseFloat(document.getElementById('priceRangeMax').value) || 99999;
@@ -1024,7 +1026,7 @@ async function calculateBudget() {
   if (divideMillions) budget = Math.round(budget * 10);
 
   const minProb = parseInt(document.getElementById('budgetMinProb').value) / 100;
-  const fixtureFilter = document.getElementById('budgetFixtureFilter').value === 'yes';
+  const fixtureFilter = document.querySelector('input[name="budgetFixtureFilter"]:checked')?.value === 'yes';
   const premium = document.getElementById('budgetPremium').checked;
 
   let formations = [[3,4,3],[3,5,2],[4,3,3],[4,4,2],[4,5,1],[5,3,2],[5,4,1]];
@@ -1195,7 +1197,7 @@ async function calculateMy11() {
   const numJornadas = parseInt(document.getElementById('selNumJornadas')?.value || '1');
 
   const minProb = parseInt(document.getElementById('my11MinProb').value) / 100;
-  const fixtureFilter = document.getElementById('my11FixtureFilter').value === 'yes';
+  const fixtureFilter = document.querySelector('input[name="my11FixtureFilter"]:checked')?.value === 'yes';
   const premium = document.getElementById('my11Premium').checked;
 
   let formations = [[3,4,3],[3,5,2],[4,3,3],[4,4,2],[4,5,1],[5,3,2],[5,4,1]];
@@ -1261,7 +1263,7 @@ function renderMarketTab() {
   let players = allPlayers.filter(p => marketNames.has(p.name));
 
   // Apply market filters
-  const fixtureFilter = document.getElementById('marketFixtureFilter').value === 'yes';
+  const fixtureFilter = document.querySelector('input[name="marketFixtureFilter"]:checked')?.value === 'yes';
   const minProb = parseInt(document.getElementById('marketMinProb').value) / 100;
 
   let filtered = players.filter(p => p.start_probability >= minProb);
@@ -1413,12 +1415,14 @@ function initEventListeners() {
   document.getElementById('btnCalcMy11').addEventListener('click', calculateMy11);
 
   // Sort/filter changes -> re-render lists
-  const reRenderTriggers = ['selSort', 'selWorthProb', 'playersFixtureFilter', 'playersMinProb',
+  const reRenderTriggers = ['selSort', 'selWorthProb', 'playersMinProb',
     'priceRangeMin', 'priceRangeMax', 'filterGK', 'filterDEF', 'filterMID', 'filterATT'];
   for (const id of reRenderTriggers) {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', renderPlayersTab);
   }
+  // Radio-based fixture filters trigger re-renders
+  document.querySelectorAll('input[name="playersFixtureFilter"]').forEach(r => r.addEventListener('change', renderPlayersTab));
 
   // Sidebar settings that require reloading players
   const reloadTriggers = ['selCompetition', 'selApp', 'selJornada', 'selNumJornadas',
@@ -1436,10 +1440,8 @@ function initEventListeners() {
   }
 
   // Market filter changes
-  ['marketFixtureFilter', 'marketMinProb'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', renderMarketTab);
-  });
+  document.getElementById('marketMinProb')?.addEventListener('change', renderMarketTab);
+  document.querySelectorAll('input[name="marketFixtureFilter"]').forEach(r => r.addEventListener('change', renderMarketTab));
 
   // App change updates budget
   document.getElementById('selApp').addEventListener('change', updateBudgetInput);
@@ -1468,17 +1470,20 @@ function initEventListeners() {
   const allFilterIds = [
     'selCompetition', 'selApp', 'selPenalties', 'selSort', 'selWorthProb',
     'selJornada', 'selNumJornadas', 'selIgnoreForm', 'selIgnoreFixtures',
-    'budgetInput', 'budgetFixtureFilter', 'budgetMinProb', 'budgetPremium',
-    'my11FixtureFilter', 'my11MinProb', 'my11Premium',
-    'playersFixtureFilter', 'playersMinProb', 'priceRangeMin', 'priceRangeMax',
+    'budgetInput', 'budgetMinProb', 'budgetPremium',
+    'my11MinProb', 'my11Premium',
+    'playersMinProb', 'priceRangeMin', 'priceRangeMax',
     'filterGK', 'filterDEF', 'filterMID', 'filterATT',
-    'marketFixtureFilter', 'marketMinProb',
+    'marketMinProb',
   ];
   for (const id of allFilterIds) {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', persistState);
     if (el && (el.type === 'range' || el.type === 'number')) el.addEventListener('input', persistState);
   }
+  // Radio-based fixture filters persist
+  document.querySelectorAll('input[name="budgetFixtureFilter"], input[name="my11FixtureFilter"], input[name="playersFixtureFilter"], input[name="marketFixtureFilter"]')
+    .forEach(r => r.addEventListener('change', persistState));
 }
 
 // ─── Cookie Consent / Privacy ───────────────────────────────────────────────

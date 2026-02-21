@@ -2,8 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Calculadora Fantasy</title>
-  <meta name="description" content="Calculadora Fantasy - Optimiza tu equipo de LaLiga Fantasy y Biwenger con IA">
+  <title>Calculadora Fantasy - Optimiza tu equipo de LaLiga Fantasy y Biwenger</title>
+  <meta name="description" content="Calcula tu mejor 11 ideal, analiza jugadores y optimiza tu presupuesto. Soporte para LaLiga Fantasy y Biwenger.">
+  <link rel="canonical" href="https://www.calculadorafantasy.com/app/">
+  <link rel="alternate" hreflang="es" href="https://www.calculadorafantasy.com/app/?lang=es">
+  <link rel="alternate" hreflang="en" href="https://www.calculadorafantasy.com/app/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://www.calculadorafantasy.com/app/">
   <meta name="theme-color" content="#0e1117">
   <meta name="msapplication-navbutton-color" content="#0e1117">
   <meta name="mobile-web-app-capable" content="yes">
@@ -191,14 +195,18 @@
       <details class="expander" open>
         <summary data-i18n="sb.extra_filters">Filtros adicionales</summary>
         <div class="expander-content">
-          <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
-          <select id="budgetFixtureFilter" class="sidebar-select">
-            <option value="no" data-i18n-opt="opt.no">No</option>
-            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
-          </select>
-          <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
-          <input type="range" id="budgetMinProb" min="0" max="100" value="65" class="range-input">
-          <span id="budgetMinProbVal">65%</span>
+          <div class="filter-group">
+            <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="budgetFixtureFilter" value="no" checked> <span data-i18n-opt="opt.no">No</span></label>
+              <label class="radio-label"><input type="radio" name="budgetFixtureFilter" value="yes"> <span data-i18n-opt="opt.yes">S&iacute;</span></label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
+            <input type="range" id="budgetMinProb" min="0" max="100" value="65" class="range-input">
+            <span id="budgetMinProbVal">65%</span>
+          </div>
         </div>
       </details>
 
@@ -238,14 +246,18 @@
       <details class="expander" open>
         <summary data-i18n="filters.complete_more">Filtros adicionales</summary>
         <div class="expander-content">
-          <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
-          <select id="my11FixtureFilter" class="sidebar-select">
-            <option value="no" data-i18n-opt="opt.no">No</option>
-            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
-          </select>
-          <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
-          <input type="range" id="my11MinProb" min="0" max="100" value="65" class="range-input">
-          <span id="my11MinProbVal">65%</span>
+          <div class="filter-group">
+            <label data-i18n="sb.exclude_hard_fixtures">Excluir partidos dif&iacute;ciles</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="my11FixtureFilter" value="no" checked> <span data-i18n-opt="opt.no">No</span></label>
+              <label class="radio-label"><input type="radio" name="my11FixtureFilter" value="yes"> <span data-i18n-opt="opt.yes">S&iacute;</span></label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label data-i18n="sb.start_prob_range">Probabilidad de ser titular (%)</label>
+            <input type="range" id="my11MinProb" min="0" max="100" value="65" class="range-input">
+            <span id="my11MinProbVal">65%</span>
+          </div>
         </div>
       </details>
 
@@ -269,40 +281,50 @@
       <details class="expander">
         <summary data-i18n="filters.more">Filtros adicionales</summary>
         <div class="expander-content">
-          <label data-i18n="filters.fixture">Filtrar por dificultad</label>
-          <select id="playersFixtureFilter" class="sidebar-select">
-            <option value="no" data-i18n-opt="opt.no">No</option>
-            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
-          </select>
-
-          <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
-          <input type="range" id="playersMinProb" min="0" max="100" value="0" class="range-input">
-          <span id="playersMinProbVal">0%</span>
-
-          <label data-i18n="filters.price">Precio (M)</label>
-          <div class="dual-range-container">
-            <div class="dual-range-track"></div>
-            <div id="priceRangeFill" class="dual-range-fill"></div>
-            <input type="range" id="priceRangeMin" min="0" max="500" value="0" step="1">
-            <input type="range" id="priceRangeMax" min="0" max="500" value="500" step="1">
-          </div>
-          <div class="dual-range-values">
-            <span id="priceMinLabel">0M</span>
-            <span id="priceMaxLabel">500M</span>
+          <div class="filter-group">
+            <label data-i18n="filters.fixture">Filtrar por dificultad</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="playersFixtureFilter" value="no" checked> <span data-i18n-opt="opt.no">No</span></label>
+              <label class="radio-label"><input type="radio" name="playersFixtureFilter" value="yes"> <span data-i18n-opt="opt.yes">S&iacute;</span></label>
+            </div>
           </div>
 
-          <label data-i18n="filters.position">Filtrar por posici&oacute;n</label>
-          <div class="position-filters">
-            <label class="checkbox-label"><input type="checkbox" id="filterGK" checked> <span data-i18n="pos.gk">Portero</span></label>
-            <label class="checkbox-label"><input type="checkbox" id="filterDEF" checked> <span data-i18n="pos.def">Defensa</span></label>
-            <label class="checkbox-label"><input type="checkbox" id="filterMID" checked> <span data-i18n="pos.mid">Mediocentro</span></label>
-            <label class="checkbox-label"><input type="checkbox" id="filterATT" checked> <span data-i18n="pos.att">Delantero</span></label>
+          <div class="filter-group">
+            <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
+            <input type="range" id="playersMinProb" min="0" max="100" value="0" class="range-input">
+            <span id="playersMinProbVal">0%</span>
           </div>
 
-          <label data-i18n="filters.teams">Filtrar por equipos</label>
-          <input type="text" id="filterTeamsSearch" class="search-input" placeholder="Buscar equipo..." list="filterTeamsDatalist" autocomplete="off" style="margin-bottom:6px">
-          <datalist id="filterTeamsDatalist"></datalist>
-          <div id="filterTeamsChips" class="player-chips"></div>
+          <div class="filter-group">
+            <label data-i18n="filters.price">Precio (M)</label>
+            <div class="dual-range-container">
+              <div class="dual-range-track"></div>
+              <div id="priceRangeFill" class="dual-range-fill"></div>
+              <input type="range" id="priceRangeMin" min="0" max="500" value="0" step="1">
+              <input type="range" id="priceRangeMax" min="0" max="500" value="500" step="1">
+            </div>
+            <div class="dual-range-values">
+              <span id="priceMinLabel">0M</span>
+              <span id="priceMaxLabel">500M</span>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label data-i18n="filters.position">Filtrar por posici&oacute;n</label>
+            <div class="position-filters">
+              <label class="checkbox-label"><input type="checkbox" id="filterGK" checked> <span data-i18n="pos.gk">Portero</span></label>
+              <label class="checkbox-label"><input type="checkbox" id="filterDEF" checked> <span data-i18n="pos.def">Defensa</span></label>
+              <label class="checkbox-label"><input type="checkbox" id="filterMID" checked> <span data-i18n="pos.mid">Mediocentro</span></label>
+              <label class="checkbox-label"><input type="checkbox" id="filterATT" checked> <span data-i18n="pos.att">Delantero</span></label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label data-i18n="filters.teams">Filtrar por equipos</label>
+            <input type="text" id="filterTeamsSearch" class="search-input" placeholder="Buscar equipo..." list="filterTeamsDatalist" autocomplete="off" style="margin-bottom:6px">
+            <datalist id="filterTeamsDatalist"></datalist>
+            <div id="filterTeamsChips" class="player-chips"></div>
+          </div>
         </div>
       </details>
 
@@ -326,14 +348,18 @@
       <details class="expander">
         <summary data-i18n="filters.complete_more">Filtros adicionales</summary>
         <div class="expander-content">
-          <label data-i18n="filters.fixture">Filtrar por dificultad</label>
-          <select id="marketFixtureFilter" class="sidebar-select">
-            <option value="no" data-i18n-opt="opt.no">No</option>
-            <option value="yes" data-i18n-opt="opt.yes">S&iacute;</option>
-          </select>
-          <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
-          <input type="range" id="marketMinProb" min="0" max="100" value="0" class="range-input">
-          <span id="marketMinProbVal">0%</span>
+          <div class="filter-group">
+            <label data-i18n="filters.fixture">Filtrar por dificultad</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="marketFixtureFilter" value="no" checked> <span data-i18n-opt="opt.no">No</span></label>
+              <label class="radio-label"><input type="radio" name="marketFixtureFilter" value="yes"> <span data-i18n-opt="opt.yes">S&iacute;</span></label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label data-i18n="sb.start_prob_range">Probabilidad titular (%)</label>
+            <input type="range" id="marketMinProb" min="0" max="100" value="0" class="range-input">
+            <span id="marketMinProbVal">0%</span>
+          </div>
         </div>
       </details>
 

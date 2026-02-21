@@ -255,6 +255,15 @@ html, body {
 }
 .checkbox-label input { accent-color: var(--accent); }
 
+.radio-group {
+  display: flex; gap: 16px;
+}
+.radio-label {
+  display: flex; align-items: center; gap: 5px;
+  font-size: .88rem; cursor: pointer;
+}
+.radio-label input { accent-color: var(--accent); }
+
 .position-filters { display: flex; flex-wrap: wrap; gap: 8px 16px; }
 
 /* ── Expander / Details ──────────────────────────────────────────────────── */
@@ -273,6 +282,8 @@ html, body {
 }
 .expander[open] summary::before { content: '▾ '; }
 .expander-content { padding: 12px 14px; }
+.filter-group + .filter-group { margin-top: 18px; }
+.filter-group label { display: block; margin-bottom: 4px; font-size: .88rem; }
 
 /* ── Blind / Ban side-by-side layout ──────────────────────────────────────── */
 .blind-ban-row {
