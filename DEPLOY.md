@@ -251,31 +251,95 @@ Recomendación: mantener el frontend en IONOS (ya lo tienes) y el API en Render 
 
 ---
 
-## 5. Base de datos MySQL (opcional)
+## 5. Base de datos MySQL
 
-### Opción A: Aiven (recomendado, gratis)
+### IONOS (solo accesible internamente — backup/futuro)
+
+> La BD incluida en el hosting compartido de IONOS (`db5019852496.hosting-data.io`) **solo es
+> accesible desde dentro de la red de IONOS** (scripts PHP que corran en su propio hosting).
+> El hostname es un DNS interno que no resuelve desde fuera. No puedes conectarte
+> desde tu PC (DBeaver), desde Render, ni desde Docker en otro servidor.
+>
+> **¿Para qué sirve entonces?** Si en el futuro quisieras tener un script PHP en IONOS
+> que sincronice datos con la BD principal (Aiven), o crear una API PHP ligera en IONOS,
+> la BD ya está creada. Gratis con tu plan actual (2 GB, 18 conexiones).
+
+**Archivos PHP** (en la carpeta `php/`):
+
+| Archivo | Descripción |
+|---------|-------------|
+| `php/config.php` | Credenciales reales (**gitignored**, nunca se sube al repo) |
+| `php/config.example.php` | Plantilla sin contraseña (se sube al repo) |
+| `php/test_connection.php` | Script de prueba con PDO |
+
+**Para probar la conexión desde IONOS:**
+1. Sube `php/config.php` y `php/test_connection.php` a tu hosting IONOS (por FTP/panel)
+2. Abre `https://www.calculadorafantasy.com/php/test_connection.php` en el navegador
+3. Si todo va bien, verás "Conexion OK" con la versión de MySQL
+4. **Borra `test_connection.php` del hosting** cuando termines de probar (no dejarlo público)
+
+> **Seguridad**: `config.php` contiene la contraseña pero nunca se expone al navegador
+> porque PHP se ejecuta en el servidor. Aun así, `php/config.php` está en `.gitignore`
+> para que nunca se suba al repositorio. Solo se sube `config.example.php` como plantilla.
+
+### Opción A: Aiven (recomendado, gratis, accesible desde cualquier sitio)
 
 1. Crea cuenta en [aiven.io](https://aiven.io)
-2. Crea un servicio MySQL (plan Free: 1 GB)
-3. Ejecuta `db_schema.sql` para crear las tablas:
+2. Crea un servicio **MySQL** (plan Free: 1 GB)
+3. En el dashboard de Aiven, copia los datos de conexión:
+   - Host (ej. `mysql-352f577a-calculadorafantasy.g.aivencloud.com`)
+   - Puerto (ej. `25310`)
+   - Usuario (ej. `avnadmin`)
+   - Contraseña
+   - Nombre de la BD (ej. `defaultdb`)
+4. **Probar conexión desde DBeaver** (o terminal):
    ```bash
-   mysql -h TU-HOST -P TU-PUERTO -u TU-USUARIO -p --ssl-mode=REQUIRED < db_schema.sql
+   mysql -h mysql-xxxx.aivencloud.com -P 12345 -u avnadmin -p --ssl-mode=REQUIRED
    ```
-4. Añade las credenciales como variables de entorno en Render/Railway:
+5. **Crear las tablas**:
+   ```bash
+   mysql -h mysql-xxxx.aivencloud.com -P 12345 -u avnadmin -p --ssl-mode=REQUIRED defaultdb < db_schema.sql
    ```
-   DB_HOST=mysql-xxx.aivencloud.com
-   DB_PORT=12345
+   O importa `db_schema.sql` desde DBeaver.
+6. **Añadir las credenciales al backend** (Render, Railway, o `docker.env`):
+   ```
+   DB_HOST=mysql-352f577a-calculadorafantasy.g.aivencloud.com
+   DB_PORT=25310
    DB_USER=avnadmin
    DB_PASSWORD=tu_password
-   DB_NAME=calculadora_fantasy
+   DB_NAME=defaultdb
    DB_SSL=true
+   DB_SSL_CA=ca.pem
    ```
+
+   **Certificado SSL (`ca.pem`)**:
+   - Descárgalo desde el dashboard de Aiven (pestaña Overview → CA Certificate).
+   - Está en la raíz del proyecto, **gitignored** (no se sube al repo).
+   - **Local**: `DB_SSL_CA=ca.pem` funciona si lanzas uvicorn desde la raíz del proyecto.
+   - **Render**: No permite subir archivos extra. Opciones:
+     1. **(Recomendado)** Quita `ca.pem` del `.gitignore` y commitéalo — es un certificado
+        público de la CA de Aiven, no es secreto. Pon `DB_SSL_CA=ca.pem`.
+     2. Codifica en base64 (`DB_SSL_CA_BASE64`) y decodifica al arrancar.
+   - **Docker**: Monta el archivo en el contenedor:
+     ```bash
+     docker run -d ... -v /ruta/local/ca.pem:/app/ca.pem calculadora-fantasy-api
+     ```
+     Y pon `DB_SSL_CA=/app/ca.pem` en `docker.env`.
+
+> **Ventajas**: Gratis, accesible desde cualquier IP (tu PC, Render, Docker),
+> panel web con métricas, backups automáticos. 1 GB de almacenamiento.
+
+> **¿Y las credenciales de IONOS?** NO las pongas en Render/Docker — el backend no
+> puede conectar a la BD de IONOS (DNS interno). IONOS solo se accede desde sus
+> propios scripts PHP (ver sección anterior con `php/config.php`).
+> Las variables `DB_*` del backend son **solo para Aiven**.
 
 ### Opción B: Oracle Cloud Free Tier
 
 1. Crea cuenta en [Oracle Cloud](https://cloud.oracle.com/free)
 2. Crea una instancia MySQL Always Free
-3. Mismo proceso de configuración
+3. Mismo proceso de configuración (host, puerto, usuario, contraseña)
+4. Habilitar acceso desde IPs externas en las security lists del VCN
 
 ---
 
@@ -324,6 +388,6 @@ python export_players_json.py --all
 - [ ] Variable `FRONTEND_URL=https://www.calculadorafantasy.com` en Render (o en `docker.env` si usas Docker)
 - [ ] Probar `curl https://TU-URL-API/api/health` → `{"status":"ok"}`
 - [ ] Probar en el navegador: cargar jugadores y calcular 11s
-- [ ] Cookie consent y política de privacidad visibles
-- [ ] (Opcional) Google Analytics: sustituir `G-XXXXXXXXXX` en `app.js` por `G-QXF4YKPSMD` si usas GA
-- [ ] (Opcional) MySQL y variables de BD si quieres guardar estadísticas
+- [ ] Cookie consent y política de privacidad visibles (tanto en `index.html` como en `app/index.html`)
+- [ ] Google Analytics: se carga automáticamente tras aceptar cookies (ID `G-QXF4YKPSMD`)
+- [ ] MySQL configurado (IONOS / Aiven / Oracle) y variables `DB_*` en Render/Docker

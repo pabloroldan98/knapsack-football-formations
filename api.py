@@ -18,13 +18,21 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from fastapi import Request
+
 from main import get_current_players_wrapper
 from group_knapsack import best_full_teams
 from player import purge_everything
 from useful_functions import read_dict_data, percentile_ranks_dict, percentile_rank
 from biwenger import get_next_jornada
+import db as database
 
 app = FastAPI(title="Calculadora Fantasy API", version="1.0.0")
+
+
+@app.on_event("startup")
+def _startup():
+    database.init()
 
 # CORS: FRONTEND_URL desde variable de entorno (Render, Docker, etc.)
 _cors_origins = [
@@ -120,6 +128,8 @@ class CalculateRequest(BaseModel):
     # "My Best 11" mode: only these players are considered, budget = -1
     selected_player_names: Optional[List[str]] = None
 
+    session_id: str = ""
+
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 def _load_players(competition, is_biwenger, no_form, no_fixtures, nerf_penalty,
@@ -193,7 +203,40 @@ def _load_players(competition, is_biwenger, no_form, no_fixtures, nerf_penalty,
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "db": database.DB_ENABLED}
+
+
+class VisitRequest(BaseModel):
+    session_id: str
+    page: str = "app"
+    lang: str = "es"
+    referrer: str = ""
+    screen_w: Optional[int] = None
+    screen_h: Optional[int] = None
+
+
+@app.post("/api/visit")
+def track_visit(req: VisitRequest, request: Request):
+    ip = request.client.host if request.client else ""
+    ip_hash = hashlib.sha256(ip.encode()).hexdigest()[:16] if ip else ""
+    ua = request.headers.get("user-agent", "")
+    database.log_visit(req.session_id, req.page, req.lang, ua, ip_hash,
+                       req.referrer, req.screen_w, req.screen_h)
+    return {"ok": True}
+
+
+class PlayerActionRequest(BaseModel):
+    session_id: str = ""
+    player_name: str
+    competition: str = "laliga"
+    action_type: str  # 'blinded', 'banned', 'my11', 'market'
+
+
+@app.post("/api/player-action")
+def track_player_action(req: PlayerActionRequest):
+    database.log_player_action(req.session_id, req.player_name,
+                               req.competition, req.action_type)
+    return {"ok": True}
 
 
 @app.get("/api/competitions")
@@ -227,6 +270,7 @@ def get_players(
     ignore_penalties: bool = False,
     jornada_key: str = "",
     num_jornadas: int = 1,
+    session_id: str = "",
 ):
     is_biwenger = (app == "biwenger")
     is_tournament = competition in [
@@ -247,6 +291,11 @@ def get_players(
 
     teams = sorted({p.team for p in players})
 
+    database.log_player_load(
+        session_id, competition, app, jornada_key, num_jornadas,
+        ignore_form, ignore_fixtures, ignore_penalties, len(players),
+    )
+
     return {
         "players": [player_to_dict(p, divide_millions) for p in players],
         "teams": teams,
@@ -258,6 +307,7 @@ def get_players(
 
 @app.post("/api/calculate")
 def calculate(req: CalculateRequest):
+    t_start = time.time()
     is_biwenger = (req.app == "biwenger")
     is_tournament = req.competition in [
         "mundialito", "champions", "europaleague", "conference",
@@ -356,6 +406,18 @@ def calculate(req: CalculateRequest):
             "missing_blinded": missing,
         })
 
+    calc_type = "my11" if req.selected_player_names is not None else "budget"
+    duration_ms = int((time.time() - t_start) * 1000)
+    calc_id = database.log_calculation(
+        req.session_id, calc_type, req.competition, req.app, req.budget,
+        req.formations, len(formations_out), len(needed),
+        len(req.blinded_names), len(req.banned_names),
+        req.min_prob, req.speed_up, duration_ms,
+    )
+    for rank, fr in enumerate(formations_out, 1):
+        database.log_result_formation(calc_id, fr["formation"], fr["score"],
+                                      fr["total_price"], rank, fr["players"])
+
     return {"formations": formations_out}
 
 
@@ -364,6 +426,7 @@ def calculate(req: CalculateRequest):
 @app.post("/api/calculate-stream")
 async def calculate_stream(req: CalculateRequest):
     """Same as /api/calculate but streams progress via Server-Sent Events."""
+    t_start = time.time()
     is_biwenger = (req.app == "biwenger")
     is_tournament = req.competition in [
         "mundialito", "champions", "europaleague", "conference",
@@ -527,6 +590,18 @@ async def calculate_stream(req: CalculateRequest):
                         "players": [player_to_dict(pl, divide_millions) for pl in actual],
                         "missing_blinded": missing,
                     })
+                calc_type = "my11" if req.selected_player_names is not None else "budget"
+                duration_ms = int((time.time() - t_start) * 1000)
+                calc_id = database.log_calculation(
+                    req.session_id, calc_type, req.competition, req.app, req.budget,
+                    req.formations, len(formations_out), len(needed),
+                    len(req.blinded_names), len(req.banned_names),
+                    req.min_prob, req.speed_up, duration_ms,
+                )
+                for rank, fr in enumerate(formations_out, 1):
+                    database.log_result_formation(calc_id, fr["formation"], fr["score"],
+                                                  fr["total_price"], rank, fr["players"])
+
                 yield f"data: {json.dumps({'type': 'progress', 'percent': 100})}\n\n"
                 yield f"data: {json.dumps({'type': 'result', 'data': {'formations': formations_out}})}\n\n"
                 break

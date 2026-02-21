@@ -172,6 +172,13 @@ const I18N = {
   }
 };
 
+// ─── Session ID (persists per browser tab) ──────────────────────────────────
+const SESSION_ID = sessionStorage.getItem('sid') || (() => {
+  const id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36);
+  sessionStorage.setItem('sid', id);
+  return id;
+})();
+
 // ─── State ──────────────────────────────────────────────────────────────────
 let LANG = 'es';
 let allPlayers = [];        // Full player list from API
@@ -637,6 +644,7 @@ async function loadPlayers() {
       competition: comp, app, ignore_form: ignoreForm,
       ignore_fixtures: ignoreFixtures, ignore_penalties: ignorePenalties,
       jornada_key: jornadaKey, num_jornadas: numJornadas,
+      session_id: SESSION_ID,
     });
 
     allPlayers = data.players;
@@ -880,6 +888,7 @@ async function calculateBudget() {
       budget, blinded_names: [...blindedNames], banned_names: [...bannedNames],
       formations, min_prob: minProb, max_prob: 1.0,
       use_fixture_filter: fixtureFilter, speed_up: true,
+      session_id: SESSION_ID,
     });
 
     const container = document.getElementById('budgetResults');
@@ -969,6 +978,7 @@ async function calculateMy11() {
       budget: -1, blinded_names: [...my11Locked], banned_names: [],
       formations, min_prob: minProb, max_prob: 1.0,
       use_fixture_filter: fixtureFilter, speed_up: true,
+      session_id: SESSION_ID,
       selected_player_names: [...my11Names],
     });
 
@@ -1307,4 +1317,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial worth prob visibility
   document.getElementById('worthProbContainer').style.display = 'none';
+
+  // Track page visit
+  apiPost('/api/visit', {
+    session_id: SESSION_ID,
+    page: 'app',
+    lang: LANG,
+    referrer: document.referrer || '',
+    screen_w: window.screen?.width,
+    screen_h: window.screen?.height,
+  }).catch(() => {});
 });
