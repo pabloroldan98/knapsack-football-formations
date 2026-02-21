@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Calculadora Fantasy</title>
+  <title>Calculadora Fantasy - Optimiza tu equipo de LaLiga Fantasy y Biwenger</title>
+  <meta name="description" content="Calcula la mejor alineación posible según tu presupuesto. Soporte para LaLiga Fantasy y Biwenger. Estadísticas, precios y puntuaciones esperadas de todos los jugadores.">
   <meta name="theme-color" content="#0e1117">
   <meta name="msapplication-navbutton-color" content="#0e1117">
   <meta name="mobile-web-app-capable" content="yes">
@@ -352,7 +353,9 @@
 
       <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
         <div class="slide-content" id="slideContent">
-          <!-- Contenido inicial se carga con JS -->
+          <h2>💰 Mejores 11s con presupuesto</h2>
+          <p>Calcula la mejor alineación posible según tu presupuesto disponible.</p>
+          <img src="img/presupuesto.png" alt="Mejores 11s con presupuesto">
         </div>
         <!-- se rellena con JS -->
         <div class="slider-controls">
@@ -478,8 +481,7 @@
       return (q === "en" || q === "es") ? q : null;
     }
     function guessBrowserLang(){
-      const n = navigator.language || navigator.userLanguage || "es";
-      return n.toLowerCase().startsWith("en") ? "en" : "es";
+      return "es";
     }
     function saveLang(lang){
       try { localStorage.setItem("lang", lang); } catch(_) {}

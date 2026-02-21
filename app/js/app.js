@@ -11,7 +11,7 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 // ─── i18n ───────────────────────────────────────────────────────────────────
 const I18N = {
   es: {
-    "app.title": "Calculadora Fantasy 🤖",
+    "app.title": "Calculadora Fantasy",
     "sb.options": "Opciones", "sb.lang": "Idioma",
     "sb.competition": "Competición", "sb.app": "Aplicación",
     "sb.penalties": "¿Te importan los penaltis?",
@@ -102,7 +102,7 @@ const I18N = {
     "squad.players_count": "jugadores",
   },
   en: {
-    "app.title": "Fantasy Calculator 🤖",
+    "app.title": "Fantasy Calculator",
     "sb.options": "Options", "sb.lang": "Language",
     "sb.competition": "Competition", "sb.app": "App",
     "sb.penalties": "Do penalties matter?",
