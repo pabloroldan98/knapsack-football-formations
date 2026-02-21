@@ -408,17 +408,27 @@ def calculate(req: CalculateRequest):
 
     calc_type = "my11" if req.selected_player_names is not None else "budget"
     duration_ms = int((time.time() - t_start) * 1000)
-    calc_id = database.log_calculation(
-        req.session_id, calc_type, req.competition, req.app, req.budget,
-        req.formations, len(formations_out), len(needed),
-        len(req.blinded_names), len(req.banned_names),
-        req.min_prob, req.speed_up, duration_ms,
-    )
-    for rank, fr in enumerate(formations_out, 1):
-        database.log_result_formation(calc_id, fr["formation"], fr["score"],
-                                      fr["total_price"], rank, fr["players"])
+    _log_calc_bg(req, calc_type, formations_out, needed, duration_ms)
 
     return {"formations": formations_out}
+
+
+def _log_calc_bg(req, calc_type, formations_out, needed, duration_ms):
+    """Log calculation + results to DB on a background thread (fire-and-forget)."""
+    def _do():
+        try:
+            calc_id = database.log_calculation(
+                req.session_id, calc_type, req.competition, req.app, req.budget,
+                req.formations, len(formations_out), len(needed),
+                len(req.blinded_names), len(req.banned_names),
+                req.min_prob, req.max_prob, req.speed_up, duration_ms,
+            )
+            for rank, fr in enumerate(formations_out, 1):
+                database.log_result_formation(calc_id, fr["formation"], fr["score"],
+                                              fr["total_price"], rank, fr["players"])
+        except Exception:
+            pass
+    threading.Thread(target=_do, daemon=True).start()
 
 
 # ─── SSE endpoint: real-time knapsack progress ───────────────────────────────
@@ -590,20 +600,12 @@ async def calculate_stream(req: CalculateRequest):
                         "players": [player_to_dict(pl, divide_millions) for pl in actual],
                         "missing_blinded": missing,
                     })
-                calc_type = "my11" if req.selected_player_names is not None else "budget"
-                duration_ms = int((time.time() - t_start) * 1000)
-                calc_id = database.log_calculation(
-                    req.session_id, calc_type, req.competition, req.app, req.budget,
-                    req.formations, len(formations_out), len(needed),
-                    len(req.blinded_names), len(req.banned_names),
-                    req.min_prob, req.speed_up, duration_ms,
-                )
-                for rank, fr in enumerate(formations_out, 1):
-                    database.log_result_formation(calc_id, fr["formation"], fr["score"],
-                                                  fr["total_price"], rank, fr["players"])
-
                 yield f"data: {json.dumps({'type': 'progress', 'percent': 100})}\n\n"
                 yield f"data: {json.dumps({'type': 'result', 'data': {'formations': formations_out}})}\n\n"
+
+                calc_type = "my11" if req.selected_player_names is not None else "budget"
+                duration_ms = int((time.time() - t_start) * 1000)
+                _log_calc_bg(req, calc_type, formations_out, needed, duration_ms)
                 break
 
         thread.join(timeout=1)

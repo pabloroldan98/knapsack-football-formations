@@ -162,7 +162,8 @@ def log_calculation(session_id: str, calc_type: str, competition: str,
                     app_source: str, budget: int, formations_in: list,
                     formations_out: int, num_players: int,
                     blinded_count: int, banned_count: int,
-                    min_prob: float, speed_up: bool, duration_ms: int) -> int | None:
+                    min_prob: float, max_prob: float,
+                    speed_up: bool, duration_ms: int) -> int | None:
     """Log a calculation and return the inserted row id (or None on failure)."""
     if not DB_ENABLED:
         return None
@@ -172,11 +173,11 @@ def log_calculation(session_id: str, calc_type: str, competition: str,
                 cur.execute(
                     "INSERT INTO calculations (session_id, calc_type, competition, app_source, "
                     "budget, formations_in, formations_out, num_players, blinded_count, banned_count, "
-                    "min_prob, speed_up, duration_ms) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    "min_prob, max_prob, speed_up, duration_ms) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (session_id, calc_type, competition, app_source, budget,
                      json.dumps(formations_in), formations_out, num_players,
-                     blinded_count, banned_count, min_prob, speed_up, duration_ms),
+                     blinded_count, banned_count, min_prob, max_prob, speed_up, duration_ms),
                 )
                 return cur.lastrowid
     except Exception as e:
@@ -200,10 +201,10 @@ def log_result_formation(calculation_id: int, formation: list, score: float,
                 rf_id = cur.lastrowid
                 for p in players:
                     cur.execute(
-                        "INSERT INTO result_players (result_formation_id, player_name, position, price, value) "
-                        "VALUES (%s, %s, %s, %s, %s)",
+                        "INSERT INTO result_players (result_formation_id, player_name, position, price, value, start_probability) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)",
                         (rf_id, p.get("name", ""), p.get("position", ""),
-                         p.get("price", 0), p.get("value", 0)),
+                         p.get("price", 0), p.get("value", 0), p.get("start_probability", 0)),
                     )
     except Exception as e:
         logger.error("log_result_formation failed: %s", e)

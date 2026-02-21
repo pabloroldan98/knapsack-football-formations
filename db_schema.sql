@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS calculations (
   blinded_count   TINYINT       DEFAULT 0,
   banned_count    TINYINT       DEFAULT 0,
   min_prob        FLOAT,
+  max_prob        FLOAT,
   speed_up        BOOLEAN       DEFAULT TRUE,
   duration_ms     INT,
   created_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -95,6 +96,7 @@ CREATE TABLE IF NOT EXISTS result_players (
   position            VARCHAR(5)    NOT NULL,
   price               FLOAT,
   value               FLOAT,
+  start_probability   FLOAT,
   created_at          TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_formation (result_formation_id),
   INDEX idx_player (player_name)
