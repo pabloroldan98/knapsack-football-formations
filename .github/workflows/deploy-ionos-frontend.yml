@@ -5,9 +5,12 @@ on:
     branches: [master]
     paths:
       - "index.html"
+      - "privacy.html"
+      - "terms.html"
       - "ads.txt"
       - "img/**"
       - "app/**"
+      - "google*.html"
       - ".github/workflows/deploy-ionos-frontend.yml"
 
 jobs:
@@ -32,11 +35,14 @@ jobs:
           set sftp:auto-confirm yes
           cd /public
 
-          # Landing page
+          # Landing + legal pages
           put -O . index.html
+          put -O . privacy.html
+          put -O . terms.html
 
-          # AdSense
+          # Google verification & AdSense
           put -O . ads.txt
+          glob -a put -O . google*.html
 
           # Imágenes
           mirror -R --delete ./img ./img

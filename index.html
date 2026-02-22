@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora Fantasy</title>
-  <meta name="description" content="Optimiza tu equipo de LaLiga Fantasy y Biwenger. Calcula la mejor alineación posible según tu presupuesto. Soporte para LaLiga Fantasy y Biwenger. Estadísticas, precios y puntuaciones esperadas de todos los jugadores.">
+  <meta name="description" content="Optimiza tu equipo de LaLiga Fantasy y Biwenger. Calcula la mejor alineación posible según tu presupuesto. Estadísticas, precios y puntuaciones esperadas de todos los jugadores.">
   <link rel="canonical" href="https://www.calculadorafantasy.com/">
   <link rel="alternate" hreflang="es" href="https://www.calculadorafantasy.com/?lang=es">
   <link rel="alternate" hreflang="en" href="https://www.calculadorafantasy.com/?lang=en">
@@ -33,448 +33,470 @@
   <!-- Google AdSense (respects Consent Mode state) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      width: 100%;
-      height: 100%;
-      background: rgb(14, 17, 23);
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      overflow-x: hidden;
-      overflow-y: auto;
+      width: 100%; background: #0e1117;
+      font-family: 'Segoe UI', sans-serif; color: #fff;
+      overflow-x: hidden; overflow-y: auto;
+      scroll-behavior: smooth;
     }
+    @media (min-width: 1024px) { html, body { zoom: 1.3; } }
+    a { color: #ff4c4c; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* Only zoom for desktop screens */
-    @media (min-width: 1024px) {
-      html, body {
-        zoom: 1.3;
-      }
+    /* ── Navbar ─────────────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(14,17,23,.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex; flex-direction: column; align-items: stretch;
+      padding: 0;
     }
-
-    .wrapper {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .navbar-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 32px;
     }
-
-    /* LANDING */
-    .landing {
-      position: relative;
-      min-height: 10svh;
-      width: 100%;
-      height: 100%;
-      background: rgb(14, 17, 23);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      z-index: 3;
-      transition: opacity 0.4s ease;
-      padding: 6rem 1rem 4rem;
-      text-align: center;
-    }
-
-    .landing.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .lang {
-      position: absolute;
-      top: 2rem;
-      left: 3rem;
-    }
-
+    .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; white-space: nowrap; }
+    .navbar-brand img { height: 28px; }
+    .navbar-lang { display: flex; gap: 6px; }
     .lang-btn {
-      position: static;
-      padding: 2px 4px;
-      font-size: 0.7rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; font-size: .72rem; border-radius: 20px; cursor: pointer;
+      transition: all .25s; border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
+    }
+    .lang-btn:hover { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.25); }
+    .lang-btn.active { background: rgba(255,76,76,.15); border-color: rgba(255,76,76,.5); color: #ff6b6b; }
+    .lang-btn img { width: 16px; border-radius: 2px; }
+    .navbar-bottom {
+      display: flex; align-items: center; justify-content: center;
+      gap: 28px; padding: 6px 24px 10px;
+      border-top: 1px solid rgba(255,255,255,.04);
+    }
+    .navbar-bottom a {
+      color: rgba(255,255,255,.6); font-size: .8rem; transition: color .2s;
+      letter-spacing: .02em;
+    }
+    .navbar-bottom a:hover { color: #fff; text-decoration: none; }
+    @media (max-width: 600px) {
+      .navbar-top { padding: 8px 16px; }
+      .navbar-bottom { gap: 16px; padding: 5px 12px 8px; flex-wrap: wrap; justify-content: center; }
+      .navbar-bottom a { font-size: .72rem; }
     }
 
-    .lang-btn:hover {
-      background: rgb(255, 76, 76);
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 7rem 1rem 3rem;
     }
-    .lang-btn.active {
-      border: 1.5px solid rgb(200, 50, 50);
-    }
-
-    .logo {
-      position: absolute;
-      top: 2rem;
-      right: 3rem;
-    }
-
-    .logo img {
-      height: 50px;
-    }
-
-    h1 {
-      position: static;
-      top: 7rem;
-      font-size: 2rem;
-      margin-bottom: 0;
-    }
-
-    h4 {
-      position: static;
-      top: 10rem;
-      padding: 5px;
-      font-size: 1.05rem;
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 2rem;
-    }
-
+    .hero h1 { font-size: 2.2rem; margin-bottom: .3rem; }
+    .hero h4 { font-size: 1.05rem; font-weight: 400; color: rgba(255,255,255,.7); margin-bottom: 1.5rem; }
     .enter-button {
-      position: static;
-      top: 12rem;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      background: rgb(255, 76, 76);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      padding: 14px 32px; font-size: 1.1rem; background: #ff4c4c; color: #fff;
+      border: none; border-radius: 8px; cursor: pointer; transition: background .3s;
       margin-bottom: 2rem;
-      margin-top: 1rem;
     }
+    .enter-button:hover { background: rgb(200,50,50); }
 
-    .enter-button:hover {
-      background: rgb(200, 50, 50);
-    }
-
-    .slide {
-      position: static;
-      top: 18rem;
-      max-width: 600px;
-      margin-top: 2rem;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .slide h2 {
-      font-size: 1.3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .slide p {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
+    /* Slider */
+    .slide { max-width: 600px; margin-top: 1rem; animation: fadeIn .5s ease; }
+    .slide h2 { font-size: 1.3rem; margin-bottom: .5rem; }
+    .slide p { font-size: 1rem; opacity: .9; }
     .slide img {
-      margin-top: 3rem;
-      max-width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 2rem; max-width: 100%; border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,.4); transition: transform .3s, box-shadow .3s;
     }
-
-    .slide img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 15px rgba(255, 76, 76, 0.8);
-    }
-
+    .slide img:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255,76,76,.8); }
     .slider-controls {
-      position: relative;
-      top: -50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translateY(-50%);
+      position: relative; top: -50%; width: 100%;
+      display: flex; justify-content: space-between; transform: translateY(-50%);
     }
-
     .slider-button {
-      background: rgba(255, 76, 76, 0.7);
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      background: rgba(255,76,76,.7); border: none; color: #fff;
+      font-size: 1.5rem; padding: 6px 12px; border-radius: 5px;
+      cursor: pointer; transition: background .3s;
+    }
+    .slider-button:hover { background: rgba(255,76,76,1); }
+    .slide-content { opacity: 1; transition: opacity .8s ease; }
+    .slide-content.fade-out { opacity: 0; }
+    .slide-content.fade-in { opacity: 1; }
+
+    /* ── Sections (shared) ──────────────────────────────────────────────── */
+    .section {
+      max-width: 900px; margin: 0 auto; padding: 4rem 1.5rem;
+    }
+    .section h2 {
+      font-size: 1.6rem; margin-bottom: 1.5rem; text-align: center;
+    }
+    .section-alt { background: #141820; }
+
+    /* ── How it works ───────────────────────────────────────────────────── */
+    .steps { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .step {
+      flex: 1 1 250px; max-width: 300px;
+      background: #1a1f2e; border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px; padding: 24px; text-align: center;
+    }
+    .step-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border-radius: 50%; background: #ff4c4c;
+      font-weight: 700; font-size: 1.2rem; margin-bottom: 12px;
+    }
+    .step h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .step p { font-size: .9rem; color: rgba(255,255,255,.7); line-height: 1.5; }
+
+    /* ── Features ───────────────────────────────────────────────────────── */
+    .features { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .feature {
+      flex: 1 1 200px; max-width: 260px;
+      text-align: center; padding: 16px;
+    }
+    .feature-icon { font-size: 2rem; margin-bottom: 8px; }
+    .feature h3 { font-size: .95rem; margin-bottom: 6px; }
+    .feature p { font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.4; }
+
+    /* ── FAQ ────────────────────────────────────────────────────────────── */
+    .faq-list { max-width: 700px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid rgba(255,255,255,.08); padding: 16px 0;
+    }
+    .faq-item summary {
+      cursor: pointer; font-size: .95rem; font-weight: 600;
+      list-style: none; display: flex; align-items: center; gap: 8px;
+    }
+    .faq-item summary::before { content: '▸'; transition: transform .2s; }
+    .faq-item[open] summary::before { content: '▾'; }
+    .faq-item p {
+      margin-top: 8px; font-size: .88rem;
+      color: rgba(255,255,255,.7); line-height: 1.5; padding-left: 18px;
     }
 
-    .slider-button:hover {
-      background: rgba(255, 76, 76, 1);
+    /* ── About ──────────────────────────────────────────────────────────── */
+    .about-text { max-width: 700px; margin: 0 auto; text-align: center; }
+    .about-text p { font-size: .92rem; color: rgba(255,255,255,.75); line-height: 1.6; margin-bottom: 12px; }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 2rem 1.5rem; text-align: center;
+      font-size: .85rem; color: rgba(255,255,255,.55);
     }
+    .site-footer a { color: rgba(255,255,255,.7); }
+    .site-footer a:hover { color: #ff4c4c; }
+    .footer-row { margin-bottom: 6px; }
+    .footer-sep { margin: 0 6px; opacity: .4; }
 
-    .slide-content {
-      opacity: 1;
-      transition: opacity 0.8s ease;
+    /* ── Loading overlay ────────────────────────────────────────────────── */
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(14,17,23,.95);
+      display: none; align-items: center; justify-content: center;
+      z-index: 200; color: #fff; font-size: 1.1rem;
     }
-
-    .slide-content.fade-out {
-      opacity: 0;
+    .spinner {
+      width: 32px; height: 32px; border: 3px solid #555; border-top-color: #ff4c4c;
+      border-radius: 50%; animation: spin .9s linear infinite; margin-right: 10px;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .slide-content.fade-in {
-      opacity: 1;
+    /* ── Cookie banner ──────────────────────────────────────────────────── */
+    .cookie-banner {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #1a1f2e; border-top: 1px solid rgba(255,255,255,.1);
+      padding: 14px 24px; z-index: 10000;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap; animation: cookieSlideUp .4s ease;
     }
-
-    footer {
-      position: static;
-      bottom: 2rem;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      padding-bottom: 2rem;
+    .cookie-banner.hidden { display: none; }
+    .cookie-banner-text { flex: 1; font-size: .85rem; color: rgba(255,255,255,.7); }
+    .cookie-banner-text a { color: #ff4c4c; }
+    .cookie-banner-buttons { display: flex; gap: 8px; }
+    .cookie-btn {
+      padding: 6px 16px; border-radius: 6px; border: none; cursor: pointer;
+      font-size: .85rem; color: #fff; transition: background .2s;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* IFRAME */
-    .iframe-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh;
-      background: rgb(14, 17, 23);
-      z-index: 1;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    iframe.loaded {
-      opacity: 1;
-    }
-
-  .loading-overlay {
-    position: fixed; inset: 0;
-    background: rgba(14,17,23,.95);
-    display: none; align-items: center; justify-content: center;
-    z-index: 2; color: #fff; font-size: 1.1rem;
-  }
-  .spinner {
-    width: 32px; height: 32px; border: 3px solid #555; border-top-color: #ff4c4c;
-    border-radius: 50%; animation: spin 0.9s linear infinite; margin-right: 10px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Cookie consent banner */
-  .cookie-banner {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #1a1f2e; border-top: 1px solid rgba(255,255,255,.1);
-    padding: 14px 24px; z-index: 10000;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; flex-wrap: wrap;
-    animation: cookieSlideUp .4s ease;
-  }
-  .cookie-banner.hidden { display: none; }
-  .cookie-banner-text { flex: 1; font-size: .85rem; color: rgba(255,255,255,.7); }
-  .cookie-banner-text a { color: rgb(255,76,76); }
-  .cookie-banner-buttons { display: flex; gap: 8px; }
-  .cookie-btn {
-    padding: 6px 16px; border-radius: 6px; border: none; cursor: pointer;
-    font-size: .85rem; color: #fff; transition: background .2s;
-  }
-  .cookie-btn-accept { background: rgb(255,76,76); }
-  .cookie-btn-accept:hover { background: rgb(200,50,50); }
-  .cookie-btn-reject { background: rgba(255,255,255,.1); }
-  .cookie-btn-reject:hover { background: rgba(255,255,255,.2); }
-  @keyframes cookieSlideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-
-  /* Privacy modal (improved) */
-  .privacy-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.8); z-index: 10001;
-    padding: 2rem; overflow: auto;
-  }
-  .privacy-overlay.visible {
-    display: flex; align-items: center; justify-content: center;
-  }
-  .privacy-box {
-    max-width: 700px; width: 100%;
-    background: #1a1f2e; border: 1px solid rgba(255,255,255,.1);
-    border-radius: 8px; padding: 28px;
-  }
-  .privacy-box h2 { margin-bottom: 12px; }
-  .privacy-box p { margin-bottom: 10px; font-size: .92rem; color: rgba(255,255,255,.85); line-height: 1.5; }
-  .privacy-box a { color: rgb(255,76,76); }
-  .privacy-close-btn {
-    margin-top: 12px; padding: 10px 20px;
-    background: rgb(255,76,76); border: none; border-radius: 6px;
-    color: #fff; cursor: pointer; font-size: .9rem;
-  }
-  .privacy-close-btn:hover { background: rgb(200,50,50); }
-
-  .footer-links { margin-top: 6px; font-size: .85rem; }
-  .footer-links a { color: rgba(255,255,255,.7); text-decoration: underline; }
-  .footer-links a:hover { color: rgb(255,76,76); }
-  .footer-sep { margin: 0 6px; opacity: .4; }
+    .cookie-btn-accept { background: #ff4c4c; }
+    .cookie-btn-accept:hover { background: rgb(200,50,50); }
+    .cookie-btn-reject { background: rgba(255,255,255,.1); }
+    .cookie-btn-reject:hover { background: rgba(255,255,255,.2); }
+    @keyframes cookieSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <!-- LANDING -->
-    <div class="landing" id="landing">
-      <!-- Language -->
-      <div class="lang">
-        <div class="lang-toggle" aria-label="Language">
-          <button class="lang-btn" id="btnES" onclick="setLang('es')">
-            Español <img src="https://flagcdn.com/es.svg" alt="ES" style="width:18px; vertical-align:middle;">
-          </button>
-          <button class="lang-btn" id="btnEN" onclick="setLang('en')">
-            English <img src="https://flagcdn.com/gb.svg" alt="EN" style="width:18px; vertical-align:middle;">
-          </button>
-        </div>
-      </div>
-      <!-- LOGO -->
-      <div class="logo">
-        <img src="logo.png" alt="Logo Calculadora Fantasy">
-      </div>
 
-      <h1 id="t-title">Bienvenido a la Calculadora Fantasy</h1>
-      <h4 id="t-subtitle">Con soporte para: LaLiga Fantasy &amp; Biwenger</h4>
-      <button class="enter-button" id="t-enter" onclick="enterApp()">Empezar a calcular</button>
-
-      <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
-        <div class="slide-content" id="slideContent">
-          <h2>💰 Mejores 11s con presupuesto</h2>
-          <p>Calcula la mejor alineación posible según tu presupuesto disponible.</p>
-          <img src="img/presupuesto.png" alt="Mejores 11s con presupuesto">
-        </div>
-        <!-- se rellena con JS -->
-        <div class="slider-controls">
-          <button class="slider-button" onclick="prevSlide()">&#10094;</button>
-          <button class="slider-button" onclick="nextSlide()">&#10095;</button>
-        </div>
+  <!-- ═══ Navbar ═══ -->
+  <nav class="navbar">
+    <div class="navbar-top">
+      <div class="navbar-brand">
+        <img src="logo.png" alt="Logo"> <span>Calculadora Fantasy</span>
       </div>
-
-      <footer>
-        <p>
-          📩 <span id="t-contact-label">Contacto</span>:
-          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
-        </p>
-        <p class="footer-links">
-          <a href="#" onclick="openPrivacy(); return false" id="t-privacy-link">Política de Privacidad</a>
-          <span class="footer-sep">|</span>
-          <a href="#" onclick="resetCookieConsent(); return false" id="t-cookie-prefs-link">Preferencias de cookies</a>
-        </p>
-      </footer>
-    </div>
-
-    <!-- Cookie Consent Banner -->
-    <div id="cookieBanner" class="cookie-banner">
-      <div class="cookie-banner-text">
-        <span id="t-cookie-text">Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.</span>
-        <a href="#" onclick="openPrivacy(); return false" id="t-cookie-privacy-link">Política de Privacidad</a>
-      </div>
-      <div class="cookie-banner-buttons">
-        <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" id="t-cookie-accept">Aceptar</button>
-        <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()" id="t-cookie-reject">Rechazar</button>
+      <div class="navbar-lang">
+        <button class="lang-btn" id="btnES" onclick="setLang('es')">
+          Español <img src="https://flagcdn.com/es.svg" alt="ES">
+        </button>
+        <button class="lang-btn" id="btnEN" onclick="setLang('en')">
+          English <img src="https://flagcdn.com/gb.svg" alt="EN">
+        </button>
       </div>
     </div>
+    <div class="navbar-bottom">
+      <a href="#hero" id="nav-home">Inicio</a>
+      <a href="#how" id="nav-how">Cómo funciona</a>
+      <a href="#features" id="nav-features">Características</a>
+      <a href="#faq" id="nav-faq">FAQ</a>
+      <a href="#about" id="nav-about">Sobre nosotros</a>
+      <a href="privacy.html" id="nav-privacy">Privacidad</a>
+    </div>
+  </nav>
 
-    <!-- Privacy Policy Modal -->
-    <div id="privacyModal" class="privacy-overlay">
-      <div class="privacy-box">
-        <h2 id="t-privacy-title">Política de Privacidad</h2>
-        <p id="t-privacy-p1">En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales.
-          Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.</p>
-        <p id="t-privacy-p2">Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad.
-          Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.</p>
-        <p id="t-privacy-p3">Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio.
-          Estos datos no están vinculados a información personal identificable.</p>
-        <p id="t-privacy-p4">Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a
-          <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>.</p>
-        <button class="privacy-close-btn" onclick="closePrivacy()" id="t-privacy-close">Cerrar</button>
+  <!-- ═══ Hero ═══ -->
+  <section class="hero" id="hero">
+    <h1 id="t-title">Bienvenido a la Calculadora Fantasy</h1>
+    <h4 id="t-subtitle">Con soporte para: LaLiga Fantasy &amp; Biwenger</h4>
+    <button class="enter-button" id="t-enter" onclick="enterApp()">Empezar a calcular</button>
+
+    <div class="slide" id="slide" onmouseover="pauseSlider()" onmouseout="resumeSlider()">
+      <div class="slide-content" id="slideContent">
+        <h2>💰 Mejores 11s con presupuesto</h2>
+        <p>Calcula la mejor alineación posible según tu presupuesto disponible.</p>
+        <img src="img/presupuesto.png" alt="Mejores 11s con presupuesto">
+      </div>
+      <div class="slider-controls">
+        <button class="slider-button" onclick="prevSlide()">&#10094;</button>
+        <button class="slider-button" onclick="nextSlide()">&#10095;</button>
       </div>
     </div>
+  </section>
 
-    <!-- APP loader -->
-    <div id="loading" class="loading-overlay">
-      <div class="spinner"></div> <span id="t-loading">Cargando jugadores…</span>
+  <!-- ═══ How it works ═══ -->
+  <section class="section section-alt" id="how">
+    <h2 id="t-how-title">¿Cómo funciona?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3 id="t-step1-title">Elige tu competición</h3>
+        <p id="t-step1-desc">Selecciona LaLiga Fantasy o Biwenger y configura los parámetros de tu liga: jornada, presupuesto y preferencias.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3 id="t-step2-title">Carga los jugadores</h3>
+        <p id="t-step2-desc">Nuestro algoritmo recoge automáticamente los datos actualizados de todos los jugadores: puntuación esperada, forma, dificultad de partido y probabilidad de ser titular.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3 id="t-step3-title">Obtén tu mejor once</h3>
+        <p id="t-step3-desc">El optimizador calcula las mejores alineaciones posibles usando un algoritmo de mochila (knapsack). Resultados en segundos, no en horas.</p>
+      </div>
     </div>
-<!--    &lt;!&ndash; APP &ndash;&gt;-->
-<!--    <div class="iframe-container">-->
-<!--      <iframe-->
-<!--        id="appFrame"-->
-<!--        src="https://calculadorafantasy.streamlit.app/~/+/?embed=true"-->
-<!--        allowfullscreen-->
-<!--        onload="this.classList.add('loaded')">-->
-<!--      </iframe>-->
-<!--    </div>-->
+  </section>
+
+  <!-- ═══ Features ═══ -->
+  <section class="section" id="features">
+    <h2 id="t-feat-title">Características</h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">💰</div>
+        <h3 id="t-f1-title">Optimización por presupuesto</h3>
+        <p id="t-f1-desc">Introduce tu presupuesto disponible y obtén las mejores alineaciones posibles, maximizando la puntuación esperada.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚽</div>
+        <h3 id="t-f2-title">Tu mejor once ideal</h3>
+        <p id="t-f2-desc">Añade los jugadores de tu equipo y descubre cuál es tu once ideal para la próxima jornada.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3 id="t-f3-title">Estadísticas completas</h3>
+        <p id="t-f3-desc">Consulta forma, dificultad de partido, probabilidad de titularidad y puntuación esperada de cada jugador.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📈</div>
+        <h3 id="t-f4-title">Análisis de mercado</h3>
+        <p id="t-f4-desc">Compara jugadores del mercado para tomar la mejor decisión de fichaje basándote en datos reales.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3 id="t-f5-title">Blindar y excluir</h3>
+        <p id="t-f5-desc">Fuerza jugadores que quieras en tu once o excluye los que no te interesen del cálculo.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💾</div>
+        <h3 id="t-f6-title">Guarda tus plantillas</h3>
+        <p id="t-f6-desc">Guarda y carga tus plantillas localmente para no tener que volver a introducir tus jugadores cada vez.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="section section-alt" id="faq">
+    <h2 id="t-faq-title">Preguntas frecuentes</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary id="t-faq1-q">¿La herramienta es gratuita?</summary>
+        <p id="t-faq1-a">Sí, Calculadora Fantasy es completamente gratuita. Puedes utilizarla tantas veces como quieras sin ningún coste.</p>
+      </details>
+      <details class="faq-item">
+        <summary id="t-faq2-q">¿Qué competiciones soporta?</summary>
+        <p id="t-faq2-a">Actualmente soportamos LaLiga Fantasy (LaLiga Marca) y Biwenger, incluyendo competiciones europeas como Champions League, Europa League y Conference League.</p>
+      </details>
+      <details class="faq-item">
+        <summary id="t-faq3-q">¿Cómo se calculan las puntuaciones?</summary>
+        <p id="t-faq3-a">Utilizamos datos actualizados de múltiples fuentes. La puntuación esperada combina el rendimiento reciente del jugador, la dificultad del rival, la probabilidad de ser titular y otros factores estadísticos.</p>
+      </details>
+      <details class="faq-item">
+        <summary id="t-faq4-q">¿Cada cuánto se actualizan los datos?</summary>
+        <p id="t-faq4-a">Los datos de jugadores se actualizan automáticamente antes de cada jornada mediante scrapers que recogen información de las fuentes oficiales.</p>
+      </details>
+      <details class="faq-item">
+        <summary id="t-faq5-q">¿Qué algoritmo se usa para la optimización?</summary>
+        <p id="t-faq5-a">Utilizamos un algoritmo de mochila agrupada (group knapsack), una técnica de optimización combinatoria que encuentra la mejor selección de jugadores maximizando la puntuación dentro de las restricciones de presupuesto y formación.</p>
+      </details>
+      <details class="faq-item">
+        <summary id="t-faq6-q">¿Mis datos personales están seguros?</summary>
+        <p id="t-faq6-a">No recopilamos datos personales. Solo almacenamos datos de uso anónimos para mejorar el servicio. Puedes consultar nuestra <a href="privacy.html">Política de Privacidad</a> para más detalles.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ═══ About ═══ -->
+  <section class="section" id="about">
+    <h2 id="t-about-title">Sobre nosotros</h2>
+    <div class="about-text">
+      <p id="t-about-p1">Calculadora Fantasy nació de la pasión por el fantasy football y la programación. Nuestro objetivo es ofrecer una herramienta accesible y potente que ayude a los jugadores de LaLiga Fantasy y Biwenger a tomar mejores decisiones basadas en datos.</p>
+      <p id="t-about-p2">El proyecto es desarrollado y mantenido de forma independiente. Si tienes sugerencias, errores que reportar o simplemente quieres saludar, no dudes en escribirnos.</p>
+      <p>📩 <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
+    </div>
+  </section>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <div class="footer-row">
+      📩 <span id="t-contact-label">Contacto</span>:
+      <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
+    </div>
+    <div class="footer-row">
+      <a href="privacy.html" id="t-footer-privacy">Política de Privacidad</a>
+      <span class="footer-sep">|</span>
+      <a href="terms.html" id="t-footer-terms">Términos de uso</a>
+      <span class="footer-sep">|</span>
+      <a href="#" onclick="resetCookieConsent(); return false" id="t-footer-cookies">Preferencias de cookies</a>
+    </div>
+    <div class="footer-row" style="margin-top:8px">
+      &copy; <span id="footerYear"></span> Calculadora Fantasy
+    </div>
+  </footer>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookieBanner" class="cookie-banner">
+    <div class="cookie-banner-text">
+      <span id="t-cookie-text">Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.</span>
+      <a href="privacy.html" id="t-cookie-privacy-link">Política de Privacidad</a>
+    </div>
+    <div class="cookie-banner-buttons">
+      <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" id="t-cookie-accept">Aceptar</button>
+      <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()" id="t-cookie-reject">Rechazar</button>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div> <span id="t-loading">Cargando jugadores…</span>
   </div>
 
   <script>
-    // --- Simple i18n ----------------------------------------------------------
+    document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ─── i18n ─────────────────────────────────────────────────────────────────
     const I18N = {
       es: {
         title: "Bienvenido a la Calculadora Fantasy",
         subtitle: "Con soporte para: LaLiga Fantasy & Biwenger",
         enter: "Empezar a calcular",
+        nav_home: "Inicio", nav_how: "Cómo funciona", nav_features: "Características",
+        nav_faq: "FAQ", nav_about: "Sobre nosotros", nav_privacy: "Privacidad",
         contact_label: "Contacto",
-        privacy_link: "Política de Privacidad",
-        cookie_prefs: "Preferencias de cookies",
-        privacy_title: "Política de Privacidad",
-        privacy_p1: "En Calculadora Fantasy respetamos tu privacidad y nos comprometemos a proteger tus datos personales. Este sitio web no recopila datos personales sin tu consentimiento y no comparte información con terceros salvo obligación legal.",
-        privacy_p2: "Utilizamos Google Analytics para análisis de tráfico y Google AdSense para publicidad. Estos servicios pueden usar cookies. Puedes gestionar tus preferencias de cookies en cualquier momento.",
-        privacy_p3: "Podemos almacenar datos de uso anónimos (preferencias de configuración, competiciones consultadas) para mejorar el servicio. Estos datos no están vinculados a información personal identificable.",
-        privacy_p4: "Para más información o ejercer tus derechos de acceso, rectificación o supresión, escríbenos a",
-        privacy_close: "Cerrar",
+        footer_privacy: "Política de Privacidad",
+        footer_terms: "Términos de uso",
+        footer_cookies: "Preferencias de cookies",
         cookie_text: "Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.",
         cookie_privacy: "Política de Privacidad",
-        cookie_accept: "Aceptar",
-        cookie_reject: "Rechazar",
+        cookie_accept: "Aceptar", cookie_reject: "Rechazar",
         loading: "Cargando jugadores…",
+        how_title: "¿Cómo funciona?",
+        step1_title: "Elige tu competición",
+        step1_desc: "Selecciona LaLiga Fantasy o Biwenger y configura los parámetros de tu liga: jornada, presupuesto y preferencias.",
+        step2_title: "Carga los jugadores",
+        step2_desc: "Nuestro algoritmo recoge automáticamente los datos actualizados de todos los jugadores: puntuación esperada, forma, dificultad de partido y probabilidad de ser titular.",
+        step3_title: "Obtén tu mejor once",
+        step3_desc: "El optimizador calcula las mejores alineaciones posibles usando un algoritmo de mochila (knapsack). Resultados en segundos, no en horas.",
+        feat_title: "Características",
+        f1_title: "Optimización por presupuesto", f1_desc: "Introduce tu presupuesto disponible y obtén las mejores alineaciones posibles, maximizando la puntuación esperada.",
+        f2_title: "Tu mejor once ideal", f2_desc: "Añade los jugadores de tu equipo y descubre cuál es tu once ideal para la próxima jornada.",
+        f3_title: "Estadísticas completas", f3_desc: "Consulta forma, dificultad de partido, probabilidad de titularidad y puntuación esperada de cada jugador.",
+        f4_title: "Análisis de mercado", f4_desc: "Compara jugadores del mercado para tomar la mejor decisión de fichaje basándote en datos reales.",
+        f5_title: "Blindar y excluir", f5_desc: "Fuerza jugadores que quieras en tu once o excluye los que no te interesen del cálculo.",
+        f6_title: "Guarda tus plantillas", f6_desc: "Guarda y carga tus plantillas localmente para no tener que volver a introducir tus jugadores cada vez.",
+        faq_title: "Preguntas frecuentes",
+        faq1_q: "¿La herramienta es gratuita?", faq1_a: "Sí, Calculadora Fantasy es completamente gratuita. Puedes utilizarla tantas veces como quieras sin ningún coste.",
+        faq2_q: "¿Qué competiciones soporta?", faq2_a: "Actualmente soportamos LaLiga Fantasy (LaLiga Marca) y Biwenger, incluyendo competiciones europeas como Champions League, Europa League y Conference League.",
+        faq3_q: "¿Cómo se calculan las puntuaciones?", faq3_a: "Utilizamos datos actualizados de múltiples fuentes. La puntuación esperada combina el rendimiento reciente del jugador, la dificultad del rival, la probabilidad de ser titular y otros factores estadísticos.",
+        faq4_q: "¿Cada cuánto se actualizan los datos?", faq4_a: "Los datos de jugadores se actualizan automáticamente antes de cada jornada mediante scrapers que recogen información de las fuentes oficiales.",
+        faq5_q: "¿Qué algoritmo se usa para la optimización?", faq5_a: "Utilizamos un algoritmo de mochila agrupada (group knapsack), una técnica de optimización combinatoria que encuentra la mejor selección de jugadores maximizando la puntuación dentro de las restricciones de presupuesto y formación.",
+        faq6_q: "¿Mis datos personales están seguros?", faq6_a: 'No recopilamos datos personales. Solo almacenamos datos de uso anónimos para mejorar el servicio. Puedes consultar nuestra <a href="privacy.html">Política de Privacidad</a> para más detalles.',
+        about_title: "Sobre nosotros",
+        about_p1: "Calculadora Fantasy nació de la pasión por el fantasy football y la programación. Nuestro objetivo es ofrecer una herramienta accesible y potente que ayude a los jugadores de LaLiga Fantasy y Biwenger a tomar mejores decisiones basadas en datos.",
+        about_p2: "El proyecto es desarrollado y mantenido de forma independiente. Si tienes sugerencias, errores que reportar o simplemente quieres saludar, no dudes en escribirnos.",
         slides: [
-          { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.",            img: "img/presupuesto.png" },
-          { title: "⚽ Mi mejor 11 posible",         desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.",                 img: "img/once.png" },
-          { title: "📋 Lista de jugadores",          desc: "Consulta estadísticas, precios y puntuaciones esperadas de todos los jugadores.", img: "img/lista.png" },
-          { title: "📈 Analizar mi mercado",         desc: "Selecciona varios jugadores para compararlos entre ellos.",                       img: "img/mercado.png" },
+          { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.", img: "img/presupuesto.png" },
+          { title: "⚽ Mi mejor 11 posible", desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.", img: "img/once.png" },
+          { title: "📋 Lista de jugadores", desc: "Consulta estadísticas, precios y puntuaciones esperadas de todos los jugadores.", img: "img/lista.png" },
+          { title: "📈 Analizar mi mercado", desc: "Selecciona varios jugadores para compararlos entre ellos.", img: "img/mercado.png" },
         ]
       },
       en: {
         title: "Welcome to the Fantasy Calculator",
         subtitle: "Supports: LaLiga Fantasy & Biwenger",
         enter: "Start calculating",
+        nav_home: "Home", nav_how: "How it works", nav_features: "Features",
+        nav_faq: "FAQ", nav_about: "About us", nav_privacy: "Privacy",
         contact_label: "Contact",
-        privacy_link: "Privacy Policy",
-        cookie_prefs: "Cookie preferences",
-        privacy_title: "Privacy Policy",
-        privacy_p1: "At Fantasy Calculator we respect your privacy and are committed to protecting your personal data. This site does not collect personal data without your consent and does not share information with third parties except when legally required.",
-        privacy_p2: "We use Google Analytics for traffic analysis and Google AdSense for advertising. These services may use cookies. You can manage your cookie preferences at any time.",
-        privacy_p3: "We may store anonymous usage data (configuration preferences, competitions viewed) to improve the service. This data is not linked to personally identifiable information.",
-        privacy_p4: "For more information or to exercise your rights of access, rectification or erasure, write to",
-        privacy_close: "Close",
+        footer_privacy: "Privacy Policy",
+        footer_terms: "Terms of Use",
+        footer_cookies: "Cookie preferences",
         cookie_text: "This site uses cookies to improve your experience and show relevant ads.",
         cookie_privacy: "Privacy Policy",
-        cookie_accept: "Accept",
-        cookie_reject: "Reject",
+        cookie_accept: "Accept", cookie_reject: "Reject",
         loading: "Loading players…",
+        how_title: "How does it work?",
+        step1_title: "Choose your competition",
+        step1_desc: "Select LaLiga Fantasy or Biwenger and configure your league settings: matchweek, budget and preferences.",
+        step2_title: "Load the players",
+        step2_desc: "Our algorithm automatically collects updated data for every player: expected score, form, fixture difficulty and start probability.",
+        step3_title: "Get your best lineup",
+        step3_desc: "The optimizer calculates the best possible lineups using a knapsack algorithm. Results in seconds, not hours.",
+        feat_title: "Features",
+        f1_title: "Budget optimization", f1_desc: "Enter your available budget and get the best possible lineups, maximizing expected score.",
+        f2_title: "Your best possible XI", f2_desc: "Add your squad players and discover the ideal starting eleven for the next matchweek.",
+        f3_title: "Full statistics", f3_desc: "Check form, fixture difficulty, start probability and expected score for every player.",
+        f4_title: "Market analysis", f4_desc: "Compare market players to make the best signing decision based on real data.",
+        f5_title: "Lock and exclude", f5_desc: "Force players into your lineup or exclude unwanted ones from the calculation.",
+        f6_title: "Save your squads", f6_desc: "Save and load your squads locally so you don't have to re-enter your players every time.",
+        faq_title: "Frequently Asked Questions",
+        faq1_q: "Is the tool free?", faq1_a: "Yes, Fantasy Calculator is completely free. You can use it as many times as you want at no cost.",
+        faq2_q: "Which competitions are supported?", faq2_a: "We currently support LaLiga Fantasy (LaLiga Marca) and Biwenger, including European competitions like Champions League, Europa League and Conference League.",
+        faq3_q: "How are scores calculated?", faq3_a: "We use updated data from multiple sources. The expected score combines the player's recent performance, fixture difficulty, start probability and other statistical factors.",
+        faq4_q: "How often is the data updated?", faq4_a: "Player data is automatically updated before each matchweek through scrapers that collect information from official sources.",
+        faq5_q: "What algorithm is used for optimization?", faq5_a: "We use a group knapsack algorithm, a combinatorial optimization technique that finds the best player selection maximizing the score within budget and formation constraints.",
+        faq6_q: "Is my personal data safe?", faq6_a: 'We do not collect personal data. We only store anonymous usage data to improve the service. Check our <a href="privacy.html">Privacy Policy</a> for details.',
+        about_title: "About us",
+        about_p1: "Fantasy Calculator was born from a passion for fantasy football and programming. Our goal is to provide an accessible and powerful tool that helps LaLiga Fantasy and Biwenger players make better data-driven decisions.",
+        about_p2: "The project is independently developed and maintained. If you have suggestions, bugs to report or just want to say hello, feel free to write to us.",
         slides: [
-          { title: "💰 Best lineups by budget",     desc: "Compute the best possible lineup based on your available budget.",   img: "img/budget.png" },
-          { title: "⚽ My best possible lineup",    desc: "Pick your available players and get your ideal starting eleven.",    img: "img/lineup.png" },
-          { title: "📋 Players list",               desc: "See stats, prices and expected points for every player.",            img: "img/list.png" },
-          { title: "📈 Analyze my market",          desc: "Select several players to compare them against each other.",         img: "img/market.png" },
+          { title: "💰 Best lineups by budget", desc: "Compute the best possible lineup based on your available budget.", img: "img/budget.png" },
+          { title: "⚽ My best possible lineup", desc: "Pick your available players and get your ideal starting eleven.", img: "img/lineup.png" },
+          { title: "📋 Players list", desc: "See stats, prices and expected points for every player.", img: "img/list.png" },
+          { title: "📈 Analyze my market", desc: "Select several players to compare them against each other.", img: "img/market.png" },
         ]
       }
     };
@@ -484,15 +506,9 @@
       const q = (p.get("lang") || "").toLowerCase();
       return (q === "en" || q === "es") ? q : null;
     }
-    function guessBrowserLang(){
-      return "es";
-    }
-    function saveLang(lang){
-      try { localStorage.setItem("lang", lang); } catch(_) {}
-    }
-    function loadLang(){
-      try { return localStorage.getItem("lang"); } catch(_) { return null; }
-    }
+    function guessBrowserLang(){ return "es"; }
+    function saveLang(lang){ try { localStorage.setItem("lang", lang); } catch(_) {} }
+    function loadLang(){ try { return localStorage.getItem("lang"); } catch(_) { return null; } }
 
     let LANG = getQueryLang() || loadLang() || guessBrowserLang();
 
@@ -500,43 +516,44 @@
       const T = I18N[LANG] || I18N.es;
       document.documentElement.lang = LANG;
 
-      // Top texts
-      document.getElementById("t-title").textContent = T.title;
-      document.getElementById("t-subtitle").textContent = T.subtitle;
-      document.getElementById("t-enter").textContent = T.enter;
+      const txt = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = T[key]; };
+      const htm = (id, key) => { const el = document.getElementById(id); if (el) el.innerHTML = T[key]; };
 
-      // Footer & privacy
-      document.getElementById("t-contact-label").textContent = T.contact_label;
-      document.getElementById("t-privacy-link").textContent = T.privacy_link;
-      document.getElementById("t-cookie-prefs-link").textContent = T.cookie_prefs;
-      document.getElementById("t-privacy-title").textContent = T.privacy_title;
-      document.getElementById("t-privacy-p1").textContent = T.privacy_p1;
-      document.getElementById("t-privacy-p2").textContent = T.privacy_p2;
-      document.getElementById("t-privacy-p3").textContent = T.privacy_p3;
-      const p4 = document.getElementById("t-privacy-p4");
-      p4.firstChild && p4.removeChild(p4.firstChild);
-      p4.insertAdjacentText("afterbegin", T.privacy_p4 + " ");
-      document.getElementById("t-privacy-close").textContent = T.privacy_close;
+      txt("t-title", "title"); txt("t-subtitle", "subtitle"); txt("t-enter", "enter");
+      txt("nav-home", "nav_home"); txt("nav-how", "nav_how"); txt("nav-features", "nav_features");
+      txt("nav-faq", "nav_faq"); txt("nav-about", "nav_about"); txt("nav-privacy", "nav_privacy");
+      txt("t-contact-label", "contact_label");
+      txt("t-footer-privacy", "footer_privacy"); txt("t-footer-terms", "footer_terms"); txt("t-footer-cookies", "footer_cookies");
+      txt("t-cookie-text", "cookie_text"); txt("t-cookie-privacy-link", "cookie_privacy");
+      txt("t-cookie-accept", "cookie_accept"); txt("t-cookie-reject", "cookie_reject");
+      txt("t-loading", "loading");
+      txt("t-how-title", "how_title");
+      txt("t-step1-title", "step1_title"); txt("t-step1-desc", "step1_desc");
+      txt("t-step2-title", "step2_title"); txt("t-step2-desc", "step2_desc");
+      txt("t-step3-title", "step3_title"); txt("t-step3-desc", "step3_desc");
+      txt("t-feat-title", "feat_title");
+      txt("t-f1-title", "f1_title"); txt("t-f1-desc", "f1_desc");
+      txt("t-f2-title", "f2_title"); txt("t-f2-desc", "f2_desc");
+      txt("t-f3-title", "f3_title"); txt("t-f3-desc", "f3_desc");
+      txt("t-f4-title", "f4_title"); txt("t-f4-desc", "f4_desc");
+      txt("t-f5-title", "f5_title"); txt("t-f5-desc", "f5_desc");
+      txt("t-f6-title", "f6_title"); txt("t-f6-desc", "f6_desc");
+      txt("t-faq-title", "faq_title");
+      txt("t-faq1-q", "faq1_q"); htm("t-faq1-a", "faq1_a");
+      txt("t-faq2-q", "faq2_q"); htm("t-faq2-a", "faq2_a");
+      txt("t-faq3-q", "faq3_q"); htm("t-faq3-a", "faq3_a");
+      txt("t-faq4-q", "faq4_q"); htm("t-faq4-a", "faq4_a");
+      txt("t-faq5-q", "faq5_q"); htm("t-faq5-a", "faq5_a");
+      txt("t-faq6-q", "faq6_q"); htm("t-faq6-a", "faq6_a");
+      txt("t-about-title", "about_title"); txt("t-about-p1", "about_p1"); txt("t-about-p2", "about_p2");
 
-      // Cookie banner
-      document.getElementById("t-cookie-text").textContent = T.cookie_text;
-      document.getElementById("t-cookie-privacy-link").textContent = T.cookie_privacy;
-      document.getElementById("t-cookie-accept").textContent = T.cookie_accept;
-      document.getElementById("t-cookie-reject").textContent = T.cookie_reject;
-
-      // Loading overlay
-      document.getElementById("t-loading").textContent = T.loading;
-
-      // Slides content
-      slides = T.slides.slice(); // replace the global slides array
+      slides = T.slides.slice();
       currentSlide = 0;
       renderSlide(currentSlide);
 
-      // Toggle active button
       document.getElementById("btnES").classList.toggle("active", LANG==="es");
       document.getElementById("btnEN").classList.toggle("active", LANG==="en");
 
-      // Keep URL shareable with ?lang=
       const url = new URL(location.href);
       url.searchParams.set("lang", LANG);
       history.replaceState(null, "", url.toString());
@@ -544,37 +561,21 @@
 
     function setLang(lang){
       if (lang !== "es" && lang !== "en") return;
-      LANG = lang;
-      saveLang(LANG);
-      applyLangToDom();
+      LANG = lang; saveLang(LANG); applyLangToDom();
     }
-    // -------------------------------------------------------------------------
 
-    // Slides (placeholder; overwritten by applyLangToDom on first run)
+    // ─── Slider ─────────────────────────────────────────────────────────────
     let slides = I18N[LANG].slides.slice();
     let currentSlide = 0;
     let intervalId;
-    const slideContainer = document.getElementById('slide');
 
     function renderSlide(index) {
       const slide = slides[index];
       const content = document.getElementById('slideContent');
-
-      // Fade out
-      content.classList.remove('fade-in');
-      content.classList.add('fade-out');
-
-      // Espera a que termine el fade-out antes de cambiar contenido
+      content.classList.remove('fade-in'); content.classList.add('fade-out');
       setTimeout(() => {
-        content.innerHTML = `
-          <h2>${slide.title}</h2>
-          <p>${slide.desc}</p>
-          <img src="${slide.img}" alt="${slide.title}">
-        `;
-
-        // Fade in
-        content.classList.remove('fade-out');
-        content.classList.add('fade-in');
+        content.innerHTML = `<h2>${slide.title}</h2><p>${slide.desc}</p><img src="${slide.img}" alt="${slide.title}">`;
+        content.classList.remove('fade-out'); content.classList.add('fade-in');
       }, 300);
     }
 
@@ -586,91 +587,58 @@
 
     function enterApp() {
       document.getElementById('loading').style.display = 'flex';
-      document.getElementById('landing').classList.add('hidden');
-      let path;
-      if (window.location.protocol === "file:") { path = `app/index.html`; }
-      else { path = `app/`; }
+      let path = window.location.protocol === "file:" ? "app/index.html" : "app/";
       const target = new URL(path, window.location.href);
-      // propagate language to the new app
       target.searchParams.set("lang", LANG);
       setTimeout(() => { window.location.href = target.toString(); }, 200);
     }
 
     startSlider();
-    applyLangToDom(); // initial render in the right language
+    applyLangToDom();
 
     window.addEventListener('pageshow', (e) => {
       const fromHistory = e.persisted || (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
-      if (fromHistory) {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('landing').classList.remove('hidden');
-      }
+      if (fromHistory) { document.getElementById('loading').style.display = 'none'; }
     });
 
-    // --- Privacy modal ---------------------------------------------------------
-    function openPrivacy() { document.getElementById('privacyModal').classList.add('visible'); }
-    function closePrivacy() { document.getElementById('privacyModal').classList.remove('visible'); }
-
-    // --- Cookie consent --------------------------------------------------------
+    // ─── Cookie consent ─────────────────────────────────────────────────────
     function initCookieConsent() {
       const consent = localStorage.getItem('cookie_consent');
       if (consent) {
         document.getElementById('cookieBanner').classList.add('hidden');
         if (consent === 'accepted') {
-          gtag('consent', 'update', {
-            'ad_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted',
-            'analytics_storage': 'granted'
-          });
+          gtag('consent', 'update', { 'ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted','analytics_storage':'granted' });
           enableAnalytics();
         }
       }
     }
-
     function acceptCookies() {
       localStorage.setItem('cookie_consent', 'accepted');
       document.getElementById('cookieBanner').classList.add('hidden');
-      gtag('consent', 'update', {
-        'ad_storage': 'granted',
-        'ad_user_data': 'granted',
-        'ad_personalization': 'granted',
-        'analytics_storage': 'granted'
-      });
+      gtag('consent', 'update', { 'ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted','analytics_storage':'granted' });
       enableAnalytics();
     }
-
     function rejectCookies() {
       localStorage.setItem('cookie_consent', 'rejected');
       document.getElementById('cookieBanner').classList.add('hidden');
-      gtag('consent', 'update', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'denied'
-      });
+      gtag('consent', 'update', { 'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied' });
     }
-
     function resetCookieConsent() {
       localStorage.removeItem('cookie_consent');
       document.getElementById('cookieBanner').classList.remove('hidden');
     }
-
     function enableAnalytics() {
       if (window.gtag) return;
-      const s = document.createElement('script');
-      s.async = true;
+      const s = document.createElement('script'); s.async = true;
       s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD';
       document.head.appendChild(s);
       s.onload = () => {
         window.dataLayer = window.dataLayer || [];
         function gtag(){ dataLayer.push(arguments); }
         window.gtag = gtag;
-        gtag('js', new Date());
-        gtag('config', 'G-QXF4YKPSMD');
+        gtag('js', new Date()); gtag('config', 'G-QXF4YKPSMD');
       };
     }
-
     initCookieConsent();
   </script>
 </body>
