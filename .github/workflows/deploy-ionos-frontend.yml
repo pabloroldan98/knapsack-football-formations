@@ -8,6 +8,8 @@ on:
       - "privacy.html"
       - "terms.html"
       - "ads.txt"
+      - "robots.txt"
+      - "sitemap.xml"
       - "img/**"
       - "app/**"
       - "google*.html"
@@ -40,8 +42,10 @@ jobs:
           put -O . privacy.html
           put -O . terms.html
 
-          # Google verification & AdSense
+          # Google verification, AdSense & SEO
           put -O . ads.txt
+          put -O . robots.txt
+          put -O . sitemap.xml
           glob -a put -O . google*.html
 
           # Imágenes

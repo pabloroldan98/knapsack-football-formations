@@ -32,6 +32,108 @@
   </script>
   <!-- Google AdSense (respects Consent Mode state) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
+
+  <!-- Structured Data: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Calculadora Fantasy",
+    "url": "https://www.calculadorafantasy.com/",
+    "description": "Optimiza tu equipo de LaLiga Fantasy y Biwenger. Calcula la mejor alineación posible según tu presupuesto.",
+    "inLanguage": ["es", "en"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.calculadorafantasy.com/app/?lang=es",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculadora Fantasy",
+    "url": "https://www.calculadorafantasy.com/app/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "description": "Herramienta gratuita para optimizar tu equipo de fantasy football. Soporta LaLiga Fantasy y Biwenger. Calcula tu mejor once con un algoritmo de mochila agrupada (knapsack).",
+    "featureList": [
+      "Optimización de alineaciones por presupuesto",
+      "Cálculo del mejor once ideal",
+      "Estadísticas de jugadores: forma, dificultad de partido, probabilidad de titularidad",
+      "Análisis comparativo de mercado",
+      "Blindar y excluir jugadores del cálculo",
+      "Guardado local de plantillas"
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿La herramienta es gratuita?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí, Calculadora Fantasy es completamente gratuita. Puedes utilizarla tantas veces como quieras sin ningún coste."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué competiciones soporta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Actualmente soportamos LaLiga Fantasy (LaLiga Marca) y Biwenger, incluyendo competiciones europeas como Champions League, Europa League y Conference League."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cómo se calculan las puntuaciones?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Utilizamos datos actualizados de múltiples fuentes. La puntuación esperada combina el rendimiento reciente del jugador, la dificultad del rival, la probabilidad de ser titular y otros factores estadísticos."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cada cuánto se actualizan los datos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Los datos de jugadores se actualizan automáticamente antes de cada jornada mediante scrapers que recogen información de las fuentes oficiales."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué algoritmo se usa para la optimización?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Utilizamos un algoritmo de mochila agrupada (group knapsack), una técnica de optimización combinatoria que encuentra la mejor selección de jugadores maximizando la puntuación dentro de las restricciones de presupuesto y formación."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Mis datos personales están seguros?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No recopilamos datos personales. Solo almacenamos datos de uso anónimos para mejorar el servicio. Puedes consultar nuestra Política de Privacidad para más detalles."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
