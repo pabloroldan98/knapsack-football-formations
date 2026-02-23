@@ -160,7 +160,7 @@
     }
     .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; white-space: nowrap; }
     .navbar-brand img { height: 28px; }
-    .navbar-lang { display: flex; gap: 6px; }
+    .navbar-lang { display: flex; gap: 6px; margin-left: 6px; }
     .lang-btn {
       display: inline-flex; align-items: center; gap: 5px;
       padding: 5px 10px; font-size: .72rem; border-radius: 20px; cursor: pointer;
@@ -288,6 +288,14 @@
     .site-footer a:hover { color: #ff4c4c; }
     .footer-row { margin-bottom: 6px; }
     .footer-sep { margin: 0 6px; opacity: .4; }
+    .bmc-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #ff4c4c; color: #fff !important; font-weight: 600; font-size: .82rem;
+      padding: 6px 14px; border-radius: 6px; text-decoration: none !important;
+      transition: background .2s, transform .15s;
+    }
+    .bmc-link:hover { background: #c83232; color: #fff !important; transform: scale(1.03); text-decoration: none !important; }
+    .bmc-link img { height: 18px; filter: brightness(0) invert(1); }
 
     /* ── Loading overlay ────────────────────────────────────────────────── */
     .loading-overlay {
@@ -484,6 +492,12 @@
       <span class="footer-sep">|</span>
       <a href="#" onclick="resetCookieConsent(); return false" id="t-footer-cookies">Preferencias de cookies</a>
     </div>
+    <div class="footer-row" style="margin-top:10px">
+      <a href="https://buymeacoffee.com/calculadorafantasy" target="_blank" rel="noopener" class="bmc-link" id="t-bmc">
+        <img src="img/bmc-icon.svg" alt="Buy Me a Coffee">
+        <span id="t-bmc-text">Invítame a un café</span>
+      </a>
+    </div>
     <div class="footer-row" style="margin-top:8px">
       &copy; <span id="footerYear"></span> Calculadora Fantasy
     </div>
@@ -521,6 +535,7 @@
         footer_privacy: "Política de Privacidad",
         footer_terms: "Términos de uso",
         footer_cookies: "Preferencias de cookies",
+        bmc_text: "Invítame a un café",
         cookie_text: "Este sitio usa cookies para mejorar tu experiencia y mostrar anuncios relevantes.",
         cookie_privacy: "Política de Privacidad",
         cookie_accept: "Aceptar", cookie_reject: "Rechazar",
@@ -566,6 +581,7 @@
         footer_privacy: "Privacy Policy",
         footer_terms: "Terms of Use",
         footer_cookies: "Cookie preferences",
+        bmc_text: "Buy me a coffee",
         cookie_text: "This site uses cookies to improve your experience and show relevant ads.",
         cookie_privacy: "Privacy Policy",
         cookie_accept: "Accept", cookie_reject: "Reject",
@@ -626,6 +642,7 @@
       txt("nav-faq", "nav_faq"); txt("nav-about", "nav_about"); txt("nav-privacy", "nav_privacy");
       txt("t-contact-label", "contact_label");
       txt("t-footer-privacy", "footer_privacy"); txt("t-footer-terms", "footer_terms"); txt("t-footer-cookies", "footer_cookies");
+      txt("t-bmc-text", "bmc_text");
       txt("t-cookie-text", "cookie_text"); txt("t-cookie-privacy-link", "cookie_privacy");
       txt("t-cookie-accept", "cookie_accept"); txt("t-cookie-reject", "cookie_reject");
       txt("t-loading", "loading");

@@ -552,6 +552,16 @@ select[multiple] option:checked {
 
 .squad-empty { font-size: .85rem; color: rgba(255,255,255,.45); font-style: italic; }
 
+/* Buy Me a Coffee button */
+.bmc-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #ff4c4c; color: #fff !important; font-weight: 600; font-size: .82rem;
+  padding: 6px 14px; border-radius: 6px; text-decoration: none !important;
+  transition: background .2s, transform .15s;
+}
+.bmc-link:hover { background: #c83232; color: #fff !important; transform: scale(1.03); text-decoration: none !important; }
+.bmc-link img { height: 18px; filter: brightness(0) invert(1); }
+
 /* Desktop wide screens */
 @media (min-width: 1400px) {
   .main-content { max-width: 1100px; }
