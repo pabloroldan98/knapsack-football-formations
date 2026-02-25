@@ -207,7 +207,7 @@
           "id": 4548,
           "name": "Round 27",
           "short": "R27",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4549,
@@ -283,191 +283,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4548,
-        "name": "Round 27",
-        "short": "R27",
-        "status": "active",
-        "end": 1771952400,
-        "type": "round",
-        "games": [
-          {
-            "id": 46767,
-            "date": 1771876800,
-            "status": "finished",
-            "home": {
-              "id": 109,
-              "name": "Everton",
-              "slug": "everton-fc",
-              "score": 0
-            },
-            "away": {
-              "id": 111,
-              "name": "Manchester United",
-              "slug": "manchester-united",
-              "score": 1
-            }
-          },
-          {
-            "id": 46764,
-            "date": 1771777800,
-            "status": "finished",
-            "home": {
-              "id": 94,
-              "name": "Tottenham",
-              "slug": "tottenham",
-              "score": 1
-            },
-            "away": {
-              "id": 112,
-              "name": "Arsenal",
-              "slug": "arsenal-fc",
-              "score": 4
-            }
-          },
-          {
-            "id": 46763,
-            "date": 1771768800,
-            "status": "finished",
-            "home": {
-              "id": 104,
-              "name": "Sunderland",
-              "slug": "sunderland",
-              "score": 1
-            },
-            "away": {
-              "id": 414,
-              "name": "Fulham",
-              "slug": "fulham",
-              "score": 3
-            }
-          },
-          {
-            "id": 46766,
-            "date": 1771768800,
-            "status": "finished",
-            "home": {
-              "id": 633,
-              "name": "Nottingham Forest",
-              "slug": "nottingham-forest",
-              "score": 0
-            },
-            "away": {
-              "id": 105,
-              "name": "Liverpool",
-              "slug": "liverpool-fc",
-              "score": 1
-            }
-          },
-          {
-            "id": 46768,
-            "date": 1771768800,
-            "status": "finished",
-            "home": {
-              "id": 99,
-              "name": "Crystal Palace",
-              "slug": "crystal-palace",
-              "score": 1
-            },
-            "away": {
-              "id": 412,
-              "name": "Wolverhampton",
-              "slug": "wolverhampton",
-              "score": 0
-            }
-          },
-          {
-            "id": 46765,
-            "date": 1771704000,
-            "status": "finished",
-            "home": {
-              "id": 108,
-              "name": "Manchester City",
-              "slug": "manchester-city",
-              "score": 2
-            },
-            "away": {
-              "id": 269,
-              "name": "Newcastle",
-              "slug": "newcastle",
-              "score": 1
-            }
-          },
-          {
-            "id": 46762,
-            "date": 1771695000,
-            "status": "finished",
-            "home": {
-              "id": 101,
-              "name": "West Ham United",
-              "slug": "west-ham-united",
-              "score": 0
-            },
-            "away": {
-              "id": 102,
-              "name": "AFC Bournemouth",
-              "slug": "afc-bournemouth",
-              "score": 0
-            }
-          },
-          {
-            "id": 46769,
-            "date": 1771686000,
-            "status": "finished",
-            "home": {
-              "id": 95,
-              "name": "Chelsea",
-              "slug": "chelsea-fc",
-              "score": 1
-            },
-            "away": {
-              "id": 107,
-              "name": "Burnley",
-              "slug": "burnley-fc",
-              "score": 1
-            }
-          },
-          {
-            "id": 46770,
-            "date": 1771686000,
-            "status": "finished",
-            "home": {
-              "id": 591,
-              "name": "Brentford FC",
-              "slug": "brentford-fc",
-              "score": 0
-            },
-            "away": {
-              "id": 270,
-              "name": "Brighton & Hove Albion",
-              "slug": "brighton-hove-albion",
-              "score": 2
-            }
-          },
-          {
-            "id": 46771,
-            "date": 1771686000,
-            "status": "finished",
-            "home": {
-              "id": 468,
-              "name": "Aston Villa",
-              "slug": "aston-villa",
-              "score": 1
-            },
-            "away": {
-              "id": 477,
-              "name": "Leeds United",
-              "slug": "leeds-united",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 603816
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "2279": {
         "id": 2279,
@@ -627,10 +443,12 @@
         "price": 250000,
         "fantasyPrice": 12000000,
         "number": 2,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -10000,
+        "statusInfo": "Undetermined discomfort.",
         "playedHome": 12,
         "playedAway": 6,
+        "statusChange": 1771938011,
         "fitness": [
           4,
           0,
@@ -1912,12 +1730,12 @@
         "price": 220000,
         "fantasyPrice": 11000000,
         "number": 25,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": 0,
-        "statusInfo": "Knee injury. Estimated return: End of February.",
+        "statusInfo": "Knee injury.",
         "playedHome": 5,
         "playedAway": 5,
-        "statusChange": 1771329654,
+        "statusChange": 1771938009,
         "fitness": [
           "injured",
           "doubt",
@@ -2802,6 +2620,7 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -3753,10 +3572,12 @@
         "price": 180000,
         "fantasyPrice": 11000000,
         "number": 3,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Hamstring discomfort.",
         "playedHome": 3,
         "playedAway": 3,
+        "statusChange": 1771938014,
         "fitness": [
           null,
           null,
@@ -4534,10 +4355,12 @@
         "price": 2630000,
         "fantasyPrice": 28000000,
         "number": 41,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -50000,
+        "statusInfo": "Hamstring injury.",
         "playedHome": 11,
         "playedAway": 8,
+        "statusChange": 1771938015,
         "fitness": [
           null,
           3,
@@ -4734,12 +4557,12 @@
         "price": 190000,
         "fantasyPrice": 14000000,
         "number": 12,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": 0,
-        "statusInfo": "Muscle injury. Estimated return: Early March.",
+        "statusInfo": "Muscle injury.",
         "playedHome": 0,
         "playedAway": 2,
-        "statusChange": 1771329670,
+        "statusChange": 1771938013,
         "fitness": [
           "injured",
           null,
@@ -4917,10 +4740,12 @@
         "price": 12700000,
         "fantasyPrice": 64000000,
         "number": 7,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -220000,
+        "statusInfo": "Back discomfort.",
         "playedHome": 12,
         "playedAway": 13,
+        "statusChange": 1771938015,
         "fitness": [
           null,
           3,
@@ -6654,12 +6479,10 @@
         "price": 2350000,
         "fantasyPrice": 11000000,
         "number": 15,
-        "status": "sanctioned",
+        "status": "ok",
         "priceIncrement": -20000,
-        "statusInfo": "Red Card (Day 27).",
         "playedHome": 13,
         "playedAway": 13,
-        "statusChange": 1770814814,
         "fitness": [
           "sanctioned",
           -2,
@@ -7927,12 +7750,12 @@
         "price": 2770000,
         "fantasyPrice": 41000000,
         "number": 29,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -60000,
-        "statusInfo": "Muscle injury. Estimated return: Early March.",
+        "statusInfo": "Muscle injury.",
         "playedHome": 1,
         "playedAway": 2,
-        "statusChange": 1771329654,
+        "statusChange": 1771938009,
         "fitness": [
           "injured",
           "injured",
@@ -8089,8 +7912,8 @@
           "injured",
           "injured",
           "injured",
-          null,
-          4
+          "injured",
+          null
         ],
         "points": 50,
         "pointsHome": 14,
@@ -8231,10 +8054,12 @@
         "price": 5950000,
         "fantasyPrice": 20000000,
         "number": 6,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 20000,
+        "statusInfo": "Groin discomfort.",
         "playedHome": 7,
         "playedAway": 7,
+        "statusChange": 1771938011,
         "fitness": [
           null,
           6,
@@ -8306,10 +8131,12 @@
         "price": 1290000,
         "fantasyPrice": 12000000,
         "number": 37,
-        "status": "ok",
+        "status": "sanctioned",
         "priceIncrement": -60000,
+        "statusInfo": "Red Card (Day 28).",
         "playedHome": 10,
         "playedAway": 12,
+        "statusChange": 1771934424,
         "fitness": [
           -1,
           0,
@@ -8533,10 +8360,12 @@
         "price": 2130000,
         "fantasyPrice": 8000000,
         "number": 67,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -20000,
+        "statusInfo": "Hamstring discomfort.",
         "playedHome": 9,
         "playedAway": 10,
+        "statusChange": 1771938013,
         "fitness": [
           null,
           "doubt",
@@ -9410,12 +9239,12 @@
         "price": 150000,
         "fantasyPrice": 8000000,
         "number": 7,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": 0,
-        "statusInfo": "Knee injury. Estimated return: Early September.",
+        "statusInfo": "Knee injury.",
         "playedHome": 0,
         "playedAway": 0,
-        "statusChange": 1754560800,
+        "statusChange": 1771938004,
         "fitness": [
           "injured",
           "injured",
@@ -9437,12 +9266,10 @@
         "price": 290000,
         "fantasyPrice": 10000000,
         "number": 40,
-        "status": "sanctioned",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Red Card (Day 27).",
         "playedHome": 2,
         "playedAway": 3,
-        "statusChange": 1771329672,
         "fitness": [
           "sanctioned",
           null,
@@ -9589,12 +9416,12 @@
         "price": 1640000,
         "fantasyPrice": 14000000,
         "number": 7,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -20000,
-        "statusInfo": "Muscle injury. Estimated return: Mid-February.",
+        "statusInfo": "Muscle injury.",
         "playedHome": 9,
         "playedAway": 8,
-        "statusChange": 1770386417,
+        "statusChange": 1771938007,
         "fitness": [
           "injured",
           "injured",
@@ -11689,12 +11516,12 @@
         "price": 670000,
         "fantasyPrice": 10000000,
         "number": 17,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -20000,
-        "statusInfo": "Knee injury. Estimated return: Mid-March.",
+        "statusInfo": "Knee injury.",
         "playedHome": 10,
         "playedAway": 7,
-        "statusChange": 1771682426,
+        "statusChange": 1771938015,
         "fitness": [
           "injured",
           6,
@@ -12517,12 +12344,12 @@
         "price": 2470000,
         "fantasyPrice": 11000000,
         "number": 19,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -180000,
         "statusInfo": "Groin injury.",
         "playedHome": 6,
         "playedAway": 7,
-        "statusChange": 1771682430,
+        "statusChange": 1771938016,
         "fitness": [
           "injured",
           1,
@@ -12802,9 +12629,9 @@
         "playedAway": 14,
         "fitness": [
           1,
+          null,
           3,
           1,
-          3,
           3
         ],
         "points": 38,
@@ -12996,12 +12823,10 @@
         "price": 150000,
         "fantasyPrice": 8000000,
         "number": 43,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Hamstring injury. Estimated return: Indefinite return.",
         "playedHome": 0,
         "playedAway": 0,
-        "statusChange": 1770915617,
         "fitness": [
           "injured",
           null,
@@ -13150,12 +12975,10 @@
         "price": 2440000,
         "fantasyPrice": 18000000,
         "number": 4,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -80000,
-        "statusInfo": "Back discomfort.",
         "playedHome": 8,
         "playedAway": 7,
-        "statusChange": 1771329659,
         "fitness": [
           "doubt",
           6,
@@ -14251,10 +14074,12 @@
         "price": 2940000,
         "fantasyPrice": 14000000,
         "number": 29,
-        "status": "ok",
+        "status": "sanctioned",
         "priceIncrement": -20000,
+        "statusInfo": "Red Card (Day 28).",
         "playedHome": 8,
         "playedAway": 8,
+        "statusChange": 1771934411,
         "fitness": [
           4,
           5,
@@ -14659,12 +14484,10 @@
         "price": 1690000,
         "fantasyPrice": 37000000,
         "number": 9,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Muscle fatigue.",
         "playedHome": 6,
         "playedAway": 5,
-        "statusChange": 1771329656,
         "fitness": [
           "doubt",
           null,
@@ -15250,7 +15073,7 @@
       }
     },
     "update": 1771995610,
-    "etag": 4094599292,
+    "etag": 382669110,
     "scoreID": 3
   },
   "meta": {
