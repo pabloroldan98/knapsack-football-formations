@@ -441,7 +441,7 @@
           {
             "id": 47609,
             "date": 1772472600,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 775,
               "name": "Pisa",
@@ -458,7 +458,7 @@
           {
             "id": 47606,
             "date": 1772480700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 141,
               "name": "Udinese",
@@ -1563,8 +1563,6 @@
         "fitness": [
           4,
           0,
-          null,
-          null,
           null
         ],
         "points": 4,
@@ -2383,8 +2381,6 @@
         "playedHome": 0,
         "playedAway": 0,
         "fitness": [
-          null,
-          null,
           null,
           null,
           null
@@ -10716,8 +10712,6 @@
         "fitness": [
           null,
           null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -14511,13 +14505,1192 @@
         ]
       }
     },
-    "update": 1772164810,
-    "etag": 995368274,
+    "update": 1772149174,
+    "etag": 1220482580,
     "scoreID": 3
   },
   "meta": {
     "config": {
       "ads": {
+        "competition#41": {
+          "desktop": {
+            "header": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_web/%section%",
+              "sizes": "[[970,90], [728,90]]",
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328688
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439965"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "ix",
+                  "params": {
+                    "siteId": "611875"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32952,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-ldb1"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66276,
+                    "target": "posicion=ldb1;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "7KEsFCDARy",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs ldb1",
+              "targeting": {
+                "pos": "ldb1",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 8855414055,
+                "format": "horizontal"
+              }
+            },
+            "content": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_web/%section%",
+              "sizes": "[[1,1]]",
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs nstd1",
+              "targeting": {
+                "pos": "nstd1",
+                "pbskey": "biwenger_%competition%"
+              },
+              "bidders": [
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-nstd1"
+                  }
+                }
+              ],
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 7239080051
+              }
+            },
+            "footer": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_web/%section%",
+              "sizes": "[[970,90],[970,250],[728,90]]",
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328688
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439968"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32956,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-ldb3"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66276,
+                    "target": "posicion=ldb3;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "7KEsFCDARy",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs ldb3",
+              "targeting": {
+                "pos": "ldb3",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 4146012855
+              }
+            },
+            "sidebar-right": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_web/%section%",
+              "sizes": [
+                "[[120,600], [160,600], [120,1000], [160,1000]]",
+                "(min-width: 1790px) / [[300,600], [120,600], [160,600], [120,1000], [160,1000], [422,900], [300,250]]"
+              ],
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "a6oavmfe"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328682
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439966"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "ix",
+                  "params": {
+                    "siteId": "611875"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32953,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-sky2"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66278,
+                    "target": "posicion=sky2;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "16lWdaGMzz",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs sky2",
+              "targeting": {
+                "pos": "sky2",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 2669279650,
+                "format": "rectangle,vertical"
+              }
+            },
+            "sidebar-left": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_web/%section%",
+              "sizes": [
+                "[[120,600], [160,600], [120,1000], [160,1000]]",
+                "(min-width: 1790px) / [[300,600], [120,600], [160,600], [120,1000], [160,1000], [422,900], [300,250]]"
+              ],
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "a6oavmfe"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328682
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439966"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "ix",
+                  "params": {
+                    "siteId": "611875"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32953,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-sky2"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66278,
+                    "target": "posicion=sky2;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "16lWdaGMzz",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs sky2",
+              "targeting": {
+                "pos": "sky2",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 2669279650,
+                "format": "rectangle,vertical"
+              }
+            }
+          },
+          "mobile": {
+            "header": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_mob/%section%",
+              "block_android": "/7811748/biwenger_euroliga_app/android/%section%",
+              "block_ios": "/7811748/biwenger_euroliga_app/iphone/%section%",
+              "sizes": "[[320,100], [320,50]]",
+              "reloadInterval": 30,
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "q0hhosff"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328769
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439965"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32910,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "ix",
+                  "params": {
+                    "siteId": "611885"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217121"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "adagio",
+                  "params": {
+                    "organizationId": "1147",
+                    "site": "biwenger-as-com",
+                    "placement": "content",
+                    "environment": "mobile",
+                    "category": "sports",
+                    "useAdUnitCodeAsAdUnitElementId": true
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-mldb2"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66277,
+                    "target": "posicion=mldb2;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "7KEsFCDARy",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs mldb2",
+              "targeting": {
+                "pos": "mldb2",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "slot": "8855414055",
+                "client": "ca-pub-5081994088919884",
+                "format": "horizontal",
+                "full-width-responsive": false,
+                "style": "max-height: 100px"
+              }
+            },
+            "content": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_mob/%section%",
+              "block_android": "/7811748/biwenger_euroliga_app/android/%section%",
+              "block_ios": "/7811748/biwenger_euroliga_app/iphone/%section%",
+              "sizes": "[[320,100],[300,250],[336,280],[300,600]]",
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "q0hhosff"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328765
+                  },
+                  "params-ios": {
+                    "placementId": 16328765,
+                    "app": {
+                      "id": "D565ZLLXHC.com.ideatic.comuniame",
+                      "device_id": {
+                        "idfa": "%idfa%"
+                      }
+                    }
+                  },
+                  "params-android": {
+                    "placementId": 16328765,
+                    "app": {
+                      "id": "com.biwenger.app",
+                      "device_id": {
+                        "aaid": "%aaid%"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32911,
+                    "rid": "biwenger.as.com"
+                  },
+                  "params-app": {
+                    "pid": 32957,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "inmobi",
+                  "params": {
+                    "plc": 1649152345004,
+                    "bidfloor": 0.08
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439966"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "tappx",
+                  "params": {
+                    "disabled": true,
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-61128-mweb-5359",
+                    "endpoint": "zz37968bw"
+                  },
+                  "params-android": {
+                    "disabled": true,
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-60840-android-6492",
+                    "endpoint": "zz37968bw",
+                    "app": {
+                      "name": "Biwenger - Fantasy manager",
+                      "bundle": "com.biwenger.app",
+                      "storeurl": "https://play.google.com/store/apps/details?id=com.biwenger.app",
+                      "domain": "https://www.biwenger.com/"
+                    }
+                  },
+                  "params-ios": {
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-60839-ios-6471",
+                    "endpoint": "zz37968bw",
+                    "app": {
+                      "name": "Biwenger - Fantasy manager",
+                      "bundle": "1083570913",
+                      "storeurl": "https://apps.apple.com/es/app/biwenger-fantasy-manager/id1083570913",
+                      "domain": "https://www.biwenger.com/"
+                    }
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "ix",
+                  "params": {
+                    "siteId": "611881"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217118"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217119"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217121"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "adagio",
+                  "params": {
+                    "organizationId": "1147",
+                    "site": "biwenger-as-com",
+                    "placement": "content",
+                    "environment": "mobile",
+                    "category": "sports",
+                    "useAdUnitCodeAsAdUnitElementId": true
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-mpu1"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66277,
+                    "target": "posicion=mpu1;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "16lWdaGMzz",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs mpu1",
+              "targeting": {
+                "pos": "mpu1",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 7239080051,
+                "weight": 50
+              }
+            },
+            "subcontent": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_mob/%section%",
+              "block_android": "/7811748/biwenger_euroliga_app/android/%section%",
+              "block_ios": "/7811748/biwenger_euroliga_app/iphone/%section%",
+              "sizes": "[[320,100],[300,250],[336,280]]",
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "q0hhosff"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328769
+                  },
+                  "params-ios": {
+                    "placementId": 16328769,
+                    "app": {
+                      "id": "D565ZLLXHC.com.ideatic.comuniame",
+                      "device_id": {
+                        "idfa": "%idfa%"
+                      }
+                    }
+                  },
+                  "params-android": {
+                    "placementId": 16328769,
+                    "app": {
+                      "id": "com.biwenger.app",
+                      "device_id": {
+                        "aaid": "%aaid%"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439967"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32912,
+                    "rid": "biwenger.as.com"
+                  },
+                  "params-app": {
+                    "pid": 32958,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "tappx",
+                  "params": {
+                    "disabled": true,
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-61128-mweb-5359",
+                    "endpoint": "zz37968bw"
+                  },
+                  "params-android": {
+                    "disabled": true,
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-60840-android-6492",
+                    "endpoint": "zz37968bw",
+                    "app": {
+                      "name": "Biwenger - Fantasy manager",
+                      "bundle": "com.biwenger.app",
+                      "storeurl": "https://play.google.com/store/apps/details?id=com.biwenger.app",
+                      "domain": "https://www.biwenger.com/"
+                    }
+                  },
+                  "params-ios": {
+                    "host": "zz37968bw.pub.tappx.com/rtb/",
+                    "tappxkey": "pub-60839-ios-6471",
+                    "endpoint": "zz37968bw",
+                    "app": {
+                      "name": "Biwenger - Fantasy manager",
+                      "bundle": "1083570913",
+                      "storeurl": "https://apps.apple.com/es/app/biwenger-fantasy-manager/id1083570913",
+                      "domain": "https://www.biwenger.com/"
+                    }
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "inmobi",
+                  "params": {
+                    "plc": 10000053405,
+                    "bidfloor": 0.08
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217118"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217121"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "adagio",
+                  "params": {
+                    "organizationId": "1147",
+                    "site": "biwenger-as-com",
+                    "placement": "subcontent",
+                    "environment": "mobile",
+                    "category": "sports",
+                    "useAdUnitCodeAsAdUnitElementId": true
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-mpu2"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66277,
+                    "target": "posicion=mpu2;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "16lWdaGMzz",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs mpu2",
+              "targeting": {
+                "pos": "mpu2",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 8553243256,
+                "weight": 50
+              }
+            },
+            "footer": {
+              "type": "gpt",
+              "block": "/7811748/biwenger_euroliga_mob/%section%",
+              "block_android": "/7811748/biwenger_euroliga_app/android/%section%",
+              "block_ios": "/7811748/biwenger_euroliga_app/iphone/%section%",
+              "scroll": true,
+              "sizes": "[[300,250], [300,600], [320,50]]",
+              "bidders": [
+                {
+                  "type": "prebid",
+                  "name": "nexx360",
+                  "params": {
+                    "tagId": "1a686alv"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "appnexus",
+                  "params": {
+                    "placementId": 16328765
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "pubmatic",
+                  "params": {
+                    "publisherId": "161794",
+                    "adSlot": "4439968"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "yieldlove",
+                  "params": {
+                    "pid": 32913,
+                    "rid": "biwenger.as.com"
+                  },
+                  "params-app": {
+                    "pid": 32959,
+                    "rid": "biwenger.as.com"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "inmobi",
+                  "params": {
+                    "plc": 10000053408,
+                    "bidfloor": 0.05
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217118"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217119"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "gumgum",
+                  "params": {
+                    "zone": "odixelw7",
+                    "slot": "1217121"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "sparteo",
+                  "params": {
+                    "networkId": "6269fd15-b1a3-4e81-9ab1-98ef99058b4c"
+                  }
+                },
+                {
+                  "type": "prebid",
+                  "name": "adagio",
+                  "params": {
+                    "organizationId": "1147",
+                    "site": "biwenger-as-com",
+                    "placement": "footer",
+                    "environment": "mobile",
+                    "category": "sports",
+                    "useAdUnitCodeAsAdUnitElementId": true
+                  }
+                },
+                {
+                  "name": "rubicon",
+                  "type": "prebid",
+                  "params": {
+                    "accountId": "9778",
+                    "siteId": "184214",
+                    "zoneId": "898192"
+                  }
+                },
+                {
+                  "name": "tam",
+                  "type": "amazon",
+                  "params": {
+                    "pubID": "3226",
+                    "slotName": "7811748/%blockName%"
+                  }
+                },
+                {
+                  "name": "criteo",
+                  "type": "prebid",
+                  "params": {
+                    "networkId": 9160,
+                    "publisherSubId": "%blockNamePart2%-mpu3"
+                  }
+                },
+                {
+                  "name": "smartadserver",
+                  "type": "prebid",
+                  "params": {
+                    "domain": "//prg.smartadserver.com",
+                    "siteId": 641478,
+                    "pageId": 1941599,
+                    "formatId": 66277,
+                    "target": "posicion=mpu3;adunit=%blockName%-other"
+                  }
+                },
+                {
+                  "name": "richaudience",
+                  "type": "prebid",
+                  "params": {
+                    "pid": "16lWdaGMzz",
+                    "supplyType": "site"
+                  }
+                }
+              ],
+              "location": {
+                "country": [
+                  "ES"
+                ]
+              },
+              "name": "pbs mpu3",
+              "targeting": {
+                "pos": "mpu3",
+                "pbskey": "biwenger_%competition%"
+              },
+              "passback": {
+                "name": "adsense",
+                "type": "adsense",
+                "client": "ca-pub-5081994088919884",
+                "slot": 4146012855,
+                "weight": 33
+              }
+            }
+          }
+        },
+        "league#1973097": {
+          "#comments": "Desactivar sticky banner en Liga Sportium",
+          "android": {
+            "banner": {
+              "type": "AdMob",
+              "id": "ca-app-pub-5081994088919884/9650976858",
+              "app": "ca-app-pub-5081994088919884~8174243653",
+              "aps": true,
+              "amazon": {
+                "app": "9dece6944d4647db86b514511e8fd3ec",
+                "320x50": "a57f3aa5-3466-4e19-a081-9b98201d37b2",
+                "320x100": "9a7526d2-057f-4c9a-b897-e58f2c0e2198",
+                "728x90": "9be088f7-ce72-4435-ae0b-5883e92da1cc"
+              },
+              "levelPlay": {
+                "adUnit": "e1ekctr36kou4c5x"
+              },
+              "disableSlots": [
+                "android/banner"
+              ]
+            }
+          },
+          "ios": {
+            "banner": {
+              "type": "AdMob",
+              "app": "ca-app-pub-5081994088919884~6837111253",
+              "id": "ca-app-pub-5081994088919884/8313844456",
+              "aps": true,
+              "amazon": {
+                "app": "6aec85413ec94f2f96a222ff8ebf4995",
+                "320x50": "b8273f2f-60de-412c-852c-48b628a452ef",
+                "320x100": "4e266fe1-c4b2-4db0-b3c6-1df06feac19a",
+                "728x90": "2b3e8cfa-53d6-47c5-b40f-87677dad3592"
+              },
+              "disableSlots": [
+                "ios/banner"
+              ]
+            }
+          }
+        },
         "mobile": {
           "sections": {
             "round": {
@@ -15643,7 +16816,7 @@
               "adUnit": "e1ekctr36kou4c5x"
             },
             "disableSlots": [
-              "mobile-header"
+              "mobile/header"
             ]
           },
           "rewardedVideo": {
@@ -15669,6 +16842,13 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            }
           }
         },
         "ios": {
@@ -15684,7 +16864,7 @@
               "728x90": "2b3e8cfa-53d6-47c5-b40f-87677dad3592"
             },
             "disableSlots": [
-              "mobile-header"
+              "mobile/header"
             ]
           },
           "rewardedVideo": {
@@ -15704,6 +16884,13 @@
               "app": "6aec85413ec94f2f96a222ff8ebf4995",
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
+            }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
             }
           }
         }
