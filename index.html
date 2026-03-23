@@ -713,6 +713,32 @@
     }
 
     startSlider();
+    // ─── Wake up backend ────────────────────────────────────────────────────
+    function pingBackend() {
+      const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? `${window.location.protocol}//${window.location.hostname}:8000`
+        : 'https://knapsack-football-formations.onrender.com';
+        
+      fetch(`${API_BASE}/api/health`)
+        .then(res => {
+          if (!res.ok) throw new Error("Not ok");
+          return res.json();
+        })
+        .then(data => {
+          console.log("Backend warmed up.");
+          window._backendReady = true;
+          // Optionally fetch players to cache them
+          fetch(`${API_BASE}/api/players?competition=laliga&app=biwenger`).catch(()=>{});
+        })
+        .catch(err => {
+          console.error("Backend waking up...");
+        });
+    }
+    pingBackend();
+    setInterval(() => {
+      if (!window._backendReady) pingBackend();
+    }, 10000);
+
     applyLangToDom();
 
     window.addEventListener('pageshow', (e) => {

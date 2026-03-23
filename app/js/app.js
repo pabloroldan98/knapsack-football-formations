@@ -718,6 +718,28 @@ async function loadCompetitions() {
     loadPlayers();
   } catch (e) {
     console.error('Error loading competitions:', e);
+    // Even if competitions fail to load, try to load players with default values
+    const selComp = document.getElementById('selCompetition');
+    if (selComp && selComp.options.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = 'laliga';
+      opt.textContent = 'LaLiga';
+      selComp.appendChild(opt);
+      selComp.value = 'laliga';
+    }
+    
+    const selApp = document.getElementById('selApp');
+    if (selApp && selApp.options.length === 0) {
+      const optApp = document.createElement('option');
+      optApp.value = 'biwenger';
+      optApp.textContent = 'Biwenger';
+      selApp.appendChild(optApp);
+      selApp.value = 'biwenger';
+    }
+    
+    restoreState();
+    onCompetitionChange();
+    loadPlayers();
   }
 }
 
@@ -775,6 +797,7 @@ function updateBudgetInput() {
 // ─── Load Players ───────────────────────────────────────────────────────────
 let _isLoadingPlayers = false;
 let _hasLoadedOnce = false;
+let _loadFailures = 0;
 async function loadPlayers() {
   if (_isLoadingPlayers) return;
   _isLoadingPlayers = true;
@@ -786,7 +809,13 @@ async function loadPlayers() {
   const jornadaKey = document.getElementById('selJornada')?.value || '';
   const numJornadas = parseInt(document.getElementById('selNumJornadas')?.value || '1');
 
-  showLoading(t('loading.players'));
+  const isFirstLoad = allPlayers.length === 0;
+  if (isFirstLoad && _loadFailures > 0) {
+    showLoading(LANG === 'en' ? "Waking up server (can take ~1 min)..." : "Iniciando servidor (puede tardar ~1 min)...");
+  } else {
+    showLoading(t('loading.players'));
+  }
+
   try {
     const data = await apiGet('/api/players', {
       competition: comp, app, ignore_form: ignoreForm,
@@ -794,6 +823,8 @@ async function loadPlayers() {
       jornada_key: jornadaKey, num_jornadas: numJornadas,
       session_id: SESSION_ID,
     });
+
+    _loadFailures = 0; // reset on success
 
     allPlayers = data.players;
     divideMillions = data.divide_millions;
@@ -829,8 +860,18 @@ async function loadPlayers() {
     document.querySelector('.sidebar-backdrop')?.classList.remove('visible');
 
   } catch (e) {
-    hideLoading();
+    _loadFailures++;
     console.error('Error loading players:', e);
+    if (allPlayers.length > 0) {
+      hideLoading();
+    } else {
+      // Keep loading screen, but update text
+      document.getElementById('loadingText').textContent = LANG === 'en' ? "Waking up server (can take ~1 min)..." : "Iniciando servidor (puede tardar ~1 min)...";
+      
+      // Stop the progress bar animation since we're just waiting
+      const progContainer = document.getElementById('progressContainer');
+      if (progContainer) progContainer.style.display = 'none';
+    }
   } finally {
     _isLoadingPlayers = false;
   }
@@ -1606,4 +1647,66 @@ document.addEventListener('DOMContentLoaded', () => {
     screen_w: window.screen?.width,
     screen_h: window.screen?.height,
   }).catch(() => {});
+
+  // Periodic check to ensure players are loaded
+  setInterval(() => {
+    if (allPlayers.length === 0 && !_isLoadingPlayers) {
+      console.log("No players loaded. Automatically triggering loadPlayers()...");
+      
+      const compEl = document.getElementById('selCompetition');
+      if (compEl && (!compEl.value || compEl.options.length === 0)) {
+        if (compEl.options.length === 0) {
+          const opt = document.createElement('option');
+          opt.value = 'laliga';
+          opt.textContent = 'LaLiga';
+          compEl.appendChild(opt);
+        }
+        compEl.value = 'laliga';
+      }
+      
+      const appEl = document.getElementById('selApp');
+      if (appEl && (!appEl.value || appEl.options.length === 0)) {
+        if (appEl.options.length === 0) {
+          const optApp = document.createElement('option');
+          optApp.value = 'biwenger';
+          optApp.textContent = 'Biwenger';
+          appEl.appendChild(optApp);
+        }
+        appEl.value = 'biwenger';
+      }
+      
+      loadPlayers();
+    }
+  }, 5000); // Check every 5 seconds
+
+  // Check immediately on visibility change (when switching back to the tab)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && allPlayers.length === 0 && !_isLoadingPlayers) {
+      console.log("Tab focused and no players loaded. Automatically triggering loadPlayers()...");
+      
+      const compEl = document.getElementById('selCompetition');
+      if (compEl && (!compEl.value || compEl.options.length === 0)) {
+        if (compEl.options.length === 0) {
+          const opt = document.createElement('option');
+          opt.value = 'laliga';
+          opt.textContent = 'LaLiga';
+          compEl.appendChild(opt);
+        }
+        compEl.value = 'laliga';
+      }
+      
+      const appEl = document.getElementById('selApp');
+      if (appEl && (!appEl.value || appEl.options.length === 0)) {
+        if (appEl.options.length === 0) {
+          const optApp = document.createElement('option');
+          optApp.value = 'biwenger';
+          optApp.textContent = 'Biwenger';
+          appEl.appendChild(optApp);
+        }
+        appEl.value = 'biwenger';
+      }
+      
+      loadPlayers();
+    }
+  });
 });
