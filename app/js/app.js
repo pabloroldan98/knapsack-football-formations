@@ -68,6 +68,7 @@ const I18N = {
     "footer.terms": "Términos de uso",
     "footer.cookies": "Preferencias de cookies",
     "footer.bmc": "Invítame a un café",
+    "footer.disclaimer": "Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga Fantasy ni Biwenger. Todos los nombres y marcas registradas pertenecen a sus respectivos dueños.",
     "player.form": "Forma", "player.fixture": "Partido", "player.titular": "Titular",
     "formations.name": "Formación", "formations.points": "puntos",
     "formations.see_all": "Ver todos los jugadores utilizados",
@@ -102,6 +103,7 @@ const I18N = {
     "squad.deleted_ok": "Plantilla borrada",
     "squad.loaded_ok": "Plantilla cargada",
     "squad.players_count": "jugadores",
+    "footer.disclaimer": "Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga Fantasy ni Biwenger. Todos los nombres y marcas registradas pertenecen a sus respectivos dueños.",
   },
   en: {
     "app.title": "Fantasy Calculator",
@@ -195,6 +197,7 @@ const I18N = {
     "squad.deleted_ok": "Squad deleted",
     "squad.loaded_ok": "Squad loaded",
     "squad.players_count": "players",
+    "footer.disclaimer": "Calculadora Fantasy is not affiliated with, sponsored by, or endorsed by LaLiga Fantasy or Biwenger. All names and trademarks belong to their respective owners.",
   }
 };
 

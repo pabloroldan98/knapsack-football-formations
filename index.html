@@ -475,7 +475,12 @@
     <div class="about-text">
       <p id="t-about-p1">Calculadora Fantasy nació de la pasión por el fantasy football y la programación. Nuestro objetivo es ofrecer una herramienta accesible y potente que ayude a los jugadores de LaLiga Fantasy y Biwenger a tomar mejores decisiones basadas en datos.</p>
       <p id="t-about-p2">El proyecto es desarrollado y mantenido de forma independiente. Si tienes sugerencias, errores que reportar o simplemente quieres saludar, no dudes en escribirnos.</p>
-      <p>📩 <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
+      
+      <h3 id="t-methodology-title" style="margin-top: 2rem; margin-bottom: 1rem; color: #ff4c4c;">Nuestra Metodología de Datos</h3>
+      <p id="t-methodology-p1">Calculadora Fantasy no solo muestra datos, sino que los procesa y optimiza. Recopilamos información pública de rendimiento deportivo y aplicamos nuestro propio <strong>algoritmo de optimización combinatoria (Knapsack Problem adaptado)</strong> para generar las alineaciones perfectas. Cada recomendación que ves es el resultado de procesar millones de combinaciones posibles en tiempo real.</p>
+      <p id="t-methodology-p2">Nuestro valor añadido radica en la creación de un sistema de puntuación ponderada propio que tiene en cuenta factores como: forma reciente, dificultad del calendario a corto plazo, y el historial de titularidad del jugador en su equipo actual. Todo esto se procesa para que tú solo tengas que hacer un clic y obtener el mejor resultado matemático para tu equipo.</p>
+      
+      <p style="margin-top: 1.5rem;">📩 <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
     </div>
   </section>
 
@@ -497,6 +502,9 @@
         <img src="img/bmc-icon.svg" alt="Buy Me a Coffee">
         <span id="t-bmc-text">Invítame a un café</span>
       </a>
+    </div>
+    <div class="footer-row" style="margin-top:10px; font-size: 0.75rem; color: rgba(255,255,255,.4);">
+      <span id="t-disclaimer">Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga Fantasy ni Biwenger. Todos los nombres y marcas registradas pertenecen a sus respectivos dueños.</span>
     </div>
     <div class="footer-row" style="margin-top:8px">
       &copy; <span id="footerYear"></span> Calculadora Fantasy
@@ -532,6 +540,7 @@
         nav_home: "Inicio", nav_how: "Cómo funciona", nav_features: "Características",
         nav_faq: "FAQ", nav_about: "Sobre nosotros", nav_privacy: "Privacidad",
         contact_label: "Contacto",
+        disclaimer: "Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga Fantasy ni Biwenger. Todos los nombres y marcas registradas pertenecen a sus respectivos dueños.",
         footer_privacy: "Política de Privacidad",
         footer_terms: "Términos de uso",
         footer_cookies: "Preferencias de cookies",
@@ -564,6 +573,9 @@
         about_title: "Sobre nosotros",
         about_p1: "Calculadora Fantasy nació de la pasión por el fantasy football y la programación. Nuestro objetivo es ofrecer una herramienta accesible y potente que ayude a los jugadores de LaLiga Fantasy y Biwenger a tomar mejores decisiones basadas en datos.",
         about_p2: "El proyecto es desarrollado y mantenido de forma independiente. Si tienes sugerencias, errores que reportar o simplemente quieres saludar, no dudes en escribirnos.",
+        methodology_title: "Nuestra Metodología de Datos",
+        methodology_p1: "Calculadora Fantasy no solo muestra datos, sino que los procesa y optimiza. Recopilamos información pública de rendimiento deportivo y aplicamos nuestro propio algoritmo de optimización combinatoria (Knapsack Problem adaptado) para generar las alineaciones perfectas. Cada recomendación que ves es el resultado de procesar millones de combinaciones posibles en tiempo real.",
+        methodology_p2: "Nuestro valor añadido radica en la creación de un sistema de puntuación ponderada propio que tiene en cuenta factores como: forma reciente, dificultad del calendario a corto plazo, y el historial de titularidad del jugador en su equipo actual. Todo esto se procesa para que tú solo tengas que hacer un clic y obtener el mejor resultado matemático para tu equipo.",
         slides: [
           { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.", img: "img/presupuesto.png" },
           { title: "⚽ Mi mejor 11 posible", desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.", img: "img/once.png" },
@@ -578,6 +590,7 @@
         nav_home: "Home", nav_how: "How it works", nav_features: "Features",
         nav_faq: "FAQ", nav_about: "About us", nav_privacy: "Privacy",
         contact_label: "Contact",
+        disclaimer: "Calculadora Fantasy is not affiliated with, sponsored by, or endorsed by LaLiga Fantasy or Biwenger. All names and trademarks belong to their respective owners.",
         footer_privacy: "Privacy Policy",
         footer_terms: "Terms of Use",
         footer_cookies: "Cookie preferences",
@@ -610,6 +623,9 @@
         about_title: "About us",
         about_p1: "Fantasy Calculator was born from a passion for fantasy football and programming. Our goal is to provide an accessible and powerful tool that helps LaLiga Fantasy and Biwenger players make better data-driven decisions.",
         about_p2: "The project is independently developed and maintained. If you have suggestions, bugs to report or just want to say hello, feel free to write to us.",
+        methodology_title: "Our Data Methodology",
+        methodology_p1: "Fantasy Calculator does not just display data; it processes and optimizes it. We collect public sports performance data and apply our own combinatorial optimization algorithm (adapted Knapsack Problem) to generate the perfect lineups. Every recommendation you see is the result of processing millions of possible combinations in real-time.",
+        methodology_p2: "Our added value lies in creating our own weighted scoring system that takes into account factors like: recent form, short-term fixture difficulty, and the player's starting history. All this is processed so you only have to click once to get the best mathematical result for your team.",
         slides: [
           { title: "💰 Best lineups by budget", desc: "Compute the best possible lineup based on your available budget.", img: "img/budget.png" },
           { title: "⚽ My best possible lineup", desc: "Pick your available players and get your ideal starting eleven.", img: "img/lineup.png" },
@@ -641,6 +657,7 @@
       txt("nav-home", "nav_home"); txt("nav-how", "nav_how"); txt("nav-features", "nav_features");
       txt("nav-faq", "nav_faq"); txt("nav-about", "nav_about"); txt("nav-privacy", "nav_privacy");
       txt("t-contact-label", "contact_label");
+      txt("t-disclaimer", "disclaimer");
       txt("t-footer-privacy", "footer_privacy"); txt("t-footer-terms", "footer_terms"); txt("t-footer-cookies", "footer_cookies");
       txt("t-bmc-text", "bmc_text");
       txt("t-cookie-text", "cookie_text"); txt("t-cookie-privacy-link", "cookie_privacy");
@@ -665,6 +682,7 @@
       txt("t-faq5-q", "faq5_q"); htm("t-faq5-a", "faq5_a");
       txt("t-faq6-q", "faq6_q"); htm("t-faq6-a", "faq6_a");
       txt("t-about-title", "about_title"); txt("t-about-p1", "about_p1"); txt("t-about-p2", "about_p2");
+      txt("t-methodology-title", "methodology_title"); txt("t-methodology-p1", "methodology_p1"); txt("t-methodology-p2", "methodology_p2");
 
       slides = T.slides.slice();
       currentSlide = 0;

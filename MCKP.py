@@ -161,52 +161,58 @@ def get_contrained_solution(scores, paths, count):
 # Translated by pabloroldan98
 
 def knapsack_multichoice_onepick(weights, values, max_weight, verbose=False, update_master=None):
-    if len(weights) == 0:
-        return 0
+    if not weights or not weights[0]:
+        return 0, []
 
-    last_array = [-1 for _ in range(max_weight + 1)]
+    last_array = [float('-inf')] * (max_weight + 1)
     last_path = [[] for _ in range(max_weight + 1)]
     for i in range(len(weights[0])):
-        if weights[0][i] < max_weight:
-            if last_array[weights[0][i]] < values[0][i]:
-                last_array[weights[0][i]] = values[0][i]
-                last_path[weights[0][i]] = [(0, i)]
-            # last_array[weight[0][i]] = max(last_array[weight[0][i]], value[0][i])
+        w = weights[0][i]
+        if w <= max_weight and last_array[w] < values[0][i]:
+            last_array[w] = values[0][i]
+            last_path[w] = [(0, i)]
 
     # Calculate the total number of operations based on each item j in each category i
     total_operations = sum(len(weights[i]) for i in range(1, len(weights)))
     # Progress bar setup
-    pbar = tqdm(total=total_operations, disable=not verbose, desc='Knapsack Progress')
+    pbar = tqdm(total=total_operations, disable=not verbose, desc='Knapsack Progress') if tqdm else None
 
     for i in range(1, len(weights)):
-        current_array = [-1 for _ in range(max_weight + 1)]
+        current_array = [float('-inf')] * (max_weight + 1)
         current_path = [[] for _ in range(max_weight + 1)]
         for j in range(len(weights[i])):
-            for k in range(weights[i][j], max_weight + 1):
-                if last_array[k - weights[i][j]] > 0:
-                    if current_array[k] < last_array[k - weights[i][j]] + values[i][j]:
-                        current_array[k] = last_array[k - weights[i][j]] + values[i][j]
-                        current_path[k] = copy.deepcopy(last_path[k - weights[i][j]])
+            w_ij = weights[i][j]
+            v_ij = values[i][j]
+            for k in range(w_ij, max_weight + 1):
+                prev = k - w_ij
+                if last_array[prev] > float('-inf'):
+                    new_val = last_array[prev] + v_ij
+                    if current_array[k] < new_val:
+                        current_array[k] = new_val
+                        current_path[k] = copy.deepcopy(last_path[prev])
                         current_path[k].append((i, j))
-                    # current_array[k] = max(current_array[k], last_array[k - weight[i][j]] + value[i][j])
-            pbar.update(1) # Update progress after processing each weight
-            # if master_pbar:
-            #     master_pbar.update(1)
+            if pbar:
+                pbar.update(1)
             if update_master:
                 update_master(1)
         last_array = current_array
         last_path = current_path
-    pbar.close()
+    if pbar:
+        pbar.close()
 
-    solution, index_path = get_onepick_solution(last_array, last_path)
-
-    return solution, index_path
+    # solution, index_path = get_onepick_solution(last_array, last_path)
+    # return solution, index_path
+    best_score = max(last_array)
+    if best_score > float('-inf'):
+        best_idx = last_array.index(best_score)
+        return best_score, last_path[best_idx]
+    
+    return 0, []
 
 
 def get_onepick_solution(scores, paths):
     scores_paths = list(zip(scores, paths))
     scores_paths_by_score = sorted(scores_paths, key=lambda tup: tup[0], reverse=True)
-
     return scores_paths_by_score[0][0], scores_paths_by_score[0][1]
 
 

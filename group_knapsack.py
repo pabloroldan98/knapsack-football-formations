@@ -90,13 +90,14 @@ def best_full_teams(players_list, formations=possible_formations, budget=300, sp
     def _apply_speed_limit(plist, formation):
         if not speed_up:
             return plist
-        if any(x >= 6 for x in formation):
+        max_pos = max(formation) if formation else 0
+        if max_pos >= 6:
             return plist[:90]
-        if any(x >= 5 for x in formation):
+        if max_pos >= 5:
             return plist[:100]
-        if any(x >= 4 for x in formation):
+        if max_pos >= 4:
             return plist[:150]
-        return plist
+        return plist[:1000]
 
     # Precompute everything in a single pass (avoid filtering twice per formation)
     total_global_operations = 0
