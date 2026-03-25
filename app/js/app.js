@@ -1680,7 +1680,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       loadPlayers();
     }
-  }, 5000); // Check every 5 seconds
+  }, 1000); // Check every 1 second
 
   // Check immediately on visibility change (when switching back to the tab)
   document.addEventListener('visibilitychange', () => {
