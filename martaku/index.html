@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorpresa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Fondo más oscuro y con muy poco fade */
+      --bg: #0d0d12;
+      --bg-gradient: #16161d;
+      --text: #eaeaea;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at top center, var(--bg-gradient) 0%, var(--bg) 100%);
+      font-family: 'Lora', serif;
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* --- PANTALLA DE INICIO --- */
+    #start-screen {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000;
+      transition: opacity 0.8s ease;
+    }
+
+    .btn-start {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      padding: 1rem 3rem;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .btn-start:hover {
+      transform: scale(1.05) translateY(-2px);
+      background: #c0392b;
+    }
+
+    /* El "Texto de prueba" en Comic Sans y como logo DVD */
+    #texto-prueba {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 1.8rem;
+      color: #e74c3c;
+      pointer-events: none;
+      white-space: nowrap;
+      /* Se quita la animacion CSS para controlarlo con JS */
+      transform: translate3d(0,0,0);
+      will-change: transform;
+    }
+
+    @media (max-width: 600px) {
+      #texto-prueba { font-size: 1.4rem; }
+    }
+
+    /* --- PANTALLA DE VÍDEO --- */
+    #video-screen {
+      position: fixed; inset: 0;
+      background: #000;
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    #intro-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .btn-skip {
+      position: absolute;
+      bottom: 40px; right: 40px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      font-family: sans-serif;
+      transition: background 0.2s;
+      z-index: 1001; /* Asegura que esté por encima del vídeo */
+    }
+    .btn-skip:hover { background: rgba(255,255,255,0.2); }
+
+    /* --- FONDOS DECORATIVOS --- */
+    .bg-decorations {
+      position: fixed; 
+      top: 0; left: 0; width: 100%; height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.8; /* Ahora se ven mucho más */
+    }
+    .bg-decorations img {
+      position: absolute;
+      width: 25vw;
+      min-width: 140px;
+      max-width: 280px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      filter: none; /* Quitamos el sepia y el blanco y negro para que resalten */
+    }
+
+    /* Aseguramos que se queden por los lados usando combinaciones de flex/grid si quisieramos, 
+       o simplemente manteniendo sus top/left ajustados para bordes */
+
+    /* --- CONTENIDO PRINCIPAL (SCRAPBOOK) --- */
+    #main-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
+      width: 100%;
+    }
+
+    /* TÍTULO PRINCIPAL Y DESCRIPCIÓN */
+    #intro-text-container {
+      text-align: center;
+      margin-top: 3rem;
+      margin-bottom: -1rem;
+      position: relative;
+      z-index: 5;
+      padding: 0 1rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #main-title {
+      color: #f0f0f0;
+      font-family: 'Lora', serif;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+    }
+
+    #main-description {
+      color: #ffffff; /* Blanco puro para que contraste bien con el fondo oscuro */
+      font-family: 'Consolas', 'Courier New', monospace; /* Fuente Consolas */
+      font-size: 1.15rem; /* Un pelín más grande para facilitar lectura */
+      line-height: 1.6;
+      text-shadow: 2px 2px 8px rgba(0,0,0,1); /* Sombreado más fuerte para despegarlo del fondo */
+      white-space: pre-wrap; /* Permite que si pones saltos de línea se respeten */
+      background: rgba(0, 0, 0, 0.4); /* Un fondo oscuro semitransparente detrás del texto para que lea bien pase lo que pase detrás */
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      #intro-text-container {
+        margin-top: 2rem;
+      }
+      #main-title {
+        font-size: 1.8rem;
+      }
+      #main-description {
+        font-size: 0.95rem;
+      }
+    }
+
+    .scrapbook {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .photo-container {
+      background: #1a1a1a; /* Fondo oscuro tipo polaroid negra */
+      /* Reducido el padding para que el texto esté más pegado a la imagen */
+      padding: 10px 10px 15px 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8); /* Sombra un poco más fuerte */
+      border-radius: 6px;
+      width: 90%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s;
+      gap: 5px; /* Controla el espaciado interno general */
+    }
+
+    /* Pequeñas rotaciones para darle efecto álbum */
+    .block:nth-child(even) .photo-container { transform: rotate(1deg); }
+    .block:nth-child(odd) .photo-container { transform: rotate(-1deg); }
+    
+    .photo-container:hover {
+      transform: scale(1.02) rotate(0deg) !important;
+      z-index: 10;
+    }
+
+    /* --- COLLAGE --- */
+    .collage-grid {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      cursor: pointer; /* Indica que se puede hacer click para la canción */
+      align-items: center;
+      justify-items: center;
+    }
+
+    .collage-item {
+      width: 100%;
+      height: 100%;
+      max-height: 45vh; /* Evitar que se desborden en altura */
+      object-fit: contain; /* NO RECORTAR NUNCA LAS IMÁGENES */
+      border-radius: 4px;
+      display: block;
+    }
+
+    /* Layout 1: Una foto (ocupa todo) */
+    .layout-1 {
+      grid-template-columns: 1fr;
+    }
+    .layout-1 .collage-item {
+      max-height: 65vh;
+    }
+
+    /* Layout 3: 3a arriba, 3b abajo */
+    .layout-3 {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+    }
+
+    /* Layout 4: 4a izq, 4b der, 4c abajo */
+    .layout-4 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .layout-4 .collage-item:nth-child(1) { grid-column: 1 / 2; }
+    .layout-4 .collage-item:nth-child(2) { grid-column: 2 / 3; }
+    .layout-4 .collage-item:nth-child(3) { grid-column: 1 / -1; max-height: 50vh; }
+
+    /* Layout 5: 5a arriba, 5b medio, 5c izq, 5d der */
+    .layout-5 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .layout-5 .collage-item:nth-child(1) { grid-column: 1 / -1; max-height: 40vh; }
+    .layout-5 .collage-item:nth-child(2) { grid-column: 1 / -1; max-height: 40vh; }
+    .layout-5 .collage-item:nth-child(3) { grid-column: 1 / 2; }
+    .layout-5 .collage-item:nth-child(4) { grid-column: 2 / 3; }
+
+    /* Layout 6: 6a izq, 6b der, 6c (gif) abajo */
+    .layout-6 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .layout-6 .collage-item:nth-child(1) { grid-column: 1 / 2; }
+    .layout-6 .collage-item:nth-child(2) { grid-column: 2 / 3; }
+    .layout-6 .collage-item:nth-child(3) { grid-column: 1 / -1; max-height: 50vh; }
+
+    /* Layout 7: Cuadrado */
+    .layout-7 {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    /* TEXTO / CAPTION */
+    .caption {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      color: #f0f0f0; /* Texto claro porque está sobre el polaroid oscuro */
+      text-align: center;
+      margin-top: 5px; /* Más pegado a la imagen */
+      margin-bottom: 5px; /* Más pegado a los botones */
+      width: 100%;
+      line-height: 1.4;
+    }
+
+    /* REPRODUCTOR */
+    audio {
+      width: 100%;
+      margin-top: 0px; /* Reducido para acercarlo al texto */
+      outline: none;
+    }
+
+    /* BOTONES DE AUDIO (Too much) */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 5px;
+      gap: 10px;
+    }
+
+    .btn-nav {
+      padding: 8px 16px;
+      font-family: 'Lora', serif;
+      font-weight: bold;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      background: #333; /* Fondo oscuro para el botón */
+      color: #eaeaea; /* Texto claro */
+    }
+    .btn-nav:hover {
+      background: #444;
+      transform: translateY(-2px);
+    }
+    .btn-nav-next {
+      background: #ff4d6d;
+      color: white;
+    }
+    .btn-nav-next:hover {
+      background: #ff1e46;
+    }
+
+    /* --- MODAL EXTRAS (Fotos y Playlist) --- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(13, 13, 18, 0.95);
+      z-index: 10000;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 12px;
+      color: #f0f0f0;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+    .btn-close {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: transparent;
+      border: none;
+      color: #aaa;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-close:hover { color: #fff; }
+    
+    .playlist-list {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ccc;
+      padding-left: 20px;
+    }
+    .playlist-list li { margin-bottom: 8px; }
+    .playlist-list strong { color: #ff4d6d; }
+    
+    /* Sliders horizontales */
+    .slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 15px;
+      padding-bottom: 15px;
+      margin-bottom: 10px;
+    }
+    .slider img {
+      scroll-snap-align: center;
+      height: 250px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #0d0d12;
+      flex-shrink: 0; /* Evita que las fotos se aplasten */
+    }
+    .slider::-webkit-scrollbar { height: 8px; }
+    .slider::-webkit-scrollbar-track { background: #333; border-radius: 4px; }
+    .slider::-webkit-scrollbar-thumb { background: #ff4d6d; border-radius: 4px; }
+
+    @media (max-width: 768px) {
+      .scrapbook { gap: 4rem; padding: 2rem 1rem; }
+      .photo-container { width: 100%; padding: 8px 8px 12px 8px; }
+      .caption { font-size: 1.05rem; margin-top: 8px; }
+      .btn-skip { bottom: 20px; right: 20px; padding: 0.6rem 1.2rem; }
+      .btn-nav { font-size: 0.8rem; padding: 8px 12px; }
+      .modal-content { padding: 1.5rem 1rem; }
+      .slider img { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE INICIO -->
+  <div id="start-screen">
+    <div id="texto-prueba">Texto de prueba</div>
+    <button class="btn-start" id="start-btn">Comenzar</button>
+  </div>
+
+  <!-- PANTALLA DEL VÍDEO INTRODUCTORIO -->
+  <div id="video-screen">
+    <video id="intro-video" src="videos/intro.mp4" playsinline></video>
+    <button class="btn-skip" id="skip-btn">Saltar Intro</button>
+  </div>
+
+  <!-- FONDOS DECORATIVOS -->
+  <!-- Mover las fotos hacia los laterales izquierdo y derecho -->
+  <div class="bg-decorations">
+      <img src="images/x01.jpeg" style="top: 2%; left: -2%; transform: rotate(-10deg);">
+      <img src="images/x02.jpeg" style="top: 15%; right: -5%; transform: rotate(15deg);">
+      <img src="images/x03.jpeg" style="top: 30%; left: -6%; transform: rotate(5deg);">
+      <img src="images/x04.webp" style="top: 40%; right: -2%; transform: rotate(-5deg);">
+      <img src="images/x05.jpeg" style="top: 55%; left: -3%; transform: rotate(12deg);">
+      <img src="images/x06.jpeg" style="top: 65%; right: -8%; transform: rotate(-15deg);">
+      <img src="images/x07.jpeg" style="top: 80%; left: -4%; transform: rotate(8deg);">
+      <img src="images/x08.jpeg" style="top: 85%; right: -2%; transform: rotate(-12deg);">
+      <img src="images/x09.jpeg" style="bottom: -5%; left: 15%; transform: rotate(10deg);">
+      <img src="images/x10.jpeg" style="bottom: -5%; right: 15%; transform: rotate(-8deg);">
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div id="main-content">
+      <div id="intro-text-container">
+          <h1 id="main-title">Martálbum<br>(versión final final_bueno - este si ~ FINAL_03)</h1>
+          <p id="main-description">Sé que es una calentada que te cagas, pero bueno, he querido poner un poco algunos de los recuerdos que tenemos juntos, que 4 meses dan para más de lo que uno cree la verdad. :)<br>Aquí hay fotos tuyas y de cosas que me recuerdan a ti, además la idea es que *esto* es un álbum, tienes portadas a las canciones y las canciones como tal.<br><br>Bueno, mucho texto pero es que estoy nervioso :)) Disfruta <3 </p>
+      </div>
+      <div class="scrapbook" id="scrapbook">
+          <!-- Los bloques se generan mediante JS -->
+      </div>
+      
+      <!-- BOTÓN EXTRAS AL FINAL -->
+      <div style="text-align: center; margin-top: 5rem; margin-bottom: 5rem; position: relative; z-index: 10;">
+        <button id="btn-open-extras" class="btn-nav" style="font-size: 1.2rem; padding: 15px 30px; background: #ff4d6d; color: white;">Fotos y Playlist</button>
+      </div>
+  </div>
+
+  <!-- MODAL EXTRAS -->
+  <div id="extras-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="btn-close-extras" class="btn-close">&times;</button>
+      <h2 style="text-align:center; font-family:'Lora', serif; font-size: 2.5rem; margin-bottom:2rem; color: #ff4d6d; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">Fotos y Playlist</h2>
+
+      <h3 style="font-family:'Lora', serif; font-size: 1.8rem; margin-bottom: 1rem;">Playlist Oficial</h3>
+      <ol class="playlist-list">
+        <li><strong>Knocking Water Over</strong> - Bo Burnham</li>
+        <li><strong>Sin Noticias De Holanda</strong> - Melendi</li>
+        <li><strong>A Little Piece Of Heaven</strong> - Avenged Sevenfold</li>
+        <li><strong>IRIS OUT</strong> - Kenshi Yonezu</li>
+        <li><strong>El Team Rocket</strong> - TU MADRE ES PVTA</li>
+        <li><strong>Attack On Titans - All Openings (1-9)</strong> - Various Artists</li>
+        <li><strong>Tu jardín con enanitos</strong> - Melendi</li>
+        <li><strong>Piratas Del Bar Caribe</strong> - Melendi</li>
+        <li><strong>Do I Wanna Know?</strong> - Arctic Monkeys</li>
+      </ol>
+
+      <h3 style="font-family:'Lora', serif; font-size: 1.8rem; margin-top:3rem; margin-bottom: 1rem;">Fotos de fondo</h3>
+      <div class="slider">
+        <img src="images/x01.jpeg" loading="lazy">
+        <img src="images/x02.jpeg" loading="lazy">
+        <img src="images/x03.jpeg" loading="lazy">
+        <img src="images/x04.webp" loading="lazy">
+        <img src="images/x05.jpeg" loading="lazy">
+        <img src="images/x06.jpeg" loading="lazy">
+        <img src="images/x07.jpeg" loading="lazy">
+        <img src="images/x08.jpeg" loading="lazy">
+        <img src="images/x09.jpeg" loading="lazy">
+        <img src="images/x10.jpeg" loading="lazy">
+      </div>
+
+      <h3 style="font-family:'Lora', serif; font-size: 1.8rem; margin-top:3rem; margin-bottom: 1rem;">Fotos del álbum (por sección)</h3>
+      <div id="album-sliders">
+        <!-- Generado en JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const startScreen = document.getElementById('start-screen');
+    const startBtn = document.getElementById('start-btn');
+    const videoScreen = document.getElementById('video-screen');
+    const introVideo = document.getElementById('intro-video');
+    const skipBtn = document.getElementById('skip-btn');
+    const mainContent = document.getElementById('main-content');
+    const scrapbookContainer = document.getElementById('scrapbook');
+
+    /* =========================================================
+       DATOS: Imágenes y Audios
+       Se mapean los assets exactos de tu carpeta extra/
+       ========================================================= */
+    const blocksData = [
+      {
+        id: "01",
+        layout: "layout-1",
+        images: ['images/01.jpg'],
+        audios: ['music/01.mp3'],
+        text: "Nuestra primera cita (NO DRAMATIZADA)"
+      },
+      {
+        id: "02",
+        layout: "layout-1",
+        images: ['images/02.jpeg'],
+        audios: ['music/02.mp3'],
+        text: "Tus regalinchis c:"
+      },
+      {
+        id: "03",
+        layout: "layout-3", // 3a arriba, 3b abajo
+        images: ['images/03a.jpeg', 'images/03b.jpg'],
+        audios: ['music/03.mp3'],
+        text: "Tu regalo de Navidad :)"
+      },
+      {
+        id: "04",
+        layout: "layout-4", // 4a izq, 4b der, 4c abajo
+        images: ['images/04a.jpeg', 'images/04b.jpg', 'images/04c.jpg'],
+        audios: ['music/04.mp3'],
+        text: "Probablemente la mejor recomendación de serie que he recibido, GRACIAS"
+      },
+      {
+        id: "05",
+        layout: "layout-5", // 5a arriba, 5b en medio, 5c izq, 5d der
+        images: ['images/05a.jpeg', 'images/05b.jpeg', 'images/05c.jpeg', 'images/05d.jpeg'],
+        audios: ['music/05.mp3'],
+        text: "Murciégalo abducido, Murciégalo abducido"
+      },
+      {
+        id: "06",
+        layout: "layout-6", // 6a izq, 6b der, 6c (gif) abajo
+        images: ['images/06a.jpg', 'images/06b.webp', 'images/06c.gif'],
+        audios: ['music/06.mp3'],
+        text: "Otra recomendación absolutamente GOD<br>(esto es 100% canon, ocurrió así)"
+      },
+      {
+        id: "07",
+        layout: "layout-7", // Cuadrado
+        images: ['images/07a.webp', 'images/07b.webp', 'images/07c.webp', 'images/07d.webp'],
+        audios: ['music/07a.mp3', 'music/07b.mp3'],
+        text: "Fotos Bullying :D"
+      },
+      {
+        id: "08",
+        layout: "layout-1",
+        images: ['images/08.jpeg'],
+        audios: ['music/08.mp3'],
+        text: "Tú 💚"
+      }
+    ];
+
+    // Generar DOM dinámicamente
+    blocksData.forEach((block) => {
+      const blockEl = document.createElement('div');
+      blockEl.className = 'block';
+
+      const photoContainer = document.createElement('div');
+      photoContainer.className = 'photo-container';
+      
+      // Contenedor de las imágenes (Collage)
+      const collageGrid = document.createElement('div');
+      collageGrid.className = 'collage-grid ' + block.layout;
+      
+      block.images.forEach(src => {
+        const el = document.createElement('img');
+        el.src = src;
+        el.className = 'collage-item';
+        el.loading = 'lazy';
+        collageGrid.appendChild(el);
+      });
+      
+      photoContainer.appendChild(collageGrid);
+
+      // El texto dentro del marco blanco, justo debajo del collage
+      const captionEl = document.createElement('p');
+      captionEl.className = 'caption';
+      captionEl.innerHTML = block.text; // Cambiado a innerHTML para que pille los <br>
+
+      // Aseguramos que el reproductor de audio va debajo del texto
+      const controlsContainer = document.createElement('div');
+      controlsContainer.style.width = '100%';
+      controlsContainer.style.display = 'flex';
+      controlsContainer.style.flexDirection = 'column';
+      controlsContainer.style.gap = '8px';
+      
+      // Crear el reproductor de audio
+      const audioEl = document.createElement('audio');
+      audioEl.controls = true;
+      controlsContainer.appendChild(audioEl);
+
+      // Truco para servidores locales básicos: descargamos el audio como Blob
+      // para que el navegador nos permita hacer click en la barra de progreso
+      // (ya que python -m http.server a veces bloquea el avance por no soportar "Range Requests")
+      function loadAudioSource(url, playAfterLoad = false) {
+        fetch(url)
+          .then(res => res.blob())
+          .then(blob => {
+            audioEl.src = URL.createObjectURL(blob);
+            if (playAfterLoad) audioEl.play().catch(e => console.log(e));
+          })
+          .catch(err => {
+            audioEl.src = url; // Fallback
+            if (playAfterLoad) audioEl.play();
+          });
+      }
+
+      loadAudioSource(block.audios[0]);
+
+      // Tocar la imagen inicia/pausa la canción asociada
+      collageGrid.addEventListener('click', () => {
+        if (audioEl.paused) {
+          audioEl.play();
+        } else {
+          audioEl.pause();
+        }
+      });
+
+      // Botones de navegación si hay múltiples AUDIOS
+      if (block.audios.length > 1) {
+        let currentAudioIdx = 0;
+        
+        const navContainer = document.createElement('div');
+        navContainer.className = 'nav-buttons';
+        
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'btn-nav';
+        prevBtn.textContent = "Quiero volver al 'too much'";
+        prevBtn.style.display = 'none'; // Oculto inicialmente
+        
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn-nav btn-nav-next';
+        nextBtn.textContent = "Esto es too 'too much'";
+
+        function updateAudio(newIndex) {
+          currentAudioIdx = newIndex;
+          
+          const wasPlaying = !audioEl.paused;
+          // Usamos nuestra función para cargar el siguiente audio
+          loadAudioSource(block.audios[currentAudioIdx], wasPlaying);
+          
+          prevBtn.style.display = currentAudioIdx > 0 ? 'block' : 'none';
+          nextBtn.style.display = currentAudioIdx < block.audios.length - 1 ? 'block' : 'none';
+        }
+
+        prevBtn.addEventListener('click', () => updateAudio(currentAudioIdx - 1));
+        nextBtn.addEventListener('click', () => updateAudio(currentAudioIdx + 1));
+
+        navContainer.appendChild(prevBtn);
+        navContainer.appendChild(nextBtn);
+        controlsContainer.appendChild(navContainer);
+      }
+
+      photoContainer.appendChild(captionEl);
+      photoContainer.appendChild(controlsContainer);
+      blockEl.appendChild(photoContainer);
+      scrapbookContainer.appendChild(blockEl);
+    });
+
+    // Control para que solo suene un audio a la vez
+    document.addEventListener('play', function(e) {
+      if (e.target.tagName && e.target.tagName.toLowerCase() === 'audio') {
+        const audios = document.getElementsByTagName('audio');
+        for (let i = 0; i < audios.length; i++) {
+          if (audios[i] !== e.target) {
+            audios[i].pause();
+          }
+        }
+      }
+    }, true);
+
+    // 0. Animación del "Texto de prueba" estilo DVD
+    const textoPrueba = document.getElementById('texto-prueba');
+    let x = 0; let y = 0;
+    let speedX = 2; let speedY = 2;
+    let colorIndex = 0;
+    const colors = ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22'];
+    
+    // Posición inicial aleatoria
+    x = Math.random() * (window.innerWidth - 200);
+    y = Math.random() * (window.innerHeight - 50);
+
+    function animateDVD() {
+      if (startScreen.style.display === 'none') return; // Parar si ya no se ve
+
+      const rect = textoPrueba.getBoundingClientRect();
+      const winWidth = window.innerWidth;
+      const winHeight = window.innerHeight;
+
+      let hit = false;
+      // Rebote en X
+      if (x + rect.width >= winWidth) {
+        speedX = -Math.abs(speedX);
+        x = winWidth - rect.width;
+        hit = true;
+      } else if (x <= 0) {
+        speedX = Math.abs(speedX);
+        x = 0;
+        hit = true;
+      }
+      
+      // Rebote en Y
+      if (y + rect.height >= winHeight) {
+        speedY = -Math.abs(speedY);
+        y = winHeight - rect.height;
+        hit = true;
+      } else if (y <= 0) {
+        speedY = Math.abs(speedY);
+        y = 0;
+        hit = true;
+      }
+
+      if (hit) changeColor();
+
+      x += speedX;
+      y += speedY;
+
+      textoPrueba.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      requestAnimationFrame(animateDVD);
+    }
+
+    function changeColor() {
+      colorIndex = (colorIndex + 1) % colors.length;
+      textoPrueba.style.color = colors[colorIndex];
+    }
+
+    animateDVD(); // Iniciar animación DVD
+
+    // 1. Iniciar experiencia
+    startBtn.addEventListener('click', () => {
+      startScreen.style.opacity = '0';
+      setTimeout(() => {
+        startScreen.style.display = 'none';
+        
+        videoScreen.style.display = 'flex';
+        videoScreen.offsetHeight; // Reflow
+        videoScreen.style.opacity = '1';
+        
+        introVideo.play().catch(e => {
+          console.log("Error al reproducir el intro:", e);
+          iniciarAlbum(); // si falla, saltar al album
+        });
+      }, 800);
+    });
+
+    // 2. Finalizar vídeo y pasar al álbum
+    const iniciarAlbum = () => {
+      introVideo.pause();
+      videoScreen.style.opacity = '0';
+      
+      setTimeout(() => {
+        videoScreen.style.display = 'none';
+        
+        mainContent.style.display = 'block';
+        mainContent.offsetHeight; // Reflow
+        mainContent.style.opacity = '1';
+      }, 800);
+    };
+
+    skipBtn.addEventListener('click', iniciarAlbum);
+    introVideo.addEventListener('ended', iniciarAlbum);
+
+    // 3. Lógica del modal de Fotos y Playlist
+    const modalExtras = document.getElementById('extras-modal');
+    const btnOpenExtras = document.getElementById('btn-open-extras');
+    const btnCloseExtras = document.getElementById('btn-close-extras');
+    const albumSlidersContainer = document.getElementById('album-sliders');
+
+    // Generar sliders del álbum dinámicamente
+    blocksData.forEach((block, index) => {
+      const sectionTitle = document.createElement('h4');
+      sectionTitle.textContent = `Sección ${index + 1}`;
+      sectionTitle.style.fontFamily = "'Lora', serif";
+      sectionTitle.style.marginTop = "1.5rem";
+      sectionTitle.style.marginBottom = "0.5rem";
+      sectionTitle.style.color = "#ccc";
+      
+      const slider = document.createElement('div');
+      slider.className = 'slider';
+      
+      block.images.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.loading = 'lazy';
+        slider.appendChild(img);
+      });
+
+      albumSlidersContainer.appendChild(sectionTitle);
+      albumSlidersContainer.appendChild(slider);
+    });
+
+    btnOpenExtras.addEventListener('click', () => {
+      modalExtras.style.display = 'block';
+      modalExtras.offsetHeight; // Reflow
+      modalExtras.style.opacity = '1';
+      document.body.style.overflow = 'hidden'; // Evitar scroll del fondo
+    });
+
+    btnCloseExtras.addEventListener('click', () => {
+      modalExtras.style.opacity = '0';
+      setTimeout(() => {
+        modalExtras.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+      }, 500);
+    });
+
+  </script>
+</body>
+</html>
