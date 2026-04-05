@@ -327,13 +327,20 @@
       background: #444;
       transform: translateY(-2px);
     }
-    .btn-nav-next {
+    .btn-nav {
+      background: #ff4d6d;
+      color: white;
+    }
+    .btn-nav:hover {
+      background: #ff1e46;
+    }
+    /* .btn-nav-next {
       background: #ff4d6d;
       color: white;
     }
     .btn-nav-next:hover {
       background: #ff1e46;
-    }
+    } */
 
     /* --- MODAL EXTRAS (Fotos y Playlist) --- */
     .modal-overlay {
@@ -649,7 +656,7 @@
         
         const nextBtn = document.createElement('button');
         nextBtn.className = 'btn-nav btn-nav-next';
-        nextBtn.textContent = "Esto es too 'too much'";
+        nextBtn.textContent = "Esto es 'too much'";
 
         function updateAudio(newIndex) {
           currentAudioIdx = newIndex;
@@ -788,7 +795,7 @@
     // Generar sliders del álbum dinámicamente
     blocksData.forEach((block, index) => {
       const sectionTitle = document.createElement('h4');
-      sectionTitle.textContent = `Sección ${index + 1}`;
+      sectionTitle.textContent = `Fotos ${index + 1}`;
       sectionTitle.style.fontFamily = "'Lora', serif";
       sectionTitle.style.marginTop = "1.5rem";
       sectionTitle.style.marginBottom = "0.5rem";
