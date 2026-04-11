@@ -153,35 +153,99 @@
           {
             "id": 50323,
             "date": 1776193200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 300,
               "name": "Liverpool",
               "slug": "liverpool",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 79,
+                "standings": null,
+                "homeAway": [
+                  94,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  73,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 80,
               "name": "PSG",
               "slug": "psg",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 64,
+                "standings": null,
+                "homeAway": [
+                  89,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  59,
+                  25
+                ]
+              }
             }
           },
           {
             "id": 50324,
             "date": 1776193200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 29,
               "name": "Atlético de Madrid",
               "slug": "atletico-de-madrid",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 62,
+                "standings": null,
+                "homeAway": [
+                  67,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  62,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 84,
               "name": "Barcelona",
               "slug": "barcelona",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 69,
+                "standings": null,
+                "homeAway": [
+                  93,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
             }
           },
           {
@@ -192,13 +256,45 @@
               "id": 28,
               "name": "Arsenal",
               "slug": "arsenal",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 45,
+                "standings": null,
+                "homeAway": [
+                  36,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  47,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 36,
               "name": "Sporting Portugal",
               "slug": "sporting-portugal",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 83,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  82,
+                  25
+                ]
+              }
             }
           },
           {
@@ -209,13 +305,45 @@
               "id": 31,
               "name": "Bayern Munich",
               "slug": "bayern-munich",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 67,
+                "standings": null,
+                "homeAway": [
+                  82,
+                  30
+                ],
+                "form": [
+                  62,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 39,
               "name": "Real Madrid",
               "slug": "real-madrid",
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 85,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  78,
+                  45
+                ],
+                "goalDiff": [
+                  79,
+                  25
+                ]
+              }
             }
           }
         ]
@@ -1987,7 +2115,7 @@
         "statusInfo": "Concussion problems",
         "playedHome": 3,
         "playedAway": 5,
-        "statusChange": 1773212413,
+        "statusChange": 1773918000,
         "fitness": [
           "injured",
           3,
@@ -11649,12 +11777,10 @@
         "price": 3210000,
         "fantasyPrice": 40000000,
         "number": 8,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Leg problems",
         "playedHome": 3,
         "playedAway": 2,
-        "statusChange": 1775628025,
         "fitness": [
           4,
           "injured",
@@ -11805,12 +11931,10 @@
         "price": 2080000,
         "fantasyPrice": 17000000,
         "number": 19,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Undisclosed problems",
         "playedHome": 3,
         "playedAway": 4,
-        "statusChange": 1775628027,
         "fitness": [
           4,
           3,
@@ -12420,13 +12544,11 @@
         "price": 2310000,
         "fantasyPrice": 24000000,
         "number": 10,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Undisclosed problems",
         "iconHero": "i/p/hero/10952.png",
         "playedHome": 5,
         "playedAway": 5,
-        "statusChange": 1775728806,
         "fitness": [
           4,
           2,
@@ -13462,10 +13584,12 @@
         "price": 7200000,
         "fantasyPrice": 9000000,
         "number": 42,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -250000,
+        "statusInfo": "Hamstring problems",
         "playedHome": 4,
         "playedAway": 3,
+        "statusChange": 1775818809,
         "fitness": [
           null,
           15,
@@ -15751,7 +15875,7 @@
         "iconHero": "i/p/hero/11151.png",
         "playedHome": 3,
         "playedAway": 4,
-        "statusChange": 1772103600,
+        "statusChange": 1775822409,
         "fitness": [
           "injured",
           "injured",
@@ -15824,13 +15948,11 @@
         "price": 10400000,
         "fantasyPrice": 46000000,
         "number": 8,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -170000,
-        "statusInfo": "Hamstring problems",
         "iconHero": "i/p/hero/15733.png",
         "playedHome": 5,
         "playedAway": 3,
-        "statusChange": 1775718008,
         "fitness": [
           3,
           6,
@@ -16994,17 +17116,59 @@
           {
             "id": 50318,
             "date": 1776279600,
-            "round": {
-              "id": 4843
-            },
+            "status": "pending",
             "home": {
               "id": 28,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 45,
+                "standings": null,
+                "homeAway": [
+                  36,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  47,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 36,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 83,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  82,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17016,17 +17180,59 @@
           {
             "id": 50324,
             "date": 1776193200,
-            "round": {
-              "id": 4843
-            },
+            "status": "preview",
             "home": {
               "id": 29,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 62,
+                "standings": null,
+                "homeAway": [
+                  67,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  62,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 84,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 69,
+                "standings": null,
+                "homeAway": [
+                  93,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17038,17 +17244,59 @@
           {
             "id": 50322,
             "date": 1776279600,
-            "round": {
-              "id": 4843
-            },
+            "status": "pending",
             "home": {
               "id": 31,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 67,
+                "standings": null,
+                "homeAway": [
+                  82,
+                  30
+                ],
+                "form": [
+                  62,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 39,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 85,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  78,
+                  45
+                ],
+                "goalDiff": [
+                  79,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17060,17 +17308,59 @@
           {
             "id": 50318,
             "date": 1776279600,
-            "round": {
-              "id": 4843
-            },
+            "status": "pending",
             "home": {
               "id": 28,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 45,
+                "standings": null,
+                "homeAway": [
+                  36,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  47,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 36,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 83,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  82,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17082,17 +17372,59 @@
           {
             "id": 50322,
             "date": 1776279600,
-            "round": {
-              "id": 4843
-            },
+            "status": "pending",
             "home": {
               "id": 31,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 67,
+                "standings": null,
+                "homeAway": [
+                  82,
+                  30
+                ],
+                "form": [
+                  62,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 39,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 85,
+                "standings": null,
+                "homeAway": [
+                  100,
+                  30
+                ],
+                "form": [
+                  78,
+                  45
+                ],
+                "goalDiff": [
+                  79,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17104,17 +17436,59 @@
           {
             "id": 50323,
             "date": 1776193200,
-            "round": {
-              "id": 4843
-            },
+            "status": "preview",
             "home": {
               "id": 300,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 79,
+                "standings": null,
+                "homeAway": [
+                  94,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  73,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 80,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 64,
+                "standings": null,
+                "homeAway": [
+                  89,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  59,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17126,17 +17500,59 @@
           {
             "id": 50324,
             "date": 1776193200,
-            "round": {
-              "id": 4843
-            },
+            "status": "preview",
             "home": {
               "id": 29,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 62,
+                "standings": null,
+                "homeAway": [
+                  67,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  62,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 84,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 69,
+                "standings": null,
+                "homeAway": [
+                  93,
+                  30
+                ],
+                "form": [
+                  58,
+                  45
+                ],
+                "goalDiff": [
+                  58,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       },
@@ -17148,23 +17564,65 @@
           {
             "id": 50323,
             "date": 1776193200,
-            "round": {
-              "id": 4843
-            },
+            "status": "preview",
             "home": {
               "id": 300,
-              "score": null
+              "score": null,
+              "difficulty": {
+                "rating": 79,
+                "standings": null,
+                "homeAway": [
+                  94,
+                  30
+                ],
+                "form": [
+                  73,
+                  45
+                ],
+                "goalDiff": [
+                  73,
+                  25
+                ]
+              }
             },
             "away": {
               "id": 80,
-              "score": null
-            }
+              "score": null,
+              "difficulty": {
+                "rating": 64,
+                "standings": null,
+                "homeAway": [
+                  89,
+                  30
+                ],
+                "form": [
+                  50,
+                  45
+                ],
+                "goalDiff": [
+                  59,
+                  25
+                ]
+              }
+            },
+            "round": {
+              "id": 4843
+            },
+            "competition": {
+              "id": 51,
+              "name": "Champions League",
+              "slug": "champions-league",
+              "sport": "football",
+              "currency": "€"
+            },
+            "preview": null,
+            "summary": null
           }
         ]
       }
     },
-    "update": 1775876410,
-    "etag": 3460774622,
+    "update": 1775859774,
+    "etag": 4031048432,
     "scoreID": 3
   },
   "meta": {
