@@ -276,7 +276,7 @@
           "id": 4594,
           "name": "Round 35",
           "short": "R35",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4595,
@@ -327,208 +327,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4594,
-        "name": "Round 35",
-        "short": "R35",
-        "status": "active",
-        "end": 1776178800,
-        "type": "round",
-        "games": [
-          {
-            "id": 47256,
-            "date": 1776105000,
-            "status": "finished",
-            "home": {
-              "id": 156,
-              "name": "Real Valladolid",
-              "slug": "real-valladolid",
-              "score": 0
-            },
-            "away": {
-              "id": 584,
-              "name": "Eibar",
-              "slug": "eibar",
-              "score": 0
-            }
-          },
-          {
-            "id": 47259,
-            "date": 1776020400,
-            "status": "finished",
-            "home": {
-              "id": 471,
-              "name": "Racing",
-              "slug": "racing",
-              "score": 5
-            },
-            "away": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 1
-            }
-          },
-          {
-            "id": 47262,
-            "date": 1776011400,
-            "status": "finished",
-            "home": {
-              "id": 159,
-              "name": "Cádiz",
-              "slug": "cadiz",
-              "score": 0
-            },
-            "away": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 1
-            }
-          },
-          {
-            "id": 47263,
-            "date": 1776011400,
-            "status": "finished",
-            "home": {
-              "id": 171,
-              "name": "Mirandes",
-              "slug": "mirandes",
-              "score": 2
-            },
-            "away": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 2
-            }
-          },
-          {
-            "id": 47257,
-            "date": 1776003300,
-            "status": "finished",
-            "home": {
-              "id": 157,
-              "name": "Huesca",
-              "slug": "huesca",
-              "score": 1
-            },
-            "away": {
-              "id": 421,
-              "name": "Deportivo",
-              "slug": "deportivo",
-              "score": 1
-            }
-          },
-          {
-            "id": 47261,
-            "date": 1775995200,
-            "status": "finished",
-            "home": {
-              "id": 290,
-              "name": "Granada",
-              "slug": "granada",
-              "score": 1
-            },
-            "away": {
-              "id": 293,
-              "name": "Cultural Leonesa",
-              "slug": "cultural-leonesa",
-              "score": 0
-            }
-          },
-          {
-            "id": 47260,
-            "date": 1775934000,
-            "status": "finished",
-            "home": {
-              "id": 160,
-              "name": "Córdoba",
-              "slug": "cordoba",
-              "score": 1
-            },
-            "away": {
-              "id": 154,
-              "name": "Zaragoza",
-              "slug": "zaragoza",
-              "score": 0
-            }
-          },
-          {
-            "id": 47258,
-            "date": 1775925000,
-            "status": "finished",
-            "home": {
-              "id": 422,
-              "name": "Málaga",
-              "slug": "malaga",
-              "score": 2
-            },
-            "away": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 0
-            }
-          },
-          {
-            "id": 47264,
-            "date": 1775916900,
-            "status": "finished",
-            "home": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 2
-            },
-            "away": {
-              "id": 295,
-              "name": "Albacete",
-              "slug": "albacete",
-              "score": 1
-            }
-          },
-          {
-            "id": 47265,
-            "date": 1775916900,
-            "status": "finished",
-            "home": {
-              "id": 588,
-              "name": "Burgos CF",
-              "slug": "burgos-cf",
-              "score": 1
-            },
-            "away": {
-              "id": 291,
-              "name": "Sporting",
-              "slug": "sporting",
-              "score": 0
-            }
-          },
-          {
-            "id": 47266,
-            "date": 1775845800,
-            "status": "finished",
-            "home": {
-              "id": 780,
-              "name": "Ceuta",
-              "slug": "ceuta",
-              "score": 0
-            },
-            "away": {
-              "id": 587,
-              "name": "Real Sociedad B",
-              "slug": "real-sociedad-b",
-              "score": 0
-            }
-          }
-        ],
-        "pool": {
-          "id": 610936
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35069": {
         "id": 35069,
@@ -1118,10 +917,12 @@
         "price": 1080000,
         "fantasyPrice": 16000000,
         "number": 18,
-        "status": "warned",
+        "status": "sanctioned",
         "priceIncrement": -10000,
+        "statusInfo": "Accumulation of yellow cards.",
         "playedHome": 10,
         "playedAway": 11,
+        "statusChange": 1776178815,
         "fitness": [
           2,
           6,
@@ -1470,12 +1271,10 @@
         "price": 1240000,
         "fantasyPrice": 10000000,
         "number": 30,
-        "status": "sanctioned",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Accumulation of yellow cards.",
         "playedHome": 15,
         "playedAway": 13,
-        "statusChange": 1775455216,
         "fitness": [
           "sanctioned",
           2,
@@ -2303,7 +2102,7 @@
         "price": 1220000,
         "fantasyPrice": 11000000,
         "number": 16,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": -10000,
         "playedHome": 10,
         "playedAway": 10,
@@ -6212,7 +6011,7 @@
         "playedHome": 12,
         "playedAway": 11,
         "extraStatus": "warned",
-        "statusChange": 1773572410,
+        "statusChange": 1773572400,
         "fitness": [
           "injured",
           "injured",
@@ -7194,10 +6993,12 @@
         "price": 2730000,
         "fantasyPrice": 20000000,
         "number": 14,
-        "status": "warned",
+        "status": "sanctioned",
         "priceIncrement": -10000,
+        "statusInfo": "Accumulation of yellow cards.",
         "playedHome": 16,
         "playedAway": 15,
+        "statusChange": 1776178809,
         "fitness": [
           2,
           2,
@@ -7244,12 +7045,10 @@
         "price": 200000,
         "fantasyPrice": 7000000,
         "number": 27,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Undetermined discomfort.",
         "playedHome": 6,
         "playedAway": 9,
-        "statusChange": 1774292415,
         "fitness": [
           "doubt",
           "doubt",
@@ -14549,8 +14348,8 @@
           null,
           null
         ],
-        "points": 0,
-        "pointsHome": 0,
+        "points": 2,
+        "pointsHome": 2,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -15968,7 +15767,7 @@
           {
             "id": 47269,
             "date": 1776521700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 154,
               "score": null,
@@ -16248,7 +16047,7 @@
           {
             "id": 47275,
             "date": 1776529800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 293,
               "score": null,
@@ -16598,7 +16397,7 @@
           {
             "id": 47275,
             "date": 1776529800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 293,
               "score": null,
@@ -17088,7 +16887,7 @@
           {
             "id": 47276,
             "date": 1776529800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 547,
               "score": null,
@@ -17298,7 +17097,7 @@
           {
             "id": 47276,
             "date": 1776529800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 547,
               "score": null,
@@ -17438,7 +17237,7 @@
           {
             "id": 47269,
             "date": 1776521700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 154,
               "score": null,
@@ -17501,8 +17300,8 @@
         ]
       }
     },
-    "update": 1776222010,
-    "etag": 3827309268,
+    "update": 1776205647,
+    "etag": 892755489,
     "scoreID": 1
   },
   "meta": {
