@@ -30,6 +30,12 @@
       'wait_for_update': 500
     });
   </script>
+  <!-- Google tag (gtag.js) — GA4 G-QXF4YKPSMD (respects Consent Mode state) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <script>
+    gtag('js', new Date());
+    gtag('config', 'G-QXF4YKPSMD');
+  </script>
   <!-- Google AdSense (respects Consent Mode state) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
 
@@ -188,9 +194,9 @@
 
     /* ── Hero ───────────────────────────────────────────────────────────── */
     .hero {
-      min-height: 100vh; display: flex; flex-direction: column;
+      min-height: 72vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center; text-align: center;
-      padding: 7rem 1rem 3rem;
+      padding: 6rem 1rem 3rem;
     }
     .hero h1 { font-size: 2.2rem; margin-bottom: .3rem; }
     .hero h4 { font-size: 1.05rem; font-weight: 400; color: rgba(255,255,255,.7); margin-bottom: 1.5rem; }
@@ -274,6 +280,33 @@
       color: rgba(255,255,255,.7); line-height: 1.5; padding-left: 18px;
     }
 
+    /* ── Guides section ─────────────────────────────────────────────────── */
+    .guides-intro {
+      max-width: 700px; margin: 0 auto 1.8rem; text-align: center;
+      color: rgba(255,255,255,.7); font-size: .95rem; line-height: 1.6;
+    }
+    .guides-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .guide-card {
+      display: flex; flex-direction: column;
+      background: #1a1f2e; border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px; padding: 1.1rem 1.2rem;
+      text-decoration: none !important; color: inherit;
+      transition: border-color .25s, transform .2s, box-shadow .2s;
+    }
+    .guide-card:hover {
+      border-color: rgba(255,76,76,.5); transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.2);
+    }
+    .guide-card .ico { font-size: 1.5rem; margin-bottom: .5rem; }
+    .guide-card h3 { font-size: 1rem; margin-bottom: .35rem; color: #fff; }
+    .guide-card p { font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.45; margin-bottom: .6rem; flex: 1; }
+    .guide-card .more { color: #ff6b6b; font-size: .82rem; font-weight: 600; }
+    .guides-cta { text-align: center; margin-top: 1.8rem; }
+    .guides-cta a { color: #ff6b6b; font-weight: 600; }
+
     /* ── About ──────────────────────────────────────────────────────────── */
     .about-text { max-width: 700px; margin: 0 auto; text-align: center; }
     .about-text p { font-size: .92rem; color: rgba(255,255,255,.75); line-height: 1.6; margin-bottom: 12px; }
@@ -354,6 +387,7 @@
       <a href="#hero" id="nav-home">Inicio</a>
       <a href="#how" id="nav-how">Cómo funciona</a>
       <a href="#features" id="nav-features">Características</a>
+      <a href="#guides" id="nav-guides">Guías</a>
       <a href="#faq" id="nav-faq">FAQ</a>
       <a href="#about" id="nav-about">Sobre nosotros</a>
       <a href="privacy.html" id="nav-privacy">Privacidad</a>
@@ -438,8 +472,51 @@
     </div>
   </section>
 
+  <!-- ═══ Guides ═══ -->
+  <section class="section section-alt" id="guides">
+    <h2 id="t-guides-title">Guías y estrategia Fantasy</h2>
+    <p class="guides-intro" id="t-guides-intro">Aprende a sacar más puntos en LaLiga Fantasy y Biwenger con nuestras guías: sistema de puntuación, gestión del presupuesto, cómo elegir jugadores y errores comunes.</p>
+
+    <div class="guides-grid">
+      <a href="guias/guia-laliga-fantasy.html" class="guide-card">
+        <div class="ico">⚽</div>
+        <h3 id="t-guide1-title">Guía completa de LaLiga Fantasy</h3>
+        <p id="t-guide1-desc">Puntuación, formaciones, mercado y estrategia básica para construir un equipo ganador.</p>
+        <span class="more" id="t-guide1-more">Leer guía →</span>
+      </a>
+      <a href="guias/guia-biwenger.html" class="guide-card">
+        <div class="ico">📊</div>
+        <h3 id="t-guide2-title">Guía completa de Biwenger</h3>
+        <p id="t-guide2-desc">Cómo puntúa Biwenger, gestión del mercado entre jornadas y trucos para subir en tu liga privada.</p>
+        <span class="more" id="t-guide2-more">Leer guía →</span>
+      </a>
+      <a href="guias/como-elegir-jugadores-fantasy.html" class="guide-card">
+        <div class="ico">🎯</div>
+        <h3 id="t-guide3-title">Cómo elegir jugadores Fantasy</h3>
+        <p id="t-guide3-desc">Los 7 factores que de verdad importan al fichar: forma, calendario, titularidad, rol y rentabilidad.</p>
+        <span class="more" id="t-guide3-more">Leer guía →</span>
+      </a>
+      <a href="guias/gestion-presupuesto-fantasy.html" class="guide-card">
+        <div class="ico">💰</div>
+        <h3 id="t-guide4-title">Gestión de presupuesto</h3>
+        <p id="t-guide4-desc">Cuánto gastar en cada línea, estrategias Balanced y Stars &amp; Scrubs y cuándo reservar dinero.</p>
+        <span class="more" id="t-guide4-more">Leer guía →</span>
+      </a>
+      <a href="guias/errores-comunes-fantasy.html" class="guide-card">
+        <div class="ico">⚠️</div>
+        <h3 id="t-guide5-title">10 errores comunes</h3>
+        <p id="t-guide5-desc">Los fallos más frecuentes en Fantasy Football y el proceso simple que los evita.</p>
+        <span class="more" id="t-guide5-more">Leer guía →</span>
+      </a>
+    </div>
+
+    <div class="guides-cta">
+      <a href="guias/" id="t-guides-cta">Ver todas las guías →</a>
+    </div>
+  </section>
+
   <!-- ═══ FAQ ═══ -->
-  <section class="section section-alt" id="faq">
+  <section class="section" id="faq">
     <h2 id="t-faq-title">Preguntas frecuentes</h2>
     <div class="faq-list">
       <details class="faq-item">
@@ -478,7 +555,7 @@
       
       <h3 id="t-methodology-title" style="margin-top: 2rem; margin-bottom: 1rem; color: #ff4c4c;">Nuestra Metodología de Datos</h3>
       <p id="t-methodology-p1">Calculadora Fantasy no solo muestra datos, sino que los procesa y optimiza. Recopilamos información pública de rendimiento deportivo y aplicamos nuestro propio <strong>algoritmo de optimización combinatoria (Knapsack Problem adaptado)</strong> para generar las alineaciones perfectas. Cada recomendación que ves es el resultado de procesar millones de combinaciones posibles en tiempo real.</p>
-      <p id="t-methodology-p2">Nuestro valor añadido radica en la creación de un sistema de puntuación ponderada propio que tiene en cuenta factores como: forma reciente, dificultad del calendario a corto plazo, y el historial de titularidad del jugador en su equipo actual. Todo esto se procesa para que tú solo tengas que hacer un clic y obtener el mejor resultado matemático para tu equipo.</p>
+      <div id="t-methodology-detail"></div>
       
       <p style="margin-top: 1.5rem;">📩 <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
     </div>
@@ -491,6 +568,8 @@
       <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
     </div>
     <div class="footer-row">
+      <a href="guias/" id="t-footer-guides">Guías</a>
+      <span class="footer-sep">|</span>
       <a href="privacy.html" id="t-footer-privacy">Política de Privacidad</a>
       <span class="footer-sep">|</span>
       <a href="terms.html" id="t-footer-terms">Términos de uso</a>
@@ -575,7 +654,23 @@
         about_p2: "El proyecto es desarrollado y mantenido de forma independiente. Si tienes sugerencias, errores que reportar o simplemente quieres saludar, no dudes en escribirnos.",
         methodology_title: "Nuestra Metodología de Datos",
         methodology_p1: "Calculadora Fantasy no solo muestra datos, sino que los procesa y optimiza. Recopilamos información pública de rendimiento deportivo y aplicamos nuestro propio algoritmo de optimización combinatoria (Knapsack Problem adaptado) para generar las alineaciones perfectas. Cada recomendación que ves es el resultado de procesar millones de combinaciones posibles en tiempo real.",
-        methodology_p2: "Nuestro valor añadido radica en la creación de un sistema de puntuación ponderada propio que tiene en cuenta factores como: forma reciente, dificultad del calendario a corto plazo, y el historial de titularidad del jugador en su equipo actual. Todo esto se procesa para que tú solo tengas que hacer un clic y obtener el mejor resultado matemático para tu equipo.",
+        methodology_p2: "",
+        methodology_detail: '\n          <p>Cada jugador recibe una puntuación esperada calculada con la siguiente fórmula transparente:</p>\n          <p style="text-align:center; margin:12px auto; padding:12px 16px; background:#1a1f2e; border:1px solid rgba(255,76,76,.25); border-radius:8px; max-width:620px; font-size:.95rem;">\n            <strong>puntuación esperada = media Sofascore × factor forma × factor dificultad + boost penaltis</strong>\n          </p>\n          <ul style="text-align:left; max-width:640px; margin:10px auto 0; font-size:.9rem; color: rgba(255,255,255,.75); line-height:1.6; padding-left: 1.2rem;">\n            <li><strong>Media Sofascore</strong> como base objetiva del rendimiento real del jugador.</li>\n            <li><strong>Factor de forma ∈ [0,95 · · · 1,05]</strong> calculado a partir de cómo evoluciona el precio del jugador (si sube es buena forma, si baja es mala).</li>\n            <li><strong>Factor de dificultad ∈ [0,95 · · · 1,05]</strong> basado en el ELO del rival y en el historial del jugador contra ese equipo.</li>\n            <li><strong>Boost por penaltis</strong> si el jugador es el lanzador habitual (o el portero que suele pararlos).</li>\n          </ul>\n          <p style="margin-top:12px">Los multiplicadores en banda estrecha (±5%) evitan sobrereacciones a datos puntuales y mantienen la nota Sofascore como referencia principal. Puedes ver la metodología completa aplicada al fichaje en nuestra <a href="guias/como-elegir-jugadores-fantasy.html">guía de cómo elegir jugadores</a>.</p>\n        ',
+        nav_guides: "Guías",
+        guides_title: "Guías y estrategia Fantasy",
+        guides_intro: "Aprende a sacar más puntos en LaLiga Fantasy y Biwenger con nuestras guías: sistema de puntuación, gestión del presupuesto, cómo elegir jugadores y errores comunes.",
+        guide1_title: "Guía completa de LaLiga Fantasy",
+        guide1_desc: "Puntuación, formaciones, mercado y estrategia básica para construir un equipo ganador.",
+        guide2_title: "Guía completa de Biwenger",
+        guide2_desc: "Cómo puntúa Biwenger, gestión del mercado entre jornadas y trucos para subir en tu liga privada.",
+        guide3_title: "Cómo elegir jugadores Fantasy",
+        guide3_desc: "Los 7 factores que de verdad importan al fichar: forma, calendario, titularidad, rol y rentabilidad.",
+        guide4_title: "Gestión de presupuesto",
+        guide4_desc: "Cuánto gastar en cada línea, estrategias Balanced y Stars & Scrubs y cuándo reservar dinero.",
+        guide5_title: "10 errores comunes",
+        guide5_desc: "Los fallos más frecuentes en Fantasy Football y el proceso simple que los evita.",
+        guide_more: "Leer guía →",
+        guides_cta: "Ver todas las guías →",
         slides: [
           { title: "💰 Mejores 11s con presupuesto", desc: "Calcula la mejor alineación posible según tu presupuesto disponible.", img: "img/presupuesto.png" },
           { title: "⚽ Mi mejor 11 posible", desc: "Elige tus jugadores disponibles y descubre tu mejor once ideal.", img: "img/once.png" },
@@ -625,7 +720,23 @@
         about_p2: "The project is independently developed and maintained. If you have suggestions, bugs to report or just want to say hello, feel free to write to us.",
         methodology_title: "Our Data Methodology",
         methodology_p1: "Fantasy Calculator does not just display data; it processes and optimizes it. We collect public sports performance data and apply our own combinatorial optimization algorithm (adapted Knapsack Problem) to generate the perfect lineups. Every recommendation you see is the result of processing millions of possible combinations in real-time.",
-        methodology_p2: "Our added value lies in creating our own weighted scoring system that takes into account factors like: recent form, short-term fixture difficulty, and the player's starting history. All this is processed so you only have to click once to get the best mathematical result for your team.",
+        methodology_p2: "",
+        methodology_detail: '\n          <p>Each player gets an expected score computed with the following transparent formula:</p>\n          <p style="text-align:center; margin:12px auto; padding:12px 16px; background:#1a1f2e; border:1px solid rgba(255,76,76,.25); border-radius:8px; max-width:620px; font-size:.95rem;">\n            <strong>expected score = Sofascore average × form factor × fixture difficulty factor + penalty boost</strong>\n          </p>\n          <ul style="text-align:left; max-width:640px; margin:10px auto 0; font-size:.9rem; color: rgba(255,255,255,.75); line-height:1.6; padding-left: 1.2rem;">\n            <li><strong>Sofascore average</strong> as the objective base of the player\'s real performance.</li>\n            <li><strong>Form factor ∈ [0.95 · · · 1.05]</strong> derived from how the player\'s price has evolved (rising price = good form, falling price = bad form).</li>\n            <li><strong>Fixture difficulty factor ∈ [0.95 · · · 1.05]</strong> based on the opponent\'s ELO and the player\'s history against that team.</li>\n            <li><strong>Penalty boost</strong> if the player is the usual penalty taker (or the goalkeeper who tends to save them).</li>\n          </ul>\n          <p style="margin-top:12px">The narrow ±5% band prevents overreaction to noisy data and keeps the Sofascore rating as the dominant signal. You can read the full methodology applied to signings in our <a href="guias/como-elegir-jugadores-fantasy.html">how to pick players guide</a>.</p>\n        ',
+        nav_guides: "Guides",
+        guides_title: "Fantasy guides and strategy",
+        guides_intro: "Learn how to score more points in LaLiga Fantasy and Biwenger: scoring system, budget management, how to pick players and common mistakes.",
+        guide1_title: "Complete LaLiga Fantasy guide",
+        guide1_desc: "Scoring, formations, market and basic strategy to build a winning team.",
+        guide2_title: "Complete Biwenger guide",
+        guide2_desc: "How Biwenger scoring works, market management between matchweeks and tips to climb in your league.",
+        guide3_title: "How to pick Fantasy players",
+        guide3_desc: "The 7 factors that really matter when signing: form, fixtures, starting probability, role and value.",
+        guide4_title: "Budget management",
+        guide4_desc: "How much to spend on each line, Balanced and Stars & Scrubs strategies and when to keep cash.",
+        guide5_title: "10 common mistakes",
+        guide5_desc: "The most frequent Fantasy Football mistakes and the simple process that prevents them.",
+        guide_more: "Read guide →",
+        guides_cta: "See all guides →",
         slides: [
           { title: "💰 Best lineups by budget", desc: "Compute the best possible lineup based on your available budget.", img: "img/budget.png" },
           { title: "⚽ My best possible lineup", desc: "Pick your available players and get your ideal starting eleven.", img: "img/lineup.png" },
@@ -682,7 +793,16 @@
       txt("t-faq5-q", "faq5_q"); htm("t-faq5-a", "faq5_a");
       txt("t-faq6-q", "faq6_q"); htm("t-faq6-a", "faq6_a");
       txt("t-about-title", "about_title"); txt("t-about-p1", "about_p1"); txt("t-about-p2", "about_p2");
-      txt("t-methodology-title", "methodology_title"); txt("t-methodology-p1", "methodology_p1"); txt("t-methodology-p2", "methodology_p2");
+      txt("t-methodology-title", "methodology_title"); txt("t-methodology-p1", "methodology_p1");
+      htm("t-methodology-detail", "methodology_detail");
+      txt("nav-guides", "nav_guides");
+      txt("t-guides-title", "guides_title"); txt("t-guides-intro", "guides_intro");
+      txt("t-guide1-title", "guide1_title"); txt("t-guide1-desc", "guide1_desc"); txt("t-guide1-more", "guide_more");
+      txt("t-guide2-title", "guide2_title"); txt("t-guide2-desc", "guide2_desc"); txt("t-guide2-more", "guide_more");
+      txt("t-guide3-title", "guide3_title"); txt("t-guide3-desc", "guide3_desc"); txt("t-guide3-more", "guide_more");
+      txt("t-guide4-title", "guide4_title"); txt("t-guide4-desc", "guide4_desc"); txt("t-guide4-more", "guide_more");
+      txt("t-guide5-title", "guide5_title"); txt("t-guide5-desc", "guide5_desc"); txt("t-guide5-more", "guide_more");
+      txt("t-guides-cta", "guides_cta");
 
       slides = T.slides.slice();
       currentSlide = 0;
@@ -765,13 +885,14 @@
     });
 
     // ─── Cookie consent ─────────────────────────────────────────────────────
+    // Nota: gtag.js (GA4 G-QXF4YKPSMD) se carga siempre desde el <head>.
+    // Consent Mode v2 controla si se usan cookies/identificadores según la elección del usuario.
     function initCookieConsent() {
       const consent = localStorage.getItem('cookie_consent');
       if (consent) {
         document.getElementById('cookieBanner').classList.add('hidden');
         if (consent === 'accepted') {
           gtag('consent', 'update', { 'ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted','analytics_storage':'granted' });
-          enableAnalytics();
         }
       }
     }
@@ -779,7 +900,6 @@
       localStorage.setItem('cookie_consent', 'accepted');
       document.getElementById('cookieBanner').classList.add('hidden');
       gtag('consent', 'update', { 'ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted','analytics_storage':'granted' });
-      enableAnalytics();
     }
     function rejectCookies() {
       localStorage.setItem('cookie_consent', 'rejected');
@@ -789,18 +909,6 @@
     function resetCookieConsent() {
       localStorage.removeItem('cookie_consent');
       document.getElementById('cookieBanner').classList.remove('hidden');
-    }
-    function enableAnalytics() {
-      if (window.gtag) return;
-      const s = document.createElement('script'); s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD';
-      document.head.appendChild(s);
-      s.onload = () => {
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
-        window.gtag = gtag;
-        gtag('js', new Date()); gtag('config', 'G-QXF4YKPSMD');
-      };
     }
     initCookieConsent();
   </script>

@@ -16,7 +16,10 @@
   <link rel="icon" type="image/png" href="../logo.png">
   <link rel="apple-touch-icon" type="image/png" href="../logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google-adsense-account" content="ca-pub-7891666149137266">
+  <!-- Nota: esta es una SPA/calculadora sin contenido editorial. Por decisión de producto
+       y para cumplir las políticas de AdSense, NO se carga adsbygoogle.js aquí.
+       Los anuncios (cuando se activen) sólo aparecerán en las páginas con contenido
+       editorial (/, /guias/…, /privacy.html, /terms.html). -->
 
   <!-- Google Consent Mode v2 — must be BEFORE any Google tag -->
   <script>
@@ -30,8 +33,12 @@
       'wait_for_update': 500
     });
   </script>
-  <!-- Google AdSense (respects Consent Mode state) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) — GA4 G-QXF4YKPSMD (respects Consent Mode state) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <script>
+    gtag('js', new Date());
+    gtag('config', 'G-QXF4YKPSMD');
+  </script>
 
   <link rel="stylesheet" href="css/style.css">
 </head>

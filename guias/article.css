@@ -1,0 +1,175 @@
+/* ─── Estilos compartidos para las guías de Calculadora Fantasy ──────── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: #0e1117;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+@media (min-width: 1024px) { html, body { zoom: 1.2; } }
+a { color: #ff4c4c; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Navbar */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(14,17,23,.94); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 24px;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.nav-brand img { height: 26px; }
+.nav-links { display: flex; gap: 18px; font-size: .88rem; }
+.nav-links a { color: rgba(255,255,255,.7); }
+.nav-links a:hover { color: #fff; text-decoration: none; }
+@media (max-width: 600px) {
+  .nav { padding: 10px 14px; }
+  .nav-links { gap: 12px; font-size: .82rem; flex-wrap: wrap; justify-content: flex-end; }
+  .nav-brand span { display: none; }
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  max-width: 820px; margin: 0 auto; padding: 1rem 1.5rem 0;
+  font-size: .82rem; color: rgba(255,255,255,.55);
+}
+.breadcrumbs a { color: rgba(255,255,255,.7); }
+.breadcrumbs .sep { margin: 0 6px; opacity: .5; }
+
+/* Article */
+.article {
+  max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+}
+.article header { margin-bottom: 2rem; }
+.article h1 {
+  font-size: 2rem; line-height: 1.2; margin-bottom: .6rem;
+}
+.article .lead {
+  font-size: 1.05rem; color: rgba(255,255,255,.75);
+  line-height: 1.6; margin-bottom: 1rem;
+}
+.article .meta {
+  font-size: .82rem; color: rgba(255,255,255,.45);
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.article .meta span::after { content: '•'; margin-left: 10px; opacity: .4; }
+.article .meta span:last-child::after { content: ''; }
+
+.article h2 {
+  font-size: 1.45rem; margin: 2.2rem 0 .7rem;
+  color: #fff; border-left: 3px solid #ff4c4c; padding-left: .7rem;
+}
+.article h3 {
+  font-size: 1.15rem; margin: 1.6rem 0 .6rem; color: #ffb6b6;
+}
+.article p, .article li {
+  font-size: .98rem; line-height: 1.7; color: rgba(255,255,255,.85);
+  margin-bottom: .9rem;
+}
+.article ul, .article ol {
+  padding-left: 1.5rem; margin-bottom: 1rem;
+}
+.article li { margin-bottom: .5rem; }
+.article strong { color: #fff; }
+.article blockquote {
+  border-left: 3px solid #ff4c4c;
+  background: rgba(255,76,76,.08);
+  padding: 1rem 1.2rem;
+  margin: 1.3rem 0;
+  border-radius: 4px;
+  color: rgba(255,255,255,.85);
+  font-style: italic;
+}
+.article .callout {
+  background: #1a1f2e; border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px; padding: 1rem 1.2rem; margin: 1.3rem 0;
+}
+.article .callout h4 { color: #ff4c4c; font-size: 1rem; margin-bottom: .4rem; }
+.article .callout p { margin-bottom: 0; font-size: .93rem; }
+
+.article table {
+  width: 100%; border-collapse: collapse; margin: 1.2rem 0;
+  font-size: .9rem;
+}
+.article th, .article td {
+  border: 1px solid rgba(255,255,255,.1);
+  padding: .55rem .8rem; text-align: left;
+}
+.article th { background: #1a1f2e; color: #ff6b6b; }
+.article td { color: rgba(255,255,255,.82); }
+
+.article .cta-box {
+  margin: 2rem 0; padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255,76,76,.14), rgba(255,76,76,.04));
+  border: 1px solid rgba(255,76,76,.3); border-radius: 10px;
+  text-align: center;
+}
+.article .cta-box h3 { color: #fff; margin-bottom: .6rem; }
+.article .cta-box p { margin-bottom: 1rem; }
+.article .cta-btn {
+  display: inline-block; padding: 10px 24px; background: #ff4c4c;
+  color: #fff !important; border-radius: 6px; font-weight: 600;
+  transition: background .25s;
+}
+.article .cta-btn:hover { background: #c83232; text-decoration: none !important; }
+
+/* Related articles */
+.related {
+  max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 3rem;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.related h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+.related-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.related-card {
+  display: block; background: #1a1f2e;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px; padding: 1rem;
+  transition: border-color .2s, transform .15s;
+}
+.related-card:hover {
+  border-color: rgba(255,76,76,.5); transform: translateY(-2px); text-decoration: none;
+}
+.related-card h3 { font-size: .98rem; color: #fff; margin-bottom: .3rem; }
+.related-card p { font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.4; }
+
+/* Guides hub */
+.hub-header {
+  max-width: 980px; margin: 0 auto; padding: 3rem 1.5rem 1.5rem; text-align: center;
+}
+.hub-header h1 { font-size: 2.1rem; margin-bottom: .5rem; }
+.hub-header p { color: rgba(255,255,255,.7); font-size: 1rem; line-height: 1.6; max-width: 640px; margin: 0 auto; }
+.hub-grid {
+  max-width: 980px; margin: 0 auto; padding: 0 1.5rem 4rem;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.hub-card {
+  display: flex; flex-direction: column;
+  background: #1a1f2e; border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px; padding: 1.3rem;
+  transition: border-color .25s, transform .2s, box-shadow .25s;
+}
+.hub-card:hover {
+  border-color: rgba(255,76,76,.55); transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25); text-decoration: none;
+}
+.hub-card .icon { font-size: 1.8rem; margin-bottom: .6rem; }
+.hub-card h2 { font-size: 1.1rem; margin-bottom: .4rem; color: #fff; }
+.hub-card p { font-size: .88rem; color: rgba(255,255,255,.68); line-height: 1.5; margin-bottom: .7rem; flex: 1; }
+.hub-card .read-more { color: #ff6b6b; font-size: .85rem; font-weight: 600; }
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 2rem 1.5rem; text-align: center;
+  font-size: .82rem; color: rgba(255,255,255,.55);
+}
+.site-footer a { color: rgba(255,255,255,.7); }
+.site-footer a:hover { color: #ff4c4c; }
+.site-footer .row { margin-bottom: 6px; }
+.site-footer .sep { margin: 0 6px; opacity: .4; }

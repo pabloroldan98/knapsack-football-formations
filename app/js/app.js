@@ -1535,6 +1535,8 @@ function initEventListeners() {
 }
 
 // ─── Cookie Consent / Privacy ───────────────────────────────────────────────
+// Nota: gtag.js (GA4 G-QXF4YKPSMD) se carga siempre desde el <head> de index.html.
+// Consent Mode v2 controla si se usan cookies/identificadores según la elección del usuario.
 function initCookieConsent() {
   const banner = document.getElementById('cookieConsent');
   if (!banner) return;
@@ -1548,7 +1550,6 @@ function initCookieConsent() {
         'ad_personalization': 'granted',
         'analytics_storage': 'granted'
       });
-      enableAnalytics();
     }
   }
 }
@@ -1562,7 +1563,6 @@ function acceptCookies() {
     'ad_personalization': 'granted',
     'analytics_storage': 'granted'
   });
-  enableAnalytics();
 }
 
 function rejectCookies() {
@@ -1574,22 +1574,6 @@ function rejectCookies() {
     'ad_personalization': 'denied',
     'analytics_storage': 'denied'
   });
-}
-
-function enableAnalytics() {
-  // Google Analytics – only load after consent
-  if (window.gtag) return; // already loaded
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD';
-  document.head.appendChild(script);
-  script.onload = () => {
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag('js', new Date());
-    gtag('config', 'G-QXF4YKPSMD');
-  };
 }
 
 function openPrivacyFromApp() {
