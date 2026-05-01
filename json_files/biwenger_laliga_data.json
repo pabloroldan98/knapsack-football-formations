@@ -292,7 +292,7 @@
           "id": 4517,
           "name": "Round 34",
           "short": "R34",
-          "status": "pending"
+          "status": "active"
         },
         {
           "id": 4518,
@@ -330,64 +330,25 @@
         "id": 4517,
         "name": "Round 34",
         "short": "R34",
-        "status": "pending",
-        "start": 1777662000,
-        "end": 1777662000,
+        "status": "active",
+        "end": 1777993200,
         "type": "round",
         "games": [
           {
             "id": 46454,
             "date": 1777662000,
-            "status": "preview",
+            "status": "finished",
             "home": {
               "id": 289,
               "name": "Girona",
               "slug": "girona",
-              "score": null,
-              "difficulty": {
-                "rating": 33,
-                "standings": [
-                  27,
-                  35
-                ],
-                "homeAway": [
-                  14,
-                  20
-                ],
-                "form": [
-                  55,
-                  25
-                ],
-                "goalDiff": [
-                  33,
-                  20
-                ]
-              }
+              "score": 0
             },
             "away": {
               "id": 465,
               "name": "Mallorca",
               "slug": "mallorca",
-              "score": null,
-              "difficulty": {
-                "rating": 31,
-                "standings": [
-                  38,
-                  35
-                ],
-                "homeAway": [
-                  22,
-                  20
-                ],
-                "form": [
-                  32,
-                  25
-                ],
-                "goalDiff": [
-                  26,
-                  20
-                ]
-              }
+              "score": 1
             }
           },
           {
@@ -510,9 +471,9 @@
               "slug": "alaves",
               "score": null,
               "difficulty": {
-                "rating": 39,
+                "rating": 40,
                 "standings": [
-                  58,
+                  59,
                   35
                 ],
                 "homeAway": [
@@ -535,9 +496,9 @@
               "slug": "athletic",
               "score": null,
               "difficulty": {
-                "rating": 30,
+                "rating": 29,
                 "standings": [
-                  26,
+                  22,
                   35
                 ],
                 "homeAway": [
@@ -620,9 +581,9 @@
               "slug": "celta",
               "score": null,
               "difficulty": {
-                "rating": 40,
+                "rating": 38,
                 "standings": [
-                  32,
+                  27,
                   35
                 ],
                 "homeAway": [
@@ -647,7 +608,7 @@
               "difficulty": {
                 "rating": 39,
                 "standings": [
-                  68,
+                  69,
                   35
                 ],
                 "homeAway": [
@@ -888,8 +849,7 @@
         ],
         "pool": {
           "id": 614405
-        },
-        "probableLineups": true
+        }
       }
     ],
     "players": {
@@ -927,10 +887,12 @@
         "price": 3240000,
         "fantasyPrice": 8000000,
         "number": 4,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 30000,
+        "statusInfo": "Adductor discomfort. Estimated return: Early May.",
         "playedHome": 16,
         "playedAway": 13,
+        "statusChange": 1777633219,
         "fitness": [
           6,
           6,
@@ -1009,17 +971,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 16,
-        "playedAway": 11,
+        "playedAway": 12,
         "fitness": [
+          2,
           null,
           2,
           0,
-          0,
-          2
+          0
         ],
-        "points": 45,
+        "points": 47,
         "pointsHome": 28,
-        "pointsAway": 17,
+        "pointsAway": 19,
         "pointsLastSeason": 88
       },
       "24576": {
@@ -1031,14 +993,14 @@
         "price": 6390000,
         "fantasyPrice": 32000000,
         "number": 9,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": 50000,
-        "statusInfo": "Muscle discomfort.",
+        "statusInfo": "Muscle discomfort. Estimated return: Early May.",
         "iconHero": "i/p/hero/24576.png",
         "playedHome": 16,
         "playedAway": 15,
         "extraStatus": "warned",
-        "statusChange": 1777568408,
+        "statusChange": 1777633208,
         "fitness": [
           16,
           "injured",
@@ -1171,10 +1133,10 @@
         "playedHome": 7,
         "playedAway": 5,
         "fitness": [
+          null,
           2,
           null,
           0,
-          null,
           null
         ],
         "points": 10,
@@ -1225,8 +1187,8 @@
         "fitness": [
           "injured",
           "injured",
+          "injured",
           0,
-          2,
           2
         ],
         "points": 14,
@@ -1891,11 +1853,11 @@
         "playedAway": 14,
         "statusChange": 1777143605,
         "fitness": [
+          "sanctioned",
           2,
           6,
           6,
-          6,
-          2
+          6
         ],
         "points": 110,
         "pointsHome": 62,
@@ -2574,7 +2536,7 @@
         "number": 40,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Myofascial injury in the biceps femoris. Estimated return: Indefinite return.",
+        "statusInfo": "Myofascial injury in the biceps femoris. Estimated return: early June.",
         "playedHome": 6,
         "playedAway": 7,
         "statusChange": 1777539617,
@@ -2791,17 +2753,17 @@
         "number": 4,
         "status": "ok",
         "priceIncrement": 10000,
-        "playedHome": 15,
+        "playedHome": 16,
         "playedAway": 15,
         "fitness": [
           2,
           2,
+          2,
           6,
-          6,
-          2
+          6
         ],
-        "points": 117,
-        "pointsHome": 67,
+        "points": 119,
+        "pointsHome": 69,
         "pointsAway": 50,
         "pointsLastSeason": 122
       },
@@ -2925,17 +2887,17 @@
         "number": 20,
         "status": "ok",
         "priceIncrement": 40000,
-        "playedHome": 13,
+        "playedHome": 14,
         "playedAway": 14,
         "fitness": [
+          2,
           6,
           6,
           2,
-          6,
-          2
+          6
         ],
-        "points": 112,
-        "pointsHome": 59,
+        "points": 114,
+        "pointsHome": 61,
         "pointsAway": 53,
         "pointsLastSeason": 24
       },
@@ -2979,17 +2941,17 @@
         "number": 18,
         "status": "ok",
         "priceIncrement": 40000,
-        "playedHome": 9,
+        "playedHome": 10,
         "playedAway": 10,
         "fitness": [
+          2,
           6,
           9,
           -2,
-          6,
-          2
+          6
         ],
-        "points": 129,
-        "pointsHome": 77,
+        "points": 131,
+        "pointsHome": 79,
         "pointsAway": 52,
         "pointsLastSeason": null
       },
@@ -3179,12 +3141,12 @@
         "price": 250000,
         "fantasyPrice": 15000000,
         "number": 24,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Rupture of the anterior cruciate ligament of the left knee.",
+        "statusInfo": "Rupture of the anterior cruciate ligament of the left knee. Estimated return: Early May.",
         "playedHome": 1,
         "playedAway": 1,
-        "statusChange": 1777543209,
+        "statusChange": 1777636812,
         "fitness": [
           "injured",
           "injured",
@@ -3426,17 +3388,17 @@
         "number": 21,
         "status": "warned",
         "priceIncrement": -10000,
-        "playedHome": 11,
+        "playedHome": 12,
         "playedAway": 14,
         "fitness": [
           2,
+          2,
           null,
           2,
-          "doubt",
-          "injured"
+          "doubt"
         ],
-        "points": 102,
-        "pointsHome": 50,
+        "points": 104,
+        "pointsHome": 52,
         "pointsAway": 52,
         "pointsLastSeason": 139
       },
@@ -3507,17 +3469,17 @@
         "number": 14,
         "status": "ok",
         "priceIncrement": 30000,
-        "playedHome": 5,
+        "playedHome": 6,
         "playedAway": 7,
         "fitness": [
           2,
+          2,
           6,
           -2,
-          null,
-          2
+          null
         ],
-        "points": 36,
-        "pointsHome": 22,
+        "points": 38,
+        "pointsHome": 24,
         "pointsAway": 14,
         "pointsLastSeason": null
       },
@@ -3953,7 +3915,7 @@
         "number": 15,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Partial rupture of the anterior cruciate ligament of the left knee. Estimated return: End of April.",
+        "statusInfo": "Partial rupture of the anterior cruciate ligament of the left knee. Estimated return: Early May.",
         "playedHome": 6,
         "playedAway": 6,
         "statusChange": 1766314800,
@@ -4262,17 +4224,17 @@
         "number": 17,
         "status": "ok",
         "priceIncrement": -40000,
-        "playedHome": 15,
+        "playedHome": 16,
         "playedAway": 15,
         "fitness": [
           2,
+          2,
           6,
           "doubt",
-          6,
-          2
+          6
         ],
-        "points": 128,
-        "pointsHome": 66,
+        "points": 130,
+        "pointsHome": 68,
         "pointsAway": 62,
         "pointsLastSeason": 120
       },
@@ -4541,17 +4503,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 5,
-        "playedAway": 5,
+        "playedAway": 6,
         "fitness": [
           2,
           2,
           2,
-          6,
-          null
+          2,
+          6
         ],
-        "points": 36,
+        "points": 38,
         "pointsHome": 26,
-        "pointsAway": 10,
+        "pointsAway": 12,
         "pointsLastSeason": 4
       },
       "11": {
@@ -5751,17 +5713,17 @@
         "number": 8,
         "status": "ok",
         "priceIncrement": -20000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 12,
         "fitness": [
+          2,
           null,
           2,
           0,
-          6,
-          2
+          6
         ],
-        "points": 58,
-        "pointsHome": 34,
+        "points": 60,
+        "pointsHome": 36,
         "pointsAway": 24,
         "pointsLastSeason": 124
       },
@@ -5826,17 +5788,17 @@
         "number": 16,
         "status": "ok",
         "priceIncrement": 70000,
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 10,
         "fitness": [
+          2,
           6,
           null,
           6,
-          2,
-          null
+          2
         ],
-        "points": 50,
-        "pointsHome": 20,
+        "points": 52,
+        "pointsHome": 22,
         "pointsAway": 30,
         "pointsLastSeason": 20
       },
@@ -6010,12 +5972,12 @@
         "price": 9060000,
         "fantasyPrice": 21000000,
         "number": 20,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -60000,
-        "statusInfo": "Hip strike.",
+        "statusInfo": "Hip bump. Estimated return: Early May.",
         "playedHome": 17,
         "playedAway": 12,
-        "statusChange": 1777528816,
+        "statusChange": 1777633213,
         "fitness": [
           2,
           2,
@@ -6413,17 +6375,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 5,
-        "playedAway": 3,
+        "playedAway": 4,
         "fitness": [
+          3,
           0,
           1,
           3,
-          3,
-          0
+          3
         ],
-        "points": 11,
+        "points": 14,
         "pointsHome": 10,
-        "pointsAway": 1,
+        "pointsAway": 4,
         "pointsLastSeason": null
       },
       "2247": {
@@ -6593,17 +6555,17 @@
         "number": 2,
         "status": "warned",
         "priceIncrement": 10000,
-        "playedHome": 16,
+        "playedHome": 17,
         "playedAway": 14,
         "fitness": [
+          2,
           6,
           0,
           2,
-          0,
-          2
+          0
         ],
-        "points": 83,
-        "pointsHome": 47,
+        "points": 85,
+        "pointsHome": 49,
         "pointsAway": 36,
         "pointsLastSeason": null
       },
@@ -6698,12 +6660,10 @@
         "price": 230000,
         "fantasyPrice": 8000000,
         "number": 2,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Ruptured anterior cruciate ligament of his right knee. Estimated return: Mid-June.",
         "playedHome": 3,
         "playedAway": 2,
-        "statusChange": 1761822000,
         "fitness": [
           "injured",
           "injured",
@@ -7075,11 +7035,11 @@
         "playedHome": 15,
         "playedAway": 16,
         "fitness": [
+          null,
           2,
           6,
           2,
-          6,
-          2
+          6
         ],
         "points": 109,
         "pointsHome": 67,
@@ -7149,13 +7109,13 @@
         "price": 10190000,
         "fantasyPrice": 47000000,
         "number": 19,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -180000,
-        "statusInfo": "Ankle discomfort.",
+        "statusInfo": "Ankle discomfort. Estimated return: Early May.",
         "iconHero": "i/p/hero/34557.png",
         "playedHome": 15,
         "playedAway": 14,
-        "statusChange": 1777539613,
+        "statusChange": 1777633215,
         "fitness": [
           null,
           null,
@@ -7235,17 +7195,17 @@
         "status": "ok",
         "priceIncrement": 160000,
         "playedHome": 13,
-        "playedAway": 13,
+        "playedAway": 14,
         "fitness": [
+          2,
           9,
           6,
           9,
-          6,
-          "sanctioned"
+          6
         ],
-        "points": 114,
+        "points": 116,
         "pointsHome": 81,
-        "pointsAway": 33,
+        "pointsAway": 35,
         "pointsLastSeason": null
       },
       "9763": {
@@ -7339,17 +7299,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 6,
-        "playedAway": 9,
+        "playedAway": 10,
         "fitness": [
+          2,
           null,
           0,
           null,
-          null,
           null
         ],
-        "points": 10,
+        "points": 12,
         "pointsHome": 6,
-        "pointsAway": 4,
+        "pointsAway": 6,
         "pointsLastSeason": -2
       },
       "9557": {
@@ -7700,17 +7660,17 @@
         "number": 3,
         "status": "ok",
         "priceIncrement": 100000,
-        "playedHome": 14,
+        "playedHome": 15,
         "playedAway": 13,
         "fitness": [
+          2,
           9,
           6,
           null,
-          0,
-          2
+          0
         ],
-        "points": 75,
-        "pointsHome": 35,
+        "points": 77,
+        "pointsHome": 37,
         "pointsAway": 40,
         "pointsLastSeason": null
       },
@@ -7754,17 +7714,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "playedHome": 17,
-        "playedAway": 15,
+        "playedAway": 16,
         "fitness": [
+          6,
           2,
           6,
           6,
-          2,
-          "sanctioned"
+          2
         ],
-        "points": 118,
+        "points": 124,
         "pointsHome": 64,
-        "pointsAway": 54,
+        "pointsAway": 60,
         "pointsLastSeason": 137
       },
       "23809": {
@@ -8493,17 +8453,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 1,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          2,
           null,
           null,
           null,
-          null,
-          0
+          null
         ],
-        "points": 6,
+        "points": 8,
         "pointsHome": 6,
-        "pointsAway": 0,
+        "pointsAway": 2,
         "pointsLastSeason": null
       },
       "3159": {
@@ -8836,11 +8796,11 @@
         "playedHome": 3,
         "playedAway": 7,
         "fitness": [
+          null,
           2,
           null,
           null,
-          null,
-          2
+          null
         ],
         "points": 22,
         "pointsHome": 6,
@@ -9014,17 +8974,17 @@
         "status": "warned",
         "priceIncrement": 30000,
         "playedHome": 15,
-        "playedAway": 13,
+        "playedAway": 14,
         "fitness": [
+          10,
           2,
           6,
           6,
-          10,
-          2
+          10
         ],
-        "points": 140,
+        "points": 150,
         "pointsHome": 94,
-        "pointsAway": 46,
+        "pointsAway": 56,
         "pointsLastSeason": 54
       },
       "26945": {
@@ -9205,7 +9165,7 @@
         "playedAway": 3,
         "statusChange": 1777546821,
         "fitness": [
-          "doubt",
+          "injured",
           "doubt",
           "doubt",
           "doubt",
@@ -9595,17 +9555,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "playedHome": 13,
-        "playedAway": 14,
+        "playedAway": 15,
         "fitness": [
           2,
           2,
+          2,
           6,
-          6,
-          null
+          6
         ],
-        "points": 83,
+        "points": 85,
         "pointsHome": 59,
-        "pointsAway": 24,
+        "pointsAway": 26,
         "pointsLastSeason": 110
       },
       "33789": {
@@ -9695,17 +9655,17 @@
         "status": "ok",
         "priceIncrement": 20000,
         "playedHome": 14,
-        "playedAway": 13,
+        "playedAway": 14,
         "fitness": [
+          2,
           2,
           6,
           2,
-          10,
-          2
+          10
         ],
-        "points": 63,
+        "points": 65,
         "pointsHome": 43,
-        "pointsAway": 20,
+        "pointsAway": 22,
         "pointsLastSeason": 82
       },
       "1721": {
@@ -9774,11 +9734,11 @@
         "playedAway": 4,
         "statusChange": 1777546817,
         "fitness": [
+          "injured",
           "doubt",
           null,
           2,
-          null,
-          "doubt"
+          null
         ],
         "points": 16,
         "pointsHome": 8,
@@ -9847,14 +9807,11 @@
         "price": 5950000,
         "fantasyPrice": 8000000,
         "number": 22,
-        "status": "doubt",
+        "status": "warned",
         "priceIncrement": -50000,
-        "statusInfo": "Grade I sprain of the syndesmosis of the left ankle.",
         "iconHero": "i/p/hero/34077.png",
         "playedHome": 9,
         "playedAway": 8,
-        "extraStatus": "warned",
-        "statusChange": 1777550410,
         "fitness": [
           "doubt",
           "injured",
@@ -10190,17 +10147,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "playedHome": 16,
-        "playedAway": 16,
+        "playedAway": 17,
         "fitness": [
+          2,
           2,
           6,
           "sanctioned",
-          6,
           6
         ],
-        "points": 116,
+        "points": 118,
         "pointsHome": 72,
-        "pointsAway": 44,
+        "pointsAway": 46,
         "pointsLastSeason": 145
       },
       "38164": {
@@ -10275,8 +10232,8 @@
           "injured",
           "injured",
           "injured",
-          2,
-          6
+          "injured",
+          2
         ],
         "points": 100,
         "pointsHome": 48,
@@ -10300,8 +10257,8 @@
         "playedHome": 7,
         "playedAway": 10,
         "fitness": [
-          2,
           null,
+          2,
           null,
           null,
           null
@@ -10479,14 +10436,14 @@
         "number": 0,
         "status": "ok",
         "priceIncrement": 0,
-        "playedHome": 16,
+        "playedHome": 17,
         "playedAway": 17,
         "fitness": [
           0,
           0,
+          0,
           1,
-          3,
-          0
+          3
         ],
         "points": 38,
         "pointsHome": 22,
@@ -11213,17 +11170,17 @@
         "status": "warned",
         "priceIncrement": 30000,
         "playedHome": 14,
-        "playedAway": 12,
+        "playedAway": 13,
         "fitness": [
           2,
           2,
           2,
-          6,
-          2
+          2,
+          6
         ],
-        "points": 96,
+        "points": 98,
         "pointsHome": 56,
-        "pointsAway": 40,
+        "pointsAway": 42,
         "pointsLastSeason": 78
       },
       "37726": {
@@ -11420,10 +11377,12 @@
         "price": 150000,
         "fantasyPrice": 7000000,
         "number": 14,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Undetermined discomfort.",
         "playedHome": 6,
         "playedAway": 2,
+        "statusChange": 1777651592,
         "fitness": [
           null,
           2,
@@ -11688,17 +11647,17 @@
         "status": "ok",
         "priceIncrement": 50000,
         "playedHome": 15,
-        "playedAway": 15,
+        "playedAway": 16,
         "fitness": [
+          6,
           2,
           6,
           10,
-          6,
-          10
+          6
         ],
-        "points": 106,
+        "points": 112,
         "pointsHome": 66,
-        "pointsAway": 40,
+        "pointsAway": 46,
         "pointsLastSeason": 56
       },
       "39736": {
@@ -11924,17 +11883,17 @@
         "number": 13,
         "status": "warned",
         "priceIncrement": 0,
-        "playedHome": 15,
+        "playedHome": 16,
         "playedAway": 15,
         "fitness": [
           2,
           2,
-          6,
           2,
-          6
+          6,
+          2
         ],
-        "points": 110,
-        "pointsHome": 56,
+        "points": 112,
+        "pointsHome": 58,
         "pointsAway": 54,
         "pointsLastSeason": 136
       },
@@ -12405,7 +12364,7 @@
           "injured",
           "injured",
           "injured",
-          6
+          "injured"
         ],
         "points": 86,
         "pointsHome": 42,
@@ -12477,14 +12436,11 @@
         "price": 15230000,
         "fantasyPrice": 55000000,
         "number": 11,
-        "status": "doubt",
+        "status": "warned",
         "priceIncrement": 130000,
-        "statusInfo": "Injury to the biceps femoris of the right thigh.",
         "iconHero": "i/p/hero/26930.png",
         "playedHome": 11,
         "playedAway": 9,
-        "extraStatus": "warned",
-        "statusChange": 1777550407,
         "fitness": [
           "doubt",
           "injured",
@@ -13241,17 +13197,17 @@
         "status": "warned",
         "priceIncrement": 40000,
         "playedHome": 14,
-        "playedAway": 16,
+        "playedAway": 17,
         "fitness": [
+          14,
           6,
           10,
           6,
-          2,
           2
         ],
-        "points": 168,
+        "points": 182,
         "pointsHome": 84,
-        "pointsAway": 84,
+        "pointsAway": 98,
         "pointsLastSeason": 109
       },
       "17057": {
@@ -13446,17 +13402,17 @@
         "status": "ok",
         "priceIncrement": 100000,
         "playedHome": 17,
-        "playedAway": 16,
+        "playedAway": 17,
         "fitness": [
           6,
           6,
+          6,
           10,
-          10,
-          2
+          10
         ],
-        "points": 122,
+        "points": 128,
         "pointsHome": 74,
-        "pointsAway": 48,
+        "pointsAway": 54,
         "pointsLastSeason": 142
       },
       "17756": {
@@ -13652,17 +13608,17 @@
         "status": "ok",
         "priceIncrement": 0,
         "iconHero": "i/p/hero/9966.png",
-        "playedHome": 7,
+        "playedHome": 8,
         "playedAway": 9,
         "fitness": [
           2,
           2,
+          2,
           0,
-          null,
-          "injured"
+          null
         ],
-        "points": 43,
-        "pointsHome": 26,
+        "points": 45,
+        "pointsHome": 28,
         "pointsAway": 17,
         "pointsLastSeason": 161
       },
@@ -13852,10 +13808,10 @@
         "playedAway": 6,
         "fitness": [
           null,
-          2,
-          2,
           null,
-          "doubt"
+          2,
+          2,
+          null
         ],
         "points": 31,
         "pointsHome": 29,
@@ -14142,17 +14098,17 @@
         "status": "ok",
         "priceIncrement": 30000,
         "iconHero": "i/p/hero/11196.png",
-        "playedHome": 10,
+        "playedHome": 11,
         "playedAway": 13,
         "fitness": [
           2,
+          2,
           0,
           10,
-          2,
           2
         ],
-        "points": 88,
-        "pointsHome": 46,
+        "points": 90,
+        "pointsHome": 48,
         "pointsAway": 42,
         "pointsLastSeason": 12
       },
@@ -14221,12 +14177,10 @@
         "price": 150000,
         "fantasyPrice": 7000000,
         "number": 26,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Muscle injury in the left adductor longus. Estimated return: Indefinite return.",
         "playedHome": 10,
         "playedAway": 6,
-        "statusChange": 1776974417,
         "fitness": [
           "injured",
           2,
@@ -14614,17 +14568,17 @@
         "status": "ok",
         "priceIncrement": 40000,
         "iconHero": "i/p/hero/29631.png",
-        "playedHome": 12,
+        "playedHome": 13,
         "playedAway": 15,
         "fitness": [
           2,
+          2,
           9,
           -2,
-          6,
-          2
+          6
         ],
-        "points": 116,
-        "pointsHome": 62,
+        "points": 118,
+        "pointsHome": 64,
         "pointsAway": 54,
         "pointsLastSeason": 104
       },
@@ -14691,17 +14645,17 @@
         "priceIncrement": 60000,
         "iconHero": "i/p/hero/25724.png",
         "playedHome": 16,
-        "playedAway": 16,
+        "playedAway": 17,
         "fitness": [
           2,
           2,
+          2,
           16,
-          13,
-          -2
+          13
         ],
-        "points": 213,
+        "points": 215,
         "pointsHome": 132,
-        "pointsAway": 81,
+        "pointsAway": 83,
         "pointsLastSeason": 119
       },
       "38404": {
@@ -14771,7 +14725,7 @@
         "number": 21,
         "status": "injured",
         "priceIncrement": -570000,
-        "statusInfo": "Muscle injury in the soleus of the left leg. Estimated return: Indefinite return.",
+        "statusInfo": "Muscle injury in the soleus of the left leg. Estimated return: Mid-May.",
         "iconHero": "i/p/hero/37473.png",
         "playedHome": 16,
         "playedAway": 17,
@@ -14875,17 +14829,17 @@
         "number": 12,
         "status": "ok",
         "priceIncrement": 40000,
-        "playedHome": 15,
+        "playedHome": 16,
         "playedAway": 16,
         "fitness": [
-          2,
           6,
+          2,
           6,
           6,
           6
         ],
-        "points": 121,
-        "pointsHome": 69,
+        "points": 127,
+        "pointsHome": 75,
         "pointsAway": 52,
         "pointsLastSeason": null
       },
@@ -14909,8 +14863,8 @@
           "injured",
           "injured",
           "injured",
-          2,
-          -2
+          "injured",
+          2
         ],
         "points": 93,
         "pointsHome": 43,
@@ -15035,7 +14989,7 @@
         "number": 7,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Knee discomfort. Estimated return: Indefinite return.",
+        "statusInfo": "Discomfort in the operated knee. Estimated return: Indefinite return.",
         "playedHome": 3,
         "playedAway": 7,
         "statusChange": 1777550411,
@@ -15219,17 +15173,17 @@
         "status": "ok",
         "priceIncrement": 120000,
         "playedHome": 5,
-        "playedAway": 1,
+        "playedAway": 2,
         "fitness": [
+          2,
           "doubt",
           "doubt",
           10,
-          10,
-          6
+          10
         ],
-        "points": 34,
+        "points": 36,
         "pointsHome": 28,
-        "pointsAway": 6,
+        "pointsAway": 8,
         "pointsLastSeason": null
       },
       "8376": {
@@ -15274,9 +15228,9 @@
               "id": 91,
               "score": null,
               "difficulty": {
-                "rating": 39,
+                "rating": 40,
                 "standings": [
-                  58,
+                  59,
                   35
                 ],
                 "homeAway": [
@@ -15297,9 +15251,9 @@
               "id": 1,
               "score": null,
               "difficulty": {
-                "rating": 30,
+                "rating": 29,
                 "standings": [
-                  26,
+                  22,
                   35
                 ],
                 "homeAway": [
@@ -15484,9 +15438,9 @@
               "id": 5,
               "score": null,
               "difficulty": {
-                "rating": 40,
+                "rating": 38,
                 "standings": [
-                  32,
+                  27,
                   35
                 ],
                 "homeAway": [
@@ -15509,7 +15463,7 @@
               "difficulty": {
                 "rating": 39,
                 "standings": [
-                  68,
+                  69,
                   35
                 ],
                 "homeAway": [
@@ -16184,9 +16138,9 @@
               "id": 5,
               "score": null,
               "difficulty": {
-                "rating": 40,
+                "rating": 38,
                 "standings": [
-                  32,
+                  27,
                   35
                 ],
                 "homeAway": [
@@ -16209,7 +16163,7 @@
               "difficulty": {
                 "rating": 39,
                 "standings": [
-                  68,
+                  69,
                   35
                 ],
                 "homeAway": [
@@ -16324,9 +16278,9 @@
               "id": 91,
               "score": null,
               "difficulty": {
-                "rating": 39,
+                "rating": 40,
                 "standings": [
-                  58,
+                  59,
                   35
                 ],
                 "homeAway": [
@@ -16347,9 +16301,9 @@
               "id": 1,
               "score": null,
               "difficulty": {
-                "rating": 30,
+                "rating": 29,
                 "standings": [
-                  26,
+                  22,
                   35
                 ],
                 "homeAway": [
@@ -16457,43 +16411,20 @@
         "slug": "girona",
         "nextGames": [
           {
-            "id": 46454,
-            "date": 1777662000,
-            "status": "preview",
+            "id": 46462,
+            "date": 1778526000,
+            "status": "pending",
             "home": {
-              "id": 289,
+              "id": 70,
               "score": null,
               "difficulty": {
-                "rating": 33,
+                "rating": 29,
                 "standings": [
-                  27,
+                  28,
                   35
                 ],
                 "homeAway": [
-                  14,
-                  20
-                ],
-                "form": [
-                  55,
-                  25
-                ],
-                "goalDiff": [
-                  33,
-                  20
-                ]
-              }
-            },
-            "away": {
-              "id": 465,
-              "score": null,
-              "difficulty": {
-                "rating": 31,
-                "standings": [
-                  38,
-                  35
-                ],
-                "homeAway": [
-                  22,
+                  31,
                   20
                 ],
                 "form": [
@@ -16501,13 +16432,36 @@
                   25
                 ],
                 "goalDiff": [
-                  26,
+                  24,
+                  20
+                ]
+              }
+            },
+            "away": {
+              "id": 289,
+              "score": null,
+              "difficulty": {
+                "rating": 45,
+                "standings": [
+                  49,
+                  35
+                ],
+                "homeAway": [
+                  32,
+                  20
+                ],
+                "form": [
+                  55,
+                  25
+                ],
+                "goalDiff": [
+                  36,
                   20
                 ]
               }
             },
             "round": {
-              "id": 4517
+              "id": 4518
             },
             "competition": {
               "id": 1,
@@ -16527,57 +16481,57 @@
         "slug": "mallorca",
         "nextGames": [
           {
-            "id": 46454,
-            "date": 1777662000,
-            "status": "preview",
+            "id": 46467,
+            "date": 1778414400,
+            "status": "pending",
             "home": {
-              "id": 289,
+              "id": 465,
               "score": null,
               "difficulty": {
-                "rating": 33,
+                "rating": 67,
                 "standings": [
-                  27,
+                  85,
                   35
                 ],
                 "homeAway": [
-                  14,
+                  44,
                   20
                 ],
                 "form": [
-                  55,
+                  58,
                   25
                 ],
                 "goalDiff": [
-                  33,
+                  68,
                   20
                 ]
               }
             },
             "away": {
-              "id": 465,
+              "id": 19,
               "score": null,
               "difficulty": {
-                "rating": 31,
+                "rating": 34,
                 "standings": [
-                  38,
+                  27,
                   35
                 ],
                 "homeAway": [
-                  22,
+                  32,
                   20
                 ],
                 "form": [
-                  32,
+                  58,
                   25
                 ],
                 "goalDiff": [
-                  26,
+                  17,
                   20
                 ]
               }
             },
             "round": {
-              "id": 4517
+              "id": 4518
             },
             "competition": {
               "id": 1,
@@ -16662,8 +16616,8 @@
         ]
       }
     },
-    "update": 1777611610,
-    "etag": 69125364,
+    "update": 1777677920,
+    "etag": 1001852113,
     "scoreID": 1
   },
   "meta": {
