@@ -33,8 +33,9 @@
     "activeEvents": [],
     "players": [],
     "teams": [],
-    "update": 1778036410,
-    "etag": 1816494172
+    "update": 1778023115,
+    "etag": 626055422,
+    "scoreID": 1
   },
   "meta": {
     "config": {
@@ -2395,14 +2396,15 @@
       "features": {
         "safeFrame": false,
         "randomInterstitial": false,
-        "reviewApp": true,
+        "reviewApp": false,
         "reviewAppAllUsers": "Math.random() < 0.20",
         "reviewAppInternalFlow": true,
         "prebidSandbox": true,
         "prebidTouchGuardNetworks": [
           "inmobi",
           "pubmatic"
-        ]
+        ],
+        "world-cup-ground": "world_cup"
       },
       "apps": {
         "ios": {
