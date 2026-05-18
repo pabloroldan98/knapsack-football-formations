@@ -1208,8 +1208,8 @@
         "nextGames": []
       }
     },
-    "update": 1779159610,
-    "etag": 2929542376
+    "update": 1779147527,
+    "etag": 2235805276
   },
   "meta": {
     "config": {
@@ -3481,6 +3481,9 @@
           "pubmatic"
         ],
         "world-cup-ground": "world_cup",
+        "recentSeasons": [
+          53
+        ],
         "inAppPurchasesPromos": {
           "shop": {
             "es": "Ya disponible",
@@ -3604,6 +3607,42 @@
       }
     ],
     "competitions": [
+      {
+        "id": 53,
+        "name": "World Cup",
+        "slug": "world-cup",
+        "sport": "football",
+        "currency": "$",
+        "nationalTeams": true,
+        "scores": [
+          {
+            "id": 1,
+            "name": "AS.com",
+            "kind": "as"
+          },
+          {
+            "id": 2,
+            "name": "SofaScore",
+            "kind": "SofaScore"
+          },
+          {
+            "id": 3,
+            "name": "AS.com and SofaScore average",
+            "kind": "Average"
+          },
+          {
+            "id": 4,
+            "name": "Statistics",
+            "kind": "Stats"
+          }
+        ],
+        "config": {
+          "coaches": true,
+          "multiPos": true,
+          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
+          "optimizeImages": true
+        }
+      },
       {
         "id": 1,
         "name": "Primera División",

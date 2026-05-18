@@ -4791,12 +4791,10 @@
         "price": 1990000,
         "fantasyPrice": 16000000,
         "number": 33,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Undisclosed problems",
         "playedHome": 3,
         "playedAway": 3,
-        "statusChange": 1778443205,
         "fitness": [
           4,
           "injured",
@@ -5020,7 +5018,7 @@
         "number": 10,
         "status": "injured",
         "priceIncrement": 10000,
-        "statusInfo": "Undisclosed problems",
+        "statusInfo": "Calf problems",
         "playedHome": 6,
         "playedAway": 6,
         "statusChange": 1779084004,
@@ -5727,8 +5725,8 @@
         ]
       }
     },
-    "update": 1779159610,
-    "etag": 2413915196,
+    "update": 1779146959,
+    "etag": 810020391,
     "scoreID": 3
   },
   "meta": {
@@ -8001,6 +7999,9 @@
           "pubmatic"
         ],
         "world-cup-ground": "world_cup",
+        "recentSeasons": [
+          53
+        ],
         "inAppPurchasesPromos": {
           "shop": {
             "es": "Ya disponible",
@@ -8124,6 +8125,42 @@
       }
     ],
     "competitions": [
+      {
+        "id": 53,
+        "name": "World Cup",
+        "slug": "world-cup",
+        "sport": "football",
+        "currency": "$",
+        "nationalTeams": true,
+        "scores": [
+          {
+            "id": 1,
+            "name": "AS.com",
+            "kind": "as"
+          },
+          {
+            "id": 2,
+            "name": "SofaScore",
+            "kind": "SofaScore"
+          },
+          {
+            "id": 3,
+            "name": "AS.com and SofaScore average",
+            "kind": "Average"
+          },
+          {
+            "id": 4,
+            "name": "Statistics",
+            "kind": "Stats"
+          }
+        ],
+        "config": {
+          "coaches": true,
+          "multiPos": true,
+          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
+          "optimizeImages": true
+        }
+      },
       {
         "id": 1,
         "name": "Primera División",
