@@ -20,13 +20,13 @@ jobs:
           - bundesliga
           - ligueone
           - segunda
-#          - champions
-#          - europaleague
-#          - conference
-#          - mundialito
-#          - mundial
-#          - eurocopa
-#          - copaamerica
+          # - champions
+          # - europaleague
+          # - conference
+          # - mundialito
+          # - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Enable Debug Logging
@@ -75,19 +75,19 @@ jobs:
       max-parallel: 13
       matrix:
         league:
-#          - laliga
-#          - premier
-#          - seriea
-#          - bundesliga
-#          - ligueone
-#          - segunda
+          # - laliga
+          # - premier
+          # - seriea
+          # - bundesliga
+          # - ligueone
+          # - segunda
           - champions
           - europaleague
           - conference
-#          - mundialito
-#          - mundial
-#          - eurocopa
-#          - copaamerica
+          # - mundialito
+          - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Enable Debug Logging
@@ -136,19 +136,19 @@ jobs:
       max-parallel: 13
       matrix:
         league:
-#          - laliga
-#          - premier
-#          - seriea
-#          - bundesliga
-#          - ligueone
-#          - segunda
+          # - laliga
+          # - premier
+          # - seriea
+          # - bundesliga
+          # - ligueone
+          # - segunda
           - champions
           - europaleague
           - conference
-#          - mundialito
-#          - mundial
-#          - eurocopa
-#          - copaamerica
+          # - mundialito
+          - mundial
+          # - eurocopa
+          # - copaamerica
 
     steps:
       - name: Enable Debug Logging

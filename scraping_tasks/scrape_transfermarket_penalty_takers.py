@@ -79,7 +79,7 @@ europaleague_penalty_takers = safe_get_penalty_takers("Europa League", "transfer
 conference_penalty_takers = safe_get_penalty_takers("Conference League", "transfermarket_conference_penalty_takers")
 # mundialito_penalty_takers = safe_get_penalty_takers("Mundialito", "transfermarket_mundialito_penalty_takers")
 #
-# mundial_penalty_takers = safe_get_penalty_takers("Mundial", "transfermarket_mundial_penalty_takers")
+mundial_penalty_takers = safe_get_penalty_takers("Mundial", "transfermarket_mundial_penalty_takers")
 # eurocopa_penalty_takers = safe_get_penalty_takers("Eurocopa", "transfermarket_eurocopa_penalty_takers")
 # copaamerica_penalty_takers = safe_get_penalty_takers("Copa América", "transfermarket_copaamerica_penalty_takers")
 

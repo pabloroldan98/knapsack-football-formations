@@ -97,7 +97,7 @@ europaleague_team_history = safe_get_team_history("Europa League", "transfermark
 conference_team_history = safe_get_team_history("Conference League", "transfermarket_conference_team_history", use_country_as_team=False)
 # mundialito_team_history = safe_get_team_history("Mundialito", "transfermarket_mundialito_team_history", use_country_as_team=False)
 #
-# mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history", use_country_as_team=True)
+mundial_team_history = safe_get_team_history("Mundial", "transfermarket_mundial_team_history", use_country_as_team=True)
 # eurocopa_team_history = safe_get_team_history("Eurocopa", "transfermarket_eurocopa_team_history", use_country_as_team=True)
 # copaamerica_team_history = safe_get_team_history("Copa América", "transfermarket_copaamerica_team_history", use_country_as_team=True)
 

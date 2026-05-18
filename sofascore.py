@@ -160,12 +160,16 @@ def get_team_links_from_league(league_url):
 
     team_data = {}
     base = "https://www.sofascore.com/team/football"
-    for idx, t in enumerate(all_teams):
-        name = t["name"]
-        slug = t["slug"]
+    seen_ids = set()
+    idx = 0
+    for t in all_teams:
         tid = t["id"]
-        url = urljoin(base + "/", f"{slug}/{tid}")
-        team_data[str(idx)] = [name, url]
+        if tid in seen_ids:
+            continue
+        seen_ids.add(tid)
+        url = urljoin(base + "/", f"{t['slug']}/{tid}")
+        team_data[str(idx)] = [t["name"], url]
+        idx += 1
 
     return team_data
 

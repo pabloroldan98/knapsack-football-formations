@@ -89,7 +89,7 @@ sofascore_europaleague_players_ratings = safe_get_sofascore_ratings("Europa Leag
 sofascore_conference_players_ratings = safe_get_sofascore_ratings("Conference League", "sofascore_conference_players_ratings")
 # sofascore_mundialito_players_ratings = safe_get_sofascore_ratings("Mundialito", "sofascore_mundialito_players_ratings")
 #
-# sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
+sofascore_mundial_players_ratings = safe_get_sofascore_ratings("Mundial", "sofascore_mundial_players_ratings")
 # sofascore_eurocopa_players_ratings = safe_get_sofascore_ratings("Eurocopa", "sofascore_eurocopa_players_ratings")
 # sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
 

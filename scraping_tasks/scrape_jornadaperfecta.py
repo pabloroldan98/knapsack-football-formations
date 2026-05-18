@@ -126,9 +126,9 @@ conference_start_probabilities = safe_get_start_probabilities(
 #     "Mundialito", "jornadaperfecta_mundialito_players_start_probabilities"
 # )
 #
-# mundial_start_probabilities = safe_get_start_probabilities(
-#     "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
-# )
+mundial_start_probabilities = safe_get_start_probabilities(
+    "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
+)
 # eurocopa_start_probabilities = safe_get_start_probabilities(
 #     "Eurocopa", "jornadaperfecta_eurocopa_players_start_probabilities"
 # )

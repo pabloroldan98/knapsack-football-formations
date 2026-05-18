@@ -72,7 +72,7 @@ biwenger_europaleague_data = safe_get_biwenger_data("biwenger_europaleague_data"
 # biwenger_conference_data = safe_get_biwenger_data("biwenger_conference_data", "Conference League")
 # biwenger_mundialito_data = safe_get_biwenger_data("biwenger_mundialito_data", "Mundialito")
 #
-# biwenger_mundial_data = safe_get_biwenger_data("biwenger_mundial_data", "Mundial")
+biwenger_mundial_data = safe_get_biwenger_data("biwenger_mundial_data", "Mundial")
 # biwenger_eurocopa_data = safe_get_biwenger_data("biwenger_eurocopa_data", "Eurocopa")
 # biwenger_copaamerica_data = safe_get_biwenger_data("biwenger_copaamerica_data", "Copa América")
 

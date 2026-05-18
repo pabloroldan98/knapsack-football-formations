@@ -124,9 +124,9 @@ segunda_start_probabilities = safe_get_start_probabilities(
 #     "Mundialito", "futbolfantasy_mundialito_players_start_probabilities"
 # )
 #
-# mundial_start_probabilities = safe_get_start_probabilities(
-#     "Mundial", "futbolfantasy_mundial_players_start_probabilities"
-# )
+mundial_start_probabilities = safe_get_start_probabilities(
+    "Mundial", "futbolfantasy_mundial_players_start_probabilities"
+)
 # eurocopa_start_probabilities = safe_get_start_probabilities(
 #     "Eurocopa", "futbolfantasy_eurocopa_players_start_probabilities"
 # )

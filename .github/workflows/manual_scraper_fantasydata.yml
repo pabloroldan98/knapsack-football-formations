@@ -86,10 +86,10 @@ jobs:
           - champions
 #          - europaleague
 #          - conference
-      #   - mundialito
-      #   - mundial
-      #   - eurocopa
-      #   - copaamerica
+          # - mundialito
+          - mundial
+          # - eurocopa
+          # - copaamerica
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

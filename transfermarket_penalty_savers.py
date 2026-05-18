@@ -53,7 +53,8 @@ class TransfermarktScraper:
         team_links = {}
         if soup:
             idx = 1
-            while idx < 20:
+            idx_limit = 2 if 'teilnehmer' in self.competition else 20
+            while idx < idx_limit:
                 block_id = f"yw{idx}"
                 selector = f"#{block_id} table tbody tr td a"
                 teams = soup.select(selector)
