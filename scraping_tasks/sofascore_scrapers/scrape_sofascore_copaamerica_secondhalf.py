@@ -95,7 +95,7 @@ print("##############################")
 # sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
 
 
-sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (first half)", "sofascore_champions_players_ratings", select_half=1)
+# sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (first half)", "sofascore_champions_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (second half)", "sofascore_champions_players_ratings", select_half=2)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Europa League (first half)", "sofascore_europaleague_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Europa League (second half)", "sofascore_europaleague_players_ratings", select_half=2)
@@ -109,7 +109,7 @@ sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions Leag
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Eurocopa (first half)", "sofascore_eurocopa_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Eurocopa (second half)", "sofascore_eurocopa_players_ratings", select_half=2)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Copa América (first half)", "sofascore_copaamerica_players_ratings", select_half=1)
-# sofascore_champions_players_ratings = safe_get_sofascore_ratings("Copa América (second half)", "sofascore_copaamerica_players_ratings", select_half=2)
+sofascore_champions_players_ratings = safe_get_sofascore_ratings("Copa América (second half)", "sofascore_copaamerica_players_ratings", select_half=2)
 
 
 # except Exception as e:

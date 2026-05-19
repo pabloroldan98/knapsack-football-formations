@@ -95,14 +95,14 @@ print("##############################")
 # sofascore_copaamerica_players_ratings = safe_get_sofascore_ratings("Copa América", "sofascore_copaamerica_players_ratings")
 
 
-sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (first half)", "sofascore_champions_players_ratings", select_half=1)
+# sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (first half)", "sofascore_champions_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Champions League (second half)", "sofascore_champions_players_ratings", select_half=2)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Europa League (first half)", "sofascore_europaleague_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Europa League (second half)", "sofascore_europaleague_players_ratings", select_half=2)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Conference League (first half)", "sofascore_conference_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Conference League (second half)", "sofascore_conference_players_ratings", select_half=2)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Mundialito (first half)", "sofascore_mundialito_players_ratings", select_half=1)
-# sofascore_champions_players_ratings = safe_get_sofascore_ratings("Mundialito (second half)", "sofascore_mundialito_players_ratings", select_half=2)
+sofascore_champions_players_ratings = safe_get_sofascore_ratings("Mundialito (second half)", "sofascore_mundialito_players_ratings", select_half=2)
 
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Mundial (first half)", "sofascore_mundial_players_ratings", select_half=1)
 # sofascore_champions_players_ratings = safe_get_sofascore_ratings("Mundial (second half)", "sofascore_mundial_players_ratings", select_half=2)
