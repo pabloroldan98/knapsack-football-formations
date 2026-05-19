@@ -28,12 +28,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -63,7 +63,7 @@ jobs:
     timeout-minutes: 30  # Set the job timeout to 30 minutes
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download FutbolFantasy DATA artifact
         uses: actions/download-artifact@v4

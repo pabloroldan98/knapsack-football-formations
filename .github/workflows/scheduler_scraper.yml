@@ -19,10 +19,10 @@ jobs:
     if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -51,10 +51,10 @@ jobs:
     if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -83,10 +83,10 @@ jobs:
     if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -133,10 +133,10 @@ jobs:
           # - copaamerica
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -171,10 +171,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 7 * 4,5,6,7,8,9,10 *') || (github.event.schedule == '0 8 * 1,2,3,11,12 *')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -203,10 +203,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -235,10 +235,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -267,10 +267,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -299,10 +299,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -331,10 +331,10 @@ jobs:
 #    if: (github.event_name == 'workflow_dispatch') || ((github.event.schedule != '0 7 * 4,5,6,7,8,9,10 *') && (github.event.schedule != '0 8 * 1,2,3,11,12 *'))
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -363,10 +363,10 @@ jobs:
     if: (github.event_name == 'workflow_dispatch') || (github.event.schedule == '0 2 * 1,2,8,9 2')
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -414,10 +414,10 @@ jobs:
           # - copaamerica
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -470,10 +470,10 @@ jobs:
           # - copaamerica
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -527,10 +527,10 @@ jobs:
           # - copaamerica
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -592,10 +592,10 @@ jobs:
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -662,12 +662,12 @@ jobs:
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -723,7 +723,7 @@ jobs:
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
@@ -742,7 +742,7 @@ jobs:
           rm -rf data_files/sofascore
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -792,7 +792,7 @@ jobs:
     timeout-minutes: 30  # Set the job timeout to 30 minutes
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download Biwenger DATA artifact
         if: needs.scrape_biwenger.result == 'success'
