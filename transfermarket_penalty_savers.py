@@ -1,26 +1,25 @@
 import re
-import requests
 import tls_requests
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import time
 import os
-import ast
-from pprint import pprint
 
-from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, find_manual_similar_string
+from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
 class TransfermarktScraper:
-    def __init__(self, competition: str = None):
+    def __init__(self, competition: str = None, max_workers: int = 8):
         self.base_url = 'https://www.transfermarkt.com'
         self.competition =  (
             competition
             if competition is not None
             else "-/startseite/wettbewerb/ES1"
         )
+        self.max_workers = max(1, max_workers)
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
@@ -86,18 +85,24 @@ class TransfermarktScraper:
                 player_name = player.text.strip()
                 player_name = find_manual_similar_string(player_name)
                 position_text = positions[i * 3 + 2].text.strip()
-                url = player.get('href')
-                if player_name and url and position_text:
+                player_url = player.get('href')
+                if player_name and player_url and position_text:
                     if "Goalkeeper" in position_text:
-                        player_links[player_name] = f"{self.base_url}{url}"
+                        player_links[player_name] = f"{self.base_url}{player_url}"
                 i = i + 1
         return player_links
 
-    def get_team_player_links(self, team_links):
+    def _team_players_url(self, team_suffix):
         year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, 7, 1)))
+        slug = team_suffix.split('/')[1]
+        verein_id = team_suffix.split('/')[4]
+        return f"{self.base_url}/{slug}/startseite/verein/{verein_id}/plus/0?saison_id={year}"
 
+    def get_team_player_links(self, team_links):
         team_player_links = {}
-        for team_name, team_suffix in team_links.items():
+
+        def fetch_one(item):
+            team_name, team_suffix = item
             # if team_name not in [
             #     "Chelsea FC",
             #     "CR Flamengo",
@@ -105,67 +110,144 @@ class TransfermarktScraper:
             # ]:
             #     continue
             print('Extracting goalkeeper links from %s ...' % team_name)
-            team_players_url = f"{self.base_url}/{team_suffix.split('/')[1]}/startseite/verein/{team_suffix.split('/')[4]}/plus/0?saison_id={year}"
             # team_players_url = f"{self.base_url}/{team_suffix.split('/')[1]}/kader/verein/{team_suffix.split('/')[4]}/saison_id/{year}/plus/1"
-            team_player_links[team_name] = self.get_goalkeeper_links(team_players_url)
-            # break
+            return team_name, self.get_goalkeeper_links(self._team_players_url(team_suffix))
+
+        workers = min(self.max_workers, len(team_links) or 1)
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            for team_name, player_links in executor.map(fetch_one, team_links.items()):
+                team_player_links[team_name] = player_links
 
         return team_player_links
 
-    def get_team_country(self, url):
-        soup = self.fetch_page(url)
-        if soup:
-            meta_tag = soup.find('meta', attrs={'name': 'keywords'})
-            if meta_tag:
-                content = meta_tag.get('content', '')
-                country = content.split(',')[-1].strip()
-                return country
-        return None
+    def _penalty_detail_url(self, profile_url):
+        # penalty_saves_url = url.replace("/profil/", "/elfmeterstatistik/") + "/saison_id=2022//wettbewerb_id//plus/1#gehalten"
+        path = profile_url.replace(self.base_url, "")
+        path = path.replace("/profil/", "/elfmeterstatistik/")
+        return f"{self.base_url}{path.rstrip('/')}/saison_id//wettbewerb_id//plus/1"
+
+    def _absolute_url(self, href):
+        if not href:
+            return None
+        if href.startswith("http"):
+            return href
+        return f"{self.base_url}{href}"
+
+    def _penalty_page_urls(self, soup, first_page_url):
+        page_urls = [first_page_url]
+        seen_paths = {first_page_url}
+        for link in soup.select("ul.tm-pagination a.tm-pagination__link[href]"):
+            page_url = self._absolute_url(link.get("href"))
+            if page_url and page_url not in seen_paths:
+                seen_paths.add(page_url)
+                page_urls.append(page_url)
+        return page_urls
+
+    def _parse_penalty_row(self, tr, is_saved):
+        minute_elem = tr.select_one("td:nth-of-type(8)")
+        date_elem = tr.select_one("td:nth-of-type(4)")
+        if not minute_elem or not date_elem:
+            return None
+        minute_text = minute_elem.text.replace("'", "").strip()
+        if not minute_text.isdigit():
+            return None
+        # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+        # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+        date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+        try:
+            date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        except ValueError:
+            return None
+        match_link = tr.select_one("a.ergebnis-link")
+        match_id = match_link.get("id") if match_link else None
+        return {
+            'is_saved': is_saved,
+            'date': date_obj,
+            'minute': int(minute_text),
+            'match_id': match_id,
+        }
+
+    def _extract_penalties_from_page(self, soup, seen_match_ids):
+        penalties = []
+        for grid_id, is_saved in (("yw1", True), ("yw2", False)):
+            for tr in soup.select(f"#{grid_id} table.items tbody tr, div.grid-view#{grid_id} table.items tbody tr"):
+                row = self._parse_penalty_row(tr, is_saved)
+                if not row:
+                    continue
+                match_id = row.pop('match_id', None)
+                if match_id:
+                    if match_id in seen_match_ids:
+                        continue
+                    seen_match_ids.add(match_id)
+                penalties.append(row)
+        return penalties
+
+    # def get_player_penalty_saves(self, url):
+    #     penalty_saves_url = url.replace("/profil/", "/elfmeterstatistik/") + "/saison_id=2022//wettbewerb_id//plus/1#gehalten"
+    #     soup = self.fetch_page(penalty_saves_url)
+    #     penalty_saves = []
+    #     if soup:
+    #         for tr in soup.select("#yw1 table tbody tr"):
+    #             is_penalty_saved = True
+    #             minute_elem = tr.select_one("td:nth-of-type(8)")
+    #             date_elem = tr.select_one("td:nth-of-type(4)")
+    #
+    #             if minute_elem and date_elem:
+    #                 minute_text = minute_elem.text.replace("'", "").strip()
+    #                 if minute_text.isdigit():
+    #                     # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+    #                     # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+    #                     date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+    #                     date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+    #                     penalty_saves.append({
+    #                         'is_saved': is_penalty_saved,
+    #                         'date': date_obj,
+    #                         'minute': int(minute_text),
+    #                     })
+    #         for tr in soup.select("#yw2 table tbody tr"):
+    #             is_penalty_saved = False
+    #             minute_elem = tr.select_one("td:nth-of-type(8)")
+    #             date_elem = tr.select_one("td:nth-of-type(4)")
+    #
+    #             if minute_elem and date_elem:
+    #                 minute_text = minute_elem.text.replace("'", "").strip()
+    #                 if minute_text.isdigit():
+    #                     # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
+    #                     # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
+    #                     date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
+    #                     date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+    #                     penalty_saves.append({
+    #                         'is_saved': is_penalty_saved,
+    #                         'date': date_obj,
+    #                         'minute': int(minute_text),
+    #                     })
+    #     penalty_saves.sort(key=lambda x: (x['date'], x['minute']), reverse=True)
+    #     return penalty_saves
 
     def get_player_penalty_saves(self, url):
-        penalty_saves_url = url.replace("/profil/", "/elfmeterstatistik/") + "/saison_id=2022//wettbewerb_id//plus/1#gehalten"
-        soup = self.fetch_page(penalty_saves_url)
+        first_page_url = self._penalty_detail_url(url)
+        soup = self.fetch_page(first_page_url)
+        if not soup:
+            return []
+
+        seen_match_ids = set()
         penalty_saves = []
-        if soup:
-            for tr in soup.select("#yw1 table tbody tr"):
-                is_penalty_saved = True
-                minute_elem = tr.select_one("td:nth-of-type(8)")
-                date_elem = tr.select_one("td:nth-of-type(4)")
+        for page_url in self._penalty_page_urls(soup, first_page_url):
+            if page_url != first_page_url:
+                soup = self.fetch_page(page_url)
+                if not soup:
+                    continue
+            penalty_saves.extend(self._extract_penalties_from_page(soup, seen_match_ids))
 
-                if minute_elem and date_elem:
-                    minute_text = minute_elem.text.replace("'", "").strip()
-                    if minute_text.isdigit():
-                        # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
-                        # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
-                        date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
-                        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
-                        penalty_saves.append({
-                            'is_saved': is_penalty_saved,
-                            'date': date_obj,
-                            'minute': int(minute_text),
-                        })
-            for tr in soup.select("#yw2 table tbody tr"):
-                is_penalty_saved = False
-                minute_elem = tr.select_one("td:nth-of-type(8)")
-                date_elem = tr.select_one("td:nth-of-type(4)")
-
-                if minute_elem and date_elem:
-                    minute_text = minute_elem.text.replace("'", "").strip()
-                    if minute_text.isdigit():
-                        # date_obj = datetime.strptime(date_elem.text.strip(), "%b %d, %Y")
-                        # date_obj = datetime.strptime(date_elem.text.strip(), "%d.%m.%Y")
-                        date_str = date_elem.text.strip().replace('.', '/').replace('-', '/')
-                        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
-                        penalty_saves.append({
-                            'is_saved': is_penalty_saved,
-                            'date': date_obj,
-                            'minute': int(minute_text),
-                        })
         penalty_saves.sort(key=lambda x: (x['date'], x['minute']), reverse=True)
         return penalty_saves
 
+    def _scrape_goalkeeper_penalties(self, team_name, player_name, player_link):
+        player_name = find_manual_similar_string(player_name)
+        penalties = self.get_player_penalty_saves(player_link)
+        return team_name, player_name, penalties
+
     def scrape(self):
-        result = {}
         # # league_url = f"{self.base_url}/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
         # league_url = f"{self.base_url}/laliga/startseite/wettbewerb/ES1"
         # # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24"
@@ -174,14 +256,35 @@ class TransfermarktScraper:
         team_links = self.get_team_links(league_url)
         team_player_links = self.get_team_player_links(team_links)
         print()
-        for team_name, player_links in team_player_links.items():
-            team_result = {}
-            for player_name, player_link in player_links.items():
-                player_name = find_manual_similar_string(player_name)
-                print('Extracting goalkeeper penalty saves from %s ...' % player_name)
-                team_result[player_name] = self.get_player_penalty_saves(player_link)
-                # break
-            result[team_name] = team_result
+
+        tasks = [
+            (team_name, player_name, player_link)
+            for team_name, player_links in team_player_links.items()
+            for player_name, player_link in player_links.items()
+        ]
+        result = {team_name: {} for team_name in team_player_links}
+        total = len(tasks)
+        print(f"\nFetching penalty history for {total} goalkeepers ({self.max_workers} workers)...\n")
+
+        completed = 0
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = [
+                executor.submit(
+                    self._scrape_goalkeeper_penalties,
+                    team_name,
+                    player_name,
+                    player_link,
+                )
+                for team_name, player_name, player_link in tasks
+            ]
+            # break
+            for future in as_completed(futures):
+                team_name, player_name, penalties = future.result()
+                result[team_name][player_name] = penalties
+                completed += 1
+                if completed == 1 or completed % 10 == 0 or completed == total:
+                    print(f"  {completed}/{total} goalkeepers done (latest: {player_name})")
+
         return result
 
 
@@ -213,7 +316,8 @@ def competition_from_filename(file_name: str) -> str:
 def get_penalty_savers_dict(
         write_file=True,
         file_name="transfermarket_laliga_penalty_savers",
-        force_scrape=False
+        force_scrape=False,
+        max_workers=8,
 ):
     if not force_scrape:
         data = read_dict_data(file_name)
@@ -221,7 +325,7 @@ def get_penalty_savers_dict(
             return data
 
     competition = competition_from_filename(file_name)
-    scraper = TransfermarktScraper(competition=competition)
+    scraper = TransfermarktScraper(competition=competition, max_workers=max_workers)
     penalty_saves_data = scraper.scrape()
 
     filtered_penalty_saves_data = {}

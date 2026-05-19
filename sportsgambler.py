@@ -1,9 +1,11 @@
 import os
 import re
+import threading
 
 import time
 import pytz
 import requests
+from concurrent.futures import ThreadPoolExecutor
 import urllib3
 from bs4 import BeautifulSoup
 import json
@@ -29,6 +31,7 @@ class SportsgamblerScraper:
             else ""
         )
         self.session = requests.Session()
+        self._fetch_lock = threading.Lock()
         # self.driver = create_driver()
         # self.wait = WebDriverWait(self.driver, 15)
         # self.small_wait = WebDriverWait(self.driver, 5)
@@ -47,7 +50,8 @@ class SportsgamblerScraper:
 
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, verify=False)
+        with self._fetch_lock:
+            response = self.session.get(url, headers=self.headers, verify=False)
         response.raise_for_status()
         return response.text
 
@@ -85,12 +89,19 @@ class SportsgamblerScraper:
             if lid:
                 ids.append(lid)
 
-        # 3) for each id, fetch the injected lineup fragment
-        for lid in ids:
+        def parse_lineup_fragment(lid):
             match_url = f"{self.base_url}/lineups-load.php?id={lid}"
             frag_html = self.fetch_response(match_url)
-            frag = BeautifulSoup(frag_html, "html.parser")
+            return lid, BeautifulSoup(frag_html, "html.parser")
 
+        # 3) for each id, fetch the injected lineup fragment
+        fragments = []
+        if ids:
+            workers = min(8, len(ids))
+            with ThreadPoolExecutor(max_workers=workers) as executor:
+                fragments = list(executor.map(parse_lineup_fragment, ids))
+
+        for _lid, frag in fragments:
             # 4) team names & status from first/second h3
             h3s = frag.select("h3")
             home_h3 = h3s[0].get_text(strip=True) if len(h3s) >= 1 else ""

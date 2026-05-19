@@ -1,9 +1,10 @@
 import os
 import re
-
+import threading
 import time
 import pytz
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import urllib3
 from bs4 import BeautifulSoup
 import json
@@ -16,12 +17,18 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
     create_driver  # same as before
+from player_href_name_cache import (
+    PlayerHrefNameCache,
+    JORNADAPERFECTA_PLAYER_HREF_CACHE_FILE,
+    PRIORITY_ALT,
+    PRIORITY_TEXT,
+)
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
 class JornadaPerfectaScraper:
-    def __init__(self, competition: str = None):
+    def __init__(self, competition: str = None, max_workers: int = 8):
         self.base_url = "https://www.jornadaperfecta.com"
         # # self.base_url = "https://www.jornadaperfecta.com/la-liga/onces-posibles" # No existe, sin nada = laliga
         # self.base_url = "https://www.jornadaperfecta.com/onces-posibles"
@@ -31,7 +38,9 @@ class JornadaPerfectaScraper:
             if competition is not None
             else ""
         )
+        self.max_workers = max(1, max_workers)
         self.session = requests.Session()
+        self._thread_local = threading.local()
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
@@ -43,13 +52,71 @@ class JornadaPerfectaScraper:
                 "Chrome/91.0.4472.124 Safari/537.36"
             )
         }
+        self._player_href_cache = PlayerHrefNameCache(JORNADAPERFECTA_PLAYER_HREF_CACHE_FILE)
+
+    def _is_lineup_player_alt(self, alt_name):
+        if not alt_name:
+            return False
+        if alt_name.lower().startswith('cara de '):
+            return False
+        return True
+
+    def _name_priority(self, name, priority, other_name=None, other_priority=None):
+        """Alt (0) gana salvo que sea claramente peor que el texto visible (p. ej. alt 'O'')."""
+        if priority != PRIORITY_ALT or not other_name:
+            return priority
+        if len(name.split()) >= 2:
+            return PRIORITY_ALT
+        if len(name) < len(other_name):
+            return PRIORITY_TEXT
+        return PRIORITY_ALT
+
+    def _resolve_starter_name(self, performer):
+        player_link = performer.find('a', class_='player')
+        name_tag = performer.find(attrs={'itemprop': 'name'})
+        name_link = name_tag.find('a') if name_tag else None
+        href = None
+        if player_link and player_link.get('href'):
+            href = player_link['href'].strip()
+        elif name_link and name_link.get('href'):
+            href = name_link['href'].strip()
+
+        img = performer.find('img', alt=True)
+        alt_name = None
+        if img and img.get('alt'):
+            raw_alt = img['alt'].strip()
+            if self._is_lineup_player_alt(raw_alt):
+                alt_name = find_manual_similar_string(raw_alt)
+
+        display_name = None
+        if name_link:
+            display_name = name_link.get_text(strip=True)
+            if display_name:
+                display_name = find_manual_similar_string(display_name.strip().title())
+
+        if alt_name:
+            alt_pri = self._name_priority(alt_name, PRIORITY_ALT, display_name, PRIORITY_TEXT)
+            self._player_href_cache.register(href, alt_name, alt_pri)
+        if display_name:
+            self._player_href_cache.register(href, display_name, PRIORITY_TEXT)
+
+        if href:
+            resolved = self._player_href_cache.resolve(href, display_name or alt_name)
+            if resolved:
+                return resolved
+        return display_name or alt_name
 
     def fetch_page(self, url):
         self.driver.get(url)
 
+    def _thread_session(self):
+        if not getattr(self._thread_local, 'session', None):
+            self._thread_local.session = requests.Session()
+        return self._thread_local.session
+
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, verify=False)
+        response = self._thread_session().get(url, headers=self.headers, verify=False)
         response.raise_for_status()
         return response.text
 
@@ -150,10 +217,8 @@ class JornadaPerfectaScraper:
                 team_container = team_block.parent.parent
                 # 2) For each performer (possible starter)
                 for performer in team_container.find_all(attrs={"itemprop": "performer"}):
-                    # a) Starter name
-                    name_tag = performer.find(attrs={"itemprop": "name"})
-                    starter_name = name_tag.find("a").get_text(strip=True).strip().title()
-                    starter_name = find_manual_similar_string(starter_name)
+                    # a) Starter name (alt del img con mismo href; caché global jp:slug)
+                    starter_name = self._resolve_starter_name(performer)
 
                     # b) Starter probability
                     pct = performer.find(class_="percent-budget")
@@ -209,15 +274,16 @@ class JornadaPerfectaScraper:
         }
 
         probabilities_dict = {}
-
-        for url in team_links:
-            match_data = self.parse_match_page(url)
-            # Merge match_data into probabilities_dict
-            for team_name, players in match_data.items():
-                if team_name not in probabilities_dict:
-                    probabilities_dict[team_name] = {}
-                for player_name, chance_val in players.items():
-                    probabilities_dict[team_name][player_name] = chance_val
+        team_urls = sorted(team_links)
+        workers = min(self.max_workers, len(team_urls) or 1)
+        print(f"Fetching team probabilities for {len(team_urls)} pages ({workers} workers)...")
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            for match_data in executor.map(self.parse_match_page, team_urls):
+                for team_name, players in match_data.items():
+                    if team_name not in probabilities_dict:
+                        probabilities_dict[team_name] = {}
+                    for player_name, chance_val in players.items():
+                        probabilities_dict[team_name][player_name] = chance_val
 
         return probabilities_dict
 
@@ -231,15 +297,15 @@ class JornadaPerfectaScraper:
             probabilities_dict = {}
 
         match_links = self.get_match_links()
-
-        for url in match_links:
-            match_data = self.parse_match_page(url)
-            # Merge match_data into probabilities_dict
-            for team_name, players in match_data.items():
-                if team_name not in probabilities_dict:
-                    probabilities_dict[team_name] = {}
-                for player_name, chance_val in players.items():
-                    probabilities_dict[team_name][player_name] = chance_val
+        workers = min(self.max_workers, len(match_links) or 1)
+        print(f"Fetching match probabilities for {len(match_links)} pages ({workers} workers)...")
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            for match_data in executor.map(self.parse_match_page, match_links):
+                for team_name, players in match_data.items():
+                    if team_name not in probabilities_dict:
+                        probabilities_dict[team_name] = {}
+                    for player_name, chance_val in players.items():
+                        probabilities_dict[team_name][player_name] = chance_val
 
         return probabilities_dict
 
@@ -252,6 +318,7 @@ class JornadaPerfectaScraper:
 
         teams_probabilities_dict = self.scrape_teams_probabilities()
         matches_probabilities_dict = self.scrape_matches_probabilities(teams_probabilities_dict)
+        self._player_href_cache.persist()
         probabilities_dict = copy.deepcopy(matches_probabilities_dict)
 
         return probabilities_dict
@@ -477,7 +544,8 @@ def get_players_forms_dict_jornadaperfecta(
 
 def get_players_start_probabilities_dict_jornadaperfecta(
         file_name="jornadaperfecta_start_probabilities",
-        force_scrape=False
+        force_scrape=False,
+        max_workers=8,
 ):
     if not force_scrape:
         data = read_dict_data(file_name)
@@ -485,7 +553,7 @@ def get_players_start_probabilities_dict_jornadaperfecta(
             return data
 
     competition = competition_from_filename(file_name)
-    scraper = JornadaPerfectaScraper(competition=competition)
+    scraper = JornadaPerfectaScraper(competition=competition, max_workers=max_workers)
     # _, _, _, result, _ = scraper.scrape()
     result = scraper.scrape_probabilities()
 

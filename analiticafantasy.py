@@ -1,8 +1,10 @@
 import os
 import re
+import threading
 import requests
 import urllib3
 import json
+from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -19,6 +21,7 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 class AnaliticaFantasyScraper:
     def __init__(self, competition: str = None):
         self.base_url = "https://www.analiticafantasy.com"
+        self.api_base_url = "https://app.analiticafantasy.com"
         # self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
         # # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
         self.competition =  (
@@ -27,6 +30,8 @@ class AnaliticaFantasyScraper:
             else "la-liga"
         )
         self.session = requests.Session()
+        self._fetch_lock = threading.Lock()
+        self._next_data_cache = {}
         self.driver = create_driver()
         self.wait = WebDriverWait(self.driver, 15)
         self.small_wait = WebDriverWait(self.driver, 5)
@@ -37,13 +42,18 @@ class AnaliticaFantasyScraper:
                 "Chrome/91.0.4472.124 Safari/537.36"
             )
         }
+        self.api_headers = {
+            **self.headers,
+            "Accept": "application/json",
+        }
 
     def fetch_page(self, url):
         self.driver.get(url)
 
     def fetch_response(self, url):
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = self.session.get(url, headers=self.headers, verify=False)
+        with self._fetch_lock:
+            response = self.session.get(url, headers=self.headers, verify=False)
         response.raise_for_status()
         return response.text
 
@@ -133,49 +143,101 @@ class AnaliticaFantasyScraper:
                     links.append(full_url)
         return self._dedup_preserve_order(links)
 
-    def parse_lineup_page(self, match_url):
-        """
-        Example logic: parse the match page’s JSON or HTML to extract the chance/team/player data.
-        The actual parsing details depend on how the data appears in the HTML.
-        """
-        page_html = self.fetch_response(match_url)
-        # For illustration: suppose a <script id="__NEXT_DATA__"> tag contains a JSON
-        # structure with the players’ data. We find and parse it:
+    def _empty_match_dict(self):
+        return {
+            "prices": {},
+            "positions": {},
+            "forms": {},
+            "start_probabilities": {},
+            "price_trends": {},
+        }
+
+    def _fixture_id_from_url(self, url):
+        match = re.search(r"/partido/(\d+)", url)
+        return int(match.group(1)) if match else None
+
+    def _get_next_data(self, url):
+        if url in self._next_data_cache:
+            return self._next_data_cache[url]
+
+        page_html = self.fetch_response(url)
         soup = BeautifulSoup(page_html, "html.parser")
         script_tag = soup.find("script", id="__NEXT_DATA__")
         if not script_tag:
-            return {}
+            self._next_data_cache[url] = None
+            return None
 
         try:
             data_obj = json.loads(script_tag.string)
         except (json.JSONDecodeError, TypeError):
+            data_obj = None
+        self._next_data_cache[url] = data_obj
+        return data_obj
+
+    def _fixture_id_from_data(self, data_obj, page_url):
+        fixture_id = self._fixture_id_from_url(page_url)
+        if fixture_id:
+            return fixture_id
+        page_props = data_obj.get("props", {}).get("pageProps", {})
+        partido = (page_props.get("fixtureDataResponse") or {}).get("partido") or {}
+        return partido.get("fixtureId")
+
+    def _dedupe_lineup_urls_by_fixture(self, urls):
+        """
+        /equipo/... and /partido/{id}/... often point at the same fixture.
+        Keep the first URL per fixtureId to avoid duplicate API calls.
+        """
+        deduped = []
+        seen_urls = set()
+        seen_fixtures = set()
+        for url in urls:
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
+
+            data_obj = self._get_next_data(url)
+            if not data_obj:
+                deduped.append(url)
+                continue
+
+            fixture_id = self._fixture_id_from_data(data_obj, url)
+            if fixture_id:
+                if fixture_id in seen_fixtures:
+                    continue
+                seen_fixtures.add(fixture_id)
+            deduped.append(url)
+        return deduped
+
+    def _fetch_lineups_from_api(self, fixture_id):
+        if not fixture_id:
             return {}
-        # print(data_obj)
+        api_url = f"{self.api_base_url}/api/alineaciones/partido/{fixture_id}"
+        try:
+            with self._fetch_lock:
+                response = self.session.get(api_url, headers=self.api_headers, verify=False)
+            response.raise_for_status()
+            data = response.json()
+        except (requests.RequestException, json.JSONDecodeError, ValueError) as e:
+            print(f"Lineups API failed for fixture {fixture_id}: {e!r}")
+            return {}
+        if isinstance(data, dict) and ("h" in data or "a" in data):
+            return data
+        return {}
 
-        # Adjust this path depending on your actual JSON structure.
-        # Suppose each player entry looks like:
-        # {
-        #   "team": { "name": "Valencia" },
-        #   "information": { "name": "Player X" },
-        #   "chance": 88,
-        #   ...
-        # }
+    def _lineups_data_from_page(self, data_obj, page_url):
+        page_props = data_obj.get("props", {}).get("pageProps", {})
 
-        # Go into data_obj["props"]["pageProps"]["lineupsData"]
-        lineups_data = (
-            data_obj
-            .get("props", {})
-            .get("pageProps", {})
-            # .get("lineupsData", {})
-            .get("lineupsResponse", {})
-        )
+        # Legacy SSR payload (still supported if it reappears in __NEXT_DATA__)
+        lineups_data = page_props.get("lineupsResponse")
+        if lineups_data:
+            return lineups_data
+        # .get("lineupsData", {})
 
-        match_dict = {}
-        match_dict["prices"] = {}
-        match_dict["positions"] = {}
-        match_dict["forms"] = {}
-        match_dict["start_probabilities"] = {}
-        match_dict["price_trends"] = {}
+        fixture_id = self._fixture_id_from_data(data_obj, page_url)
+        return self._fetch_lineups_from_api(fixture_id)
+
+    def _build_match_dict_from_lineups(self, lineups_data):
+        match_dict = self._empty_match_dict()
 
         # Safely extract home/away lineups
         for side_key in ["h", "a"]:
@@ -185,7 +247,7 @@ class AnaliticaFantasyScraper:
             players = team_data.get("l", [])
 
             for player in players:
-                player_name = player.get("n", {}).strip().title()
+                player_name = (player.get("n") or "").strip().title()
                 player_name = find_manual_similar_string(player_name)
 
                 chance_int = player.get("c", None)  # e.g. 40
@@ -220,6 +282,38 @@ class AnaliticaFantasyScraper:
                     if price_trend is not None:
                         match_dict["price_trends"][team_name][player_name] = price_trend
 
+        return match_dict
+
+    def parse_lineup_page(self, match_url):
+        """
+        Example logic: parse the match page’s JSON or HTML to extract the chance/team/player data.
+        The actual parsing details depend on how the data appears in the HTML.
+        """
+        # For illustration: suppose a <script id="__NEXT_DATA__"> tag contains a JSON
+        # structure with the players’ data. We find and parse it:
+        data_obj = self._get_next_data(match_url)
+        if not data_obj:
+            return self._empty_match_dict()
+        # print(data_obj)
+
+        # Adjust this path depending on your actual JSON structure.
+        # Suppose each player entry looks like:
+        # {
+        #   "team": { "name": "Valencia" },
+        #   "information": { "name": "Player X" },
+        #   "chance": 88,
+        #   ...
+        # }
+
+        # Go into data_obj["props"]["pageProps"]["lineupsData"]
+        # New pages expose fixtureDataResponse in __NEXT_DATA__ and load h/a via:
+        # https://app.analiticafantasy.com/api/alineaciones/partido/{fixtureId}
+        lineups_data = self._lineups_data_from_page(data_obj, match_url)
+        if not lineups_data:
+            return self._empty_match_dict()
+
+        match_dict = self._build_match_dict_from_lineups(lineups_data)
+
         # home_players = lineups_data.get("homeLineup", {}).get("players", [])
         # away_players = lineups_data.get("awayLineup", {}).get("players", [])
         # all_chance_players = home_players + away_players
@@ -243,96 +337,93 @@ class AnaliticaFantasyScraper:
 
         return match_dict
 
+    def _merge_match_data(self, match_data, prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict):
+        for team_name, players in match_data["prices"].items():
+            if team_name not in prices_dict:
+                prices_dict[team_name] = {}
+            for player_name, data_val in players.items():
+                prices_dict[team_name][player_name] = data_val
+        for team_name, players in match_data["positions"].items():
+            if team_name not in positions_dict:
+                positions_dict[team_name] = {}
+            for player_name, data_val in players.items():
+                positions_dict[team_name][player_name] = data_val
+        for team_name, players in match_data["forms"].items():
+            if team_name not in forms_dict:
+                forms_dict[team_name] = {}
+            for player_name, data_val in players.items():
+                forms_dict[team_name][player_name] = data_val
+        for team_name, players in match_data["start_probabilities"].items():
+            if team_name not in probabilities_dict:
+                probabilities_dict[team_name] = {}
+            for player_name, data_val in players.items():
+                probabilities_dict[team_name][player_name] = data_val
+        for team_name, players in match_data["price_trends"].items():
+            if team_name not in price_trends_dict:
+                price_trends_dict[team_name] = {}
+            for player_name, data_val in players.items():
+                price_trends_dict[team_name][player_name] = data_val
+
+    def _parse_urls_parallel(self, urls, max_workers=8):
+        if not urls:
+            return []
+        workers = min(max_workers, len(urls))
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            return list(executor.map(self.parse_lineup_page, urls))
+
     def scrape(self):
         """
         1) Grab the main page, find all partido links.
         2) For each match link, parse the chance / team / player data.
         3) Merge them all into a single dictionary.
         """
-        # To get an error if there is no page
-        main_html = self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
-        # main_html = self.fetch_response(self.base_url)
-        # self.fetch_page(self.base_url)
-        self.fetch_page(f"{self.base_url}/{self.competition}/alineaciones-probables")
-        # print(f"{self.base_url}/{self.competition}/alineaciones-probables")
-
-        prices_dict = {}
-        positions_dict = {}
-        forms_dict = {}
-        price_trends_dict = {}
-        probabilities_dict = {}
-
-        # team_links = self.get_team_links(main_html)
         try:
-            team_links = self.get_team_links()
-        except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
-            print("Fallback team links")
-            team_links = self.get_team_links(main_html)
-        for url in team_links:
-            match_data = self.parse_lineup_page(url)
-            # Merge match_data into probabilities_dict
-            for team_name, players in match_data["prices"].items():
-                if team_name not in prices_dict:
-                    prices_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    prices_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["positions"].items():
-                if team_name not in positions_dict:
-                    positions_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    positions_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["forms"].items():
-                if team_name not in forms_dict:
-                    forms_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    forms_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["start_probabilities"].items():
-                if team_name not in probabilities_dict:
-                    probabilities_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    probabilities_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["price_trends"].items():
-                if team_name not in price_trends_dict:
-                    price_trends_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    price_trends_dict[team_name][player_name] = data_val
+            self._next_data_cache = {}
 
-        # match_links = self.get_match_links(main_html)
-        try:
-            match_links = self.get_match_links()
-        except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
-            print("Fallback match links")
-            match_links = self.get_match_links(main_html)
-        for url in match_links:
-            match_data = self.parse_lineup_page(url)
-            # Merge match_data into probabilities_dict
-            for team_name, players in match_data["prices"].items():
-                if team_name not in prices_dict:
-                    prices_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    prices_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["positions"].items():
-                if team_name not in positions_dict:
-                    positions_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    positions_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["forms"].items():
-                if team_name not in forms_dict:
-                    forms_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    forms_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["start_probabilities"].items():
-                if team_name not in probabilities_dict:
-                    probabilities_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    probabilities_dict[team_name][player_name] = data_val
-            for team_name, players in match_data["price_trends"].items():
-                if team_name not in price_trends_dict:
-                    price_trends_dict[team_name] = {}
-                for player_name, data_val in players.items():
-                    price_trends_dict[team_name][player_name] = data_val
+            # To get an error if there is no page
+            main_html = self.fetch_response(f"{self.base_url}/{self.competition}/alineaciones-probables")
+            # main_html = self.fetch_response(self.base_url)
+            # self.fetch_page(self.base_url)
+            self.fetch_page(f"{self.base_url}/{self.competition}/alineaciones-probables")
+            # print(f"{self.base_url}/{self.competition}/alineaciones-probables")
 
-        return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
+            prices_dict = {}
+            positions_dict = {}
+            forms_dict = {}
+            price_trends_dict = {}
+            probabilities_dict = {}
+
+            # team_links = self.get_team_links(main_html)
+            try:
+                team_links = self.get_team_links()
+            except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
+                print("Fallback team links")
+                team_links = self.get_team_links(main_html)
+
+            # match_links = self.get_match_links(main_html)
+            try:
+                match_links = self.get_match_links()
+            except (TimeoutException, ReadTimeout, ReadTimeoutError, RemoteDisconnected):
+                print("Fallback match links")
+                match_links = self.get_match_links(main_html)
+
+            # match_links first so dedupe keeps /partido/ URLs over /equipo/ for the same fixture
+            all_urls = self._dedup_preserve_order(match_links + team_links)
+            lineup_urls = self._dedupe_lineup_urls_by_fixture(all_urls)
+            skipped = len(all_urls) - len(lineup_urls)
+            if skipped:
+                print(f"Skipping {skipped} duplicate fixture URLs (team + match overlap)")
+
+            for match_data in self._parse_urls_parallel(lineup_urls):
+                # Merge match_data into probabilities_dict
+                self._merge_match_data(
+                    match_data, prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
+                )
+
+            return prices_dict, positions_dict, forms_dict, probabilities_dict, price_trends_dict
+        finally:
+            if self.driver:
+                self.driver.quit()
 
 
 def competition_from_filename(file_name: str) -> str:

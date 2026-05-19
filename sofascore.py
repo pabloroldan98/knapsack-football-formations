@@ -23,11 +23,12 @@ from pprint import pprint
 import ast
 import time
 import random
+from concurrent.futures import ThreadPoolExecutor
 
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
     run_with_timeout, CustomTimeoutException, CustomConnectionException, CustomMissingException, \
-    find_manual_similar_string, get_working_proxy
+    find_manual_similar_string, get_working_proxy, HEADER_POOL
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -35,66 +36,166 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Ro
 # Maximum wait time for player data (in seconds)
 MAX_WAIT_TIME = 2 * 60  # 2 minutes (120 seconds)
 
-# random header pool
-HEADER_POOL = [
-    # Your current one (Chrome 91 / Windows)
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
-    },
-
-    # Chrome / Windows (newer-ish)
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
-        )
-    },
-
-    # Chrome / macOS
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
-        )
-    },
-
-    # Chrome / Linux
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
-        )
-    },
-
-    # Firefox / Windows
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) "
-            "Gecko/20100101 Firefox/121.0"
-        )
-    },
-
-    # Safari / macOS
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/17.1 Safari/605.1.15"
-        )
-    },
-]
 
 
 def pick_headers():
     # copy() so you don't accidentally mutate the pool entry later
     return random.choice(HEADER_POOL).copy()
+
+
+def _fetch_team_player_paths(team_name, team_url):
+    print('Extracting %s player links...' % team_name)
+    headers = pick_headers()
+    response = tls_requests.get(team_url, headers=headers, verify=False)
+    soup = BeautifulSoup(response.text, "html.parser")
+    player_paths_list = []
+
+    script = soup.find("script", id="__NEXT_DATA__")
+    if script and script.string:
+        try:
+            data = json.loads(script.string)
+            players_list = (
+                data["props"]["pageProps"]["initialProps"]["players"]["players"]
+            )
+            for item in players_list:
+                p = item.get("player", {})
+                slug = p.get("slug")
+                pid = p.get("id")
+                if slug and pid:
+                    player_paths_list.append(
+                        f"https://www.sofascore.com/football/player/{slug}/{pid}"
+                    )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    if not player_paths_list:
+        for a_tag in soup.find_all("a", href=True):
+            href_val = a_tag["href"]
+            if "/player/" in href_val:
+                full_url = (
+                    href_val if href_val.startswith("http")
+                    else "https://www.sofascore.com" + href_val
+                )
+                player_paths_list.append(full_url)
+
+    player_paths_list = sorted(list(set(player_paths_list)))
+    print(player_paths_list)
+    return team_name, player_paths_list
+
+
+def _scrape_one_player(player_url):
+    print('Extracting player data from: %s ...' % player_url)
+    use_selenium = False
+    use_proxies = False
+    player_name = ""
+    timeout_retries = 3
+
+    while timeout_retries > 0:
+        def scrape_players_name_task(use_buffer=False):
+            if use_buffer:
+                time.sleep(0.25)
+            try:
+                return get_player_name(player_url, use_proxies=use_proxies)
+            except Exception:
+                pass
+            if use_selenium:
+                try:
+                    return get_player_name_selenium(player_url)
+                except Exception:
+                    pass
+            raise CustomMissingException("No name was fetched")
+
+        try:
+            player_name = run_with_timeout(MAX_WAIT_TIME, scrape_players_name_task)
+            print(player_name)
+            break
+        except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
+            timeout_retries -= 1
+            if timeout_retries <= 0:
+                print("Failed to fetch name after several attempts.")
+                break
+            if isinstance(e, CustomMissingException):
+                sleep_s = 0
+                reason = "element not found"
+                extra = ""
+            elif isinstance(e, CustomTimeoutException):
+                sleep_s = 1
+                reason = "timeout"
+                extra = f"(waited {MAX_WAIT_TIME}s)"
+            else:
+                sleep_s = 2
+                reason = "connection"
+                extra = f"({type(e).__name__})"
+            print(
+                f"Retrying to fetch sofascore player name ({player_url}) due to {reason} error {extra} "
+                f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
+            )
+            time.sleep(sleep_s)
+
+    if not player_name:
+        return None
+
+    average_rating = float(6.0)
+    timeout_retries = 3
+    while timeout_retries > 0:
+        def scrape_players_rating_task(use_buffer=False):
+            if use_buffer:
+                time.sleep(0.25)
+            try:
+                return float(get_player_average_rating(player_url, use_proxies=use_proxies))
+            except Exception:
+                pass
+            try:
+                return float(get_player_last_year_rating(player_url, use_proxies=use_proxies))
+            except Exception:
+                pass
+            return average_rating
+
+        try:
+            average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
+            print(average_rating)
+            break
+        except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
+            timeout_retries -= 1
+            if timeout_retries <= 0:
+                print("Failed to fetch rating after several attempts.")
+                break
+            if isinstance(e, CustomMissingException):
+                sleep_s = 0
+                reason = "element not found"
+                extra = ""
+            elif isinstance(e, CustomTimeoutException):
+                sleep_s = 1
+                reason = "timeout"
+                extra = f"(waited {MAX_WAIT_TIME}s)"
+            else:
+                sleep_s = 2
+                reason = "connection"
+                extra = f"({type(e).__name__})"
+            print(
+                f"Retrying to fetch sofascore player rating ({player_url}) due to {reason} error {extra} "
+                f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
+            )
+            time.sleep(sleep_s)
+
+    player_name = find_manual_similar_string(player_name)
+    average_rating = average_rating if average_rating != 0 else float(6.0)
+    return player_name, average_rating
+
+
+def _scrape_team_ratings(team_name, player_paths, max_workers):
+    players_ratings = {}
+    player_workers = min(max_workers, len(player_paths) or 1)
+    print(
+        f"Fetching ratings for {team_name}: {len(player_paths)} players "
+        f"({player_workers} workers)..."
+    )
+    with ThreadPoolExecutor(max_workers=player_workers) as executor:
+        for result in executor.map(_scrape_one_player, player_paths):
+            if result:
+                player_name, average_rating = result
+                players_ratings[player_name] = average_rating
+    return team_name, players_ratings
 
 
 def get_players_ratings_list(
@@ -104,10 +205,15 @@ def get_players_ratings_list(
         backup_files=True,
         force_scrape=False,
         select_half: int | None = None,
+        max_workers=8,
 ):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    teams_data_dict = get_players_data(write_file, file_name, team_links, backup_files=backup_files, force_scrape=force_scrape, select_half=select_half,)
+    teams_data_dict = get_players_data(
+        write_file, file_name, team_links,
+        backup_files=backup_files, force_scrape=force_scrape,
+        select_half=select_half, max_workers=max_workers,
+    )
     players_ratings_list = []
     for team_name, players_ratings in teams_data_dict.items():
         if isinstance(players_ratings, str):
@@ -533,7 +639,9 @@ def get_players_data(
         backup_files=True,
         force_scrape=False,
         select_half: int | None = None,
+        max_workers=8,
 ):
+    max_workers = max(1, max_workers)
     existing_data = {}
 
     # Normal caching behavior only when scraping everything (select_half=None)
@@ -573,225 +681,46 @@ def get_players_data(
         print(f"[select_half={select_half}] Teams selected: {len(team_links)} / {len(items)}")
 
     print()
-    team_players_paths = dict()
-    headers = pick_headers()
-
-    for key, value in team_links.items():
-        team_name = value[0]
-        team_name = find_manual_similar_string(team_name)
-        team_url = value[1]
-        player_paths_list = []
-
-        # "Extracting %s player links..." from original code:
-        print('Extracting %s player links...' % team_name)
-
-        # GET the team page
-        # response = requests.get(team_url, headers=headers, verify=False)
-        response = tls_requests.get(team_url, headers=headers, verify=False)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        # Try to parse JSON blob first
-        script = soup.find("script", id="__NEXT_DATA__")
-        if script and script.string:
-            try:
-                data = json.loads(script.string)
-                players_list = (
-                    data["props"]["pageProps"]["initialProps"]["players"]["players"]
-                )
-                for item in players_list:
-                    p = item.get("player", {})
-                    slug = p.get("slug")
-                    pid = p.get("id")
-                    if slug and pid:
-                        player_paths_list.append(
-                            f"https://www.sofascore.com/football/player/{slug}/{pid}"
-                        )
-            except (json.JSONDecodeError, KeyError, TypeError):
-                pass
-
-        # Fallback: scan <a> tags if JSON not found
-        if not player_paths_list:
-            for a_tag in soup.find_all("a", href=True):
-                href_val = a_tag["href"]
-                # if href_val.startswith("/player/"):
-                if "/player/" in href_val:
-                    # Construct absolute URL
-                    full_url = href_val if href_val.startswith("http") else "https://www.sofascore.com" + href_val
-                    player_paths_list.append(full_url)
-
-        player_paths_list = sorted(list(set(player_paths_list)))
-        # player_paths_list = [path for path in player_paths_list if "unai-marrero" in path]
-        # player_paths_list = [path for path in player_paths_list if "marc-bernal" in path]
-        # player_paths_list = [path for path in player_paths_list if "diakhaby" in path]
-        print(player_paths_list)
-        team_players_paths[team_name] = player_paths_list
+    team_items = [
+        (find_manual_similar_string(value[0]), value[1])
+        for value in team_links.values()
+    ]
+    team_players_paths = {}
+    team_workers = min(max_workers, len(team_items) or 1)
+    print(f"Fetching player links for {len(team_items)} teams ({team_workers} workers)...")
+    with ThreadPoolExecutor(max_workers=team_workers) as executor:
+        for team_name, paths in executor.map(
+            lambda item: _fetch_team_player_paths(item[0], item[1]),
+            team_items,
+        ):
+            team_players_paths[team_name] = paths
 
     teams_with_players_ratings = dict()
     j = 0
 
-    # Now we fetch each player's rating
-    for team_name, player_paths in team_players_paths.items():
-        players_ratings = {}
-        for p in player_paths:
-            use_selenium = False
-            use_proxies = False
-            print('Extracting player data from: %s ...' % p)
-            # 1) Attempt player name with timeouts + fallbacks
-            timeout_retries = 3
-
-            while timeout_retries > 0:
-                def scrape_players_name_task(use_buffer=False):
-                    """
-                    1) Try to find the player > name via API.
-                    2) If not found, try to find an <h2> (like your Selenium code: "(//h2)[1]").
-                    """
-                    if use_buffer:
-                        time.sleep(0.25)
-                    player_name = ""
-
-                    # Attempt #1: "player_name" via api
-                    try:
-                        player_name = get_player_name(p, use_proxies=use_proxies)
-                        return player_name
-                    except:
-                        pass
-
-                    # Attempt #2: "player_name" via Selenium
-                    if use_selenium:
-                        try:
-                            player_name = get_player_name_selenium(p)
-                            return player_name
-                        except:
-                            pass
-
-                    # return player_name  # If all fails, return ""
-                    # Raise a CustomMissingException exception if no name was fetched
-                    raise CustomMissingException("No name was fetched")
-
-                try:
-                    player_name = run_with_timeout(MAX_WAIT_TIME, scrape_players_name_task)
-                    print(player_name)
-                    break
-                except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
-                    timeout_retries -= 1
-                    if timeout_retries <= 0:
-                        print("Failed to fetch name after several attempts.")
-                        break
-                    # Different behavior depending on the exception
-                    if isinstance(e, CustomMissingException):
-                        sleep_s = 0
-                        reason = "element not found"
-                        extra = ""
-                        # use_selenium = True
-                        # use_proxies = True
-                    elif isinstance(e, CustomTimeoutException):
-                        sleep_s = 1
-                        reason = "timeout"
-                        extra = f"(waited {MAX_WAIT_TIME}s)"
-                    else:
-                        sleep_s = 2
-                        reason = "connection"
-                        extra = f"({type(e).__name__})"
-                    print(
-                        f"Retrying to fetch sofascore player name ({p}) due to {reason} error {extra} "
-                        f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
-                    )
-                    time.sleep(sleep_s)
-
-            if player_name != "":
-                # 2) Attempt rating with timeouts + fallback
-                average_rating = float(6.0)
-                timeout_retries = 3
-
-                while timeout_retries > 0:
-                    def scrape_players_rating_task(use_buffer=False):
-                        """
-                        1) Try to find the <span role="meter" aria-valuenow="...">
-                           (Summary last 12 months).
-                        2) If not found, try to find "Average Sofascore Rating"
-                           then look for the <span role="meter"> near it,
-                           apply *0.95.
-                        """
-                        if use_buffer:
-                            time.sleep(0.25)
-                        average_rating = float(6.0)
-
-                        # Attempt #1: "last-year-summary" via api
-                        try:
-                            average_rating = float(get_player_average_rating(p, use_proxies=use_proxies))
-                            return average_rating
-                        except:
-                            pass
-
-                        # # Attempt #2: "Summary (last 12 months)" via Selenium
-                        # try:
-                        #     average_rating = float(get_player_average_rating_selenium(p))
-                        #     return average_rating
-                        # except:
-                        #     pass
-
-                        # Attempt #3: "Average Sofascore Rating" fallback
-                        # Find the rating of the last year he played
-                        try:
-                            average_rating = float(get_player_last_year_rating(p, use_proxies=use_proxies))
-                            return average_rating
-                        except:
-                            pass
-
-                        # # Attempt #4: "Average Sofascore Rating" fallback
-                        # # Find the rating of the last tournament
-                        # try:
-                        #     average_rating = float(get_player_last_tournament_rating_selenium(p))
-                        #     # average_rating = get_player_average_rating_selenium_short(p)
-                        # except Exception as e:
-                        #     # print(f"Error while getting average rating for player {p}: {e}")
-                        #     # print(f"Exception type: {type(e).__name__}")
-                        #     # import traceback
-                        #     # traceback.print_exc()
-                        #     pass
-
-                        return average_rating  # If all fails, return 6.0
-
-                    try:
-                        average_rating = run_with_timeout(MAX_WAIT_TIME, scrape_players_rating_task)
-                        print(average_rating)
-                        break  # Break if successful
-                    except (CustomMissingException, CustomTimeoutException, CustomConnectionException, ReadTimeout, ReadTimeoutError, RemoteDisconnected) as e:
-                        timeout_retries -= 1
-                        if timeout_retries <= 0:
-                            print("Failed to fetch rating after several attempts.")
-                            break
-                        # Different behavior depending on the exception
-                        if isinstance(e, CustomMissingException):
-                            sleep_s = 0
-                            reason = "element not found"
-                            extra = ""
-                            # use_selenium = True
-                            # use_proxies = True
-                        elif isinstance(e, CustomTimeoutException):
-                            sleep_s = 1
-                            reason = "timeout"
-                            extra = f"(waited {MAX_WAIT_TIME}s)"
-                        else:
-                            sleep_s = 2
-                            reason = "connection"
-                            extra = f"({type(e).__name__})"
-                        print(
-                            f"Retrying to fetch sofascore player rating ({p}) due to {reason} error {extra} "
-                            f"({timeout_retries} retry left, waiting {sleep_s}s before next retry)"
-                        )
-                        time.sleep(sleep_s)
-                if player_name != "":
-                    player_name = find_manual_similar_string(player_name)
-                    # players_ratings[player_name] = average_rating
-                    players_ratings[player_name] = average_rating if average_rating != 0 else float(6.0)
-
-        teams_with_players_ratings[team_name] = players_ratings  # Add to main dict
-
-        if backup_files:
-            # write_dict_data(teams_with_players_ratings, file_name + "_" + str(j))
-            overwrite_dict_data(teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True)
-        j += 1
+    if backup_files:
+        for team_name, player_paths in team_players_paths.items():
+            team_name, players_ratings = _scrape_team_ratings(
+                team_name, player_paths, max_workers,
+            )
+            teams_with_players_ratings[team_name] = players_ratings
+            overwrite_dict_data(
+                teams_with_players_ratings, file_name + "_" + str(j), ignore_valid_file=True,
+            )
+            j += 1
+    else:
+        team_scrape_items = list(team_players_paths.items())
+        team_workers = min(max_workers, len(team_scrape_items) or 1)
+        print(
+            f"Fetching ratings for {len(team_scrape_items)} teams in parallel "
+            f"({team_workers} workers)..."
+        )
+        with ThreadPoolExecutor(max_workers=team_workers) as executor:
+            for team_name, players_ratings in executor.map(
+                lambda item: _scrape_team_ratings(item[0], item[1], max_workers),
+                team_scrape_items,
+            ):
+                teams_with_players_ratings[team_name] = players_ratings
 
     # If we are scraping halves, merge into any existing data
     if select_half in (1, 2) and existing_data:
