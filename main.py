@@ -412,12 +412,12 @@ def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=
         use_comunio_price = False
         start_probability_file_names = [
             # f"analiticafantasy_{competition}_players_start_probabilities",
-            # f"futbolfantasy_{competition}_players_start_probabilities",
-            # f"jornadaperfecta_{competition}_players_start_probabilities",
+            f"futbolfantasy_{competition}_players_start_probabilities",
+            f"jornadaperfecta_{competition}_players_start_probabilities",
             # f"pundit_{competition}_players_start_probabilities",
             # f"scout_{competition}_players_start_probabilities",
             # f"rotowire_{competition}_players_start_probabilities",
-            f"sportsgambler_{competition}_players_start_probabilities",
+            # f"sportsgambler_{competition}_players_start_probabilities",
         ]
         alt_fixture_method = False
         ignore_gk_fixture = True
