@@ -401,7 +401,7 @@ def get_next_jornada(competition="laliga"):
 
     biwenger_file_name = f"biwenger_{competition}_data"
     all_teams, _ = get_championship_data(verbose=False, biwenger_file_name=biwenger_file_name)
-    jornada_file_name = f"forced_matches_{competition}_2025_26"
+    jornada_file_name = f"forced_matches_{competition}"
     jornadas_dict = read_dict_data(jornada_file_name)
 
     next_jornadas = []

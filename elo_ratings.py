@@ -561,7 +561,7 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False, file_name
         if extra_teams:
             # full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
             # full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
-            # file_name can be None or a string like "laliga_2025_26" or "mundial_clubes_2025"
+            # file_name can be None or a string like "laliga" or "mundial_clubes_2025"
             besoccer_url, fdb_url = elos_urls_from_filename(file_name, today)
 
             full_besoccer_teams_elos_dict = get_besoccer_teams_elos(besoccer_url)

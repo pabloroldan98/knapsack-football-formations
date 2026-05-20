@@ -213,6 +213,8 @@ let LANG = 'es';
 let allPlayers = [];        // Full player list from API
 let divideMillions = false;
 let isLaLiga = true;
+let hasJornadas = false;
+let competitionsMeta = [];
 let isTournament = false;
 let teamsList = [];
 
@@ -706,9 +708,10 @@ function initLang() {
 async function loadCompetitions() {
   try {
     const data = await apiGet('/api/competitions');
+    competitionsMeta = data.competitions || [];
     const sel = document.getElementById('selCompetition');
     sel.innerHTML = '';
-    for (const c of data.competitions) {
+    for (const c of competitionsMeta) {
       const opt = document.createElement('option');
       opt.value = c.key;
       opt.textContent = LANG === 'en' ? c.name_en : c.name_es;
@@ -749,12 +752,8 @@ async function loadCompetitions() {
 function onCompetitionChange() {
   const comp = document.getElementById('selCompetition').value;
   isLaLiga = (comp === 'laliga');
-  isTournament = ['mundialito', 'champions', 'europaleague', 'conference'].includes(comp);
+  isTournament = ['mundialito', 'champions', 'europaleague', 'conference', 'mundial', 'eurocopa', 'copaamerica'].includes(comp);
 
-  // Show/hide jornada
-  document.getElementById('jornadaContainer').style.display = isLaLiga ? 'block' : 'none';
-
-  // Update app options
   const selApp = document.getElementById('selApp');
   if (isLaLiga) {
     selApp.innerHTML = '<option value="biwenger">Biwenger</option><option value="laligafantasy">LaLiga Fantasy</option>';
@@ -762,17 +761,21 @@ function onCompetitionChange() {
     selApp.innerHTML = '<option value="biwenger">Biwenger</option>';
   }
 
-  // Load jornadas if LaLiga
-  if (isLaLiga) loadJornadas(comp);
-
-  // Update budget input step
+  loadJornadas(comp);
   updateBudgetInput();
 }
 
 async function loadJornadas(competition) {
+  const jornadaContainer = document.getElementById('jornadaContainer');
+  const sel = document.getElementById('selJornada');
   try {
     const data = await apiGet('/api/jornadas', { competition });
-    const sel = document.getElementById('selJornada');
+    hasJornadas = data.jornadas && data.jornadas.length > 0;
+    jornadaContainer.style.display = hasJornadas ? 'block' : 'none';
+    if (!hasJornadas) {
+      sel.innerHTML = '';
+      return;
+    }
     sel.innerHTML = `<option value="">${LANG === 'en' ? 'Next match' : 'Siguiente partido'}</option>`;
     for (const j of data.jornadas) {
       const opt = document.createElement('option');
@@ -782,6 +785,9 @@ async function loadJornadas(competition) {
     }
   } catch (e) {
     console.error('Error loading jornadas:', e);
+    hasJornadas = false;
+    jornadaContainer.style.display = 'none';
+    sel.innerHTML = '';
   }
 }
 

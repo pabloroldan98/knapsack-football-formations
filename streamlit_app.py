@@ -723,16 +723,16 @@ if sort_option == t("sort.worth"):
     st.toast(t("toast.value_sorted"))
     # use_start_probability = st.sidebar.radio("Utilizar '% Titular' cuando se Ordena por **Rentabilidad**", ["Sí", "No"], index=0)
 
-# Jornada
+# Jornada (when forced_matches JSON exists for this competition)
 selected_jornada = []
 selected_num_jornadas = 1
-if is_laliga:
-    jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+jornadas_dict = read_dict_data(f"forced_matches_{competition}")
+if jornadas_dict:
     display_to_key = {key.replace("_", " ").strip().title().replace("Jornada", t("sb.jornada")): key for key in jornadas_dict}
     display_options = [t("jornada.next")] + list(display_to_key.keys())
     selected_display_jornada = st.sidebar.selectbox(t("sb.jornada"), options=display_options, format_func=lambda x: normalize_name(x), index=0)
     # selected_jornada = [] if selected_display_jornada == "Siguiente partido" else jornadas_dict[display_to_key[selected_display_jornada]]
-    selected_jornada = jornadas_dict.get(get_next_jornada(), []) if selected_display_jornada == t("jornada.next") else jornadas_dict[display_to_key[selected_display_jornada]]
+    selected_jornada = jornadas_dict.get(get_next_jornada(competition), []) if selected_display_jornada == t("jornada.next") else jornadas_dict[display_to_key[selected_display_jornada]]
     jornadas_map = {
         t("num.one"): 1,
         t("num.two"): 2,
@@ -805,8 +805,7 @@ with st.spinner(t("loader.players")):
         forced_matches=selected_jornada,
     )
     # if not disable_multi_jornada:
-    if is_laliga:
-        if selected_num_jornadas != 1:
+    if jornadas_dict and selected_num_jornadas != 1:
             # jornada_index = list(display_to_key.keys()).index(selected_display_jornada)
             jornada_values = list(display_to_key.values())
             jornada_index = next((i for i, k in enumerate(jornada_values) if jornadas_dict[k] == selected_jornada), None)

@@ -132,12 +132,21 @@ class CalculateRequest(BaseModel):
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
+def has_jornadas(competition: str) -> bool:
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "json_files",
+        f"forced_matches_{competition}.json",
+    )
+    return os.path.isfile(path)
+
+
 def _load_players(competition, is_biwenger, no_form, no_fixtures, nerf_penalty,
                   jornada_key, num_jornadas):
     jornadas_dict = None
     forced_matches = []
     if jornada_key:
-        jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+        jornadas_dict = read_dict_data(f"forced_matches_{competition}")
         if jornadas_dict and jornada_key in jornadas_dict:
             forced_matches = jornadas_dict[jornada_key]
 
@@ -150,8 +159,8 @@ def _load_players(competition, is_biwenger, no_form, no_fixtures, nerf_penalty,
         forced_matches=forced_matches,
     )
 
-    # Multi-jornada averaging (LaLiga only)
-    if competition == "laliga" and num_jornadas > 1 and jornadas_dict and jornada_key:
+    # Multi-jornada averaging
+    if has_jornadas(competition) and num_jornadas > 1 and jornadas_dict and jornada_key:
         jkeys = list(jornadas_dict.keys())
         try:
             idx = jkeys.index(jornada_key)
@@ -242,18 +251,25 @@ def track_player_action(req: PlayerActionRequest):
 @app.get("/api/competitions")
 def get_competitions():
     return {"competitions": [
-        {"key": "laliga",    "name_es": "LaLiga",              "name_en": "LaLiga",                  "has_jornadas": True,  "apps": ["biwenger", "laligafantasy"]},
-        {"key": "premier",   "name_es": "Premier League",      "name_en": "Premier League",          "has_jornadas": False, "apps": ["biwenger"]},
-        {"key": "seriea",    "name_es": "Serie A",             "name_en": "Serie A",                 "has_jornadas": False, "apps": ["biwenger"]},
-        {"key": "ligueone",  "name_es": "Ligue 1",            "name_en": "Ligue 1",                 "has_jornadas": False, "apps": ["biwenger"]},
-        {"key": "segunda",   "name_es": "Segunda División",   "name_en": "Spanish Second Division", "has_jornadas": False, "apps": ["biwenger"]},
-        {"key": "champions", "name_es": "Champions League",    "name_en": "Champions League",        "has_jornadas": False, "apps": ["biwenger"]},
+        {"key": "laliga",       "name_es": "LaLiga",             "name_en": "LaLiga",                  "apps": ["biwenger", "laligafantasy"]},
+        {"key": "premier",      "name_es": "Premier League",     "name_en": "Premier League",          "apps": ["biwenger"]},
+        {"key": "seriea",       "name_es": "Serie A",            "name_en": "Serie A",                 "apps": ["biwenger"]},
+        {"key": "ligueone",     "name_es": "Ligue 1",            "name_en": "Ligue 1",                 "apps": ["biwenger"]},
+        # {"key": "bundesliga",   "name_es": "Bundesliga",         "name_en": "Bundesliga",              "apps": ["biwenger"]},
+        {"key": "segunda",      "name_es": "Segunda División",   "name_en": "Spanish Second Division", "apps": ["biwenger"]},
+        {"key": "champions",    "name_es": "Champions League",   "name_en": "Champions League",        "apps": ["biwenger"]},
+        # {"key": "europaleague", "name_es": "Europa League",      "name_en": "Europa League",           "apps": ["biwenger"]},
+        # {"key": "conference",   "name_es": "Conference League",  "name_en": "Conference League",       "apps": ["biwenger"]},
+        # {"key": "mundialito",   "name_es": "Mundial de Clubes",  "name_en": "Club World Cup",          "apps": ["biwenger"]},
+        {"key": "mundial",      "name_es": "Mundial",            "name_en": "World Cup",               "apps": ["biwenger"]},
+        # {"key": "eurocopa",     "name_es": "Eurocopa",           "name_en": "Euro",                    "apps": ["biwenger"]},
+        # {"key": "copaamerica",  "name_es": "Copa América",       "name_en": "Copa America",            "apps": ["biwenger"]},
     ]}
 
 
 @app.get("/api/jornadas")
 def get_jornadas(competition: str = "laliga"):
-    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+    jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if not jornadas_dict:
         return {"jornadas": [], "next_jornada": None}
     next_j = get_next_jornada(competition)

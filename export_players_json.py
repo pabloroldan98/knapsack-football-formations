@@ -107,7 +107,7 @@ def export_players(competition="laliga", app="biwenger"):
 
 def export_jornadas(competition="laliga"):
     """Exporta las jornadas disponibles a JSON."""
-    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+    jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if not jornadas_dict:
         print(f"  No hay jornadas para {competition}")
         return None

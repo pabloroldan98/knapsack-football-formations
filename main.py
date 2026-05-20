@@ -209,7 +209,7 @@ def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=
     if forced_matches:
         jornada_selected = forced_matches.copy()
     else:
-        jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+        jornadas_dict = read_dict_data(f"forced_matches_{competition}")
         if jornadas_dict:
             jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
         else:
@@ -572,7 +572,7 @@ if __name__ == "__main__":
 
 
     competition = "laliga"
-    jornadas_dict = read_dict_data(f"forced_matches_{competition}_2025_26")
+    jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if jornadas_dict:
         jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
     else:
@@ -1100,7 +1100,7 @@ if __name__ == "__main__":
     # current_jornada = None
     # buffer = []
     #
-    # with open("forced_matches_txt_files/forced_matches_champions_2025_26.txt", encoding="utf-8") as f:
+    # with open("forced_matches_txt_files/forced_matches_champions.txt", encoding="utf-8") as f:
     #     for line in f:
     #         line = line.strip()
     #
@@ -1124,7 +1124,7 @@ if __name__ == "__main__":
     #             elif line and not line.startswith("-----"):
     #                 buffer.append(line)
     # print(jornadas)
-    # overwrite_dict_data(jornadas, "forced_matches_champions_2025_26")
+    # overwrite_dict_data(jornadas, "forced_matches_champions")
     #
     #
     # ### TO MAKE PREDICTIONS ABOUT GOAL DIFFERENCE
@@ -1167,7 +1167,7 @@ if __name__ == "__main__":
     #     print(f"{team}: {avg:.4f}")
     # # Partidos
     #
-    # # jornadas_dict = read_dict_data("forced_matches_laliga_2025_26")
+    # # jornadas_dict = read_dict_data("forced_matches_laliga")
     # # jornada = jornadas_dict.get(get_next_jornada(), [])
     # # jornada = jornadas_dict["jornada_3"]
     # jornada = jornada_selected.copy()
