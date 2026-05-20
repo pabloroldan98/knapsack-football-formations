@@ -1100,7 +1100,7 @@ if __name__ == "__main__":
     # current_jornada = None
     # buffer = []
     #
-    # with open("forced_matches_champions_2025_26.txt", encoding="utf-8") as f:
+    # with open("forced_matches_txt_files/forced_matches_champions_2025_26.txt", encoding="utf-8") as f:
     #     for line in f:
     #         line = line.strip()
     #

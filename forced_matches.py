@@ -156,7 +156,7 @@ def get_forced_matches_dict(
     overwrite_dict_data(jornadas, file_name)
 
     if write_txt:
-        txt_path = os.path.join(ROOT_DIR, f"{file_name}.txt")
+        txt_path = os.path.join(ROOT_DIR, "forced_matches_txt_files", f"{file_name}.txt")
         write_forced_matches_txt(jornadas, txt_path)
         print(f"Wrote {txt_path}")
 
