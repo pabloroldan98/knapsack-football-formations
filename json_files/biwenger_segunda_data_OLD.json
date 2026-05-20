@@ -306,7 +306,7 @@
           "id": 4599,
           "name": "Round 40",
           "short": "R40",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4600,
@@ -327,208 +327,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4599,
-        "name": "Round 40",
-        "short": "R40",
-        "status": "active",
-        "end": 1779202800,
-        "type": "round",
-        "games": [
-          {
-            "id": 47319,
-            "date": 1779129000,
-            "status": "finished",
-            "home": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 0
-            },
-            "away": {
-              "id": 157,
-              "name": "Huesca",
-              "slug": "huesca",
-              "score": 0
-            }
-          },
-          {
-            "id": 47311,
-            "date": 1779045300,
-            "status": "finished",
-            "home": {
-              "id": 154,
-              "name": "Zaragoza",
-              "slug": "zaragoza",
-              "score": 1
-            },
-            "away": {
-              "id": 291,
-              "name": "Sporting",
-              "slug": "sporting",
-              "score": 3
-            }
-          },
-          {
-            "id": 47316,
-            "date": 1779019200,
-            "status": "finished",
-            "home": {
-              "id": 421,
-              "name": "Deportivo",
-              "slug": "deportivo",
-              "score": 2
-            },
-            "away": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 1
-            }
-          },
-          {
-            "id": 47312,
-            "date": 1778949000,
-            "status": "finished",
-            "home": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 1
-            },
-            "away": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 2
-            }
-          },
-          {
-            "id": 47313,
-            "date": 1778949000,
-            "status": "finished",
-            "home": {
-              "id": 471,
-              "name": "Racing",
-              "slug": "racing",
-              "score": 4
-            },
-            "away": {
-              "id": 156,
-              "name": "Real Valladolid",
-              "slug": "real-valladolid",
-              "score": 1
-            }
-          },
-          {
-            "id": 47315,
-            "date": 1778949000,
-            "status": "finished",
-            "home": {
-              "id": 290,
-              "name": "Granada",
-              "slug": "granada",
-              "score": 0
-            },
-            "away": {
-              "id": 588,
-              "name": "Burgos CF",
-              "slug": "burgos-cf",
-              "score": 1
-            }
-          },
-          {
-            "id": 47318,
-            "date": 1778940900,
-            "status": "finished",
-            "home": {
-              "id": 293,
-              "name": "Cultural Leonesa",
-              "slug": "cultural-leonesa",
-              "score": 2
-            },
-            "away": {
-              "id": 584,
-              "name": "Eibar",
-              "slug": "eibar",
-              "score": 1
-            }
-          },
-          {
-            "id": 47321,
-            "date": 1778940900,
-            "status": "finished",
-            "home": {
-              "id": 780,
-              "name": "Ceuta",
-              "slug": "ceuta",
-              "score": 1
-            },
-            "away": {
-              "id": 422,
-              "name": "Málaga",
-              "slug": "malaga",
-              "score": 4
-            }
-          },
-          {
-            "id": 47314,
-            "date": 1778932800,
-            "status": "finished",
-            "home": {
-              "id": 587,
-              "name": "Real Sociedad B",
-              "slug": "real-sociedad-b",
-              "score": 2
-            },
-            "away": {
-              "id": 171,
-              "name": "Mirandes",
-              "slug": "mirandes",
-              "score": 2
-            }
-          },
-          {
-            "id": 47317,
-            "date": 1778871600,
-            "status": "finished",
-            "home": {
-              "id": 160,
-              "name": "Córdoba",
-              "slug": "cordoba",
-              "score": 1
-            },
-            "away": {
-              "id": 295,
-              "name": "Albacete",
-              "slug": "albacete",
-              "score": 2
-            }
-          },
-          {
-            "id": 47320,
-            "date": 1778869800,
-            "status": "finished",
-            "home": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 1
-            },
-            "away": {
-              "id": 159,
-              "name": "Cádiz",
-              "slug": "cadiz",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 617622
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35069": {
         "id": 35069,
@@ -5941,7 +5740,11 @@
         "playedHome": 0,
         "playedAway": 1,
         "fitness": [
-          2
+          2,
+          null,
+          null,
+          null,
+          null
         ],
         "points": 2,
         "pointsHome": 0,
@@ -6032,7 +5835,7 @@
         "price": 1500000,
         "fantasyPrice": 12000000,
         "number": 6,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": 20000,
         "playedHome": 16,
         "playedAway": 15,
@@ -11861,8 +11664,8 @@
         "fitness": [
           2
         ],
-        "points": 0,
-        "pointsHome": 0,
+        "points": 2,
+        "pointsHome": 2,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -12376,7 +12179,7 @@
         "price": 3480000,
         "fantasyPrice": 23000000,
         "number": 23,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": 10000,
         "playedHome": 19,
         "playedAway": 16,
@@ -17634,8 +17437,8 @@
         ]
       }
     },
-    "update": 1779246010,
-    "etag": 1294680023,
+    "update": 1779232005,
+    "etag": 3291653459,
     "scoreID": 1
   },
   "meta": {
@@ -19908,6 +19711,9 @@
           "pubmatic"
         ],
         "world-cup-ground": "world_cup",
+        "errorTrackedUIDs": [
+          1146510
+        ],
         "recentSeasons": [
           53
         ],
