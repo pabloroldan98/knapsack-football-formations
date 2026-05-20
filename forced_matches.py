@@ -43,11 +43,13 @@ class ForcedMatchesScraper:
         competition: str = None,
         max_workers: int = 8,
         biwenger_team_names: list = None,
+        use_biwenger_names: bool = True,
     ):
         self.base_url = base_url or "https://www.futbolfantasy.com"
         self.competition = competition if competition is not None else "laliga"
         self.max_workers = max(1, max_workers)
-        self.biwenger_team_names = biwenger_team_names or []
+        self.use_biwenger_names = use_biwenger_names
+        self.biwenger_team_names = (biwenger_team_names or []) if use_biwenger_names else []
         self._thread_local = threading.local()
         self.request_delay = 1.0
         self.headers = {
@@ -91,8 +93,12 @@ class ForcedMatchesScraper:
         raise requests.HTTPError(f"Failed to fetch {url}")
 
     def _normalize_team_name(self, raw_name: str):
-        """Map FutbolFantasy alt text to an exact Biwenger team name (like FF analytics)."""
-        team_name = find_manual_similar_string(raw_name.strip())
+        raw_name = raw_name.strip()
+        if not raw_name:
+            return None
+        if not self.use_biwenger_names:
+            return raw_name
+        team_name = find_manual_similar_string(raw_name)
         if not team_name:
             return None
         if not self.biwenger_team_names:
@@ -175,6 +181,7 @@ def get_forced_matches_dict(
         force_scrape=False,
         max_workers=8,
         write_txt=True,
+        use_biwenger_names=True,
 ):
     if not force_scrape:
         data = read_dict_data(file_name)
@@ -182,20 +189,27 @@ def get_forced_matches_dict(
             return data
 
     competition = competition_from_filename(file_name)
-    biwenger_file_name = biwenger_file_name_from_forced_matches(file_name)
-    biwenger_team_names = load_biwenger_team_names(biwenger_file_name)
-    # print(biwenger_team_names)
-    if not biwenger_team_names:
-        print(
-            f"Warning: no Biwenger teams loaded from {biwenger_file_name}; "
-            f"using find_manual_similar_string only."
-        )
+    biwenger_team_names = []
+    if use_biwenger_names:
+        biwenger_file_name = biwenger_file_name_from_forced_matches(file_name)
+        biwenger_team_names = load_biwenger_team_names(biwenger_file_name)
+        if not biwenger_team_names:
+            print(
+                f"Warning: no Biwenger teams loaded from {biwenger_file_name}; "
+                f"using find_manual_similar_string only."
+            )
+        else:
+            print(
+                f"Loaded {len(biwenger_team_names)} Biwenger team names "
+                f"from {biwenger_file_name}"
+            )
     else:
-        print(f"Loaded {len(biwenger_team_names)} Biwenger team names from {biwenger_file_name}")
+        print("Using FutbolFantasy team names (alt text), without Biwenger mapping.")
     scraper = ForcedMatchesScraper(
         competition=competition,
         max_workers=max_workers,
         biwenger_team_names=biwenger_team_names,
+        use_biwenger_names=use_biwenger_names,
     )
     jornadas = scraper.scrape()
 

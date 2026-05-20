@@ -16,13 +16,14 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
-def safe_get_forced_matches(label, file_name):
+def safe_get_forced_matches(label, file_name, use_biwenger_names=True):
     try:
         print("----------------------------------------")
         print(f"- Scraping {label}:")
         data = get_forced_matches_dict(
             file_name=file_name,
             force_scrape=True,
+            use_biwenger_names=use_biwenger_names,
         )
         print(f"\n{label} - Forced Matches:")
         for jornada_key, matches in data.items():
@@ -90,20 +91,20 @@ segunda_forced_matches = safe_get_forced_matches(
 )
 
 champions_forced_matches = safe_get_forced_matches(
-    "Champions League", "forced_matches_champions"
+    "Champions League", "forced_matches_champions", use_biwenger_names=False
 )
 europaleague_forced_matches = safe_get_forced_matches(
-    "Europa League", "forced_matches_europaleague"
+    "Europa League", "forced_matches_europaleague", use_biwenger_names=False
 )
 # conference_forced_matches = safe_get_forced_matches(
 #     "Conference League", "forced_matches_conference"
 # )
 mundialito_forced_matches = safe_get_forced_matches(
-    "Mundialito", "forced_matches_mundialito"
+    "Mundialito", "forced_matches_mundialito", use_biwenger_names=False
 )
 
 mundial_forced_matches = safe_get_forced_matches(
-    "Mundial", "forced_matches_mundial"
+    "Mundial", "forced_matches_mundial", use_biwenger_names=False
 )
 # eurocopa_forced_matches = safe_get_forced_matches(
 #     "Eurocopa", "forced_matches_eurocopa"
