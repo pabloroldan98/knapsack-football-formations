@@ -433,9 +433,15 @@ def format_string(s):
 
 
 def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbose=False, is_formatted=False, fallback_none=False):
-    if my_string in ["Kevin Medina", "Kevin Villodres", "Thuram-Ulien", "Khéphren Thuram", "K. Thuram", ]:
+    if my_string in [
+        "Kevin Medina", "Kevin Villodres", "Thuram-Ulien", "Khéphren Thuram", "K. Thuram",
+        "Manu Koné", "Kouadio Koné",
+    ]:
         similarity_threshold = 0.45
-    if my_string in ["Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", "Pape Sarr", "Frank Anguissa", "Zambo Anguissa", ]:
+    if my_string in [
+        "Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", "Pape Sarr", "Frank Anguissa", "Zambo Anguissa",
+        "Nueva Zelanda", "New Zealand", "Cabo Verde", "Cape Verde",
+    ]:
         similarity_threshold = 0.65
     # Before anything, we check the manual checks
     if not is_formatted:
@@ -609,7 +615,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Pedro Jair Ramírez Orta": "Pedro Ramírez",
         "Jang Si-young": "See-young Jang",
         "Mohamed Rayane Hamrouni": "M. Hamrouni",
-        "José Manuel López": "José López",
+        # "José Manuel López": "José López",
         "Erling Braut Haland": "Haaland",
         "Kim Min-Jae": "Min-jae Kim",
         "Mohamed Amine Tougai": "M. Tougai",
@@ -785,6 +791,32 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Nicols Riestra Coalla": "Nico Riestra",
         "Homam Ahmed": "Homam Al-Amin",
         "Daniel Nicolas Frey": "Daniel Frey",
+
+        "Ahmed Nadhir Benbouali": "N. Benbouali",
+        "José López": "Jose Manuel Lopez",
+        "Kevin Lenini": "Kevin Pina",
+        "Pico": "Roberto Lopes",
+        "Rafael Borré": "Santos Borré",
+        "Sherel Constancio Floranus": "Sherel Floranus",
+        "Trevor Iriving Doornbusch": "T. Doornbusch",
+        "Léo Realpe": "Leonardo Realpe",
+        "Mahdi Soliman": "E. Soliman",
+        # "Manu Koné": "Kouadio Koné",  # seriea y mundial
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
@@ -811,7 +843,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Argentina": "Argentina",
         "Australia": "Australia",
         "Austria": "Austria",
-        "Cabo Verde": "Cabo Verde",
         "Colombia": "Colombia",
         "Ecuador": "Ecuador",
         "Paraguay": "Paraguay",
@@ -863,6 +894,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Túnez": "Tunisia",
         "Uzbekistán": "Uzbekistan",
         # "Nueva Zelanda": "New Zealand",  # no hasta que pongan el nombre en inglés en https://cf.biwenger.com/api/v2/competitions/world-cup/data?lang=en&score=1
+        # "Cabo Verde": "Cape Verde",  # same
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
