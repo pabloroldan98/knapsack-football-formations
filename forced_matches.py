@@ -11,16 +11,43 @@ from futbolfantasy_analytics import competition_from_filename
 from useful_functions import (
     ROOT_DIR,
     find_manual_similar_string,
+    find_similar_string,
     overwrite_dict_data,
     read_dict_data,
 )
 
 
+def biwenger_file_name_from_forced_matches(file_name: str) -> str:
+    if file_name.startswith("forced_matches_"):
+        suffix = file_name[len("forced_matches_"):]
+    else:
+        suffix = competition_from_filename(file_name)
+    return f"biwenger_{suffix}_data"
+
+
+def load_biwenger_team_names(biwenger_file_name: str):
+    data = read_dict_data(biwenger_file_name)
+    if not data or "data" not in data or "teams" not in data["data"]:
+        return []
+    return [
+        team["name"]
+        for team in data["data"]["teams"].values()
+        if team.get("name")
+    ]
+
+
 class ForcedMatchesScraper:
-    def __init__(self, base_url: str = None, competition: str = None, max_workers: int = 8):
+    def __init__(
+        self,
+        base_url: str = None,
+        competition: str = None,
+        max_workers: int = 8,
+        biwenger_team_names: list = None,
+    ):
         self.base_url = base_url or "https://www.futbolfantasy.com"
         self.competition = competition if competition is not None else "laliga"
         self.max_workers = max(1, max_workers)
+        self.biwenger_team_names = biwenger_team_names or []
         self._thread_local = threading.local()
         self.request_delay = 1.0
         self.headers = {
@@ -63,8 +90,20 @@ class ForcedMatchesScraper:
             last_response.raise_for_status()
         raise requests.HTTPError(f"Failed to fetch {url}")
 
-    @staticmethod
-    def parse_matches_from_soup(soup):
+    def _normalize_team_name(self, raw_name: str):
+        """Map FutbolFantasy alt text to an exact Biwenger team name (like FF analytics)."""
+        team_name = find_manual_similar_string(raw_name.strip())
+        if not team_name:
+            return None
+        if not self.biwenger_team_names:
+            return team_name
+        if team_name in self.biwenger_team_names:
+            return team_name
+        return find_similar_string(
+            team_name, self.biwenger_team_names, similarity_threshold=0,
+        )
+
+    def parse_matches_from_soup(self, soup):
         matches = []
         for container in soup.find_all(class_="partido-container"):
             home_img = container.find(
@@ -77,8 +116,8 @@ class ForcedMatchesScraper:
             )
             if not home_img or not away_img:
                 continue
-            home_name = find_manual_similar_string(home_img.get("alt", "").strip())
-            away_name = find_manual_similar_string(away_img.get("alt", "").strip())
+            home_name = self._normalize_team_name(home_img.get("alt", "").strip())
+            away_name = self._normalize_team_name(away_img.get("alt", "").strip())
             if home_name and away_name:
                 matches.append([home_name, away_name])
         return matches
@@ -143,7 +182,21 @@ def get_forced_matches_dict(
             return data
 
     competition = competition_from_filename(file_name)
-    scraper = ForcedMatchesScraper(competition=competition, max_workers=max_workers)
+    biwenger_file_name = biwenger_file_name_from_forced_matches(file_name)
+    biwenger_team_names = load_biwenger_team_names(biwenger_file_name)
+    # print(biwenger_team_names)
+    if not biwenger_team_names:
+        print(
+            f"Warning: no Biwenger teams loaded from {biwenger_file_name}; "
+            f"using find_manual_similar_string only."
+        )
+    else:
+        print(f"Loaded {len(biwenger_team_names)} Biwenger team names from {biwenger_file_name}")
+    scraper = ForcedMatchesScraper(
+        competition=competition,
+        max_workers=max_workers,
+        biwenger_team_names=biwenger_team_names,
+    )
     jornadas = scraper.scrape()
 
     if not jornadas:
