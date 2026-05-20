@@ -423,7 +423,7 @@ def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=
         ignore_gk_fixture = True
         nerf_form = True
         is_country=True
-        host_team=["US", "México", "Canadá", ]
+        host_team=["US", "Mexico", "Canada", ]
         extra_teams=False
 
     elif competition == "eurocopa":
