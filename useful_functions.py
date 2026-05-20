@@ -20,6 +20,407 @@ import numpy as np
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
+# random header pool
+HEADER_POOL = [
+    # Chrome / Windows 10
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.50 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.112 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.7598.177 Safari/537.36"
+        )
+    },
+
+    # Chrome / Windows 11
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.49 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.95 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/144.0.7541.98 Safari/537.36"
+        )
+    },
+
+    # Chrome / macOS Monterey
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_6) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.50 Safari/537.36"
+        )
+    },
+
+    # Chrome / macOS Ventura
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.49 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_9) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.112 Safari/537.36"
+        )
+    },
+
+    # Chrome / macOS Sonoma
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.50 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.95 Safari/537.36"
+        )
+    },
+
+    # Chrome / Linux
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.49 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.112 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.7598.177 Safari/537.36"
+        )
+    },
+
+    # Chrome / Ubuntu
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/147.0.7727.50 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.7642.95 Safari/537.36"
+        )
+    },
+
+    # Edge / Windows 10
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.59"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
+        )
+    },
+
+    # Edge / Windows 11
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
+        )
+    },
+
+    # Edge / macOS
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
+        )
+    },
+
+    # Firefox / Windows
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) "
+            "Gecko/20100101 Firefox/149.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) "
+            "Gecko/20100101 Firefox/148.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) "
+            "Gecko/20100101 Firefox/147.0"
+        )
+    },
+
+    # Firefox / macOS
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:149.0) "
+            "Gecko/20100101 Firefox/149.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13.7; rv:148.0) "
+            "Gecko/20100101 Firefox/148.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12.7; rv:147.0) "
+            "Gecko/20100101 Firefox/147.0"
+        )
+    },
+
+    # Firefox / Linux
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) "
+            "Gecko/20100101 Firefox/149.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:148.0) "
+            "Gecko/20100101 Firefox/148.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) "
+            "Gecko/20100101 Firefox/147.0"
+        )
+    },
+
+    # Safari / macOS Ventura
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/26.0 Safari/605.1.15"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_9) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/17.6 Safari/605.1.15"
+        )
+    },
+
+    # Safari / macOS Sonoma
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/26.0 Safari/605.1.15"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/26.0 Safari/605.1.15"
+        )
+    },
+
+    # Safari / macOS Sequoia
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_3) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/26.0 Safari/605.1.15"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_2) "
+            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            "Version/26.0 Safari/605.1.15"
+        )
+    },
+
+    # Opera / Windows
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/144.0.0.0 Safari/537.36 OPR/129.0.0.0"
+        )
+    },
+
+    # Opera / macOS
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
+        )
+    },
+
+    # Opera / Linux
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
+        )
+    },
+
+    # Slightly older but still believable Chrome variants
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; WOW64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/143.0.7499.40 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux i686) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/142.0.7444.162 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_4) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/143.0.7499.71 Safari/537.36"
+        )
+    },
+
+    # Slightly older Firefox variants
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:146.0) "
+            "Gecko/20100101 Firefox/146.0"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (X11; Linux i686; rv:145.0) "
+            "Gecko/20100101 Firefox/145.0"
+        )
+    },
+
+    # Mixed additional Edge variants
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/144.0.0.0 Safari/537.36 Edg/144.0.3698.98"
+        )
+    },
+    {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_6) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/144.0.0.0 Safari/537.36 Edg/144.0.3698.98"
+        )
+    },
+]
+
+
 def cleaned_string(s):
     res = s
     return unidecode(str(res)).lower().replace(" ", "").replace("-", "")
@@ -405,8 +806,66 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Levante UD": "Levante",
         "Sociedad": "Real Sociedad",
 
+        "Irlanda": "Ireland",
+        "Gales": "Wales",
+        "Argentina": "Argentina",
+        "Australia": "Australia",
+        "Austria": "Austria",
+        "Cabo Verde": "Cabo Verde",
+        "Colombia": "Colombia",
+        "Ecuador": "Ecuador",
+        "Paraguay": "Paraguay",
+        "Portugal": "Portugal",
+        "Senegal": "Senegal",
+        "Uruguay": "Uruguay",
         "Czechia": "Czech Republic",
+        "República Checa": "Czech Republic",
+        "Rep. Checa": "Czech Republic",
         "Turkey": "Türkiye",
+        "Turquía": "Türkiye",
+        "Corea del Sur": "South Korea",
+        "España": "Spain",
+        "México": "Mexico",
+        "Sudáfrica": "South Africa",
+        "Alemania": "Germany",
+        "Arabia Saudí": "Saudi Arabia",
+        "Argelia": "Algeria",
+        "Bosnia y Herzegovina": "Bosnia",
+        "Bosnia": "Bosnia",
+        "Brasil": "Brazil",
+        "Bélgica": "Belgium",
+        "Canadá": "Canada",
+        "Catar": "Qatar",
+        "Congo (RDC)": "Congo (DRC)",
+        "Congo (Rdc)": "Congo (DRC)",
+        "RD Congo": "Congo (DRC)",
+        "Costa de Marfil": "Ivory Coast",
+        "Croacia": "Croatia",
+        "Curazao": "Curaçao",
+        "Egipto": "Egypt",
+        "Escocia": "Scotland",
+        "Estados Unidos": "US",
+        "Francia": "France",
+        "Gana": "Ghana",
+        "Haití": "Haiti",
+        "Inglaterra": "England",
+        "Irak": "Iraq",
+        "Irán": "Iran",
+        "Japón": "Japan",
+        "Jordania": "Jordan",
+        "Marruecos": "Morocco",
+        "Noruega": "Norway",
+        "Panamá": "Panama",
+        "Países Bajos": "Netherlands",
+        "Holanda": "Netherlands",
+        "Suecia": "Sweden",
+        "Suiza": "Switzerland",
+        "Túnez": "Tunisia",
+        "Uzbekistán": "Uzbekistan",
+        # "Nueva Zelanda": "New Zealand",  # no hasta que pongan el nombre en inglés en https://cf.biwenger.com/api/v2/competitions/world-cup/data?lang=en&score=1
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
 
         "Chelsea FC": "Chelsea",
         "Man City": "Manchester City",
@@ -813,405 +1272,3 @@ def percentile_rank(array, score):
 
 
 # find_similar_string("Trent", ["Trent Alexander-Arnold", ], verbose=True)
-
-
-# random header pool
-HEADER_POOL = [
-    # Chrome / Windows 10
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.50 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.112 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.7598.177 Safari/537.36"
-        )
-    },
-
-    # Chrome / Windows 11
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.49 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.95 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/144.0.7541.98 Safari/537.36"
-        )
-    },
-
-    # Chrome / macOS Monterey
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_6) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.50 Safari/537.36"
-        )
-    },
-
-    # Chrome / macOS Ventura
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.49 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_9) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.112 Safari/537.36"
-        )
-    },
-
-    # Chrome / macOS Sonoma
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.50 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.95 Safari/537.36"
-        )
-    },
-
-    # Chrome / Linux
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.49 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.112 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.7598.177 Safari/537.36"
-        )
-    },
-
-    # Chrome / Ubuntu
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/147.0.7727.50 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.7642.95 Safari/537.36"
-        )
-    },
-
-    # Edge / Windows 10
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.59"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
-        )
-    },
-
-    # Edge / Windows 11
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
-        )
-    },
-
-    # Edge / macOS
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 Edg/146.0.3856.97"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 Edg/145.0.3800.97"
-        )
-    },
-
-    # Firefox / Windows
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:149.0) "
-            "Gecko/20100101 Firefox/149.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) "
-            "Gecko/20100101 Firefox/148.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) "
-            "Gecko/20100101 Firefox/147.0"
-        )
-    },
-
-    # Firefox / macOS
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:149.0) "
-            "Gecko/20100101 Firefox/149.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13.7; rv:148.0) "
-            "Gecko/20100101 Firefox/148.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12.7; rv:147.0) "
-            "Gecko/20100101 Firefox/147.0"
-        )
-    },
-
-    # Firefox / Linux
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) "
-            "Gecko/20100101 Firefox/149.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:148.0) "
-            "Gecko/20100101 Firefox/148.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64; rv:147.0) "
-            "Gecko/20100101 Firefox/147.0"
-        )
-    },
-
-    # Safari / macOS Ventura
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/26.0 Safari/605.1.15"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_9) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/17.6 Safari/605.1.15"
-        )
-    },
-
-    # Safari / macOS Sonoma
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/26.0 Safari/605.1.15"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_6_1) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/26.0 Safari/605.1.15"
-        )
-    },
-
-    # Safari / macOS Sequoia
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_3) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/26.0 Safari/605.1.15"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_2) "
-            "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-            "Version/26.0 Safari/605.1.15"
-        )
-    },
-
-    # Opera / Windows
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/144.0.0.0 Safari/537.36 OPR/129.0.0.0"
-        )
-    },
-
-    # Opera / macOS
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_7_5) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
-        )
-    },
-
-    # Opera / Linux
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/146.0.0.0 Safari/537.36 OPR/131.0.0.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/145.0.0.0 Safari/537.36 OPR/130.0.0.0"
-        )
-    },
-
-    # Slightly older but still believable Chrome variants
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; WOW64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/143.0.7499.40 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux i686) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/142.0.7444.162 Safari/537.36"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_4) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/143.0.7499.71 Safari/537.36"
-        )
-    },
-
-    # Slightly older Firefox variants
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:146.0) "
-            "Gecko/20100101 Firefox/146.0"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (X11; Linux i686; rv:145.0) "
-            "Gecko/20100101 Firefox/145.0"
-        )
-    },
-
-    # Mixed additional Edge variants
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/144.0.0.0 Safari/537.36 Edg/144.0.3698.98"
-        )
-    },
-    {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_7_6) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/144.0.0.0 Safari/537.36 Edg/144.0.3698.98"
-        )
-    },
-]
-
