@@ -632,33 +632,36 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False, d
                         team_players_dict[player_team_name][player_name] = new_data
 
     if debug:
-        print("\n############ ASSIGNED PLAYERS ############")
-        for source, teams_dict in assigned_players.items():
-            print(f"\nSource: {source}")
+        separator = "-" * 60
 
-            for team_name, assigned_dict in teams_dict.items():
-                print(f"\nTeam: {team_name}")
-
-                for source_player_name, result_player_name in assigned_dict.items():
-                    print(f"{source_player_name} --> {result_player_name}")
-
-        print("\n############ UNASSIGNED PLAYERS ############")
         for source, players_data_dict in full_players_data_dict.items():
-            print(f"\nSource: {source}")
+            print(f"\n{separator}")
+            print(f"Source: {source}")
 
             for team_name, source_players_dict in players_data_dict.items():
                 assigned_source_players = assigned_players.get(source, {}).get(team_name, {})
 
-                unassigned_players = [
-                    source_player_name
-                    for source_player_name in source_players_dict.keys()
-                    if source_player_name not in assigned_source_players
-                ]
+                assigned_count = len(assigned_source_players)
+                total_count = len(source_players_dict)
 
-                if unassigned_players:
-                    print(f"\nTeam: {team_name}")
-                    for source_player_name in unassigned_players:
-                        print(source_player_name)
+                print(f"\nTeam: {team_name} ({assigned_count}/{total_count})")
+
+                assigned_lines = []
+                unassigned_lines = []
+
+                for source_player_name in source_players_dict.keys():
+                    result_player_name = assigned_source_players.get(source_player_name)
+
+                    if result_player_name:
+                        assigned_lines.append(f"    {source_player_name} --> {result_player_name}")
+                    else:
+                        unassigned_lines.append(f"  # {source_player_name} --> None")
+
+                for line in assigned_lines:
+                    print(line)
+
+                for line in unassigned_lines:
+                    print(line)
 
     return team_players_dict
 
