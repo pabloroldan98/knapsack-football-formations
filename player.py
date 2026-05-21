@@ -1159,7 +1159,7 @@ def get_biwenger_transfermarket_teams_dict(biwenger_team_names_list, transfermar
     return result_biwenger_transfermarket_teams_dict
 
 
-def set_team_history_boosts(players_list, players_team_history_dict, extra_teams, verbose=False):
+def set_team_history_boosts(players_list, players_team_history_dict, extra_teams, verbose=False, debug=False):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
@@ -1170,16 +1170,32 @@ def set_team_history_boosts(players_list, players_team_history_dict, extra_teams
     for team_name, team_players_history in players_team_history_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        if debug:
+            print()
+            print("--------------------------")
+            print(f"{team_name} --> {closest_team_name}")
+            print()
         for player_name, player_team_history in team_players_history.items():
             closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
             for player in result_players:
                 if player.name == closest_player_name:
+                    if debug:
+                        print(f"{player_name} --> {closest_player_name}")
                     player.team_history = player_team_history
                     transfermarket_opponent_name = biwenger_transfermarket_teams_dict[player.opponent]
                     player.team_history_boost = calc_team_history_boost(player_team_history, transfermarket_opponent_name)
                     if verbose:
                         if player.team_history_boost != 0:
                             print(f"{player.name}: {player.team} --> {player.opponent} ({player.team_history_boost:.4f})")
+
+    if debug:
+        print()
+        print("____________________________________")
+        print("FALTAN:")
+        print()
+        for player in sorted(result_players, key=lambda player: player.team if player.team else ""):
+            if not player.team_history:
+                print(f"{player.team} >   {player.name}")
 
     return result_players
 

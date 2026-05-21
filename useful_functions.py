@@ -917,6 +917,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Congo (Rdc)": "Congo (DRC)",
         "RD Congo": "Congo (DRC)",
         "DR Congo": "Congo (DRC)",
+        "Democratic Republic of the Congo": "Congo (DRC)",
         "Costa de Marfil": "Ivory Coast",
         "Côte d'Ivoire": "Ivory Coast",
         "Costa De Marfil": "Ivory Coast",
