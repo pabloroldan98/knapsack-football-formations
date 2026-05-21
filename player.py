@@ -633,25 +633,21 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False, d
 
     if debug:
         separator = "-" * 60
-
         for source, players_data_dict in full_players_data_dict.items():
             print(f"\n{separator}")
             print(f"Source: {source}")
-
-            for team_name, source_players_dict in players_data_dict.items():
+            for team_name, source_players_dict in sorted(players_data_dict.items()):
                 assigned_source_players = assigned_players.get(source, {}).get(team_name, {})
 
                 assigned_count = len(assigned_source_players)
                 total_count = len(source_players_dict)
 
                 print(f"\nTeam: {team_name} ({assigned_count}/{total_count})")
-
                 assigned_lines = []
                 unassigned_lines = []
 
                 for source_player_name in source_players_dict.keys():
                     result_player_name = assigned_source_players.get(source_player_name)
-
                     if result_player_name:
                         assigned_lines.append(f"    {source_player_name} --> {result_player_name}")
                     else:
@@ -659,7 +655,6 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False, d
 
                 for line in assigned_lines:
                     print(line)
-
                 for line in unassigned_lines:
                     print(line)
 
