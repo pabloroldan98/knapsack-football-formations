@@ -136,13 +136,14 @@ class TransfermarktScraper:
                     player_links[player_name] = f"{self.base_url}{url}"
         return player_links
 
-    def _team_players_url(self, team_suffix):
-        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, 7, 1)))
+    def _team_players_url(self, team_suffix, use_country_as_team=False):
+        cutoff_month = 5 if use_country_as_team else 7
+        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, cutoff_month, 1)))
         slug = team_suffix.split('/')[1]
         verein_id = team_suffix.split('/')[4]
         return f"{self.base_url}/{slug}/startseite/verein/{verein_id}/plus/0?saison_id={year}"
 
-    def get_team_player_links(self, team_links):
+    def get_team_player_links(self, team_links, use_country_as_team=False):
         team_player_links = {}
 
         def fetch_one(item):
@@ -156,7 +157,7 @@ class TransfermarktScraper:
             # ]:
             #     continue
             print('Extracting players links from %s ...' % team_name)
-            return team_name, self.get_player_links(self._team_players_url(team_suffix))
+            return team_name, self.get_player_links(self._team_players_url(team_suffix, use_country_as_team))
 
         workers = min(self.max_workers, len(team_links) or 1)
         with ThreadPoolExecutor(max_workers=workers) as executor:
@@ -408,7 +409,7 @@ class TransfermarktScraper:
             # # league_url = f"{self.base_url}/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4"
             league_url = f"{self.base_url}/{self.competition}"
             team_links = self.get_team_links(league_url)
-            team_player_links = self.get_team_player_links(team_links)
+            team_player_links = self.get_team_player_links(team_links, use_country_as_team)
             print()
 
             tasks = [
