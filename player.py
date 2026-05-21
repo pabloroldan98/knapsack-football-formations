@@ -1082,7 +1082,7 @@ def set_forms(players_list, full_players_forms_dict, verbose=False):
     return result_players
 
 
-def set_penalty_takers_boosts(players_list, penalty_takers_dict):
+def set_penalty_takers_boosts(players_list, penalty_takers_dict, verbose=False, debug=False):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
@@ -1090,14 +1090,27 @@ def set_penalty_takers_boosts(players_list, penalty_takers_dict):
     for team_name, penalty_takers_names_list in penalty_takers_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        if debug:
+            print()
+            print("--------------------------")
+            print(f"{team_name} --> {closest_team_name}")
+            print()
         for penalty_taker_name in penalty_takers_names_list:
             closest_player_name = find_similar_string(penalty_taker_name, players_names_list, verbose=False)
+            if debug:
+                if closest_player_name:
+                    print(f"{penalty_taker_name} --> {closest_player_name}")
+                else:
+                    print(f"# {penalty_taker_name} --> {closest_player_name}")
             for player in result_players:
                 if player.name == closest_player_name:
                     players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
                     player.penalties = players_penalties
                     players_penalties_bool_list = [i in players_penalties for i in range(max(players_penalties) + 1)]
                     player.penalty_boost = calc_penalty_boost(players_penalties_bool_list)
+                    if verbose:
+                        if player.penalty_boost != 0:
+                            print(f"{player.name}: {player.team} ({player.penalty_boost:.4f})")
 
         # for player in result_players:
         #     if player.team == closest_team_name:
@@ -1109,7 +1122,7 @@ def set_penalty_takers_boosts(players_list, penalty_takers_dict):
     return result_players
 
 
-def set_penalty_savers_boosts(players_list, penalty_savers_dict):
+def set_penalty_savers_boosts(players_list, penalty_savers_dict, verbose=False, debug=False):
     result_players = copy.deepcopy(players_list)
 
     team_names_list = list(set(player.team for player in result_players))
@@ -1117,12 +1130,25 @@ def set_penalty_savers_boosts(players_list, penalty_savers_dict):
     for team_name, penalty_savers in penalty_savers_dict.items():
         closest_team_name = find_similar_string(team_name, team_names_list)
         players_names_list = list(set(player.name for player in players_list if player.team == closest_team_name))
+        if debug:
+            print()
+            print("--------------------------")
+            print(f"{team_name} --> {closest_team_name}")
+            print()
         for player_name, player_penalty_saves in penalty_savers.items():
             closest_player_name = find_similar_string(player_name, players_names_list, verbose=False)
+            if debug:
+                if closest_player_name:
+                    print(f"{player_name} --> {closest_player_name}")
+                else:
+                    print(f"# {player_name} --> {closest_player_name}")
             for player in result_players:
                 if player.name == closest_player_name:
                     player.penalty_saves = player_penalty_saves
                     player.penalty_boost = calc_penalty_boost(player_penalty_saves)
+                    if verbose:
+                        if player.penalty_boost != 0:
+                            print(f"{player.name}: {player.team} ({player.penalty_boost:.4f})")
 
     return result_players
 
