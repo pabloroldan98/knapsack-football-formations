@@ -10,6 +10,12 @@ from useful_functions import read_dict_data, overwrite_dict_data, find_manual_si
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
+NATIONAL_TEAM_COMPETITION_SLUGS = (
+    "/teilnehmer/pokalwettbewerb/EURO",
+    "/teilnehmer/pokalwettbewerb/COPA",
+    "/teilnehmer/pokalwettbewerb/FIWC",
+)
+
 
 class TransfermarktScraper:
     def __init__(self, competition: str = None, max_workers: int = 8):
@@ -92,8 +98,12 @@ class TransfermarktScraper:
                 i = i + 1
         return player_links
 
+    def _uses_may_season_cutoff(self):
+        return any(slug in self.competition for slug in NATIONAL_TEAM_COMPETITION_SLUGS)
+
     def _team_players_url(self, team_suffix):
-        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, 7, 1)))
+        cutoff_month = 5 if self._uses_may_season_cutoff() else 7
+        year = str(datetime.now().year - int(datetime.now() < datetime(datetime.now().year, cutoff_month, 1)))
         slug = team_suffix.split('/')[1]
         verein_id = team_suffix.split('/')[4]
         return f"{self.base_url}/{slug}/startseite/verein/{verein_id}/plus/0?saison_id={year}"
