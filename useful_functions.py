@@ -862,6 +862,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Al-Taamari": "Mousa Al-Tamari",
         "Gana Gueye": "Idrissa Gueye",
         "Alijonov": "K. Alizhonov",
+        "El Mehdi Al Harrar": "E. Al Harrar",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
