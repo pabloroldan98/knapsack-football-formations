@@ -149,13 +149,17 @@ class FutbolFantasyScraper:
 
     _FORMATION_LABEL_RE = re.compile(r'\(?\s*\d+(?:\s*[-x\s]\s*\d+){1,4}\s*\)?', re.IGNORECASE)
     _LETTER_RE = re.compile(r"[^\W\d_]", re.UNICODE)
+    _SIDE_LABEL_RE = re.compile(r"\(?\s*(?:izq\.?|dcha\.?)\s*\)?", re.IGNORECASE)
 
     def _is_formation_label(self, name):
         # Filtra textos como "(4-3-3)" o "4-2-3-1" (y los residuos tipo "(--)" tras
         # quitar dígitos). Cualquier cadena sin letras se considera no-jugador.
+        # También filtra etiquetas de lado como "(Izq.)" o "(Dcha.)".
         if not name:
             return True
         name = name.strip()
+        if self._SIDE_LABEL_RE.fullmatch(name):
+            return True
         if not self._LETTER_RE.search(name):
             return True
         return bool(self._FORMATION_LABEL_RE.fullmatch(name))
