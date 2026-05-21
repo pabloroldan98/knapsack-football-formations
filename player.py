@@ -589,7 +589,7 @@ def set_manual_boosts(players_list, manual_boosts):
     return result_players
 
 
-def get_team_players_dict(players_list, full_players_data_dict, verbose=False): #, flag=False):
+def get_team_players_dict(players_list, full_players_data_dict, verbose=False, debug=False):
     result_players = copy.deepcopy(players_list)
 
     team_players_dict = {}
@@ -599,8 +599,10 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False): 
         team_players_dict[player.team][player.name] = []
 
     num_probability_files = 0
+    assigned_players = {}
     for source, players_data_dict in full_players_data_dict.items():
         num_probability_files = num_probability_files + 1
+        assigned_players[source] = {}
 
         team_data_names_list = list(players_data_dict.keys())
 
@@ -609,12 +611,18 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False): 
             if closest_player_data_team:
                 # if len(players_data_dict[closest_player_data_team]) >= 11:
                 team_players_dict[player_team_name]["num_probability_files"] = num_probability_files
+
+                if closest_player_data_team not in assigned_players[source]:
+                    assigned_players[source][closest_player_data_team] = {}
+
                 for player_name, player_data in players_in_team.items():
                     player_data_names_list = list(players_data_dict[closest_player_data_team].keys())
                     # if source == "jornadaperfecta" and flag:
                     #     closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=True)
                     closest_player_data_name = find_similar_string(player_name, player_data_names_list, verbose=False)
                     if closest_player_data_name:
+                        assigned_players[source][closest_player_data_team][closest_player_data_name] = player_name
+
                         new_data = players_data_dict[closest_player_data_team][closest_player_data_name]
                         old_player_data = player_data.copy()
                         new_data = old_player_data + [new_data]
@@ -622,6 +630,36 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False): 
                             if old_player_data != new_data:
                                 print(f"{player_name}: {old_player_data} --> {new_data} ({closest_player_data_name})")
                         team_players_dict[player_team_name][player_name] = new_data
+
+    if debug:
+        print("\n############ ASSIGNED PLAYERS ############")
+        for source, teams_dict in assigned_players.items():
+            print(f"\nSource: {source}")
+
+            for team_name, assigned_dict in teams_dict.items():
+                print(f"\nTeam: {team_name}")
+
+                for source_player_name, result_player_name in assigned_dict.items():
+                    print(f"{source_player_name} --> {result_player_name}")
+
+        print("\n############ UNASSIGNED PLAYERS ############")
+        for source, players_data_dict in full_players_data_dict.items():
+            print(f"\nSource: {source}")
+
+            for team_name, source_players_dict in players_data_dict.items():
+                assigned_source_players = assigned_players.get(source, {}).get(team_name, {})
+
+                unassigned_players = [
+                    source_player_name
+                    for source_player_name in source_players_dict.keys()
+                    if source_player_name not in assigned_source_players
+                ]
+
+                if unassigned_players:
+                    print(f"\nTeam: {team_name}")
+                    for source_player_name in unassigned_players:
+                        print(source_player_name)
+
     return team_players_dict
 
 
