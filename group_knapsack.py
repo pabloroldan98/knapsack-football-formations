@@ -1,10 +1,11 @@
 import copy
-import gc
 import heapq
 import itertools
 import math
-import streamlit as st
 from collections import defaultdict
+from typing import Callable, Dict, List, Optional, Tuple
+
+import streamlit as st
 from tqdm import tqdm
 
 from MCKP import multipleChoiceKnapsack, knapsack_multichoice, \
@@ -36,6 +37,111 @@ def _parse_formation(formation):
         return 1, formation[0], sum(formation[1:-1]), formation[-1]
 
 
+def _formation_coarse_weights(formation) -> Tuple[List[str], List[int]]:
+    """Map a tactical formation to (GK, DEF, MID, ATT) labels and slot weights."""
+    max_gk, max_def, max_mid, max_att = _parse_formation(formation)
+    return ["GK", "DEF", "MID", "ATT"], [max_gk, max_def, max_mid, max_att]
+
+
+# Max total candidates after formation filter; split inversely to slot count
+# (lines with large C(n,r) get fewer extras). Default tier is always "standard".
+_SPEED_TOTAL_PLAYER_CAP: Dict[str, int] = {
+    "local": 150,
+    "fast": 200,
+    "standard": 250,
+}
+_DEFAULT_SPEED_TIER = "standard"
+
+
+def _resolve_speed_tier(speed_up: bool, speed: Optional[str] = None) -> Optional[str]:
+    """Resolve speed tier for the global candidate cap.
+
+    When ``speed`` is omitted (default ``None``), uses ``speed_up``:
+    - ``speed_up=False`` → ``standard`` (250)
+    - ``speed_up=True`` → ``fast`` (200)
+
+    Explicit ``speed`` overrides ``speed_up``:
+    - ``"uncapped"`` / ``"none"`` / ``"off"`` → no global cap
+    - ``"local"`` / ``"fast"`` / ``"standard"`` → that tier
+    """
+    if isinstance(speed, str):
+        low = speed.lower()
+        if low in ("none", "off", "uncapped"):
+            return None
+        if speed in _SPEED_TOTAL_PLAYER_CAP:
+            return speed
+    return "fast" if speed_up else _DEFAULT_SPEED_TIER
+
+
+def _allocate_integer_shares_from_proportions(total: int, proportions: List[float]) -> List[int]:
+    """Largest-remainder split of *total* across non-negative *proportions*."""
+    if total <= 0 or not proportions:
+        return [0] * len(proportions)
+    s = sum(proportions)
+    if s <= 0:
+        return [0] * len(proportions)
+    raw = [total * p / s for p in proportions]
+    floors = [int(math.floor(r)) for r in raw]
+    rem = total - sum(floors)
+    order = sorted(
+        range(len(proportions)), key=lambda i: (raw[i] - floors[i]), reverse=True
+    )
+    for k in range(max(0, rem)):
+        floors[order[k % len(order)]] += 1
+    return floors
+
+
+def _speed_cap_proportions_inverse(slot_weights: List[int]) -> List[float]:
+    """Speed-cap shares: 0 slots → 0; w>0 → ∝ 1/w (heavy lines get a thinner pool)."""
+    return [0.0 if w <= 0 else 1.0 / float(w) for w in slot_weights]
+
+
+def _ensure_caps_at_least_formation(caps: List[int], weights: List[int]) -> None:
+    """Each position keeps at least as many candidates as formation slots (in-place)."""
+    for i, w in enumerate(weights):
+        if w > 0:
+            caps[i] = max(caps[i], w)
+
+
+def _apply_weighted_player_cap(
+    players_list,
+    position_caps: Dict[str, int],
+) -> list:
+    """Keep up to *position_caps[pos]* highest-value players per position."""
+    by_pos = defaultdict(list)
+    for pl in players_list:
+        pos = pl.position
+        cap = position_caps.get(pos, 0)
+        if cap <= 0:
+            continue
+        by_pos[pos].append(pl)
+
+    out = []
+    for pos, cap in position_caps.items():
+        if cap <= 0:
+            continue
+        lst = sorted(by_pos.get(pos, []), key=lambda pl: pl.value, reverse=True)
+        out.extend(lst[:cap])
+    out.sort(key=lambda pl: pl.value, reverse=True)
+    return out
+
+
+def _apply_speed_cap(players_list, formation, speed_tier: Optional[str]) -> list:
+    """Apply proportional per-position candidate cap for the given speed tier."""
+    if not speed_tier:
+        return players_list
+    total_cap = _SPEED_TOTAL_PLAYER_CAP.get(speed_tier)
+    if not total_cap or total_cap <= 0:
+        return players_list
+
+    pos_labels, weights = _formation_coarse_weights(formation)
+    props = _speed_cap_proportions_inverse(weights)
+    caps = _allocate_integer_shares_from_proportions(total_cap, props)
+    _ensure_caps_at_least_formation(caps, weights)
+    position_caps = dict(zip(pos_labels, caps))
+    return _apply_weighted_player_cap(players_list, position_caps)
+
+
 def filter_players_knapsack(players_list, formation):
     """
     Filters players based on a formation and per-position max counts, keeping highest-value players per price bucket.
@@ -50,9 +156,7 @@ def filter_players_knapsack(players_list, formation):
     Returns:
         List of filtered players sorted by descending .value
     """
-    max_gk, max_def, max_mid, max_att = _parse_formation(formation)
-
-    max_limits = {"GK": max_gk, "DEF": max_def, "MID": max_mid, "ATT": max_att}
+    max_limits = dict(zip(*_formation_coarse_weights(formation)))
     excluded_positions = {pos for pos, limit in max_limits.items() if limit == 0}
 
     buckets = defaultdict(lambda: defaultdict(list))
@@ -79,56 +183,73 @@ def filter_players_knapsack(players_list, formation):
     return filtered_players
 
 
-def best_full_teams(players_list, formations=possible_formations, budget=300, speed_up=True, translator=None, verbose=1):
-    super_verbose = bool(verbose-1)
+def best_full_teams(
+    players_list,
+    formations=possible_formations,
+    budget=300,
+    speed_up=False,
+    speed: Optional[str] = None,
+    translator=None,
+    verbose=1,
+    progress_callback: Optional[Callable[[float], None]] = None,
+):
+    super_verbose = bool(verbose - 1)
     verbose = bool(verbose)
-    if budget <= 0 or budget >= 100000:
+    speed_tier = _resolve_speed_tier(speed_up, speed)
+
+    unlimited_budget = budget <= 0 or budget >= 100000
+    if unlimited_budget:
         budget = 1
         for player in players_list:
             player.price = 0
-
-    def _apply_speed_limit(plist, formation):
-        if not speed_up:
-            return plist
-        max_pos = max(formation) if formation else 0
-        if max_pos >= 6:
-            return plist[:90]
-        if max_pos >= 5:
-            return plist[:100]
-        if max_pos >= 4:
-            return plist[:150]
-        return plist[:1000]
+    else:
+        # Players more expensive than the budget can never fit the knapsack
+        players_list = [p for p in players_list if (p.price or 0) <= budget]
 
     # Precompute everything in a single pass (avoid filtering twice per formation)
     total_global_operations = 0
     precomputed = []
     for formation in formations:
         filtered_players_list = filter_players_knapsack(players_list, formation)
-        filtered_players_list = _apply_speed_limit(filtered_players_list, formation)
-        players_values, players_prices, players_comb_indexes = players_preproc(filtered_players_list, formation)
+        filtered_players_list = _apply_speed_cap(filtered_players_list, formation, speed_tier)
+        players_values, players_prices, players_comb_indexes = players_preproc(
+            filtered_players_list, formation
+        )
         ops = sum(len(group) for group in players_comb_indexes[1:]) if len(players_comb_indexes) > 1 else 0
         total_global_operations += ops
-        precomputed.append((formation, filtered_players_list, players_values, players_prices, players_comb_indexes))
+        precomputed.append(
+            (formation, filtered_players_list, players_values, players_prices, players_comb_indexes)
+        )
 
     update_master = None
-    if STREAMLIT_ACTIVE:
-        progress_text = st.empty()
-        progress_bar = st.progress(0.0)
+    if total_global_operations:
+        progress_text = None
+        progress_bar = None
+        _label = (
+            translator("loader.knapsack_progress")
+            if callable(translator)
+            else "Calculando mejores combinaciones"
+        )
+        if STREAMLIT_ACTIVE:
+            progress_text = st.empty()
+            progress_bar = st.progress(0.0)
 
-        _label = (translator("loader.knapsack_progress") if callable(translator) else "Calculando mejores combinaciones")
-        def make_update_master(total_ops):
-            completed = 0
-            last_percent = -1
-            def update(n):
-                nonlocal completed, last_percent
-                completed += n
-                percent = int((completed / total_ops) * 100)
-                if percent > last_percent:
-                    progress_bar.progress(completed / total_ops)
-                    progress_text.text(f"{_label}: {percent} %")
-                    last_percent = percent
-            return update
-        update_master = make_update_master(total_global_operations)
+        completed_ops = 0
+        last_percent = -1
+
+        def update_master(n):
+            nonlocal completed_ops, last_percent
+            completed_ops += n
+            percent = (completed_ops / total_global_operations) * 100
+            pct_int = int(percent)
+            if pct_int <= last_percent:
+                return
+            last_percent = pct_int
+            if progress_callback:
+                progress_callback(percent)
+            if STREAMLIT_ACTIVE and progress_bar is not None and progress_text is not None:
+                progress_bar.progress(completed_ops / total_global_operations)
+                progress_text.text(f"{_label}: {pct_int} %")
 
     formation_score_players = []
     for formation, filtered_players_list, players_values, players_prices, players_comb_indexes in precomputed:

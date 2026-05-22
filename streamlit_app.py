@@ -1039,7 +1039,7 @@ with tabs[0]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        use_slow_calc = False
+        use_slow_calc = True
         # use_slow_calc = st.checkbox(t("sb.slow_calc"), value=False, key="is_slow_calc")
         # st.caption(t("sb.slow_calc_hint"))
 

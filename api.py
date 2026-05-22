@@ -123,7 +123,7 @@ class CalculateRequest(BaseModel):
     min_prob: float = 0.65
     max_prob: float = 1.0
     use_fixture_filter: bool = False
-    speed_up: bool = True
+    speed_up: bool = False
 
     # "My Best 11" mode: only these players are considered, budget = -1
     selected_player_names: Optional[List[str]] = None

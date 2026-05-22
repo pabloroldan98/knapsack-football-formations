@@ -768,7 +768,8 @@ if __name__ == "__main__":
 
 
     # best_full_teams(needed_purge, possible_formations, 25, verbose=2)
-    # best_full_teams(needed_purge, possible_formations, 300, speed_up=False, verbose=2)
+    # best_full_teams(needed_purge, possible_formations, 300, speed="uncapped", verbose=2)
+    # best_full_teams(needed_purge, possible_formations, 600, speed="standard", speed_up=False, verbose=2)
 
 
 
