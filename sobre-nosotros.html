@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sobre nosotros - Calculadora Fantasy</title>
+  <meta name="description" content="Quiénes somos, por qué creamos Calculadora Fantasy, cómo calculamos las puntuaciones esperadas y qué compromiso tenemos con los usuarios de LaLiga Fantasy y Biwenger.">
+  <link rel="canonical" href="https://www.calculadorafantasy.com/sobre-nosotros.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e1117">
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta name="google-adsense-account" content="ca-pub-7891666149137266">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied', 'ad_user_data': 'denied',
+      'ad_personalization': 'denied', 'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-QXF4YKPSMD');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="guias/article.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-brand"><img src="logo.png" alt="Logo"> <span>Calculadora Fantasy</span></a>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/guias/">Guías</a>
+      <a href="/app/">Calculadora</a>
+    </div>
+  </nav>
+
+  <article class="article">
+    <header>
+      <h1>Sobre Calculadora Fantasy</h1>
+      <p class="lead">Calculadora Fantasy es un proyecto independiente creado por aficionados al fantasy football y la programación. Nuestro objetivo es democratizar el análisis de datos que antes solo hacían quienes dominaban hojas de cálculo o scripts propios.</p>
+    </header>
+
+    <h2>Nuestra misión</h2>
+    <p>Creemos que decidir tu once no debería ser una lotería ni un privilegio de quien tiene diez pestañas abiertas con estadísticas. Queremos que cualquier manager de LaLiga Fantasy o Biwenger pueda, en pocos minutos:</p>
+    <ul>
+      <li>Ver una <strong>puntuación esperada</strong> razonable para cada jugador.</li>
+      <li>Comparar opciones de mercado con criterios homogéneos.</li>
+      <li>Obtener onces optimizados respetando presupuesto, formación y filtros personales.</li>
+    </ul>
+
+    <h2>Qué ofrecemos (además de la herramienta)</h2>
+    <p>Este sitio no es solo una aplicación web. Publicamos <a href="/guias/">guías en español</a> sobre estrategia, presupuesto, errores comunes, competiciones europeas y uso detallado de la calculadora. Ese contenido editorial es parte central del proyecto: la herramienta ejecuta el cálculo; las guías explican el porqué.</p>
+
+    <h2>Metodología técnica (resumen)</h2>
+    <p>Los datos de rendimiento se combinan con señales de mercado fantasy (precio, rotaciones) y contexto del rival. La fórmula base de puntuación esperada es:</p>
+    <p style="text-align:center; padding:12px; background:#1a1f2e; border-radius:8px; border:1px solid rgba(255,76,76,.25);">
+      <strong>media Sofascore × factor forma × factor dificultad + boost penaltis</strong>
+    </p>
+    <p>Los factores de forma y dificultad están acotados a ±5 % para no distorsionar la nota principal. El optimizador de alineaciones usa un <strong>problema de la mochila agrupada (group knapsack)</strong>: prueba combinaciones válidas de jugadores por posición y formación táctica, respetando tu presupuesto y jugadores blindados o excluidos.</p>
+    <p>Desarrollamos y mantenemos los scrapers y el backend de forma activa cada temporada. Los datos se actualizan antes de las jornadas relevantes; si detectas un error de nombre o de club, escríbenos.</p>
+
+    <h2>Independencia y marcas</h2>
+    <p><strong>Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga, LaLiga Fantasy, Biwenger ni ningún club.</strong> Los nombres y marcas mencionados pertenecen a sus titulares y se usan solo con fines informativos.</p>
+
+    <h2>Privacidad y transparencia</h2>
+    <p>No vendemos datos personales. Las plantillas y preferencias se guardan en tu navegador (localStorage). Usamos Google Analytics y, con tu consentimiento, cookies publicitarias según nuestra <a href="/privacy.html">Política de Privacidad</a> y el banner de cookies del sitio.</p>
+
+    <h2>Contacto y colaboración</h2>
+    <p>¿Sugerencias, bugs o ideas de nuevas competiciones?</p>
+    <p>📩 <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a></p>
+    <p>Leemos todos los mensajes. Si reportas un fallo, indica competición, jugador y captura si es posible: así lo corregimos antes.</p>
+
+    <div class="cta-box">
+      <h3>Prueba la calculadora</h3>
+      <p>Gratuita, sin registro obligatorio.</p>
+      <a href="/app/" class="cta-btn">Ir a la calculadora →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="row">
+      <a href="/">Inicio</a> <span class="sep">|</span>
+      <a href="/guias/">Guías</a> <span class="sep">|</span>
+      <a href="/app/">Calculadora</a> <span class="sep">|</span>
+      <a href="/privacy.html">Privacidad</a> <span class="sep">|</span>
+      <a href="/terms.html">Términos</a>
+    </div>
+    <div class="row" style="margin-top:8px">&copy; <span id="y"></span> Calculadora Fantasy</div>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

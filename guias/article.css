@@ -143,6 +143,18 @@ a:hover { text-decoration: underline; }
 }
 .hub-header h1 { font-size: 2.1rem; margin-bottom: .5rem; }
 .hub-header p { color: rgba(255,255,255,.7); font-size: 1rem; line-height: 1.6; max-width: 640px; margin: 0 auto; }
+.hub-intro {
+  max-width: 820px; margin: 0 auto; padding: 0 1.5rem 2.5rem;
+}
+.hub-intro h2 {
+  font-size: 1.35rem; margin: 1.5rem 0 .7rem;
+  border-left: 3px solid #ff4c4c; padding-left: .7rem;
+}
+.hub-intro p, .hub-intro li {
+  font-size: .98rem; line-height: 1.7; color: rgba(255,255,255,.82);
+  margin-bottom: .9rem;
+}
+.hub-intro ul { padding-left: 1.5rem; margin-bottom: 1rem; }
 .hub-grid {
   max-width: 980px; margin: 0 auto; padding: 0 1.5rem 4rem;
   display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

@@ -226,6 +226,34 @@ const my11Locked = new Set();
 const marketNames = new Set();
 const selectedTeamsFilter = new Set();
 
+let _activeCompetition = null;
+let _loadGeneration = 0;
+
+const DEFAULT_FILTERS = {
+  selApp: 'biwenger',
+  selPenalties: 'yes',
+  selSort: 'score',
+  selWorthProb: 'yes',
+  selJornada: '',
+  selNumJornadas: '1',
+  selIgnoreForm: 'no',
+  selIgnoreFixtures: 'no',
+  budgetFixtureFilter: 'no',
+  budgetMinProb: '65',
+  budgetPremium: false,
+  my11FixtureFilter: 'no',
+  my11MinProb: '65',
+  my11Premium: false,
+  playersFixtureFilter: 'no',
+  playersMinProb: '0',
+  filterGK: true,
+  filterDEF: true,
+  filterMID: true,
+  filterATT: true,
+  marketFixtureFilter: 'no',
+  marketMinProb: '0',
+};
+
 // ─── LocalStorage persistence ───────────────────────────────────────────────
 const LS_STATE_KEY = 'cf_app_state';
 
@@ -279,7 +307,7 @@ function _collectFilters() {
 function restoreState() {
   try {
     const raw = localStorage.getItem(LS_STATE_KEY);
-    if (!raw) return;
+    if (!raw) return null;
     const state = JSON.parse(raw);
 
     if (state.blinded) state.blinded.forEach(n => blindedNames.add(n));
@@ -290,7 +318,59 @@ function restoreState() {
     if (state.teamsFilter) state.teamsFilter.forEach(n => selectedTeamsFilter.add(n));
 
     if (state.filters) _applyFilters(state.filters);
-  } catch (_) {}
+    return state;
+  } catch (_) {
+    return null;
+  }
+}
+
+function _resetPriceRangeDefaults() {
+  const minEl = document.getElementById('priceRangeMin');
+  const maxEl = document.getElementById('priceRangeMax');
+  if (!minEl || !maxEl) return;
+  minEl.max = 500;
+  maxEl.max = 500;
+  minEl.step = 1;
+  maxEl.step = 1;
+  minEl.value = 0;
+  maxEl.value = 500;
+  initPriceRangeSlider();
+}
+
+function _syncFilterSideEffects() {
+  const isWorth = document.getElementById('selSort')?.value === 'worth';
+  const wpc = document.getElementById('worthProbContainer');
+  if (wpc) wpc.style.display = isWorth ? 'block' : 'none';
+  for (const id of ['budgetMinProb', 'my11MinProb', 'playersMinProb', 'marketMinProb']) {
+    const el = document.getElementById(id);
+    if (el) updateRangeRightFill(el);
+  }
+  renderPlayersTab();
+  renderMarketTab();
+}
+
+function resetFiltersAndSelections() {
+  blindedNames.clear();
+  bannedNames.clear();
+  my11Names.clear();
+  my11Locked.clear();
+  marketNames.clear();
+  selectedTeamsFilter.clear();
+
+  _applyFilters({ ...DEFAULT_FILTERS });
+  _resetPriceRangeDefaults();
+  updateBudgetInput();
+  _syncFilterSideEffects();
+
+  document.getElementById('budgetResults').innerHTML = '';
+  document.getElementById('my11Results').innerHTML = '';
+  renderBlindedList();
+  renderBannedList();
+  renderMy11List();
+  renderTeamChips();
+  updateTeamsDatalist();
+  updateAllDatalists();
+  persistState();
 }
 
 function _applyFilters(f) {
@@ -333,16 +413,7 @@ function _applyFilters(f) {
   const mmpEl = document.getElementById('marketMinProbVal');
   if (mmpEl && f.marketMinProb !== null) mmpEl.textContent = f.marketMinProb + '%';
 
-  // Worth prob container visibility
-  const isWorth = f.selSort === 'worth';
-  const wpc = document.getElementById('worthProbContainer');
-  if (wpc) wpc.style.display = isWorth ? 'block' : 'none';
-
-  // Re-apply range visual fills
-  for (const id of ['budgetMinProb', 'my11MinProb', 'playersMinProb', 'marketMinProb']) {
-    const el = document.getElementById(id);
-    if (el) updateRangeRightFill(el);
-  }
+  _syncFilterSideEffects();
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -717,10 +788,12 @@ async function loadCompetitions() {
       opt.textContent = LANG === 'en' ? c.name_en : c.name_es;
       sel.appendChild(opt);
     }
-    sel.addEventListener('change', onCompetitionChange);
+    sel.addEventListener('change', handleCompetitionChange);
     // Restore persisted state (filters + player Sets) before first load
-    restoreState();
+    const savedState = restoreState();
+    _activeCompetition = sel.value;
     onCompetitionChange();
+    if (savedState?.filters) _applyFilters(savedState.filters);
     loadPlayers();
   } catch (e) {
     console.error('Error loading competitions:', e);
@@ -743,10 +816,26 @@ async function loadCompetitions() {
       selApp.value = 'biwenger';
     }
     
-    restoreState();
+    const savedState = restoreState();
+    _activeCompetition = selComp.value;
     onCompetitionChange();
+    if (savedState?.filters) _applyFilters(savedState.filters);
     loadPlayers();
   }
+}
+
+function handleCompetitionChange() {
+  const comp = document.getElementById('selCompetition').value;
+  const competitionChanged = _activeCompetition !== null && _activeCompetition !== comp;
+  _activeCompetition = comp;
+
+  if (competitionChanged) {
+    allPlayers = [];
+    resetFiltersAndSelections();
+  }
+
+  onCompetitionChange();
+  loadPlayers();
 }
 
 function onCompetitionChange() {
@@ -805,12 +894,15 @@ function updateBudgetInput() {
 
 // ─── Load Players ───────────────────────────────────────────────────────────
 let _isLoadingPlayers = false;
-let _hasLoadedOnce = false;
 let _loadFailures = 0;
 async function loadPlayers() {
-  if (_isLoadingPlayers) return;
+  const generation = ++_loadGeneration;
   _isLoadingPlayers = true;
   const comp = document.getElementById('selCompetition').value;
+  allPlayers = [];
+  renderPlayersTab();
+  renderMarketTab();
+  updateAllDatalists();
   const app = document.getElementById('selApp').value;
   const ignoreForm = document.getElementById('selIgnoreForm').value === 'yes';
   const ignoreFixtures = document.getElementById('selIgnoreFixtures').value === 'yes';
@@ -818,8 +910,7 @@ async function loadPlayers() {
   const jornadaKey = document.getElementById('selJornada')?.value || '';
   const numJornadas = parseInt(document.getElementById('selNumJornadas')?.value || '1');
 
-  const isFirstLoad = allPlayers.length === 0;
-  if (isFirstLoad && _loadFailures > 0) {
+  if (_loadFailures > 0) {
     showLoading(LANG === 'en' ? "Waking up server (can take ~1 min)..." : "Iniciando servidor (puede tardar ~1 min)...");
   } else {
     showLoading(t('loading.players'));
@@ -833,6 +924,8 @@ async function loadPlayers() {
       session_id: SESSION_ID,
     });
 
+    if (generation !== _loadGeneration) return;
+
     _loadFailures = 0; // reset on success
 
     allPlayers = data.players;
@@ -841,9 +934,6 @@ async function loadPlayers() {
     isTournament = data.is_tournament;
     teamsList = data.teams;
 
-    // Only clear teams on reloads, not the initial load with restored state
-    if (_hasLoadedOnce) selectedTeamsFilter.clear();
-    _hasLoadedOnce = true;
     updateTeamsDatalist();
     renderTeamChips();
 
@@ -869,6 +959,7 @@ async function loadPlayers() {
     document.querySelector('.sidebar-backdrop')?.classList.remove('visible');
 
   } catch (e) {
+    if (generation !== _loadGeneration) return;
     _loadFailures++;
     console.error('Error loading players:', e);
     if (allPlayers.length > 0) {
@@ -882,7 +973,7 @@ async function loadPlayers() {
       if (progContainer) progContainer.style.display = 'none';
     }
   } finally {
-    _isLoadingPlayers = false;
+    if (generation === _loadGeneration) _isLoadingPlayers = false;
   }
 }
 
@@ -1478,17 +1569,15 @@ function initEventListeners() {
   // Radio-based fixture filters trigger re-renders
   document.querySelectorAll('input[name="playersFixtureFilter"]').forEach(r => r.addEventListener('change', renderPlayersTab));
 
-  // Sidebar settings that require reloading players
-  const reloadTriggers = ['selCompetition', 'selApp', 'selJornada', 'selNumJornadas',
+  // Sidebar settings that require reloading players (competition uses handleCompetitionChange)
+  const reloadTriggers = ['selApp', 'selJornada', 'selNumJornadas',
     'selIgnoreForm', 'selIgnoreFixtures', 'selPenalties'];
   for (const id of reloadTriggers) {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', () => {
-      if (allPlayers.length > 0) {
-        allPlayers = [];
-        renderPlayersTab();
-        renderMarketTab();
-      }
+      allPlayers = [];
+      renderPlayersTab();
+      renderMarketTab();
       loadPlayers();
     });
   }

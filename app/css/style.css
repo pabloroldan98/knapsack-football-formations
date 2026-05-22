@@ -20,6 +20,47 @@
   --sidebar-w:   270px;
 }
 
+/* ── Editorial / help (visible content for users and crawlers) ─────────── */
+.editorial-resources {
+  margin-top: 2.5rem; padding: 2rem 1.25rem 2.5rem;
+  border-top: 1px solid var(--border);
+  max-width: 900px;
+}
+.editorial-resources h2 {
+  font-size: 1.35rem; margin-bottom: .75rem; color: var(--text);
+}
+.editorial-resources h3 {
+  font-size: 1.05rem; margin: 1.4rem 0 .5rem; color: #ffb6b6;
+}
+.editorial-resources p, .editorial-resources li {
+  font-size: .92rem; line-height: 1.65; color: var(--text-muted);
+  margin-bottom: .75rem;
+}
+.editorial-resources ul, .editorial-resources ol {
+  padding-left: 1.35rem; margin-bottom: .9rem;
+}
+.editorial-resources a { color: var(--accent); }
+.editorial-resources .guide-links {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px; margin: 1rem 0 1.5rem;
+}
+.editorial-resources .guide-links a {
+  display: block; padding: .65rem .85rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: .88rem;
+  text-decoration: none; color: var(--text);
+}
+.editorial-resources .guide-links a:hover {
+  border-color: var(--accent); color: #fff;
+}
+.sidebar-guides-link {
+  display: block; margin: 10px 0 4px; padding: 8px 10px;
+  background: rgba(255,76,76,.12); border: 1px solid rgba(255,76,76,.35);
+  border-radius: var(--radius); color: #ff8a8a !important;
+  font-size: .85rem; text-align: center; text-decoration: none;
+}
+.sidebar-guides-link:hover { background: rgba(255,76,76,.22); color: #fff !important; }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {

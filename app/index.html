@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Calculadora Fantasy</title>
-  <meta name="description" content="Optimiza tu equipo de LaLiga Fantasy y Biwenger. Calcula tu mejor 11 ideal, analiza jugadores y optimiza tu presupuesto. Soporte para LaLiga Fantasy y Biwenger.">
+  <meta name="description" content="Calculadora gratuita para LaLiga Fantasy y Biwenger: optimiza tu once por presupuesto, consulta puntuación esperada, forma, calendario y probabilidad de titular. Incluye guía de uso paso a paso.">
   <link rel="canonical" href="https://www.calculadorafantasy.com/app/">
   <link rel="alternate" hreflang="es" href="https://www.calculadorafantasy.com/app/?lang=es">
   <link rel="alternate" hreflang="en" href="https://www.calculadorafantasy.com/app/?lang=en">
@@ -147,6 +147,7 @@
     <button id="btnLoadPlayers" class="btn-primary" data-i18n="btn.load_players" style="margin-top:16px">
       Cargar Jugadores
     </button>
+    <a href="/guias/" class="sidebar-guides-link">📚 Guías y estrategia Fantasy</a>
   </aside>
 
   <!-- Main content -->
@@ -374,12 +375,47 @@
       <div id="marketSelectedList" class="selected-players-list"></div>
     </section>
 
+    <!-- Editorial: ayuda y metodología (contenido útil, no solo la herramienta) -->
+    <section class="editorial-resources" id="ayuda">
+      <h2>Guía de uso de la Calculadora Fantasy</h2>
+      <p>Esta herramienta gratuita te ayuda a tomar decisiones basadas en datos en <strong>LaLiga Fantasy</strong>, <strong>Biwenger</strong> y competiciones como Champions League, Europa League, Mundial o Eurocopa. No sustituye tu criterio: complementa el análisis con puntuaciones esperadas y un optimizador que prueba millones de combinaciones de once en segundos.</p>
+
+      <h3>Paso 1: Configura la competición</h3>
+      <p>En el menú lateral elige la competición y la aplicación (Biwenger o LaLiga Fantasy). Si la liga tiene jornadas forzadas en el calendario, podrás seleccionar jornada concreta y cuántas jornadas agregar. Pulsa <strong>Cargar Jugadores</strong> para descargar precios, forma, dificultad de partido y probabilidad de titularidad actualizados.</p>
+
+      <h3>Paso 2: Mejores 11 con presupuesto</h3>
+      <p>Introduce tu presupuesto disponible (o -1 para ilimitado). Opcionalmente blinda jugadores que quieras sí o sí en el once, o excluye los que no te interesen. Activa filtros de probabilidad mínima de titular o de partidos difíciles si quieres descartar opciones arriesgadas. El motor prueba formaciones válidas (4-3-3, 3-5-2, etc.) y devuelve las que maximizan la puntuación esperada dentro de tu límite económico.</p>
+
+      <h3>Paso 3: Mi mejor 11 y lista de jugadores</h3>
+      <p>Si ya tienes plantilla, añade tus jugadores en <em>Mi mejor 11 posible</em> y calcula la alineación óptima solo con ellos. En <em>Lista de jugadores</em> puedes ordenar por puntuación, rentabilidad, precio, forma o calendario, y filtrar por posición, equipo o rango de precio para comparar fichajes antes del mercado.</p>
+
+      <h3>Metodología de la puntuación esperada</h3>
+      <p>Cada jugador recibe una nota prevista a jornada combinando la <strong>media Sofascore</strong> (rendimiento real reciente), un <strong>factor de forma</strong> (±5 % según evolución del precio en el mercado fantasy), un <strong>factor de dificultad</strong> (±5 % según ELO del rival e historial contra ese equipo) y, si aplica, un <strong>boost por penaltis</strong> para lanzadores habituales o porteros con historial de paradas. Los multiplicadores acotados evitan que un solo dato extremo distorsione la recomendación.</p>
+
+      <h3>Guías recomendadas</h3>
+      <div class="guide-links">
+        <a href="/guias/como-usar-calculadora-fantasy.html">Tutorial completo de la calculadora</a>
+        <a href="/guias/guia-laliga-fantasy.html">Guía LaLiga Fantasy</a>
+        <a href="/guias/guia-biwenger.html">Guía Biwenger</a>
+        <a href="/guias/como-elegir-jugadores-fantasy.html">Cómo elegir jugadores</a>
+        <a href="/guias/probabilidad-titular-calendario-fantasy.html">Titularidad y calendario</a>
+        <a href="/guias/guia-champions-europa-fantasy.html">Champions y Europa League</a>
+        <a href="/guias/errores-comunes-fantasy.html">Errores comunes</a>
+        <a href="/guias/">Ver todas las guías</a>
+      </div>
+      <p>Calculadora Fantasy es un proyecto independiente, no afiliado a LaLiga ni Biwenger. Para dudas o sugerencias: <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>. Más información en <a href="/sobre-nosotros.html">Sobre nosotros</a>.</p>
+    </section>
+
     <!-- Footer -->
     <footer class="app-footer">
       <p>&#128233; <span data-i18n="footer.contact">Contacto</span>:
         <a href="mailto:calculadora.fantasy@gmail.com">calculadora.fantasy@gmail.com</a>
       </p>
       <p class="footer-links">
+        <a href="/guias/">Guías</a>
+        <span class="footer-sep">|</span>
+        <a href="/sobre-nosotros.html">Sobre nosotros</a>
+        <span class="footer-sep">|</span>
         <a href="#" onclick="openPrivacyFromApp(); return false" data-i18n="footer.privacy">Política de Privacidad</a>
         <span class="footer-sep">|</span>
         <a href="../terms.html" data-i18n="footer.terms">Términos de uso</a>
@@ -426,22 +462,28 @@
     </div>
   </div>
 
-  <!-- Static content for crawlers -->
+  <!-- Static content for crawlers without JavaScript -->
   <noscript>
-    <div style="max-width:700px;margin:2rem auto;padding:1.5rem;color:#fff;font-family:sans-serif">
-      <h1>Calculadora Fantasy</h1>
-      <p>Optimiza tu equipo de LaLiga Fantasy y Biwenger con nuestra herramienta gratuita.</p>
+    <div style="max-width:820px;margin:2rem auto;padding:1.5rem;color:#fff;font-family:sans-serif;line-height:1.6">
+      <h1>Calculadora Fantasy — Optimizador para LaLiga Fantasy y Biwenger</h1>
+      <p>Herramienta gratuita que calcula tu mejor once según presupuesto, forma, calendario y probabilidad de titular. Incluye optimización por algoritmo de mochila (knapsack) y guías de estrategia en español.</p>
       <h2>Funcionalidades</h2>
       <ul>
-        <li><strong>Mejores 11s con presupuesto:</strong> calcula la mejor alineación posible según tu presupuesto disponible.</li>
-        <li><strong>Mi mejor 11 posible:</strong> elige tus jugadores y descubre tu once ideal para la próxima jornada.</li>
-        <li><strong>Lista de jugadores:</strong> consulta forma, dificultad de partido, probabilidad de titularidad y puntuación esperada.</li>
-        <li><strong>Análisis de mercado:</strong> compara jugadores del mercado para tomar la mejor decisión de fichaje.</li>
+        <li><strong>Mejores 11s con presupuesto:</strong> alineaciones óptimas con filtros de titularidad y partidos difíciles.</li>
+        <li><strong>Mi mejor 11 posible:</strong> once ideal entre los jugadores de tu plantilla.</li>
+        <li><strong>Lista de jugadores:</strong> estadísticas, rentabilidad y filtros por posición y equipo.</li>
+        <li><strong>Análisis de mercado:</strong> comparación de fichajes candidatos.</li>
       </ul>
-      <p>Soportamos LaLiga Fantasy, Biwenger, Champions League, Europa League y Conference League.</p>
-      <p><a href="/" style="color:#ff4c4c">Volver a la página principal</a> |
-         <a href="/privacy.html" style="color:#ff4c4c">Política de Privacidad</a> |
-         <a href="/terms.html" style="color:#ff4c4c">Términos de Uso</a></p>
+      <h2>Guías recomendadas</h2>
+      <ul>
+        <li><a href="/guias/como-usar-calculadora-fantasy.html" style="color:#ff4c4c">Tutorial de la calculadora</a></li>
+        <li><a href="/guias/guia-laliga-fantasy.html" style="color:#ff4c4c">Guía LaLiga Fantasy</a></li>
+        <li><a href="/guias/guia-biwenger.html" style="color:#ff4c4c">Guía Biwenger</a></li>
+        <li><a href="/guias/" style="color:#ff4c4c">Todas las guías</a></li>
+      </ul>
+      <p><a href="/" style="color:#ff4c4c">Inicio</a> |
+         <a href="/sobre-nosotros.html" style="color:#ff4c4c">Sobre nosotros</a> |
+         <a href="/privacy.html" style="color:#ff4c4c">Privacidad</a></p>
     </div>
   </noscript>
 
