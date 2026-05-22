@@ -746,12 +746,12 @@ if __name__ == "__main__":
     # best_transfers(my_team, mega_purged_players, 5, verbose=True)
 
     # needed_purge = purged_players[:50]
-    needed_purge = worthy_players[:200]
+    # needed_purge = worthy_players[:200]
     # needed_purge = [player for player in worthy_players if player.price > 7]
     # needed_purge = [player for player in worthy_players if (player.form >=1 and player.fixture >=1)]
     # needed_purge = needed_purge[:150]
     # needed_purge = worthy_players[:150]
-    # needed_purge = worthy_players.copy()
+    needed_purge = worthy_players.copy()
 
 
 
