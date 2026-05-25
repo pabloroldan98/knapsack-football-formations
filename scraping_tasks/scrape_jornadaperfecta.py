@@ -94,21 +94,21 @@ print("##############################")
     # for team, players in laliga_start_probabilities.items():
     #     print(team, players)
 
-laliga_start_probabilities = safe_get_start_probabilities(
-    "LaLiga", "jornadaperfecta_laliga_players_start_probabilities"
-)
-premier_start_probabilities = safe_get_start_probabilities(
-    "Premier League", "jornadaperfecta_premier_players_start_probabilities"
-)
-seriea_start_probabilities = safe_get_start_probabilities(
-    "Serie A", "jornadaperfecta_seriea_players_start_probabilities"
-)
-bundesliga_start_probabilities = safe_get_start_probabilities(
-    "Bundesliga", "jornadaperfecta_bundesliga_players_start_probabilities"
-)
-ligueone_start_probabilities = safe_get_start_probabilities(
-    "Ligue 1", "jornadaperfecta_ligueone_players_start_probabilities"
-)
+# laliga_start_probabilities = safe_get_start_probabilities(
+#     "LaLiga", "jornadaperfecta_laliga_players_start_probabilities"
+# )
+# premier_start_probabilities = safe_get_start_probabilities(
+#     "Premier League", "jornadaperfecta_premier_players_start_probabilities"
+# )
+# seriea_start_probabilities = safe_get_start_probabilities(
+#     "Serie A", "jornadaperfecta_seriea_players_start_probabilities"
+# )
+# bundesliga_start_probabilities = safe_get_start_probabilities(
+#     "Bundesliga", "jornadaperfecta_bundesliga_players_start_probabilities"
+# )
+# ligueone_start_probabilities = safe_get_start_probabilities(
+#     "Ligue 1", "jornadaperfecta_ligueone_players_start_probabilities"
+# )
 segunda_start_probabilities = safe_get_start_probabilities(
     "Segunda División", "jornadaperfecta_segunda_players_start_probabilities"
 )
