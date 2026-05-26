@@ -488,7 +488,8 @@ def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=
     current_players = get_current_players(
         no_form=no_form,
         no_fixtures=no_fixtures,
-        no_home_boost=False,
+        # no_home_boost=False,
+        no_home_boost=(competition == "champions"),
         no_team_history_boost=False,
         alt_fixture_method=alt_fixture_method,
         ignore_gk_fixture=ignore_gk_fixture,
