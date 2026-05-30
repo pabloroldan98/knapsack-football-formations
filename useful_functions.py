@@ -440,6 +440,7 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
         similarity_threshold = 0.45
     if my_string in [
         "Álvaro Carreras", "Álvaro Fernández", "Á. Fernandez", "Pape Matar Sarr", "Pape Sarr", "Frank Anguissa", "Zambo Anguissa",
+        "Luis Javier Suárez", "Luis Javier Suarez", "Luis Suárez", "Luis Suarez",
         "Nueva Zelanda", "New Zealand", "Cabo Verde", "Cape Verde",
     ]:
         similarity_threshold = 0.65
@@ -715,8 +716,8 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Neofytos Michael": "Michael",
         "Neofytos Michail": "Michael",
         "Oscar Gadeberg Buur": "Oscar Buur",
-        "Luis Javier Suárez": "Luis Suárez",
-        "Luis Javier Suarez": "Luis Suárez",
+        # "Luis Javier Suárez": "Luis Suárez",
+        # "Luis Javier Suarez": "Luis Suárez",
         "Leandro Barreiro": "Barreiro Martins",
         "Kaye Iyowuna Furo": "Kaye Furo",
         "Julian Faye Lund": "J. Lund",
