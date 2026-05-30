@@ -240,13 +240,14 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
             home_team = new_match[0]
             away_team = new_match[1]
 
+            # Save home team
             team_elo = get_team_elo(home_team, teams_elos_dict)
             is_team_home = True
             if host_team:
                 if isinstance(host_team, str):
-                    is_team_home = True if team_name == host_team else False
+                    is_team_home = True if home_team == host_team else False
                 elif isinstance(host_team, list):
-                    is_team_home = True if team_name in host_team else False
+                    is_team_home = True if home_team in host_team else False
                 else:
                     is_team_home = False
             try:
@@ -277,13 +278,14 @@ def create_teams_list(championship_teams, championship_players, teams_elos_dict,
             )
             teams_list.append(new_team)
 
+            # Save away team
             team_elo = get_team_elo(away_team, teams_elos_dict)
             is_team_home = False
             if host_team:
                 if isinstance(host_team, str):
-                    is_team_home = True if team_name == host_team else False
+                    is_team_home = True if away_team == host_team else False
                 elif isinstance(host_team, list):
-                    is_team_home = True if team_name in host_team else False
+                    is_team_home = True if away_team in host_team else False
                 else:
                     is_team_home = False
             try:
