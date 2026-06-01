@@ -1,7 +1,9 @@
 import ast
+import hashlib
 import json
 import os
 import shutil
+import tempfile
 
 import requests
 import tls_requests
@@ -16,8 +18,11 @@ from selenium.webdriver.chrome.options import Options
 import concurrent.futures
 import stopit
 import numpy as np
+from filelock import FileLock
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
+LOCK_DIR = os.path.join(ROOT_DIR, ".locks")
+FILE_LOCK_TIMEOUT = 300
 
 
 # random header pool
@@ -1127,6 +1132,38 @@ def correct_teams_with_old_data(teams_data, teams_old_file_name, num_teams=10, f
     return teams_data
 
 
+def _lock_path_for_file(file_path):
+    os.makedirs(LOCK_DIR, exist_ok=True)
+    digest = hashlib.sha1(os.path.abspath(file_path).encode("utf-8")).hexdigest()
+    return os.path.join(LOCK_DIR, f"{digest}.lock")
+
+
+def _dict_data_file_lock(file_path):
+    return FileLock(_lock_path_for_file(file_path), timeout=FILE_LOCK_TIMEOUT)
+
+
+def _atomic_write_file(file_path, write_fn, mode="w", encoding="utf-8", newline=None):
+    dir_name = os.path.dirname(file_path) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(prefix=".tmp_", dir=dir_name)
+    os.close(fd)
+    open_kwargs = {"mode": mode, "encoding": encoding}
+    if newline is not None:
+        open_kwargs["newline"] = newline
+    with open(tmp_path, **open_kwargs) as f:
+        write_fn(f)
+    os.replace(tmp_path, file_path)
+
+
+def _atomic_copy_file(src_path, dst_path):
+    dir_name = os.path.dirname(dst_path) or "."
+    os.makedirs(dir_name, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(prefix=".tmp_", dir=dir_name)
+    os.close(fd)
+    shutil.copy2(src_path, tmp_path)
+    os.replace(tmp_path, dst_path)
+
+
 # def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, ignore_old_data=False, file_type="json"):
 def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old_data=False, file_type="json"):
     file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
@@ -1136,31 +1173,39 @@ def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old
     if file_type and isinstance(file_type, str):
         file_path = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}.{file_type}")
         file_path_old = os.path.join(ROOT_DIR, f"{file_type}_files", f"{file_name}_OLD.{file_type}")
-    if not ignore_old_data:
-        # Check if the data is not valid, and if so, fill it with old data
-        if not is_valid_league_dict(dict_data) or ignore_valid_file:
-            if os.path.exists(correct_data_file_path):
-                dict_data = correct_teams_with_old_data(dict_data, correct_data_file, file_type=file_type)
-        # If data is valid now, we use old data that we missed
+    with _dict_data_file_lock(file_path):
+        if not ignore_old_data:
+            # Check if the data is not valid, and if so, fill it with old data
+            if not is_valid_league_dict(dict_data) or ignore_valid_file:
+                if os.path.exists(correct_data_file_path):
+                    dict_data = correct_teams_with_old_data(dict_data, correct_data_file, file_type=file_type)
+            # If data is valid now, we use old data that we missed
+            if is_valid_league_dict(dict_data) or ignore_valid_file:
+                if os.path.exists(correct_data_file_path):
+                    dict_data = add_old_data_to_teams(dict_data, correct_data_file, file_type=file_type)
+        # If data is valid again, we overwrite
         if is_valid_league_dict(dict_data) or ignore_valid_file:
-            if os.path.exists(correct_data_file_path):
-                dict_data = add_old_data_to_teams(dict_data, correct_data_file, file_type=file_type)
-    # If data is valid again, we overwrite
-    if is_valid_league_dict(dict_data) or ignore_valid_file:
-        # Check if the file exists and delete it
-        if os.path.exists(file_path):
-            if os.path.exists(file_path_old):
-                os.remove(file_path_old)
-            shutil.copy(file_path, file_path_old)
-            os.remove(file_path)
-        write_dict_data(dict_data, file_name, file_type)
+            if os.path.exists(file_path):
+                _atomic_copy_file(file_path, file_path_old)
+            write_dict_data(dict_data, file_name, file_type, _skip_lock=True)
 
 
-def write_dict_to_csv(dict_data, file_name):
-    with open(ROOT_DIR + "/csv_files/" + file_name + ".csv", 'w', encoding='utf-8', newline='') as csv_file:  # Specify newline parameter
-        writer = csv.writer(csv_file)
-        for key, value in dict_data.items():
-            writer.writerow([key, value])
+def write_dict_to_csv(dict_data, file_name, _skip_lock=False):
+    file_path = os.path.join(ROOT_DIR, "csv_files", f"{file_name}.csv")
+
+    def _write():
+        def write_fn(csv_file):
+            writer = csv.writer(csv_file)
+            for key, value in dict_data.items():
+                writer.writerow([key, value])
+
+        _atomic_write_file(file_path, write_fn, newline="")
+
+    if _skip_lock:
+        _write()
+    else:
+        with _dict_data_file_lock(file_path):
+            _write()
 
 
 def convert_value(value):
@@ -1178,14 +1223,25 @@ def read_dict_from_csv(file_name):
         return mydict
 
 
-def write_dict_to_json(dict_data, file_name):
+def write_dict_to_json(dict_data, file_name, _skip_lock=False):
     file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
-    with open(file_path, 'w', encoding='utf-8') as f:
-        json.dump(dict_data, f, ensure_ascii=False, indent=2)
+
+    def _write():
+        def write_fn(f):
+            json.dump(dict_data, f, ensure_ascii=False, indent=2)
+
+        _atomic_write_file(file_path, write_fn)
+
+    if _skip_lock:
+        _write()
+    else:
+        with _dict_data_file_lock(file_path):
+            _write()
 
 
 def read_dict_from_json(file_name):
     file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
+    print(file_path)
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     return data
@@ -1220,13 +1276,13 @@ def read_dict_data(file_name, file_type="json"):
     return dict_data
 
 
-def write_dict_data(dict_data, file_name, file_type="json"):
+def write_dict_data(dict_data, file_name, file_type="json", _skip_lock=False):
     if file_type == "csv":
-        write_dict_to_csv(dict_data, file_name)
+        write_dict_to_csv(dict_data, file_name, _skip_lock=_skip_lock)
     elif file_type == "json":
-        write_dict_to_json(dict_data, file_name)
+        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock)
     else:
-        write_dict_to_json(dict_data, file_name)
+        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock)
 
 
 def delete_file(file_name, file_type="json"):
