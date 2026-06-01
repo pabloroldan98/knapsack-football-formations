@@ -185,7 +185,7 @@ def competition_from_filename(file_name: str) -> str:
         ('conference', 'conferenceleague', 'conference-league', ): "UECL",
         ("eurocopa", "euro", "europa", "europeo", ): "UEC",
         ("copaamerica", "copa-america", ): "CCA",
-        ("mundial", "worldcup", "world-cup", ): "FWC",
+        ("mundial", "worldcup", "world-cup", ): "WOC",
         ("laliga", "la-liga", ): "LIGA",
         ('premier', 'premier-league', 'premierleague', ): "EPL",
         ('seriea', 'serie-a', ): "SERI",

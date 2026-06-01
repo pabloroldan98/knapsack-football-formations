@@ -126,9 +126,9 @@ champions_start_probabilities = safe_get_start_probabilities(
 #     "Mundialito", "rotowire_mundialito_players_start_probabilities"
 # )
 #
-# mundial_start_probabilities = safe_get_start_probabilities(
-#     "Mundial", "rotowire_mundial_players_start_probabilities"
-# )
+mundial_start_probabilities = safe_get_start_probabilities(
+    "Mundial", "rotowire_mundial_players_start_probabilities"
+)
 # eurocopa_start_probabilities = safe_get_start_probabilities(
 #     "Eurocopa", "rotowire_eurocopa_players_start_probabilities"
 # )
