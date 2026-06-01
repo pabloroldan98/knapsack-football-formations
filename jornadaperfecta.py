@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
-    create_driver  # same as before
+    read_dict_data_local_only, create_driver  # same as before
 from player_href_name_cache import (
     PlayerHrefNameCache,
     JORNADAPERFECTA_PLAYER_HREF_CACHE_FILE,
@@ -548,9 +548,13 @@ def get_players_start_probabilities_dict_jornadaperfecta(
         max_workers=8,
 ):
     if not force_scrape:
-        data = read_dict_data(file_name)
-        if data:
+        # data = read_dict_data(file_name)
+        # if data:
+        #     return data
+        data = read_dict_data_local_only(file_name)
+        if data is not None:
             return data
+        return {}
 
     competition = competition_from_filename(file_name)
     scraper = JornadaPerfectaScraper(competition=competition, max_workers=max_workers)

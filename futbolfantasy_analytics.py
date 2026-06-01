@@ -19,7 +19,8 @@ import requests
 from bs4 import BeautifulSoup
 import urllib3
 
-from useful_functions import overwrite_dict_data, read_dict_data, create_driver, find_manual_similar_string
+from useful_functions import overwrite_dict_data, read_dict_data, create_driver, find_manual_similar_string, \
+    read_dict_data_local_only
 from player_href_name_cache import (
     PlayerHrefNameCache,
     FUTBOLFANTASY_PLAYER_HREF_CACHE_FILE,
@@ -933,9 +934,13 @@ def get_players_start_probabilities_dict_futbolfantasy(
         max_workers=8,
 ):
     if not force_scrape:
-        data = read_dict_data(file_name)
-        if data:
+        # data = read_dict_data(file_name)
+        # if data:
+        #     return data
+        data = read_dict_data_local_only(file_name)
+        if data is not None:
             return data
+        return {}
 
     competition = competition_from_filename(file_name)
     scraper = FutbolFantasyScraper(competition=competition, max_workers=max_workers)

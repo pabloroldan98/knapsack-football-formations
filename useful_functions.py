@@ -1191,6 +1191,23 @@ def read_dict_from_json(file_name):
     return data
 
 
+def dict_data_file_path(file_name, file_type="json"):
+    if file_type == "csv":
+        return os.path.join(ROOT_DIR, "csv_files", f"{file_name}.csv")
+    return os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
+
+
+def dict_data_file_exists(file_name, file_type="json"):
+    return os.path.isfile(dict_data_file_path(file_name, file_type))
+
+
+def read_dict_data_local_only(file_name, file_type="json"):
+    if not dict_data_file_exists(file_name, file_type):
+        return None
+    data = read_dict_data(file_name, file_type)
+    return {} if data is None else data
+
+
 def read_dict_data(file_name, file_type="json"):
     dict_data = None
     if file_type == "csv" and os.path.isfile(ROOT_DIR + '/csv_files/' + file_name + '.csv'):

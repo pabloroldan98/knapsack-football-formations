@@ -27,7 +27,7 @@ from rotowire import get_players_start_probabilities_dict_rotowire
 from scout import get_players_start_probabilities_dict_scout
 from sportsgambler import get_players_start_probabilities_dict_sportsgambler
 from useful_functions import find_similar_string, find_string_positions, write_dict_data, read_dict_data, \
-    overwrite_dict_data
+    overwrite_dict_data, read_dict_data_local_only
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -925,12 +925,31 @@ def set_price_trends(players_list, full_players_price_trends_dict, full_players_
     return result_players
 
 
+def _start_probability_source_key(file_name):
+    name = file_name.lower()
+    for source in (
+        "futbolfantasy", "analiticafantasy", "jornadaperfecta",
+        "pundit", "scout", "rotowire", "sportsgambler",
+    ):
+        if source in name:
+            return source
+    return None
+
+
 def get_players_start_probabilities_dict(
         file_names=["futbolfantasy_start_probabilities", "analiticafantasy_start_probabilities", "jornadaperfecta_start_probabilities", "pundit_start_probabilities", "scout_start_probabilities", ],
         force_scrape=False
 ):
     players_dict = {}
     for file_name in file_names:
+        if not force_scrape:
+            data = read_dict_data_local_only(file_name)
+            if data is not None:
+                source_key = _start_probability_source_key(file_name)
+                if source_key:
+                    players_dict[source_key] = data
+            continue
+
         if "futbolfantasy" in file_name.lower():
             try:
                 futbolfantasy_data = get_players_start_probabilities_dict_futbolfantasy(

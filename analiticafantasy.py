@@ -15,7 +15,7 @@ from urllib3.exceptions import ReadTimeoutError
 from http.client import RemoteDisconnected
 
 from useful_functions import read_dict_data, overwrite_dict_data, find_manual_similar_string, \
-    create_driver  # same as before
+    read_dict_data_local_only, create_driver  # same as before
 
 
 class AnaliticaFantasyScraper:
@@ -544,9 +544,13 @@ def get_players_start_probabilities_dict_analiticafantasy(
         force_scrape=False
 ):
     if not force_scrape:
-        data = read_dict_data(file_name)
-        if data:
+        # data = read_dict_data(file_name)
+        # if data:
+        #     return data
+        data = read_dict_data_local_only(file_name)
+        if data is not None:
             return data
+        return {}
 
     competition = competition_from_filename(file_name)
     scraper = AnaliticaFantasyScraper(competition=competition)
