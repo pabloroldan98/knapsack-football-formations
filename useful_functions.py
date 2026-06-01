@@ -1241,7 +1241,6 @@ def write_dict_to_json(dict_data, file_name, _skip_lock=False):
 
 def read_dict_from_json(file_name):
     file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
-    print(file_path)
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     return data
