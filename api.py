@@ -105,7 +105,8 @@ def player_to_dict(player, divide_millions=False):
 
 # ─── Request models ──────────────────────────────────────────────────────────
 class CalculateRequest(BaseModel):
-    competition: str = "laliga"
+    # competition: str = "laliga"
+    competition: str = "mundial"
     app: str = "biwenger"
     ignore_form: bool = False
     ignore_fixtures: bool = False
@@ -237,7 +238,8 @@ def track_visit(req: VisitRequest, request: Request):
 class PlayerActionRequest(BaseModel):
     session_id: str = ""
     player_name: str
-    competition: str = "laliga"
+    # competition: str = "laliga"
+    competition: str = "mundial"
     action_type: str  # 'blinded', 'banned', 'my11', 'market'
 
 
@@ -251,13 +253,13 @@ def track_player_action(req: PlayerActionRequest):
 @app.get("/api/competitions")
 def get_competitions():
     return {"competitions": [
-        {"key": "laliga",       "name_es": "LaLiga",             "name_en": "LaLiga",                  "apps": ["biwenger", "laligafantasy"]},
-        {"key": "premier",      "name_es": "Premier League",     "name_en": "Premier League",          "apps": ["biwenger"]},
-        {"key": "seriea",       "name_es": "Serie A",            "name_en": "Serie A",                 "apps": ["biwenger"]},
-        {"key": "ligueone",     "name_es": "Ligue 1",            "name_en": "Ligue 1",                 "apps": ["biwenger"]},
+        # {"key": "laliga",       "name_es": "LaLiga",             "name_en": "LaLiga",                  "apps": ["biwenger", "laligafantasy"]},
+        # {"key": "premier",      "name_es": "Premier League",     "name_en": "Premier League",          "apps": ["biwenger"]},
+        # {"key": "seriea",       "name_es": "Serie A",            "name_en": "Serie A",                 "apps": ["biwenger"]},
+        # {"key": "ligueone",     "name_es": "Ligue 1",            "name_en": "Ligue 1",                 "apps": ["biwenger"]},
         # {"key": "bundesliga",   "name_es": "Bundesliga",         "name_en": "Bundesliga",              "apps": ["biwenger"]},
-        {"key": "segunda",      "name_es": "Segunda División",   "name_en": "Spanish Second Division", "apps": ["biwenger"]},
-        {"key": "champions",    "name_es": "Champions League",   "name_en": "Champions League",        "apps": ["biwenger"]},
+        # {"key": "segunda",      "name_es": "Segunda División",   "name_en": "Spanish Second Division", "apps": ["biwenger"]},
+        # {"key": "champions",    "name_es": "Champions League",   "name_en": "Champions League",        "apps": ["biwenger"]},
         # {"key": "europaleague", "name_es": "Europa League",      "name_en": "Europa League",           "apps": ["biwenger"]},
         # {"key": "conference",   "name_es": "Conference League",  "name_en": "Conference League",       "apps": ["biwenger"]},
         # {"key": "mundialito",   "name_es": "Mundial de Clubes",  "name_en": "Club World Cup",          "apps": ["biwenger"]},
@@ -268,7 +270,8 @@ def get_competitions():
 
 
 @app.get("/api/jornadas")
-def get_jornadas(competition: str = "laliga"):
+# def get_jornadas(competition: str = "laliga"):
+def get_jornadas(competition: str = "mundial"):
     jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if not jornadas_dict:
         return {"jornadas": [], "next_jornada": None}
@@ -279,7 +282,8 @@ def get_jornadas(competition: str = "laliga"):
 
 @app.get("/api/players")
 def get_players(
-    competition: str = "laliga",
+    # competition: str = "laliga",
+    competition: str = "mundial",
     app: str = "biwenger",
     ignore_form: bool = False,
     ignore_fixtures: bool = False,

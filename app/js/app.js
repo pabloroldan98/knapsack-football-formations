@@ -229,7 +229,13 @@ const selectedTeamsFilter = new Set();
 let _activeCompetition = null;
 let _loadGeneration = 0;
 
+// const DEFAULT_COMPETITION = 'laliga';
+// const DEFAULT_COMPETITION_NAME = 'LaLiga';
+const DEFAULT_COMPETITION = 'mundial';
+const DEFAULT_COMPETITION_NAME = 'Mundial';
+
 const DEFAULT_FILTERS = {
+  selCompetition: DEFAULT_COMPETITION,
   selApp: 'biwenger',
   selPenalties: 'yes',
   selSort: 'score',
@@ -789,8 +795,14 @@ async function loadCompetitions() {
       sel.appendChild(opt);
     }
     sel.addEventListener('change', handleCompetitionChange);
+    sel.value = DEFAULT_COMPETITION;
+    if (!sel.value && sel.options.length > 0) sel.selectedIndex = 0;
     // Restore persisted state (filters + player Sets) before first load
     const savedState = restoreState();
+    if (!sel.value || ![...sel.options].some(o => o.value === sel.value)) {
+      sel.value = DEFAULT_COMPETITION;
+      if (!sel.value && sel.options.length > 0) sel.selectedIndex = 0;
+    }
     _activeCompetition = sel.value;
     onCompetitionChange();
     if (savedState?.filters) _applyFilters(savedState.filters);
@@ -801,10 +813,10 @@ async function loadCompetitions() {
     const selComp = document.getElementById('selCompetition');
     if (selComp && selComp.options.length === 0) {
       const opt = document.createElement('option');
-      opt.value = 'laliga';
-      opt.textContent = 'LaLiga';
+      opt.value = DEFAULT_COMPETITION;
+      opt.textContent = DEFAULT_COMPETITION_NAME;
       selComp.appendChild(opt);
-      selComp.value = 'laliga';
+      selComp.value = DEFAULT_COMPETITION;
     }
     
     const selApp = document.getElementById('selApp');
@@ -1739,11 +1751,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (compEl && (!compEl.value || compEl.options.length === 0)) {
         if (compEl.options.length === 0) {
           const opt = document.createElement('option');
-          opt.value = 'laliga';
-          opt.textContent = 'LaLiga';
+          opt.value = DEFAULT_COMPETITION;
+          opt.textContent = DEFAULT_COMPETITION_NAME;
           compEl.appendChild(opt);
         }
-        compEl.value = 'laliga';
+        compEl.value = DEFAULT_COMPETITION;
       }
       
       const appEl = document.getElementById('selApp');
@@ -1770,11 +1782,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (compEl && (!compEl.value || compEl.options.length === 0)) {
         if (compEl.options.length === 0) {
           const opt = document.createElement('option');
-          opt.value = 'laliga';
-          opt.textContent = 'LaLiga';
+          opt.value = DEFAULT_COMPETITION;
+          opt.textContent = DEFAULT_COMPETITION_NAME;
           compEl.appendChild(opt);
         }
-        compEl.value = 'laliga';
+        compEl.value = DEFAULT_COMPETITION;
       }
       
       const appEl = document.getElementById('selApp');
