@@ -572,7 +572,8 @@ if __name__ == "__main__":
     # current_players = get_current_players()
 
 
-    competition = "laliga"
+    # competition = "laliga"
+    competition = "mundial"
     jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if jornadas_dict:
         jornada_selected = jornadas_dict.get(get_next_jornada(competition), [])
@@ -653,7 +654,7 @@ if __name__ == "__main__":
         # host_team="US",
         # debug=False,
     # )
-    # current_players = get_current_players_wrapper("champions")#, forced_matches=jornada_selected)
+    # current_players = get_current_players_wrapper("mundial")#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place
