@@ -109,9 +109,9 @@ print("##############################")
 # ligueone_start_probabilities = safe_get_start_probabilities(
 #     "Ligue 1", "jornadaperfecta_ligueone_players_start_probabilities"
 # )
-# segunda_start_probabilities = safe_get_start_probabilities(
-#     "Segunda División", "jornadaperfecta_segunda_players_start_probabilities"
-# )
+segunda_start_probabilities = safe_get_start_probabilities(
+    "Segunda División", "jornadaperfecta_segunda_players_start_probabilities"
+)
 
 # champions_start_probabilities = safe_get_start_probabilities(
 #     "Champions League", "jornadaperfecta_champions_players_start_probabilities"
