@@ -916,7 +916,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Sherzod Nasrullayev": "S. Nasrullaev",
         "El Mahdi Soliman": "E. Soliman",
         "Antonio Rüdiger": "Rüdiger",
-        "Mohannad Abu Taha": "Mohammad Taha",
         "Yassine Bounou": "Bono",
         "Jassem Gaber": "Jassem Abdulsallam",
         "Bamba Dieng": "Ahmadou Dieng",
