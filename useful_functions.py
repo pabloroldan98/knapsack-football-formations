@@ -919,6 +919,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Yassine Bounou": "Bono",
         "Jassem Gaber": "Jassem Abdulsallam",
         "Bamba Dieng": "Ahmadou Dieng",
+        "Javi Montero": "Francisco Montero",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
