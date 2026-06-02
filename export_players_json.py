@@ -54,7 +54,7 @@ COMPETITIONS = [
     {"key": "ligueone",  "apps": ["biwenger"]},
     {"key": "segunda",   "apps": ["biwenger"]},
     {"key": "champions", "apps": ["biwenger"]},
-    {"key": "mundial", "apps": ["biwenger"]},
+    {"key": "mundial",   "apps": ["biwenger"]},
 ]
 
 
