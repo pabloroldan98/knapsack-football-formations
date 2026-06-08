@@ -54,9 +54,14 @@ def _fetch_team_player_paths(team_name, team_url):
     if script and script.string:
         try:
             data = json.loads(script.string)
-            players_list = (
-                data["props"]["pageProps"]["initialProps"]["players"]["players"]
-            )
+            # players_list = (
+            #     # data["props"]["pageProps"]["initialProps"]["players"]["players"]
+            #     data["props"]["pageProps"]["players"]["players"]
+            # )
+            page_props = data["props"]["pageProps"]
+            players_list = page_props.get("players", {}).get("players")
+            if not players_list:
+                players_list = page_props.get("initialProps", {}).get("players", {}).get("players", [])
             for item in players_list:
                 p = item.get("player", {})
                 slug = p.get("slug")
