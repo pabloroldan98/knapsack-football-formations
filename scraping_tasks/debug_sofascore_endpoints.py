@@ -15,6 +15,10 @@ import tls_requests
 
 from sofascore import pick_sofascore_headers
 
+# Optional proxy (e.g. Tor: socks5://127.0.0.1:9050). WARP works at the network
+# level (WireGuard tunnel) so it needs no proxy here.
+DEBUG_PROXY = os.getenv("SOFASCORE_DEBUG_PROXY") or None
+
 # Known-good ids for testing (Segunda Division + Racing Santander + Diego Marino)
 UNIQUE_TOURNAMENT_ID = 54
 SEASON_ID = 77558
@@ -62,14 +66,29 @@ def check(url, client_identifier, headers):
             client_identifier=client_identifier,
             verify=False,
             timeout=20,
+            proxy=DEBUG_PROXY,
         )
         return str(response.status_code)
     except Exception as e:
         return f"ERR({type(e).__name__})"
 
 
+def print_egress_ip():
+    try:
+        r = tls_requests.get(
+            "https://api.ipify.org?format=json",
+            timeout=20,
+            proxy=DEBUG_PROXY,
+        )
+        print(f"Egress IP: {r.text}")
+    except Exception as e:
+        print(f"Could not determine egress IP: {type(e).__name__}: {e}")
+
+
 def main():
     print(f"GITHUB_ACTIONS={os.getenv('GITHUB_ACTIONS')}")
+    print(f"SOFASCORE_DEBUG_PROXY={DEBUG_PROXY}")
+    print_egress_ip()
     print()
 
     results = {}
