@@ -1459,9 +1459,18 @@ def get_working_proxy(
 # residential-looking exit IP. Tor must be installed and running for this to
 # connect (the CI workflows take care of that).
 TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9050")
-# SofaScore rejects the default Chrome TLS fingerprint even through Tor, so we
-# force a Safari fingerprint (which is accepted).
-TOR_CLIENT_IDENTIFIER = "safari_16_0"
+# Even through Tor, SofaScore rejects some TLS fingerprints (e.g. chrome_133
+# returns 403 for every endpoint), so we try a list of known-good identifiers
+# in order and keep the first one that works for the rest of the run. Add/remove
+# entries here if SofaScore starts/stops accepting a given fingerprint.
+TOR_CLIENT_IDENTIFIERS = [
+    "safari_16_0",
+    "safari_ios_17_0",
+    "okhttp4_android_13",
+    "firefox_132",
+    "chrome_131",
+    "chrome_120",
+]
 
 
 def _endpoint_key(url):
@@ -1489,15 +1498,25 @@ def _endpoint_key(url):
 class _TorRequests:
     """
     Tor-backed counterpart to tls_requests. `tor_requests.get(...)` makes the
-    request through the Tor SOCKS proxy (with a Safari TLS fingerprint) and
-    remembers the endpoint as blocked, so callers can use
-    `tor_requests.is_endpoint_blocked(url)` to skip the (doomed) direct attempt
-    for the rest of the run.
+    request through the Tor SOCKS proxy and remembers the endpoint as blocked,
+    so callers can use `tor_requests.is_endpoint_blocked(url)` to skip the
+    (doomed) direct attempt for the rest of the run:
+
+        if tor_requests.is_endpoint_blocked(url):
+            resp = tor_requests.get(url, headers=headers, verify=False)
+        else:
+            resp = tls_requests.get(url, headers=headers, verify=False)
+            if resp.status_code == 403:
+                resp = tor_requests.get(url, headers=headers, verify=False)
+
+    It rotates through TOR_CLIENT_IDENTIFIERS until one is accepted (similar to
+    rotating headers) and remembers the working one for later calls.
     """
 
     def __init__(self):
         self._blocked = set()
         self._lock = threading.Lock()
+        self._preferred_identifier = None
 
     def is_endpoint_blocked(self, url):
         with self._lock:
@@ -1506,9 +1525,32 @@ class _TorRequests:
     def get(self, url, **kwargs):
         with self._lock:
             self._blocked.add(_endpoint_key(url))
+
         kwargs["proxy"] = TOR_PROXY
-        kwargs.setdefault("client_identifier", TOR_CLIENT_IDENTIFIER)
-        return tls_requests.get(url, **kwargs)
+        kwargs.pop("client_identifier", None)
+
+        # Try the identifier that worked last first, then the rest in order.
+        with self._lock:
+            preferred = self._preferred_identifier
+        identifiers = list(TOR_CLIENT_IDENTIFIERS)
+        if preferred in identifiers:
+            identifiers.remove(preferred)
+            identifiers.insert(0, preferred)
+
+        last_response = None
+        for identifier in identifiers:
+            try:
+                response = tls_requests.get(
+                    url, client_identifier=identifier, **kwargs
+                )
+            except Exception:
+                continue
+            last_response = response
+            if response.status_code != 403:
+                with self._lock:
+                    self._preferred_identifier = identifier
+                return response
+        return last_response
 
 
 tor_requests = _TorRequests()
