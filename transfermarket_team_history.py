@@ -403,7 +403,7 @@ class TransfermarktScraper:
 
     def scrape(self, use_country_as_team=False):
         try:
-            # # league_url = f"{self.base_url}/fifa-club-world-cup/startseite/pokalwettbewerb/KLUB"
+            # # league_url = f"{self.base_url}/fifa-club-world-cup/teilnehmer/pokalwettbewerb/KLUB"
             # league_url = f"{self.base_url}/laliga/startseite/wettbewerb/ES1"
             # # league_url = "https://www.transfermarkt.com/europameisterschaft-2024/teilnehmer/pokalwettbewerb/EM24"
             # # league_url = f"{self.base_url}/copa-america-2024/teilnehmer/pokalwettbewerb/CAM4"
@@ -450,7 +450,7 @@ def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/startseite/pokalwettbewerb/KLUB",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "-/teilnehmer/pokalwettbewerb/KLUB",
         ("champions", "championsleague", "champions-league"): "-/teilnehmer/pokalwettbewerb/CL",
         ('europaleague', 'europa-league', ): "-/teilnehmer/pokalwettbewerb/EL",
         ('conference', 'conferenceleague', 'conference-league', ): "-/teilnehmer/pokalwettbewerb/UCOL",
