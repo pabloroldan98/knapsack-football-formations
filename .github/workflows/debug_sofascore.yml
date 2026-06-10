@@ -1,0 +1,226 @@
+name: Debug - Sofascore Endpoints
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  # Baseline: plain GitHub Actions IP (Azure). Expected: mostly 403.
+  debug-direct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pre-load TLS client
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
+      - name: Debug Sofascore endpoints (direct)
+        run: |
+          python - <<'PY'
+          import os, tls_requests
+          PROXY = os.getenv("SOFASCORE_DEBUG_PROXY") or None
+          HOSTS = ["https://www.sofascore.com", "https://api.sofascore.com"]
+          ENDPOINTS = {
+              "league_teams": "/api/v1/unique-tournament/54/season/77558/teams",
+              "team_players": "/api/v1/team/2835/players",
+              "player_info": "/api/v1/player/69379",
+              "player_summary": "/api/v1/player/69379/last-year-summary",
+              "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
+          }
+          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          def check(url, ident):
+              try:
+                  r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
+                  return str(r.status_code)
+              except Exception as e:
+                  return "ERR(%s)" % type(e).__name__
+          try:
+              print("Egress IP:", tls_requests.get("https://api.ipify.org", timeout=20, proxy=PROXY).text)
+          except Exception as e:
+              print("Egress IP unknown:", e)
+          print("PROXY =", PROXY)
+          for host in HOSTS:
+              print("=" * 70); print("HOST:", host); print("=" * 70)
+              w = max(len(n) for n in ENDPOINTS) + 2
+              print("identifier".ljust(22) + "".join(n.ljust(w) for n in ENDPOINTS))
+              for ident in IDS:
+                  row = ident.ljust(22)
+                  for path in ENDPOINTS.values():
+                      row += check(host + path, ident).ljust(w)
+                  print(row)
+              print()
+          PY
+
+  # Route all traffic through Cloudflare WARP (WireGuard tunnel, free, no signup).
+  debug-warp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install WireGuard and wgcf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wireguard-tools resolvconf
+          WGCF_VERSION=2.2.22
+          curl -L -o wgcf "https://github.com/ViRb3/wgcf/releases/download/v${WGCF_VERSION}/wgcf_${WGCF_VERSION}_linux_amd64"
+          chmod +x wgcf
+          sudo mv wgcf /usr/local/bin/wgcf
+
+      - name: Register and connect Cloudflare WARP
+        run: |
+          yes | wgcf register || true
+          wgcf generate
+          sudo cp wgcf-profile.conf /etc/wireguard/warp.conf
+          sudo wg-quick up warp
+          echo "WARP tunnel up. Egress IP:"
+          curl -s https://api.ipify.org || true
+          echo ""
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pre-load TLS client
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
+      - name: Debug Sofascore endpoints (via WARP)
+        run: |
+          python - <<'PY'
+          import os, tls_requests
+          PROXY = os.getenv("SOFASCORE_DEBUG_PROXY") or None
+          HOSTS = ["https://www.sofascore.com", "https://api.sofascore.com"]
+          ENDPOINTS = {
+              "league_teams": "/api/v1/unique-tournament/54/season/77558/teams",
+              "team_players": "/api/v1/team/2835/players",
+              "player_info": "/api/v1/player/69379",
+              "player_summary": "/api/v1/player/69379/last-year-summary",
+              "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
+          }
+          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          def check(url, ident):
+              try:
+                  r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
+                  return str(r.status_code)
+              except Exception as e:
+                  return "ERR(%s)" % type(e).__name__
+          try:
+              print("Egress IP:", tls_requests.get("https://api.ipify.org", timeout=20, proxy=PROXY).text)
+          except Exception as e:
+              print("Egress IP unknown:", e)
+          print("PROXY =", PROXY)
+          for host in HOSTS:
+              print("=" * 70); print("HOST:", host); print("=" * 70)
+              w = max(len(n) for n in ENDPOINTS) + 2
+              print("identifier".ljust(22) + "".join(n.ljust(w) for n in ENDPOINTS))
+              for ident in IDS:
+                  row = ident.ljust(22)
+                  for path in ENDPOINTS.values():
+                      row += check(host + path, ident).ljust(w)
+                  print(row)
+              print()
+          PY
+
+      - name: Tear down WARP
+        if: always()
+        run: sudo wg-quick down warp || true
+
+  # Route requests through the Tor SOCKS proxy (free). This is the fallback used by the scraper.
+  debug-tor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install and start Tor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tor
+          sudo service tor start
+          for i in $(seq 1 30); do
+            if curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org > /dev/null; then
+              echo "Tor ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          echo "Tor egress IP:"
+          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
+          echo ""
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pre-load TLS client
+        run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
+      - name: Debug Sofascore endpoints (via Tor)
+        env:
+          SOFASCORE_DEBUG_PROXY: socks5://127.0.0.1:9050
+        run: |
+          python - <<'PY'
+          import os, tls_requests
+          PROXY = os.getenv("SOFASCORE_DEBUG_PROXY") or None
+          HOSTS = ["https://www.sofascore.com", "https://api.sofascore.com"]
+          ENDPOINTS = {
+              "league_teams": "/api/v1/unique-tournament/54/season/77558/teams",
+              "team_players": "/api/v1/team/2835/players",
+              "player_info": "/api/v1/player/69379",
+              "player_summary": "/api/v1/player/69379/last-year-summary",
+              "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
+          }
+          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          def check(url, ident):
+              try:
+                  r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
+                  return str(r.status_code)
+              except Exception as e:
+                  return "ERR(%s)" % type(e).__name__
+          try:
+              print("Egress IP:", tls_requests.get("https://api.ipify.org", timeout=20, proxy=PROXY).text)
+          except Exception as e:
+              print("Egress IP unknown:", e)
+          print("PROXY =", PROXY)
+          for host in HOSTS:
+              print("=" * 70); print("HOST:", host); print("=" * 70)
+              w = max(len(n) for n in ENDPOINTS) + 2
+              print("identifier".ljust(22) + "".join(n.ljust(w) for n in ENDPOINTS))
+              for ident in IDS:
+                  row = ident.ljust(22)
+                  for path in ENDPOINTS.values():
+                      row += check(host + path, ident).ljust(w)
+                  print(row)
+              print()
+          PY

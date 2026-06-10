@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
     run_with_timeout, CustomTimeoutException, CustomConnectionException, CustomMissingException, \
-    find_manual_similar_string, get_working_proxy, HEADER_POOL
+    find_manual_similar_string, get_working_proxy, HEADER_POOL, tor_requests
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -43,149 +43,15 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
-# Order matters: safari/okhttp profiles get blocked less often by SofaScore
-# than chrome_133 (the tls_requests default, which is widely abused by bots
-# and is rejected by SofaScore even through Tor).
-SOFASCORE_CLIENT_IDENTIFIERS = [
-    "safari_16_0",
-    "okhttp4_android_13",
-    "safari_ios_17_0",
-    "firefox_132",
-    "chrome_131",
-    "chrome_124",
-]
-
-# SofaScore blocks GitHub Actions / Azure datacenter IPs at the network level.
-# In CI we route requests through a proxy (Tor SOCKS proxy set up in the
-# workflow). Set SOFASCORE_PROXY=socks5://127.0.0.1:9050 to enable it.
-SOFASCORE_PROXY = os.getenv("SOFASCORE_PROXY") or None
-
-
-def pick_sofascore_headers():
-    # Do not set User-Agent here: tls_requests syncs it from client_identifier.
-    # https://thewebscraping.github.io/tls-requests/
-    return {
-        "Accept": "*/*",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Referer": "https://www.sofascore.com/",
-        "Origin": "https://www.sofascore.com",
-    }
-
-
-def _running_in_github_actions():
-    return os.getenv("GITHUB_ACTIONS") == "true"
-
-
-def _sofascore_tls_get(url, headers=None, proxy=None, client_identifier=None, verify=False):
-    request_headers = pick_sofascore_headers()
-    if headers:
-        for key, value in headers.items():
-            if key.lower() != "user-agent":
-                request_headers[key] = value
-    return tls_requests.get(
-        url,
-        headers=request_headers,
-        verify=verify,
-        proxy=proxy or SOFASCORE_PROXY,
-        client_identifier=client_identifier or SOFASCORE_CLIENT_IDENTIFIERS[0],
-    )
-
-
-def _swap_sofascore_host(url, attempt):
-    # Alternate between the two API hosts: they sit behind different
-    # edge configurations, so one may accept what the other blocks.
-    if attempt % 2 == 0:
-        return url.replace("https://www.sofascore.com/", "https://api.sofascore.com/")
-    return url
-
-
-def _sofascore_api_get(url, tries=4, pause=5.0):
-    last_error = None
-    for attempt in range(1, tries + 1):
-        client_identifier = SOFASCORE_CLIENT_IDENTIFIERS[(attempt - 1) % len(SOFASCORE_CLIENT_IDENTIFIERS)]
-        request_url = _swap_sofascore_host(url, attempt)
-
-        print(
-            f"SofaScore API request attempt {attempt}/{tries} "
-            f"(client_identifier={client_identifier}, host={request_url.split('/')[2]}, "
-            f"proxy={'yes' if SOFASCORE_PROXY else 'no'})"
-        )
-        response = _sofascore_tls_get(request_url, client_identifier=client_identifier)
-        if response.status_code == 200:
-            return response.json()
-        last_error = CustomConnectionException(
-            f"HTTP {response.status_code} when fetching {request_url} "
-            f"(client_identifier={client_identifier}, proxy={'yes' if SOFASCORE_PROXY else 'no'})"
-        )
-        if attempt < tries:
-            print(
-                f"Attempt {attempt}/{tries} failed for SofaScore API ({request_url}). "
-                f"Retrying in {pause}s..."
-            )
-            time.sleep(pause)
-    raise last_error
-
-
-def _parse_sofascore_competition_ids(url_or_competition):
-    match = re.search(r"/(\d+)#id:(\d+)", url_or_competition)
-    if not match:
-        raise CustomMissingException(
-            f"Could not parse SofaScore competition ids from {url_or_competition}"
-        )
-    return match.group(1), match.group(2)
-
-
-def _team_id_from_team_url(team_url):
-    match = re.search(r"/(\d+)$", team_url)
-    if not match:
-        raise CustomMissingException(f"Could not parse team id from {team_url}")
-    return match.group(1)
-
-
-def _team_links_from_api(unique_tournament_id, season_id):
-    url = (
-        f"https://www.sofascore.com/api/v1/unique-tournament/"
-        f"{unique_tournament_id}/season/{season_id}/teams"
-    )
-    data = _sofascore_api_get(url)
-    team_data = {}
-    base = "https://www.sofascore.com/team/football"
-    seen_ids = set()
-    idx = 0
-    for t in data.get("teams", []):
-        if not all(k in t for k in ("name", "slug", "id")):
-            continue
-        tid = t["id"]
-        if tid in seen_ids:
-            continue
-        seen_ids.add(tid)
-        team_url = urljoin(base + "/", f"{t['slug']}/{tid}")
-        team_data[str(idx)] = [t["name"], team_url]
-        idx += 1
-    return team_data
-
-
-def _player_paths_from_api(team_id):
-    url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
-    data = _sofascore_api_get(url)
-    player_paths_list = []
-    for item in data.get("players", []):
-        p = item.get("player", {})
-        slug = p.get("slug")
-        pid = p.get("id")
-        if slug and pid:
-            player_paths_list.append(
-                f"https://www.sofascore.com/football/player/{slug}/{pid}"
-            )
-    return sorted(set(player_paths_list))
-
-
-def _fetch_team_player_paths_from_html(team_url):
+def _fetch_team_player_paths(team_name, team_url):
+    print('Extracting %s player links...' % team_name)
     headers = pick_headers()
-    response = _sofascore_tls_get(team_url, headers=headers)
-    if response.status_code != 200:
-        return []
-
+    if tor_requests.is_endpoint_blocked(team_url):
+        response = tor_requests.get(team_url, headers=headers, verify=False)
+    else:
+        response = tls_requests.get(team_url, headers=headers, verify=False)
+        if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            response = tor_requests.get(team_url, headers=headers, verify=False)
     soup = BeautifulSoup(response.text, "html.parser")
     player_paths_list = []
 
@@ -222,29 +88,7 @@ def _fetch_team_player_paths_from_html(team_url):
                 )
                 player_paths_list.append(full_url)
 
-    return sorted(set(player_paths_list))
-
-
-def _fetch_team_player_paths(team_name, team_url):
-    print('Extracting %s player links...' % team_name)
-    player_paths_list = []
-    try:
-        team_id = _team_id_from_team_url(team_url)
-        player_paths_list = _player_paths_from_api(team_id)
-    except Exception as e:
-        print(f"SofaScore API player fetch failed for {team_name} ({e})")
-        # Without a proxy, datacenter IPs are 403-blocked, so HTML fallback is pointless.
-        if _running_in_github_actions() and not SOFASCORE_PROXY:
-            raise
-        print("Falling back to HTML...")
-
-    if not player_paths_list:
-        if _running_in_github_actions() and not SOFASCORE_PROXY:
-            raise CustomMissingException(
-                f"No player links found for {team_name} via SofaScore API in GitHub Actions"
-            )
-        player_paths_list = _fetch_team_player_paths_from_html(team_url)
-
+    player_paths_list = sorted(list(set(player_paths_list)))
     print(player_paths_list)
     return team_name, player_paths_list
 
@@ -402,19 +246,23 @@ def fix_team_data(team_data):
     return team_data
 
 
-def _team_links_from_next_data(soup):
+def get_team_links_from_league(league_url):
+    # We do a direct HTTP GET
+    headers = pick_headers()
+    # response = requests.get(league_url, headers=headers, verify=False)
+    if tor_requests.is_endpoint_blocked(league_url):
+        response = tor_requests.get(league_url, headers=headers, verify=False)
+    else:
+        response = tls_requests.get(league_url, headers=headers, verify=False)
+        if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            response = tor_requests.get(league_url, headers=headers, verify=False)
+    html = response.text
+
+    soup = BeautifulSoup(html, "html.parser")
+
+    # General
     script = soup.find("script", id="__NEXT_DATA__")
-    if not script:
-        return {}
-
-    script_text = script.string or script.get_text(strip=True)
-    if not script_text:
-        return {}
-
-    try:
-        data = json.loads(script_text)
-    except json.JSONDecodeError:
-        return {}
+    data = json.loads(script.string)
 
     def find_teams(obj, out):
         if isinstance(obj, dict):
@@ -445,84 +293,6 @@ def _team_links_from_next_data(soup):
         idx += 1
 
     return team_data
-
-
-def _team_links_from_html(soup):
-    team_data = {}
-    seen_urls = set()
-    idx = 0
-    for a_tag in soup.find_all("a", href=True):
-        href = a_tag["href"]
-        if "/team/football/" not in href:
-            continue
-        full_url = href if href.startswith("http") else urljoin("https://www.sofascore.com", href)
-        full_url = full_url.split("#")[0].split("?")[0]
-        if full_url in seen_urls:
-            continue
-        seen_urls.add(full_url)
-        team_data[str(idx)] = [a_tag.get_text(strip=True), full_url]
-        idx += 1
-    return team_data
-
-
-def _get_team_links_from_league_html(league_url, tries=3, pause=5.0):
-    last_error = None
-    for attempt in range(1, tries + 1):
-        # We do a direct HTTP GET
-        headers = pick_headers()
-        # response = requests.get(league_url, headers=headers, verify=False)
-        response = _sofascore_tls_get(league_url, headers=headers)
-        if response.status_code != 200:
-            last_error = CustomConnectionException(
-                f"HTTP {response.status_code} when fetching league teams from {league_url}"
-            )
-        else:
-            soup = BeautifulSoup(response.text, "html.parser")
-
-            # General
-            team_data = _team_links_from_next_data(soup)
-            if not team_data:
-                team_data = _team_links_from_html(soup)
-            if team_data:
-                return team_data
-            last_error = CustomMissingException(
-                f"Could not extract team links from {league_url} "
-                f"(missing __NEXT_DATA__ and no /team/football/ links found)"
-            )
-
-        if attempt < tries:
-            print(
-                f"Attempt {attempt}/{tries} failed for league teams HTML ({league_url}). "
-                f"Retrying in {pause}s..."
-            )
-            time.sleep(pause)
-
-    raise last_error
-
-
-def get_team_links_from_league(league_url, tries=3, pause=5.0):
-    unique_tournament_id, season_id = _parse_sofascore_competition_ids(league_url)
-    api_url = (
-        f"https://www.sofascore.com/api/v1/unique-tournament/"
-        f"{unique_tournament_id}/season/{season_id}/teams"
-    )
-    print(f"Fetching league teams via SofaScore API: {api_url}")
-    try:
-        team_data = _team_links_from_api(unique_tournament_id, season_id)
-        if team_data:
-            print(f"Fetched {len(team_data)} teams via SofaScore API")
-            return team_data
-    except Exception as e:
-        # Without a proxy, datacenter IPs are 403-blocked, so HTML fallback is pointless.
-        if _running_in_github_actions() and not SOFASCORE_PROXY:
-            raise CustomConnectionException(
-                f"SofaScore API team fetch failed in GitHub Actions ({e}). "
-                f"HTML fallback is disabled in CI because SofaScore returns 403 to datacenter IPs. "
-                f"Set SOFASCORE_PROXY (e.g. Tor) to route around the block."
-            ) from e
-        print(f"SofaScore API team fetch failed ({e}), falling back to HTML...")
-
-    return _get_team_links_from_league_html(league_url, tries=tries, pause=pause)
 
 
 def get_player_average_rating_selenium_short(player_url):
@@ -577,11 +347,16 @@ def get_player_last_year_rating(player_url, headers=None, use_proxies=False):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    if use_proxies:
-        working_proxy = get_working_proxy(player_url)
-        resp = _sofascore_tls_get(seasons_url, headers=headers, proxy=working_proxy)
+    if tor_requests.is_endpoint_blocked(seasons_url):
+        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
     else:
-        resp = _sofascore_tls_get(seasons_url, headers=headers)
+        if use_proxies:
+            working_proxy = get_working_proxy(player_url)
+            resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+        else:
+            resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -654,7 +429,12 @@ def get_player_last_tournament_rating_selenium(player_url):
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/seasons"
     headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    resp = _sofascore_tls_get(seasons_url, headers=headers)
+    if tor_requests.is_endpoint_blocked(seasons_url):
+        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
+    else:
+        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -686,7 +466,12 @@ def get_player_last_tournament_rating_selenium(player_url):
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
     # resp_stats = requests.get(stats_url, headers=headers, verify=False)
-    resp_stats = _sofascore_tls_get(stats_url, headers=headers)
+    if tor_requests.is_endpoint_blocked(stats_url):
+        resp_stats = tor_requests.get(stats_url, headers=headers, verify=False)
+    else:
+        resp_stats = tls_requests.get(stats_url, headers=headers, verify=False)
+        if resp_stats.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp_stats = tor_requests.get(stats_url, headers=headers, verify=False)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {stats_url}")
@@ -722,11 +507,16 @@ def get_player_average_rating(player_url, headers=None, use_proxies=False):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    if use_proxies:
-        working_proxy = get_working_proxy(player_url)
-        resp = _sofascore_tls_get(seasons_url, headers=headers, proxy=working_proxy)
+    if tor_requests.is_endpoint_blocked(seasons_url):
+        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
     else:
-        resp = _sofascore_tls_get(seasons_url, headers=headers)
+        if use_proxies:
+            working_proxy = get_working_proxy(player_url)
+            resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+        else:
+            resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -763,7 +553,12 @@ def get_player_average_rating_selenium(player_url):
     """
     headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
-    resp = _sofascore_tls_get(player_url, headers=headers)
+    if tor_requests.is_endpoint_blocked(player_url):
+        resp = tor_requests.get(player_url, headers=headers, verify=False)
+    else:
+        resp = tls_requests.get(player_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
@@ -800,11 +595,16 @@ def get_player_name(player_url, headers=None, use_proxies=False):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(player_api_url, headers=headers, verify=False)
-    if use_proxies:
-        working_proxy = get_working_proxy(player_url)
-        resp = _sofascore_tls_get(player_api_url, headers=headers, proxy=working_proxy)
+    if tor_requests.is_endpoint_blocked(player_api_url):
+        resp = tor_requests.get(player_api_url, headers=headers, verify=False)
     else:
-        resp = _sofascore_tls_get(player_api_url, headers=headers)
+        if use_proxies:
+            working_proxy = get_working_proxy(player_url)
+            resp = tls_requests.get(player_api_url, headers=headers, verify=False, proxy=working_proxy)
+        else:
+            resp = tls_requests.get(player_api_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(player_api_url, headers=headers, verify=False)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -833,7 +633,12 @@ def get_player_name_selenium(player_url, headers=None):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
-    resp = _sofascore_tls_get(player_url, headers=headers)
+    if tor_requests.is_endpoint_blocked(player_url):
+        resp = tor_requests.get(player_url, headers=headers, verify=False)
+    else:
+        resp = tls_requests.get(player_url, headers=headers, verify=False)
+        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            resp = tor_requests.get(player_url, headers=headers, verify=False)
     if resp.status_code != 200:
         # print(resp.text)
         # Raise your custom exception if HTTP status is not 200

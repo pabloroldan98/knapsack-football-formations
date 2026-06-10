@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import tempfile
+import threading
 
 import requests
 import tls_requests
@@ -1450,6 +1451,67 @@ def get_working_proxy(
             continue
 
     raise RuntimeError(f"No working proxy found (tried {tried})")
+
+
+# Some sites (e.g. SofaScore) block GitHub Actions / datacenter IPs at the
+# network level (HTTP 403), even with valid browser-like headers. When that
+# happens we route the request through the Tor SOCKS proxy, which gives us a
+# residential-looking exit IP. Tor must be installed and running for this to
+# connect (the CI workflows take care of that).
+TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9050")
+# SofaScore rejects the default Chrome TLS fingerprint even through Tor, so we
+# force a Safari fingerprint (which is accepted).
+TOR_CLIENT_IDENTIFIER = "safari_16_0"
+
+
+def _endpoint_key(url):
+    """
+    Group URLs by endpoint "shape", ignoring the variable parts (numeric ids and
+    the slug that precedes them). E.g. every team page collapses to
+    "/team/football/{slug}/{id}" and every player summary to
+    "/api/v1/{slug}/{id}/last-year-summary", so a 403 on one team/player marks
+    the whole endpoint as blocked.
+    """
+    from urllib.parse import urlparse
+
+    segments = urlparse(url).path.strip("/").split("/")
+    out = []
+    for i, seg in enumerate(segments):
+        if seg.isdigit():
+            out.append("{id}")
+        elif i + 1 < len(segments) and segments[i + 1].isdigit():
+            out.append("{slug}")
+        else:
+            out.append(seg)
+    return "/" + "/".join(out)
+
+
+class _TorRequests:
+    """
+    Tor-backed counterpart to tls_requests. `tor_requests.get(...)` makes the
+    request through the Tor SOCKS proxy (with a Safari TLS fingerprint) and
+    remembers the endpoint as blocked, so callers can use
+    `tor_requests.is_endpoint_blocked(url)` to skip the (doomed) direct attempt
+    for the rest of the run.
+    """
+
+    def __init__(self):
+        self._blocked = set()
+        self._lock = threading.Lock()
+
+    def is_endpoint_blocked(self, url):
+        with self._lock:
+            return _endpoint_key(url) in self._blocked
+
+    def get(self, url, **kwargs):
+        with self._lock:
+            self._blocked.add(_endpoint_key(url))
+        kwargs["proxy"] = TOR_PROXY
+        kwargs.setdefault("client_identifier", TOR_CLIENT_IDENTIFIER)
+        return tls_requests.get(url, **kwargs)
+
+
+tor_requests = _TorRequests()
 
 
 # Define a custom exception for timeout

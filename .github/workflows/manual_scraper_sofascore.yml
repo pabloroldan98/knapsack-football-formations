@@ -39,11 +39,6 @@ jobs:
         with:
           persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
-      - name: Increase UDP buffer sizes (silence quic-go warning)
-        run: |
-          sudo sysctl -w net.core.rmem_max=7500000
-          sudo sysctl -w net.core.wmem_max=7500000
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -57,19 +52,20 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
-      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+      - name: Set up Tor (fallback when SofaScore blocks datacenter IPs)
         run: |
           sudo apt-get update
           sudo apt-get install -y tor
           sudo service tor start
-          sleep 15
-          echo "Tor egress IP:"
-          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
-          echo ""
+          for i in $(seq 1 30); do
+            if curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org > /dev/null; then
+              echo "Tor ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
 
       - name: Run tasks (${{ matrix.league }})
-        env:
-          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}.py
 
@@ -117,11 +113,6 @@ jobs:
         with:
           persist-credentials: false # Ensure the checkout action doesn't persist credentials
 
-      - name: Increase UDP buffer sizes (silence quic-go warning)
-        run: |
-          sudo sysctl -w net.core.rmem_max=7500000
-          sudo sysctl -w net.core.wmem_max=7500000
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -135,19 +126,20 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
-      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+      - name: Set up Tor (fallback when SofaScore blocks datacenter IPs)
         run: |
           sudo apt-get update
           sudo apt-get install -y tor
           sudo service tor start
-          sleep 15
-          echo "Tor egress IP:"
-          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
-          echo ""
+          for i in $(seq 1 30); do
+            if curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org > /dev/null; then
+              echo "Tor ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
 
       - name: Run tasks (${{ matrix.league }})
-        env:
-          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_firsthalf.py
 
@@ -209,11 +201,6 @@ jobs:
           mv -f data_files/sofascore/*.json json_files/ 2>/dev/null || true
           rm -rf data_files/sofascore
 
-      - name: Increase UDP buffer sizes (silence quic-go warning)
-        run: |
-          sudo sysctl -w net.core.rmem_max=7500000
-          sudo sysctl -w net.core.wmem_max=7500000
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -227,19 +214,20 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
-      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+      - name: Set up Tor (fallback when SofaScore blocks datacenter IPs)
         run: |
           sudo apt-get update
           sudo apt-get install -y tor
           sudo service tor start
-          sleep 15
-          echo "Tor egress IP:"
-          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
-          echo ""
+          for i in $(seq 1 30); do
+            if curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org > /dev/null; then
+              echo "Tor ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
 
       - name: Run tasks (${{ matrix.league }})
-        env:
-          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_secondhalf.py
 
