@@ -1466,10 +1466,15 @@ TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9050")
 TOR_CLIENT_IDENTIFIERS = [
     "safari_16_0",
     "safari_ios_17_0",
+    "safari_ios_18_0",
     "okhttp4_android_13",
+    "okhttp4_android_12",
     "firefox_132",
+    "firefox_120",
     "chrome_131",
+    "chrome_124",
     "chrome_120",
+    # chrome_133 returns 403 for every endpoint even through Tor
 ]
 
 
