@@ -241,18 +241,19 @@ def fix_team_data(team_data):
     return team_data
 
 
-def get_team_links_from_league(league_url):
-    # We do a direct HTTP GET
-    headers = pick_headers()
-    # response = requests.get(league_url, headers=headers, verify=False)
-    response = tls_requests.get(league_url, headers=headers, verify=False)
-    html = response.text
-
-    soup = BeautifulSoup(html, "html.parser")
-
-    # General
+def _team_links_from_next_data(soup):
     script = soup.find("script", id="__NEXT_DATA__")
-    data = json.loads(script.string)
+    if not script:
+        return {}
+
+    script_text = script.string or script.get_text(strip=True)
+    if not script_text:
+        return {}
+
+    try:
+        data = json.loads(script_text)
+    except json.JSONDecodeError:
+        return {}
 
     def find_teams(obj, out):
         if isinstance(obj, dict):
@@ -283,6 +284,55 @@ def get_team_links_from_league(league_url):
         idx += 1
 
     return team_data
+
+
+def _team_links_from_html(soup):
+    team_data = {}
+    seen_urls = set()
+    idx = 0
+    for a_tag in soup.find_all("a", href=True):
+        href = a_tag["href"]
+        if "/team/football/" not in href:
+            continue
+        full_url = href if href.startswith("http") else urljoin("https://www.sofascore.com", href)
+        full_url = full_url.split("#")[0].split("?")[0]
+        if full_url in seen_urls:
+            continue
+        seen_urls.add(full_url)
+        team_data[str(idx)] = [a_tag.get_text(strip=True), full_url]
+        idx += 1
+    return team_data
+
+
+def get_team_links_from_league(league_url, tries=3, pause=5.0):
+    last_error = None
+    for attempt in range(1, tries + 1):
+        headers = pick_headers()
+        response = tls_requests.get(league_url, headers=headers, verify=False)
+        if response.status_code != 200:
+            last_error = CustomConnectionException(
+                f"HTTP {response.status_code} when fetching league teams from {league_url}"
+            )
+        else:
+            soup = BeautifulSoup(response.text, "html.parser")
+            team_data = _team_links_from_next_data(soup)
+            if not team_data:
+                team_data = _team_links_from_html(soup)
+            if team_data:
+                return team_data
+            last_error = CustomMissingException(
+                f"Could not extract team links from {league_url} "
+                f"(missing __NEXT_DATA__ and no /team/football/ links found)"
+            )
+
+        if attempt < tries:
+            print(
+                f"Attempt {attempt}/{tries} failed for league teams ({league_url}). "
+                f"Retrying in {pause}s..."
+            )
+            time.sleep(pause)
+
+    raise last_error
 
 
 def get_player_average_rating_selenium_short(player_url):
