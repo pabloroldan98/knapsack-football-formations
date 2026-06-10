@@ -43,28 +43,71 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
+SOFASCORE_CLIENT_IDENTIFIERS = [
+    "chrome_133",
+    "chrome_131",
+    "chrome_124",
+    "firefox_133",
+    "firefox_132",
+]
+
+
 def pick_sofascore_headers():
-    headers = pick_headers()
-    headers.setdefault("Accept", "*/*")
-    headers.setdefault("Accept-Language", "en-US,en;q=0.9")
-    headers.setdefault("Referer", "https://www.sofascore.com/")
-    headers.setdefault("Origin", "https://www.sofascore.com")
-    return headers
+    # Do not set User-Agent here: tls_requests syncs it from client_identifier.
+    # https://thewebscraping.github.io/tls-requests/
+    return {
+        "Accept": "*/*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.sofascore.com/",
+        "Origin": "https://www.sofascore.com",
+    }
 
 
 def _running_in_github_actions():
     return os.getenv("GITHUB_ACTIONS") == "true"
 
 
+def _sofascore_tls_get(url, headers=None, proxy=None, client_identifier=None, verify=False):
+    request_headers = pick_sofascore_headers()
+    if headers:
+        for key, value in headers.items():
+            if key.lower() != "user-agent":
+                request_headers[key] = value
+    return tls_requests.get(
+        url,
+        headers=request_headers,
+        verify=verify,
+        proxy=proxy,
+        client_identifier=client_identifier or SOFASCORE_CLIENT_IDENTIFIERS[0],
+    )
+
+
 def _sofascore_api_get(url, tries=3, pause=5.0):
     last_error = None
     for attempt in range(1, tries + 1):
-        headers = pick_sofascore_headers()
-        response = tls_requests.get(url, headers=headers, verify=False)
+        client_identifier = SOFASCORE_CLIENT_IDENTIFIERS[(attempt - 1) % len(SOFASCORE_CLIENT_IDENTIFIERS)]
+        proxy = None
+        if attempt == tries and _running_in_github_actions():
+            try:
+                proxy = get_working_proxy(
+                    url,
+                    headers=pick_sofascore_headers(),
+                    max_proxies=25,
+                )
+                print(f"Using proxy for SofaScore API (attempt {attempt}/{tries}): {proxy}")
+            except Exception as proxy_error:
+                print(f"No working proxy found for SofaScore API: {proxy_error}")
+
+        print(
+            f"SofaScore API request attempt {attempt}/{tries} "
+            f"(client_identifier={client_identifier}, proxy={'yes' if proxy else 'no'})"
+        )
+        response = _sofascore_tls_get(url, proxy=proxy, client_identifier=client_identifier)
         if response.status_code == 200:
             return response.json()
         last_error = CustomConnectionException(
-            f"HTTP {response.status_code} when fetching {url}"
+            f"HTTP {response.status_code} when fetching {url} "
+            f"(client_identifier={client_identifier}, proxy={'yes' if proxy else 'no'})"
         )
         if attempt < tries:
             print(
@@ -131,7 +174,7 @@ def _player_paths_from_api(team_id):
 
 def _fetch_team_player_paths_from_html(team_url):
     headers = pick_headers()
-    response = tls_requests.get(team_url, headers=headers, verify=False)
+    response = _sofascore_tls_get(team_url, headers=headers)
     if response.status_code != 200:
         return []
 
@@ -419,7 +462,7 @@ def _get_team_links_from_league_html(league_url, tries=3, pause=5.0):
         # We do a direct HTTP GET
         headers = pick_headers()
         # response = requests.get(league_url, headers=headers, verify=False)
-        response = tls_requests.get(league_url, headers=headers, verify=False)
+        response = _sofascore_tls_get(league_url, headers=headers)
         if response.status_code != 200:
             last_error = CustomConnectionException(
                 f"HTTP {response.status_code} when fetching league teams from {league_url}"
@@ -525,9 +568,9 @@ def get_player_last_year_rating(player_url, headers=None, use_proxies=False):
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     if use_proxies:
         working_proxy = get_working_proxy(player_url)
-        resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+        resp = _sofascore_tls_get(seasons_url, headers=headers, proxy=working_proxy)
     else:
-        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+        resp = _sofascore_tls_get(seasons_url, headers=headers)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -600,7 +643,7 @@ def get_player_last_tournament_rating_selenium(player_url):
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/seasons"
     headers = pick_headers()
     # resp = requests.get(seasons_url, headers=headers, verify=False)
-    resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+    resp = _sofascore_tls_get(seasons_url, headers=headers)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -632,7 +675,7 @@ def get_player_last_tournament_rating_selenium(player_url):
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
     # resp_stats = requests.get(stats_url, headers=headers, verify=False)
-    resp_stats = tls_requests.get(stats_url, headers=headers, verify=False)
+    resp_stats = _sofascore_tls_get(stats_url, headers=headers)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {stats_url}")
@@ -670,9 +713,9 @@ def get_player_average_rating(player_url, headers=None, use_proxies=False):
     # resp = requests.get(seasons_url, headers=headers, verify=False)
     if use_proxies:
         working_proxy = get_working_proxy(player_url)
-        resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
+        resp = _sofascore_tls_get(seasons_url, headers=headers, proxy=working_proxy)
     else:
-        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
+        resp = _sofascore_tls_get(seasons_url, headers=headers)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -709,7 +752,7 @@ def get_player_average_rating_selenium(player_url):
     """
     headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
-    resp = tls_requests.get(player_url, headers=headers, verify=False)
+    resp = _sofascore_tls_get(player_url, headers=headers)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
@@ -748,9 +791,9 @@ def get_player_name(player_url, headers=None, use_proxies=False):
     # resp = requests.get(player_api_url, headers=headers, verify=False)
     if use_proxies:
         working_proxy = get_working_proxy(player_url)
-        resp = tls_requests.get(player_api_url, headers=headers, verify=False, proxy=working_proxy)
+        resp = _sofascore_tls_get(player_api_url, headers=headers, proxy=working_proxy)
     else:
-        resp = tls_requests.get(player_api_url, headers=headers, verify=False)
+        resp = _sofascore_tls_get(player_api_url, headers=headers)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -779,7 +822,7 @@ def get_player_name_selenium(player_url, headers=None):
     if not headers:
         headers = pick_headers()
     # resp = requests.get(p, headers=headers, verify=False)
-    resp = tls_requests.get(player_url, headers=headers, verify=False)
+    resp = _sofascore_tls_get(player_url, headers=headers)
     if resp.status_code != 200:
         # print(resp.text)
         # Raise your custom exception if HTTP status is not 200
