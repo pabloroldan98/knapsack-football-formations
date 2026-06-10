@@ -43,10 +43,98 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
-def _fetch_team_player_paths(team_name, team_url):
-    print('Extracting %s player links...' % team_name)
+def pick_sofascore_headers():
+    headers = pick_headers()
+    headers.setdefault("Accept", "*/*")
+    headers.setdefault("Accept-Language", "en-US,en;q=0.9")
+    headers.setdefault("Referer", "https://www.sofascore.com/")
+    headers.setdefault("Origin", "https://www.sofascore.com")
+    return headers
+
+
+def _running_in_github_actions():
+    return os.getenv("GITHUB_ACTIONS") == "true"
+
+
+def _sofascore_api_get(url, tries=3, pause=5.0):
+    last_error = None
+    for attempt in range(1, tries + 1):
+        headers = pick_sofascore_headers()
+        response = tls_requests.get(url, headers=headers, verify=False)
+        if response.status_code == 200:
+            return response.json()
+        last_error = CustomConnectionException(
+            f"HTTP {response.status_code} when fetching {url}"
+        )
+        if attempt < tries:
+            print(
+                f"Attempt {attempt}/{tries} failed for SofaScore API ({url}). "
+                f"Retrying in {pause}s..."
+            )
+            time.sleep(pause)
+    raise last_error
+
+
+def _parse_sofascore_competition_ids(url_or_competition):
+    match = re.search(r"/(\d+)#id:(\d+)", url_or_competition)
+    if not match:
+        raise CustomMissingException(
+            f"Could not parse SofaScore competition ids from {url_or_competition}"
+        )
+    return match.group(1), match.group(2)
+
+
+def _team_id_from_team_url(team_url):
+    match = re.search(r"/(\d+)$", team_url)
+    if not match:
+        raise CustomMissingException(f"Could not parse team id from {team_url}")
+    return match.group(1)
+
+
+def _team_links_from_api(unique_tournament_id, season_id):
+    url = (
+        f"https://www.sofascore.com/api/v1/unique-tournament/"
+        f"{unique_tournament_id}/season/{season_id}/teams"
+    )
+    data = _sofascore_api_get(url)
+    team_data = {}
+    base = "https://www.sofascore.com/team/football"
+    seen_ids = set()
+    idx = 0
+    for t in data.get("teams", []):
+        if not all(k in t for k in ("name", "slug", "id")):
+            continue
+        tid = t["id"]
+        if tid in seen_ids:
+            continue
+        seen_ids.add(tid)
+        team_url = urljoin(base + "/", f"{t['slug']}/{tid}")
+        team_data[str(idx)] = [t["name"], team_url]
+        idx += 1
+    return team_data
+
+
+def _player_paths_from_api(team_id):
+    url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
+    data = _sofascore_api_get(url)
+    player_paths_list = []
+    for item in data.get("players", []):
+        p = item.get("player", {})
+        slug = p.get("slug")
+        pid = p.get("id")
+        if slug and pid:
+            player_paths_list.append(
+                f"https://www.sofascore.com/football/player/{slug}/{pid}"
+            )
+    return sorted(set(player_paths_list))
+
+
+def _fetch_team_player_paths_from_html(team_url):
     headers = pick_headers()
     response = tls_requests.get(team_url, headers=headers, verify=False)
+    if response.status_code != 200:
+        return []
+
     soup = BeautifulSoup(response.text, "html.parser")
     player_paths_list = []
 
@@ -83,7 +171,28 @@ def _fetch_team_player_paths(team_name, team_url):
                 )
                 player_paths_list.append(full_url)
 
-    player_paths_list = sorted(list(set(player_paths_list)))
+    return sorted(set(player_paths_list))
+
+
+def _fetch_team_player_paths(team_name, team_url):
+    print('Extracting %s player links...' % team_name)
+    player_paths_list = []
+    try:
+        team_id = _team_id_from_team_url(team_url)
+        player_paths_list = _player_paths_from_api(team_id)
+    except Exception as e:
+        print(f"SofaScore API player fetch failed for {team_name} ({e})")
+        if _running_in_github_actions():
+            raise
+        print("Falling back to HTML...")
+
+    if not player_paths_list:
+        if _running_in_github_actions():
+            raise CustomMissingException(
+                f"No player links found for {team_name} via SofaScore API in GitHub Actions"
+            )
+        player_paths_list = _fetch_team_player_paths_from_html(team_url)
+
     print(player_paths_list)
     return team_name, player_paths_list
 
@@ -304,10 +413,12 @@ def _team_links_from_html(soup):
     return team_data
 
 
-def get_team_links_from_league(league_url, tries=3, pause=5.0):
+def _get_team_links_from_league_html(league_url, tries=3, pause=5.0):
     last_error = None
     for attempt in range(1, tries + 1):
+        # We do a direct HTTP GET
         headers = pick_headers()
+        # response = requests.get(league_url, headers=headers, verify=False)
         response = tls_requests.get(league_url, headers=headers, verify=False)
         if response.status_code != 200:
             last_error = CustomConnectionException(
@@ -315,6 +426,8 @@ def get_team_links_from_league(league_url, tries=3, pause=5.0):
             )
         else:
             soup = BeautifulSoup(response.text, "html.parser")
+
+            # General
             team_data = _team_links_from_next_data(soup)
             if not team_data:
                 team_data = _team_links_from_html(soup)
@@ -327,12 +440,35 @@ def get_team_links_from_league(league_url, tries=3, pause=5.0):
 
         if attempt < tries:
             print(
-                f"Attempt {attempt}/{tries} failed for league teams ({league_url}). "
+                f"Attempt {attempt}/{tries} failed for league teams HTML ({league_url}). "
                 f"Retrying in {pause}s..."
             )
             time.sleep(pause)
 
     raise last_error
+
+
+def get_team_links_from_league(league_url, tries=3, pause=5.0):
+    unique_tournament_id, season_id = _parse_sofascore_competition_ids(league_url)
+    api_url = (
+        f"https://www.sofascore.com/api/v1/unique-tournament/"
+        f"{unique_tournament_id}/season/{season_id}/teams"
+    )
+    print(f"Fetching league teams via SofaScore API: {api_url}")
+    try:
+        team_data = _team_links_from_api(unique_tournament_id, season_id)
+        if team_data:
+            print(f"Fetched {len(team_data)} teams via SofaScore API")
+            return team_data
+    except Exception as e:
+        if _running_in_github_actions():
+            raise CustomConnectionException(
+                f"SofaScore API team fetch failed in GitHub Actions ({e}). "
+                f"HTML fallback is disabled in CI because SofaScore returns 403 to datacenter IPs."
+            ) from e
+        print(f"SofaScore API team fetch failed ({e}), falling back to HTML...")
+
+    return _get_team_links_from_league_html(league_url, tries=tries, pause=pause)
 
 
 def get_player_average_rating_selenium_short(player_url):
