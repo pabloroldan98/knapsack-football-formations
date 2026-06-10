@@ -44,7 +44,8 @@ def pick_headers():
 
 
 # Order matters: safari/okhttp profiles get blocked less often by SofaScore
-# than chrome_133 (the tls_requests default, which is widely abused by bots).
+# than chrome_133 (the tls_requests default, which is widely abused by bots
+# and is rejected by SofaScore even through Tor).
 SOFASCORE_CLIENT_IDENTIFIERS = [
     "safari_16_0",
     "okhttp4_android_13",
@@ -53,6 +54,11 @@ SOFASCORE_CLIENT_IDENTIFIERS = [
     "chrome_131",
     "chrome_124",
 ]
+
+# SofaScore blocks GitHub Actions / Azure datacenter IPs at the network level.
+# In CI we route requests through a proxy (Tor SOCKS proxy set up in the
+# workflow). Set SOFASCORE_PROXY=socks5://127.0.0.1:9050 to enable it.
+SOFASCORE_PROXY = os.getenv("SOFASCORE_PROXY") or None
 
 
 def pick_sofascore_headers():
@@ -80,7 +86,7 @@ def _sofascore_tls_get(url, headers=None, proxy=None, client_identifier=None, ve
         url,
         headers=request_headers,
         verify=verify,
-        proxy=proxy,
+        proxy=proxy or SOFASCORE_PROXY,
         client_identifier=client_identifier or SOFASCORE_CLIENT_IDENTIFIERS[0],
     )
 
@@ -98,29 +104,18 @@ def _sofascore_api_get(url, tries=4, pause=5.0):
     for attempt in range(1, tries + 1):
         client_identifier = SOFASCORE_CLIENT_IDENTIFIERS[(attempt - 1) % len(SOFASCORE_CLIENT_IDENTIFIERS)]
         request_url = _swap_sofascore_host(url, attempt)
-        proxy = None
-        if attempt == tries and _running_in_github_actions():
-            try:
-                proxy = get_working_proxy(
-                    request_url,
-                    headers=pick_sofascore_headers(),
-                    max_proxies=25,
-                )
-                print(f"Using proxy for SofaScore API (attempt {attempt}/{tries}): {proxy}")
-            except Exception as proxy_error:
-                print(f"No working proxy found for SofaScore API: {proxy_error}")
 
         print(
             f"SofaScore API request attempt {attempt}/{tries} "
             f"(client_identifier={client_identifier}, host={request_url.split('/')[2]}, "
-            f"proxy={'yes' if proxy else 'no'})"
+            f"proxy={'yes' if SOFASCORE_PROXY else 'no'})"
         )
-        response = _sofascore_tls_get(request_url, proxy=proxy, client_identifier=client_identifier)
+        response = _sofascore_tls_get(request_url, client_identifier=client_identifier)
         if response.status_code == 200:
             return response.json()
         last_error = CustomConnectionException(
             f"HTTP {response.status_code} when fetching {request_url} "
-            f"(client_identifier={client_identifier}, proxy={'yes' if proxy else 'no'})"
+            f"(client_identifier={client_identifier}, proxy={'yes' if SOFASCORE_PROXY else 'no'})"
         )
         if attempt < tries:
             print(
@@ -238,12 +233,13 @@ def _fetch_team_player_paths(team_name, team_url):
         player_paths_list = _player_paths_from_api(team_id)
     except Exception as e:
         print(f"SofaScore API player fetch failed for {team_name} ({e})")
-        if _running_in_github_actions():
+        # Without a proxy, datacenter IPs are 403-blocked, so HTML fallback is pointless.
+        if _running_in_github_actions() and not SOFASCORE_PROXY:
             raise
         print("Falling back to HTML...")
 
     if not player_paths_list:
-        if _running_in_github_actions():
+        if _running_in_github_actions() and not SOFASCORE_PROXY:
             raise CustomMissingException(
                 f"No player links found for {team_name} via SofaScore API in GitHub Actions"
             )
@@ -517,10 +513,12 @@ def get_team_links_from_league(league_url, tries=3, pause=5.0):
             print(f"Fetched {len(team_data)} teams via SofaScore API")
             return team_data
     except Exception as e:
-        if _running_in_github_actions():
+        # Without a proxy, datacenter IPs are 403-blocked, so HTML fallback is pointless.
+        if _running_in_github_actions() and not SOFASCORE_PROXY:
             raise CustomConnectionException(
                 f"SofaScore API team fetch failed in GitHub Actions ({e}). "
-                f"HTML fallback is disabled in CI because SofaScore returns 403 to datacenter IPs."
+                f"HTML fallback is disabled in CI because SofaScore returns 403 to datacenter IPs. "
+                f"Set SOFASCORE_PROXY (e.g. Tor) to route around the block."
             ) from e
         print(f"SofaScore API team fetch failed ({e}), falling back to HTML...")
 

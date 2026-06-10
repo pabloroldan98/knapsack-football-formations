@@ -57,7 +57,19 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
+      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tor
+          sudo service tor start
+          sleep 15
+          echo "Tor egress IP:"
+          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
+          echo ""
+
       - name: Run tasks (${{ matrix.league }})
+        env:
+          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}.py
 
@@ -123,7 +135,19 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
+      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tor
+          sudo service tor start
+          sleep 15
+          echo "Tor egress IP:"
+          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
+          echo ""
+
       - name: Run tasks (${{ matrix.league }})
+        env:
+          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_firsthalf.py
 
@@ -203,7 +227,19 @@ jobs:
       - name: Pre-load TLS client (suppress download progress)
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
+      - name: Set up Tor (SofaScore blocks Azure datacenter IPs)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tor
+          sudo service tor start
+          sleep 15
+          echo "Tor egress IP:"
+          curl -s --socks5-hostname 127.0.0.1:9050 https://api.ipify.org || true
+          echo ""
+
       - name: Run tasks (${{ matrix.league }})
+        env:
+          SOFASCORE_PROXY: socks5://127.0.0.1:9050
         run: |
           python -u ./scraping_tasks/sofascore_scrapers/scrape_sofascore_${{ matrix.league }}_secondhalf.py
 
