@@ -83,16 +83,6 @@ jobs:
           chmod +x wgcf
           sudo mv wgcf /usr/local/bin/wgcf
 
-      - name: Register and connect Cloudflare WARP
-        run: |
-          yes | wgcf register || true
-          wgcf generate
-          sudo cp wgcf-profile.conf /etc/wireguard/warp.conf
-          sudo wg-quick up warp
-          echo "WARP tunnel up. Egress IP:"
-          curl -s https://api.ipify.org || true
-          echo ""
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -105,6 +95,20 @@ jobs:
 
       - name: Pre-load TLS client
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
+
+      # Bring WARP up only after deps are installed: the tunnel breaks DNS for
+      # pypi/github otherwise. We also inject a DNS resolver so requests keep
+      # resolving once the tunnel is active.
+      - name: Register and connect Cloudflare WARP
+        run: |
+          yes | wgcf register || true
+          wgcf generate
+          grep -q '^DNS' wgcf-profile.conf || sed -i '/^\[Interface\]/a DNS = 1.1.1.1' wgcf-profile.conf
+          sudo cp wgcf-profile.conf /etc/wireguard/warp.conf
+          sudo wg-quick up warp
+          echo "WARP tunnel up. Egress IP:"
+          curl -s https://api.ipify.org || true
+          echo ""
 
       - name: Debug Sofascore endpoints (via WARP)
         run: |
@@ -186,41 +190,33 @@ jobs:
       - name: Pre-load TLS client
         run: python -c "import tls_requests; tls_requests.get('https://httpbin.org/get', timeout=10)" > /dev/null 2>&1 || true
 
-      - name: Debug Sofascore endpoints (via Tor)
-        env:
-          SOFASCORE_DEBUG_PROXY: socks5://127.0.0.1:9050
+      - name: Debug Sofascore endpoints (via Tor circuits)
         run: |
           python - <<'PY'
-          import os, tls_requests
-          PROXY = os.getenv("SOFASCORE_DEBUG_PROXY") or None
-          HOSTS = ["https://www.sofascore.com", "https://api.sofascore.com"]
-          ENDPOINTS = {
-              "league_teams": "/api/v1/unique-tournament/54/season/77558/teams",
-              "team_players": "/api/v1/team/2835/players",
-              "player_info": "/api/v1/player/69379",
-              "player_summary": "/api/v1/player/69379/last-year-summary",
-              "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
-          }
-          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
-          def check(url, ident):
+          import secrets, tls_requests
+          BASE = "socks5://127.0.0.1:9050"
+          URL = "https://www.sofascore.com/api/v1/unique-tournament/54/season/77558/teams"
+          IDENT = "safari_16_0"
+          # Tor isolates streams by SOCKS auth, so unique credentials => new circuit (new exit IP).
+          def isolated_proxy():
+              scheme, _, host = BASE.partition("://")
+              return f"{scheme}://{secrets.token_hex(8)}:tor@{host}"
+          print("Trying fresh Tor circuits until one is not blocked (this is what the scraper does):")
+          print("attempt  exit_ip            status")
+          for attempt in range(12):
+              proxy = isolated_proxy()
               try:
-                  r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
-                  return str(r.status_code)
+                  ip = tls_requests.get("https://api.ipify.org", timeout=20, proxy=proxy).text
               except Exception as e:
-                  return "ERR(%s)" % type(e).__name__
-          try:
-              print("Egress IP:", tls_requests.get("https://api.ipify.org", timeout=20, proxy=PROXY).text)
-          except Exception as e:
-              print("Egress IP unknown:", e)
-          print("PROXY =", PROXY)
-          for host in HOSTS:
-              print("=" * 70); print("HOST:", host); print("=" * 70)
-              w = max(len(n) for n in ENDPOINTS) + 2
-              print("identifier".ljust(22) + "".join(n.ljust(w) for n in ENDPOINTS))
-              for ident in IDS:
-                  row = ident.ljust(22)
-                  for path in ENDPOINTS.values():
-                      row += check(host + path, ident).ljust(w)
-                  print(row)
-              print()
+                  ip = "ERR(%s)" % type(e).__name__
+              try:
+                  status = str(tls_requests.get(URL, client_identifier=IDENT, verify=False, timeout=20, proxy=proxy).status_code)
+              except Exception as e:
+                  status = "ERR(%s)" % type(e).__name__
+              print(f"{attempt:<8} {ip:<18} {status}")
+              if status == "200":
+                  print(f"\nFound a working exit node after {attempt + 1} attempt(s).")
+                  break
+          else:
+              print("\nNo working exit node found in 12 attempts.")
           PY

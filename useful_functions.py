@@ -2,6 +2,7 @@ import ast
 import hashlib
 import json
 import os
+import secrets
 import shutil
 import tempfile
 import threading
@@ -1459,10 +1460,16 @@ def get_working_proxy(
 # residential-looking exit IP. Tor must be installed and running for this to
 # connect (the CI workflows take care of that).
 TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9050")
+# SofaScore (Cloudflare) blocks many Tor exit-node IPs, so a given circuit may
+# return 403 for every endpoint/fingerprint while another exits cleanly. We
+# therefore retry through fresh Tor circuits until one isn't blocked. Tor builds
+# a separate circuit per distinct SOCKS username/password (IsolateSOCKSAuth is
+# on by default), so we just vary the SOCKS credentials to get a new exit IP.
+TOR_CIRCUIT_RETRIES = int(os.getenv("TOR_CIRCUIT_RETRIES", "12"))
 # Even through Tor, SofaScore rejects some TLS fingerprints (e.g. chrome_133
-# returns 403 for every endpoint), so we try a list of known-good identifiers
-# in order and keep the first one that works for the rest of the run. Add/remove
-# entries here if SofaScore starts/stops accepting a given fingerprint.
+# returns 403 for every endpoint), so we rotate over known-good identifiers and
+# keep the one that works. Add/remove entries here if SofaScore starts/stops
+# accepting a given fingerprint.
 TOR_CLIENT_IDENTIFIERS = [
     "safari_16_0",
     "safari_ios_17_0",
@@ -1476,6 +1483,16 @@ TOR_CLIENT_IDENTIFIERS = [
     "chrome_120",
     # chrome_133 returns 403 for every endpoint even through Tor
 ]
+
+
+def _isolated_tor_proxy():
+    """
+    Return the Tor SOCKS proxy URL with random credentials. Tor isolates streams
+    by SOCKS auth, so unique credentials force a brand-new circuit (and usually a
+    different exit IP), letting us route around blocked exit nodes.
+    """
+    scheme, _, host = TOR_PROXY.partition("://")
+    return f"{scheme}://{secrets.token_hex(8)}:tor@{host}"
 
 
 def _endpoint_key(url):
@@ -1514,14 +1531,16 @@ class _TorRequests:
             if resp.status_code == 403:
                 resp = tor_requests.get(url, headers=headers, verify=False)
 
-    It rotates through TOR_CLIENT_IDENTIFIERS until one is accepted (similar to
-    rotating headers) and remembers the working one for later calls.
+    Each call retries through fresh Tor circuits (new exit IPs) until one is not
+    blocked, rotating TOR_CLIENT_IDENTIFIERS along the way and remembering the
+    fingerprint that worked for later calls.
     """
 
     def __init__(self):
         self._blocked = set()
         self._lock = threading.Lock()
         self._preferred_identifier = None
+        self._preferred_proxy = None
 
     def is_endpoint_blocked(self, url):
         with self._lock:
@@ -1531,22 +1550,32 @@ class _TorRequests:
         with self._lock:
             self._blocked.add(_endpoint_key(url))
 
-        kwargs["proxy"] = TOR_PROXY
+        kwargs.pop("proxy", None)
         kwargs.pop("client_identifier", None)
 
-        # Try the identifier that worked last first, then the rest in order.
+        # Try the identifier/circuit that worked last first, then rotate.
         with self._lock:
-            preferred = self._preferred_identifier
+            preferred_identifier = self._preferred_identifier
+            preferred_proxy = self._preferred_proxy
         identifiers = list(TOR_CLIENT_IDENTIFIERS)
-        if preferred in identifiers:
-            identifiers.remove(preferred)
-            identifiers.insert(0, preferred)
+        if preferred_identifier in identifiers:
+            identifiers.remove(preferred_identifier)
+            identifiers.insert(0, preferred_identifier)
 
+        # Each attempt uses a fresh circuit (new exit IP) and a rotating
+        # identifier, so we route around both blocked exit nodes and rejected
+        # fingerprints. The first attempt reuses the last working circuit so we
+        # don't rebuild one on every call once we found a clean exit node.
         last_response = None
-        for identifier in identifiers:
+        for attempt in range(TOR_CIRCUIT_RETRIES):
+            identifier = identifiers[attempt % len(identifiers)]
+            proxy = preferred_proxy if attempt == 0 and preferred_proxy else _isolated_tor_proxy()
             try:
                 response = tls_requests.get(
-                    url, client_identifier=identifier, **kwargs
+                    url,
+                    client_identifier=identifier,
+                    proxy=proxy,
+                    **kwargs,
                 )
             except Exception:
                 continue
@@ -1554,6 +1583,7 @@ class _TorRequests:
             if response.status_code != 403:
                 with self._lock:
                     self._preferred_identifier = identifier
+                    self._preferred_proxy = proxy
                 return response
         return last_response
 
