@@ -43,12 +43,15 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
+# Order matters: safari/okhttp profiles get blocked less often by SofaScore
+# than chrome_133 (the tls_requests default, which is widely abused by bots).
 SOFASCORE_CLIENT_IDENTIFIERS = [
-    "chrome_133",
+    "safari_16_0",
+    "okhttp4_android_13",
+    "safari_ios_17_0",
+    "firefox_132",
     "chrome_131",
     "chrome_124",
-    "firefox_133",
-    "firefox_132",
 ]
 
 
@@ -82,15 +85,24 @@ def _sofascore_tls_get(url, headers=None, proxy=None, client_identifier=None, ve
     )
 
 
-def _sofascore_api_get(url, tries=3, pause=5.0):
+def _swap_sofascore_host(url, attempt):
+    # Alternate between the two API hosts: they sit behind different
+    # edge configurations, so one may accept what the other blocks.
+    if attempt % 2 == 0:
+        return url.replace("https://www.sofascore.com/", "https://api.sofascore.com/")
+    return url
+
+
+def _sofascore_api_get(url, tries=4, pause=5.0):
     last_error = None
     for attempt in range(1, tries + 1):
         client_identifier = SOFASCORE_CLIENT_IDENTIFIERS[(attempt - 1) % len(SOFASCORE_CLIENT_IDENTIFIERS)]
+        request_url = _swap_sofascore_host(url, attempt)
         proxy = None
         if attempt == tries and _running_in_github_actions():
             try:
                 proxy = get_working_proxy(
-                    url,
+                    request_url,
                     headers=pick_sofascore_headers(),
                     max_proxies=25,
                 )
@@ -100,18 +112,19 @@ def _sofascore_api_get(url, tries=3, pause=5.0):
 
         print(
             f"SofaScore API request attempt {attempt}/{tries} "
-            f"(client_identifier={client_identifier}, proxy={'yes' if proxy else 'no'})"
+            f"(client_identifier={client_identifier}, host={request_url.split('/')[2]}, "
+            f"proxy={'yes' if proxy else 'no'})"
         )
-        response = _sofascore_tls_get(url, proxy=proxy, client_identifier=client_identifier)
+        response = _sofascore_tls_get(request_url, proxy=proxy, client_identifier=client_identifier)
         if response.status_code == 200:
             return response.json()
         last_error = CustomConnectionException(
-            f"HTTP {response.status_code} when fetching {url} "
+            f"HTTP {response.status_code} when fetching {request_url} "
             f"(client_identifier={client_identifier}, proxy={'yes' if proxy else 'no'})"
         )
         if attempt < tries:
             print(
-                f"Attempt {attempt}/{tries} failed for SofaScore API ({url}). "
+                f"Attempt {attempt}/{tries} failed for SofaScore API ({request_url}). "
                 f"Retrying in {pause}s..."
             )
             time.sleep(pause)
