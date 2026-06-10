@@ -1219,7 +1219,7 @@ def _atomic_copy_file(src_path, dst_path):
 
 
 # def overwrite_dict_data(dict_data, file_name, ignore_valid_file=False, ignore_old_data=False, file_type="json"):
-def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old_data=False, file_type="json"):
+def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old_data=False, file_type="json", compact_list_items=False):
     file_path = os.path.join(ROOT_DIR, 'json_files', f"{file_name}.json")
     file_path_old = os.path.join(ROOT_DIR, 'json_files', f"{file_name}_OLD.json")
     correct_data_file = file_name
@@ -1241,7 +1241,7 @@ def overwrite_dict_data(dict_data, file_name, ignore_valid_file=True, ignore_old
         if is_valid_league_dict(dict_data) or ignore_valid_file:
             if os.path.exists(file_path):
                 _atomic_copy_file(file_path, file_path_old)
-            write_dict_data(dict_data, file_name, file_type, _skip_lock=True)
+            write_dict_data(dict_data, file_name, file_type, _skip_lock=True, compact_list_items=compact_list_items)
 
 
 def write_dict_to_csv(dict_data, file_name, _skip_lock=False):
@@ -1277,12 +1277,29 @@ def read_dict_from_csv(file_name):
         return mydict
 
 
-def write_dict_to_json(dict_data, file_name, _skip_lock=False):
+def _format_dict_json_compact_list_items(dict_data):
+    lines = ["{"]
+    items = list(dict_data.items())
+    for idx, (key, value) in enumerate(items):
+        if isinstance(value, list) and value and all(isinstance(item, list) for item in value):
+            entries = ",\n    ".join(json.dumps(item, ensure_ascii=False) for item in value)
+            block = f'  {json.dumps(key, ensure_ascii=False)}: [\n    {entries}\n  ]'
+        else:
+            block = json.dumps({key: value}, ensure_ascii=False, indent=2)[1:-1].strip()
+        lines.append(block + ("," if idx < len(items) - 1 else ""))
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def write_dict_to_json(dict_data, file_name, _skip_lock=False, compact_list_items=False):
     file_path = os.path.join(ROOT_DIR, "json_files", f"{file_name}.json")
 
     def _write():
         def write_fn(f):
-            json.dump(dict_data, f, ensure_ascii=False, indent=2)
+            if compact_list_items:
+                f.write(_format_dict_json_compact_list_items(dict_data))
+            else:
+                json.dump(dict_data, f, ensure_ascii=False, indent=2)
 
         _atomic_write_file(file_path, write_fn)
 
@@ -1329,13 +1346,13 @@ def read_dict_data(file_name, file_type="json"):
     return dict_data
 
 
-def write_dict_data(dict_data, file_name, file_type="json", _skip_lock=False):
+def write_dict_data(dict_data, file_name, file_type="json", _skip_lock=False, compact_list_items=False):
     if file_type == "csv":
         write_dict_to_csv(dict_data, file_name, _skip_lock=_skip_lock)
     elif file_type == "json":
-        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock)
+        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock, compact_list_items=compact_list_items)
     else:
-        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock)
+        write_dict_to_json(dict_data, file_name, _skip_lock=_skip_lock, compact_list_items=compact_list_items)
 
 
 def delete_file(file_name, file_type="json"):

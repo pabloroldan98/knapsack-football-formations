@@ -25,7 +25,14 @@ def safe_get_penalty_takers(label, file_name):
         )
         print(f"\n{label} — Penalty Takers:")
         for team, penalties in data.items():
-            print(team, penalties)
+            # print(team, penalties)
+            print(team)
+            for penalty in penalties:
+                if isinstance(penalty, list) and len(penalty) >= 2:
+                    result = "GOAL" if penalty[1] else "# miss"
+                    print(f"- {penalty[0]:<25} --> {result}")
+                else:
+                    print(f"- {penalty}")
         time.sleep(60)
         print()
         return data

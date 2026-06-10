@@ -98,12 +98,14 @@ class TransfermarktScraper:
         tds = tr.select("td")
         if len(tds) >= 11:
             date_elem = tds[0]
+            is_goal_elem = tds[9]
             minute_elem = tds[10]
         else:
             date_elem = tr.select_one("td.zentriert")
+            is_goal_elem = tr.select_one("td:nth-of-type(7)")
             minute_elem = tr.select_one("td:nth-of-type(8)")
 
-        if not date_elem or not minute_elem:
+        if not date_elem or not minute_elem or not is_goal_elem:
             return None
 
         minute_text = minute_elem.text.replace("'", "").strip()
@@ -121,12 +123,13 @@ class TransfermarktScraper:
 
         player_name = name_elem.get("title") or name_elem.text.strip()
         player_name = find_manual_similar_string(player_name)
+        is_goal_text = is_goal_elem.text.strip()
+        is_goal = is_goal_text == "in"
         return {
             'name': player_name,
             'minute': int(minute_text),
             'date': date_obj,
-            # 'position': len(takers) + 1,
-            # 'is_goal': is_goal
+            'is_goal': is_goal,
         }
 
     def _extract_takers_from_page(self, soup):
@@ -277,17 +280,16 @@ def get_penalty_takers_dict(
             key = (p["minute"], p["date"])
             combo_counts[key] = combo_counts.get(key, 0) + 1
         filtered_penalties = [
-            p["name"]
+            [p["name"], p["is_goal"]]
             for p in penalty_takers
             if p["minute"] < 90 or combo_counts[(p["minute"], p["date"])] < 3
         ][:6]
-        # filtered_penalties = [penalty_taker["name"] for penalty_taker in penalty_takers if penalty_taker["minute"] != 120][:6]
-        filtered_penalties += ["UNKNOWN"] * (6 - len(filtered_penalties))
+        filtered_penalties += [["UNKNOWN", True]] * (6 - len(filtered_penalties))
         filtered_penalties_data[team] = filtered_penalties
 
     if write_file:
         # write_dict_data(filtered_penalties_data, file_name)
-        overwrite_dict_data(filtered_penalties_data, file_name)
+        overwrite_dict_data(filtered_penalties_data, file_name, compact_list_items=True)
 
     return filtered_penalties_data
 

@@ -1101,6 +1101,16 @@ def set_forms(players_list, full_players_forms_dict, verbose=False):
     return result_players
 
 
+def get_penalty_taker_name(entry, default_is_goal=True):
+    if isinstance(entry, (list, tuple)) and len(entry) >= 2:
+        return entry[0], bool(entry[1])
+    return entry, default_is_goal
+
+
+def normalize_penalty_takers_list(penalty_takers_list):
+    return [[name, is_goal] for name, is_goal in (get_penalty_taker_name(entry) for entry in penalty_takers_list)]
+
+
 def set_penalty_takers_boosts(players_list, penalty_takers_dict, verbose=False, debug=False):
     result_players = copy.deepcopy(players_list)
 
@@ -1114,7 +1124,12 @@ def set_penalty_takers_boosts(players_list, penalty_takers_dict, verbose=False, 
             print("--------------------------")
             print(f"{team_name} --> {closest_team_name}")
             print()
-        for penalty_taker_name in penalty_takers_names_list:
+        # for penalty_taker_name in penalty_takers_names_list:
+        normalized_penalty_takers_list = normalize_penalty_takers_list(penalty_takers_names_list)
+        penalty_takers_names_only_list = [entry[0] for entry in normalized_penalty_takers_list]
+        penalty_takers_is_goal_list = [entry[1] for entry in normalized_penalty_takers_list]
+        for entry in normalized_penalty_takers_list:
+            penalty_taker_name = entry[0]
             closest_player_name = find_similar_string(penalty_taker_name, players_names_list, verbose=False)
             if debug:
                 if closest_player_name:
@@ -1123,10 +1138,17 @@ def set_penalty_takers_boosts(players_list, penalty_takers_dict, verbose=False, 
                     print(f"# {penalty_taker_name} --> {closest_player_name}")
             for player in result_players:
                 if player.name == closest_player_name:
-                    players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
+                    # players_penalties = find_string_positions(penalty_takers_names_list, penalty_taker_name)
+                    players_penalties = find_string_positions(penalty_takers_names_only_list, penalty_taker_name)
+                    if not players_penalties:
+                        continue
                     player.penalties = players_penalties
-                    players_penalties_bool_list = [i in players_penalties for i in range(max(players_penalties) + 1)]
-                    player.penalty_boost = calc_penalty_boost(players_penalties_bool_list)
+                    # players_penalties_bool_list = [i in players_penalties for i in range(max(players_penalties) + 1)]
+                    # player.penalty_boost = calc_penalty_boost(players_penalties_bool_list)
+                    max_penalty_index = max(players_penalties) + 1
+                    players_penalties_bool_list = [i in players_penalties for i in range(max_penalty_index)]
+                    players_penalty_goals_list = penalty_takers_is_goal_list[:max_penalty_index]
+                    player.penalty_boost = calc_penalty_boost(players_penalties_bool_list, players_penalty_goals_list)
                     if verbose:
                         if player.penalty_boost != 0:
                             print(f"{player.name}: {player.team} ({player.penalty_boost:.4f})")
@@ -1171,7 +1193,8 @@ def set_penalty_savers_boosts(players_list, penalty_savers_dict, verbose=False, 
 
     return result_players
 
-def calc_penalty_boost(players_penalties):
+# def calc_penalty_boost(players_penalties):
+def calc_penalty_boost(players_penalties, penalty_goals=None):
     penalty_coef = 0
     penalty_indexes = [index for index, value in enumerate(players_penalties) if value]
     # Not Goalkeepers
@@ -1180,7 +1203,9 @@ def calc_penalty_boost(players_penalties):
             # if penalty_index < 6: # Take only last 6 pens into account
             #     penalty_coef = penalty_coef + 0.175 - (penalty_index * 0.025)
             if penalty_index < 5: # Take only last 5 pens into account
-                penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.05)
+                # penalty_coef = penalty_coef + 0.21 - (penalty_index * 0.05)
+                goal_multiplier = 1 if penalty_goals is None or penalty_goals[penalty_index] else 0.5
+                penalty_coef = penalty_coef + (0.21 - (penalty_index * 0.05)) * goal_multiplier
     # Goalkeepers
     else:
         for penalty_index in penalty_indexes:
