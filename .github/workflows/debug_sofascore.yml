@@ -195,14 +195,26 @@ jobs:
           python - <<'PY'
           import secrets, tls_requests
           BASE = "socks5://127.0.0.1:9050"
-          URL = "https://www.sofascore.com/api/v1/unique-tournament/54/season/77558/teams"
-          IDENT = "safari_16_0"
+          HOSTS = ["https://www.sofascore.com", "https://api.sofascore.com"]
+          ENDPOINTS = {
+              "league_teams": "/api/v1/unique-tournament/54/season/77558/teams",
+              "team_players": "/api/v1/team/2835/players",
+              "player_info": "/api/v1/player/69379",
+              "player_summary": "/api/v1/player/69379/last-year-summary",
+              "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
+          }
+          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          PROBE_URL = "https://www.sofascore.com" + ENDPOINTS["league_teams"]
+
           # Tor isolates streams by SOCKS auth, so unique credentials => new circuit (new exit IP).
           def isolated_proxy():
               scheme, _, host = BASE.partition("://")
               return f"{scheme}://{secrets.token_hex(8)}:tor@{host}"
+
+          # Step 1: rotate fresh Tor circuits until one is not blocked (this is what the scraper does).
           print("Trying fresh Tor circuits until one is not blocked (this is what the scraper does):")
           print("attempt  exit_ip            status")
+          PROXY = None
           for attempt in range(12):
               proxy = isolated_proxy()
               try:
@@ -210,13 +222,33 @@ jobs:
               except Exception as e:
                   ip = "ERR(%s)" % type(e).__name__
               try:
-                  status = str(tls_requests.get(URL, client_identifier=IDENT, verify=False, timeout=20, proxy=proxy).status_code)
+                  status = str(tls_requests.get(PROBE_URL, client_identifier="safari_16_0", verify=False, timeout=20, proxy=proxy).status_code)
               except Exception as e:
                   status = "ERR(%s)" % type(e).__name__
               print(f"{attempt:<8} {ip:<18} {status}")
               if status == "200":
+                  PROXY = proxy
                   print(f"\nFound a working exit node after {attempt + 1} attempt(s).")
                   break
-          else:
+          if PROXY is None:
               print("\nNo working exit node found in 12 attempts.")
+              raise SystemExit(0)
+
+          # Step 2: full matrix over the working circuit (hosts x identifiers x endpoints).
+          def check(url, ident):
+              try:
+                  r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
+                  return str(r.status_code)
+              except Exception as e:
+                  return "ERR(%s)" % type(e).__name__
+          for host in HOSTS:
+              print("=" * 70); print("HOST:", host); print("=" * 70)
+              w = max(len(n) for n in ENDPOINTS) + 2
+              print("identifier".ljust(22) + "".join(n.ljust(w) for n in ENDPOINTS))
+              for ident in IDS:
+                  row = ident.ljust(22)
+                  for path in ENDPOINTS.values():
+                      row += check(host + path, ident).ljust(w)
+                  print(row)
+              print()
           PY
