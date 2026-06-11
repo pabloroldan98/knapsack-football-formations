@@ -444,7 +444,6 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
         "Kevin Medina", "Kevin Villodres", "Thuram-Ulien", "Khéphren Thuram", "K. Thuram",
         "Manu Koné", "Kouadio Koné", "Moustapha Mbow", "Mamadou Mbow",
         "Ben Doak", "Ben Gannon-Doak",
-        # "Emiliano Martínez", "Dibu Martínez",
     ]:
         similarity_threshold = 0.45
     if my_string in [
