@@ -1581,6 +1581,13 @@ class _TorRequests:
 
         kwargs.pop("proxy", None)
         kwargs.pop("client_identifier", None)
+        # Drop any caller-supplied headers: tls_requests already sends headers
+        # (User-Agent, sec-ch-ua, ...) that match the client_identifier's TLS
+        # fingerprint. Overriding them with our own pool creates a fingerprint vs.
+        # header mismatch that Cloudflare answers with a 403 challenge -- which is
+        # exactly why the scraper got 403 through Tor while the debug job (which
+        # passes no headers) got 200 on the same circuits.
+        kwargs.pop("headers", None)
 
         # Try the identifier/circuit that worked last first, then rotate.
         with self._lock:
