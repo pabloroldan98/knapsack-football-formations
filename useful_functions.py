@@ -938,7 +938,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Noureddin Bani Ateyah": "N. Bani Attiah",
         "Rahman Baba": "Baba Rahman",
         "Cameron Devlin": "Cammy Devlin",
-        # "Emiliano Martínez": "Dibu Martínez", # en mundial, premier y mundialito
         "José Manuel López": "Flaco López",
         "Antonin Svoboda": "Michael Svoboda",
         "Joris Kayembe": "Kayembe",
