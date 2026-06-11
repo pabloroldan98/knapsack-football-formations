@@ -24,6 +24,7 @@ from useful_functions import overwrite_dict_data, read_dict_data, create_driver,
 from player_href_name_cache import (
     PlayerHrefNameCache,
     FUTBOLFANTASY_PLAYER_HREF_CACHE_FILE,
+    normalize_player_href,
 )
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -367,14 +368,22 @@ class FutbolFantasyScraper:
             return href, find_manual_similar_string(alt_name), 0
         return href, None, 2
 
+    def _record_key(self, href, name):
+        cache_key = normalize_player_href(href)
+        if cache_key:
+            return cache_key
+        if name:
+            return f'__noref__{name}'
+        return None
+
     def _update_player_record(self, records, href, name, priority, prob):
         """Acumula jugadores keyed por href.
         - Nombre: menor prioridad gana (0=alt > 1=texto > 2=slug); empate: más largo gana; igual: último.
         - Probabilidad: la más alta gana.
         """
-        if not name and not href:
+        key = self._record_key(href, name)
+        if not key:
             return
-        key = href or f'__noref__{name}'
         name = name or ''
         existing = records.get(key)
         if existing is None:

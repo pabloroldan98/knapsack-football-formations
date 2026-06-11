@@ -38,11 +38,16 @@ def _save_disk_cache(path, data):
         json.dump(data, cache_file, ensure_ascii=False, indent=2)
 
 
+_INVALID_HREFS = frozenset({'#', 'javascript:void(0)', 'javascript:;'})
+
+
 def normalize_player_href(href):
     """Clave estable por jugador (slug), independiente de dominio o subrutas."""
     if not href:
         return None
     href = href.strip()
+    if href.lower() in _INVALID_HREFS:
+        return None
     if 'futbolfantasy.com' in href:
         match = re.search(r'/jugadores/([^/?#]+)', href, re.IGNORECASE)
         if match:
@@ -65,6 +70,8 @@ class PlayerHrefNameCache:
         if use_disk_cache:
             raw = _load_disk_cache(cache_path)
             for key, value in raw.items():
+                if key in _INVALID_HREFS:
+                    continue
                 if isinstance(value, dict) and value.get('name'):
                     self._entries[key] = {
                         'name': value['name'],
