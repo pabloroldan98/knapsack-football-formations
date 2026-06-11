@@ -88,10 +88,10 @@ def _fetch_team_player_paths(team_name, team_url):
             api_response = tor_requests.get(api_url, headers=headers, verify=False)
         else:
             api_response = tls_requests.get(api_url, headers=headers, verify=False)
-            if api_response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
                 api_response = tor_requests.get(api_url, headers=headers, verify=False)
         try:
-            data = api_response.json()
+            data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
             for item in data.get("players", []):
                 p = item.get("player", {})
                 slug = p.get("slug")
@@ -320,8 +320,14 @@ def get_team_links_from_league(league_url):
             api_response = tor_requests.get(api_url, headers=headers, verify=False)
         else:
             api_response = tls_requests.get(api_url, headers=headers, verify=False)
-            if api_response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+            if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
                 api_response = tor_requests.get(api_url, headers=headers, verify=False)
+        # Only trust a real 200; a blocked Tor exit returns 403 whose body has no
+        # "teams" key, which would silently look like an empty league otherwise.
+        if api_response is None or api_response.status_code != 200:
+            raise CustomConnectionException(
+                f"HTTP {getattr(api_response, 'status_code', None)} when fetching {api_url}"
+            )
         all_teams = api_response.json().get("teams", [])
 
     team_data = {}
