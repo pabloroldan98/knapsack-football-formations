@@ -811,7 +811,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Trevor Iriving Doornbusch": "T. Doornbusch",
         "Léo Realpe": "Leonardo Realpe",
         "Mahdi Soliman": "E. Soliman",
-        # "Manu Koné": "Kouadio Koné",  # seriea y mundial
         "Christopher Baah": "C. Bonsu Baah",
         "Abdul Fatawu Issahaku": "Issahaku Fatawu",
         "Prince Kwabena Adu": "Prince Adu",
@@ -1121,6 +1120,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Olympiakos": "Olympiacos",
         "Slavia Praha": "Slavia Prag",
         "Sporting CP": "Sporting Portugal",
+
+        "Kouadio Koné": "Manu Koné",  # seriea y mundial
+        "Dibu Martínez": "Emiliano Martínez",  # en mundial, premier y mundialito
     }
     # Return the normalized name if it exists in the dictionary; otherwise, return the original name
     fallback = my_string

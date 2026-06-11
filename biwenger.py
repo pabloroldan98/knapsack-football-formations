@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 from player import Player, get_position, get_status
 from elo_ratings import get_teams_elos_dict
 from team import Team
-from useful_functions import find_similar_string, read_dict_data, overwrite_dict_data
+from useful_functions import find_similar_string, find_manual_similar_string, read_dict_data, overwrite_dict_data
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -359,6 +359,7 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
 
         # pprint(championship_player)
         player_name = championship_player["name"]
+        player_name = find_manual_similar_string(player_name) # Para solucionar el caso del Dibu y Emiliano
         player_position_group = championship_player["position"]
         if use_comunio_price:
             player_price = int(round(championship_player["price"] / 100_000))
