@@ -654,7 +654,7 @@ if __name__ == "__main__":
     #     # host_team="US",
     #     # debug=False,
     # # )
-    current_players = get_current_players_wrapper("mundial")#, forced_matches=jornada_selected)
+    current_players = get_current_players_wrapper("mundial")#, no_form=True)#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place
@@ -783,36 +783,33 @@ if __name__ == "__main__":
     print("------------------------- YOUR TEAM -------------------------")
     print()
     my_players_names = [
-        # "Dituro",
-        # "Joan García",
-        # "Álvaro Valles",
+        # "Ryan",
+        # "Mpasi",
         #
-        # "Iñigo Martínez",
-        # "Marcos Alonso",
-        # "Foyth",
-        # "Vivian",
-        # "Sergi Cardona",
-        # "Mingueza",
-        # "Ratiu",
-        # "Fran García",
+        # "Éric Davis",
+        # "Kimmich",
+        # "Schlotterbeck",
+        # "Elvedi",
+        # "Akanji",
+        # "Andrés Andrade",
+        # "Arya Yousefi",
         #
-        # "Sancet",
-        # "Pedri",
-        # "Arda Güler",
-        # "Marcos Llorente",
-        # "Arambarri",
-        # "Rioja",
-        # "Pablo Torre",
-        # "Luis Milla",
+        # "James Rodríguez",
+        # "Granit Xhaka",
+        # "Brian Gutiérrez",
+        # "Calhanoglu",
+        # "De Bruyne",
+        # "Freuler",
+        # "Gilberto Mora",
         #
-        # "Panichelli",
-        # "Cucho",
-        # "Carlos Álvarez",
-        # "Muriqi",
+        # "Messi",
         # "Oyarzabal",
-        # "Carlos Vicente",
-        # "Giuliano Simeone",
-        # "Gonzalo García",
+        # "Raúl Jiménez",
+        # "Cristiano Ronaldo",
+        # "Aymen Hussein",
+        # "Arnautovic",
+        # "Mehdi Taremi",
+        # "Enner Valencia",
     ]
 
     # my_players_names = [
