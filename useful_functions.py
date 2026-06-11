@@ -803,7 +803,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Daniel Nicolas Frey": "Daniel Frey",
 
         "Ahmed Nadhir Benbouali": "N. Benbouali",
-        "José López": "Jose Manuel Lopez",
         "Kevin Lenini": "Kevin Pina",
         "Pico": "Roberto Lopes",
         "Rafael Borré": "Santos Borré",
