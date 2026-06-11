@@ -40,7 +40,7 @@ jobs:
               "player_summary": "/api/v1/player/69379/last-year-summary",
               "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
           }
-          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          IDS = ["safari_16_0", "safari_ios_17_0", "safari_ios_18_0", "okhttp4_android_13", "okhttp4_android_12", "firefox_132", "firefox_120", "chrome_133", "chrome_131", "chrome_124", "chrome_120"]
           def check(url, ident):
               try:
                   r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
@@ -123,7 +123,7 @@ jobs:
               "player_summary": "/api/v1/player/69379/last-year-summary",
               "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
           }
-          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          IDS = ["safari_16_0", "safari_ios_17_0", "safari_ios_18_0", "okhttp4_android_13", "okhttp4_android_12", "firefox_132", "firefox_120", "chrome_133", "chrome_131", "chrome_124", "chrome_120"]
           def check(url, ident):
               try:
                   r = tls_requests.get(url, client_identifier=ident, verify=False, timeout=20, proxy=PROXY)
@@ -203,7 +203,7 @@ jobs:
               "player_summary": "/api/v1/player/69379/last-year-summary",
               "player_stats": "/api/v1/player/69379/statistics/match-type/overall",
           }
-          IDS = ["safari_16_0", "safari_ios_17_0", "okhttp4_android_13", "firefox_132", "chrome_133", "chrome_131", "chrome_120"]
+          IDS = ["safari_16_0", "safari_ios_17_0", "safari_ios_18_0", "okhttp4_android_13", "okhttp4_android_12", "firefox_132", "firefox_120", "chrome_133", "chrome_131", "chrome_124", "chrome_120"]
           PROBE_URL = "https://www.sofascore.com" + ENDPOINTS["league_teams"]
 
           # Tor isolates streams by SOCKS auth, so unique credentials => new circuit (new exit IP).

@@ -1591,29 +1591,33 @@ class _TorRequests:
             identifiers.remove(preferred_identifier)
             identifiers.insert(0, preferred_identifier)
 
-        # Each attempt uses a fresh circuit (new exit IP) and a rotating
-        # identifier, so we route around both blocked exit nodes and rejected
-        # fingerprints. The first attempt reuses the last working circuit so we
-        # don't rebuild one on every call once we found a clean exit node.
+        # Each attempt uses a fresh circuit (new exit IP); within a circuit we try
+        # the known-good fingerprints in turn before giving up on it. Whether
+        # SofaScore answers depends mostly on the exit IP (a clean circuit accepts
+        # every good fingerprint), so we must not throw away a clean circuit just
+        # because the first fingerprint we happened to try on it was rejected --
+        # that was why rotating one identifier per fresh circuit kept failing. The
+        # first attempt reuses the last working circuit so we don't rebuild one on
+        # every call once we found a clean exit node.
         last_response = None
         for attempt in range(TOR_CIRCUIT_RETRIES):
-            identifier = identifiers[attempt % len(identifiers)]
             proxy = preferred_proxy if attempt == 0 and preferred_proxy else _isolated_tor_proxy()
-            try:
-                response = tls_requests.get(
-                    url,
-                    client_identifier=identifier,
-                    proxy=proxy,
-                    **kwargs,
-                )
-            except Exception:
-                continue
-            last_response = response
-            if response.status_code != 403:
-                with self._lock:
-                    self._preferred_identifier = identifier
-                    self._preferred_proxy = proxy
-                return response
+            for identifier in identifiers:
+                try:
+                    response = tls_requests.get(
+                        url,
+                        client_identifier=identifier,
+                        proxy=proxy,
+                        **kwargs,
+                    )
+                except Exception:
+                    continue
+                last_response = response
+                if response.status_code != 403:
+                    with self._lock:
+                        self._preferred_identifier = identifier
+                        self._preferred_proxy = proxy
+                    return response
         return last_response
 
 
