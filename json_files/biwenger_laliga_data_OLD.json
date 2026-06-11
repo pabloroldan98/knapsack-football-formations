@@ -524,11 +524,13 @@
         "price": 14770000,
         "fantasyPrice": 17000000,
         "number": 10,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Knee sprain.",
         "iconHero": "i/p/hero/25127.png",
         "playedHome": 15,
         "playedAway": 14,
+        "statusChange": 1781164808,
         "fitness": [
           9,
           6,
@@ -12733,7 +12735,7 @@
       }
     },
     "update": 1781240410,
-    "etag": 4101615265,
+    "etag": 1573061126,
     "scoreID": 1
   },
   "meta": {
@@ -13818,46 +13820,6 @@
                 "pos": "mpu3",
                 "pbskey": "biwenger_%competition%"
               }
-            }
-          }
-        },
-        "league#1973097": {
-          "#comments": "Desactivar sticky banner en Liga Sportium",
-          "android": {
-            "banner": {
-              "type": "AdMob",
-              "id": "ca-app-pub-5081994088919884/9650976858",
-              "app": "ca-app-pub-5081994088919884~8174243653",
-              "aps": true,
-              "amazon": {
-                "app": "9dece6944d4647db86b514511e8fd3ec",
-                "320x50": "a57f3aa5-3466-4e19-a081-9b98201d37b2",
-                "320x100": "9a7526d2-057f-4c9a-b897-e58f2c0e2198",
-                "728x90": "9be088f7-ce72-4435-ae0b-5883e92da1cc"
-              },
-              "levelPlay": {
-                "adUnit": "e1ekctr36kou4c5x"
-              },
-              "disableSlots": [
-                "android/banner"
-              ]
-            }
-          },
-          "ios": {
-            "banner": {
-              "type": "AdMob",
-              "app": "ca-app-pub-5081994088919884~6837111253",
-              "id": "ca-app-pub-5081994088919884/8313844456",
-              "aps": true,
-              "amazon": {
-                "app": "6aec85413ec94f2f96a222ff8ebf4995",
-                "320x50": "b8273f2f-60de-412c-852c-48b628a452ef",
-                "320x100": "4e266fe1-c4b2-4db0-b3c6-1df06feac19a",
-                "728x90": "2b3e8cfa-53d6-47c5-b40f-87677dad3592"
-              },
-              "disableSlots": [
-                "ios/banner"
-              ]
             }
           }
         },
@@ -14955,6 +14917,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "1/h"
           }
         },
         "ios": {
@@ -14991,24 +14961,44 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "1/h"
           }
         }
       },
       "features": {
         "safeFrame": false,
         "randomInterstitial": false,
-        "reviewApp": true,
-        "reviewAppAllUsers": "Math.random() < 0.20",
-        "reviewAppInternalFlow": true,
+        "appReview": {
+          "enabled": true,
+          "allUsers": "Math.random() < 0.20",
+          "internalFlow": true
+        },
+        "prebid": {
+          "sandbox": true,
+          "touchGuardNetworks": [
+            "inmobi",
+            "pubmatic"
+          ]
+        },
+        "grounds": {
+          "world-cup": "world_cup"
+        },
+        "world-cup-ground": "world_cup",
         "prebidSandbox": true,
         "prebidTouchGuardNetworks": [
           "inmobi",
           "pubmatic"
         ],
-        "world-cup-ground": "world_cup",
-        "errorTrackedUIDs": [
-          1146510
-        ],
+        "reviewApp": true,
+        "reviewAppAllUsers": "Math.random() < 0.20",
+        "reviewAppInternalFlow": true,
         "recentSeasons": [
           15,
           53

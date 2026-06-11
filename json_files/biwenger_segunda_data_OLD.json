@@ -330,7 +330,7 @@
           "id": 4876,
           "name": "Semifinals (away)",
           "short": "Semifinals (away)",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4877,
@@ -351,55 +351,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4876,
-        "name": "Semifinals (away)",
-        "short": "Semifinals (away)",
-        "status": "active",
-        "end": 1781190000,
-        "type": "round",
-        "games": [
-          {
-            "id": 50525,
-            "date": 1781118000,
-            "status": "finished",
-            "home": {
-              "id": 422,
-              "name": "Málaga",
-              "slug": "malaga",
-              "score": 1
-            },
-            "away": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 1
-            }
-          },
-          {
-            "id": 50524,
-            "date": 1781031600,
-            "status": "finished",
-            "home": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 3
-            },
-            "away": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 2
-            }
-          }
-        ],
-        "pool": {
-          "id": 620675
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35069": {
         "id": 35069,
@@ -1291,7 +1243,7 @@
         "number": 22,
         "status": "doubt",
         "priceIncrement": -20000,
-        "statusInfo": "Undetermined discomfort.",
+        "statusInfo": "Muscle injury.",
         "playedHome": 16,
         "playedAway": 15,
         "statusChange": 1778407200,
@@ -7862,12 +7814,12 @@
         "price": 2570000,
         "fantasyPrice": 20000000,
         "number": 22,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -160000,
         "statusInfo": "Muscle injury.",
         "playedHome": 18,
         "playedAway": 18,
-        "statusChange": 1779030007,
+        "statusChange": 1781164807,
         "fitness": [
           "injured",
           "injured",
@@ -16051,7 +16003,7 @@
       }
     },
     "update": 1781233210,
-    "etag": 2093648502,
+    "etag": 1233378974,
     "scoreID": 1
   },
   "meta": {
@@ -17136,46 +17088,6 @@
                 "pos": "mpu3",
                 "pbskey": "biwenger_%competition%"
               }
-            }
-          }
-        },
-        "league#1973097": {
-          "#comments": "Desactivar sticky banner en Liga Sportium",
-          "android": {
-            "banner": {
-              "type": "AdMob",
-              "id": "ca-app-pub-5081994088919884/9650976858",
-              "app": "ca-app-pub-5081994088919884~8174243653",
-              "aps": true,
-              "amazon": {
-                "app": "9dece6944d4647db86b514511e8fd3ec",
-                "320x50": "a57f3aa5-3466-4e19-a081-9b98201d37b2",
-                "320x100": "9a7526d2-057f-4c9a-b897-e58f2c0e2198",
-                "728x90": "9be088f7-ce72-4435-ae0b-5883e92da1cc"
-              },
-              "levelPlay": {
-                "adUnit": "e1ekctr36kou4c5x"
-              },
-              "disableSlots": [
-                "android/banner"
-              ]
-            }
-          },
-          "ios": {
-            "banner": {
-              "type": "AdMob",
-              "app": "ca-app-pub-5081994088919884~6837111253",
-              "id": "ca-app-pub-5081994088919884/8313844456",
-              "aps": true,
-              "amazon": {
-                "app": "6aec85413ec94f2f96a222ff8ebf4995",
-                "320x50": "b8273f2f-60de-412c-852c-48b628a452ef",
-                "320x100": "4e266fe1-c4b2-4db0-b3c6-1df06feac19a",
-                "728x90": "2b3e8cfa-53d6-47c5-b40f-87677dad3592"
-              },
-              "disableSlots": [
-                "ios/banner"
-              ]
             }
           }
         },
@@ -18273,6 +18185,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "1/h"
           }
         },
         "ios": {
@@ -18309,24 +18229,44 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "1/h"
           }
         }
       },
       "features": {
         "safeFrame": false,
         "randomInterstitial": false,
-        "reviewApp": true,
-        "reviewAppAllUsers": "Math.random() < 0.20",
-        "reviewAppInternalFlow": true,
+        "appReview": {
+          "enabled": true,
+          "allUsers": "Math.random() < 0.20",
+          "internalFlow": true
+        },
+        "prebid": {
+          "sandbox": true,
+          "touchGuardNetworks": [
+            "inmobi",
+            "pubmatic"
+          ]
+        },
+        "grounds": {
+          "world-cup": "world_cup"
+        },
+        "world-cup-ground": "world_cup",
         "prebidSandbox": true,
         "prebidTouchGuardNetworks": [
           "inmobi",
           "pubmatic"
         ],
-        "world-cup-ground": "world_cup",
-        "errorTrackedUIDs": [
-          1146510
-        ],
+        "reviewApp": true,
+        "reviewAppAllUsers": "Math.random() < 0.20",
+        "reviewAppInternalFlow": true,
         "recentSeasons": [
           15,
           53
@@ -18479,7 +18419,12 @@
           "coaches": true,
           "multiPos": true,
           "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
-          "optimizeImages": true
+          "optimizeImages": true,
+          "leagueSponsor": {
+            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
+            "title": "Sportium"
+          }
         }
       },
       {
