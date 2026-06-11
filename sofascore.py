@@ -79,6 +79,31 @@ def _fetch_team_player_paths(team_name, team_url):
             pass
 
     if not player_paths_list:
+        # The HTML had no __NEXT_DATA__ (e.g. served through Tor in GitHub Actions),
+        # so fall back to the JSON players API. team_url looks like
+        # https://www.sofascore.com/team/football/{slug}/{id}; pull the id.
+        team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
+        api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
+        if tor_requests.is_endpoint_blocked(api_url):
+            api_response = tor_requests.get(api_url, headers=headers, verify=False)
+        else:
+            api_response = tls_requests.get(api_url, headers=headers, verify=False)
+            if api_response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+                api_response = tor_requests.get(api_url, headers=headers, verify=False)
+        try:
+            data = api_response.json()
+            for item in data.get("players", []):
+                p = item.get("player", {})
+                slug = p.get("slug")
+                pid = p.get("id")
+                if slug and pid:
+                    player_paths_list.append(
+                        f"https://www.sofascore.com/football/player/{slug}/{pid}"
+                    )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    if not player_paths_list:
         for a_tag in soup.find_all("a", href=True):
             href_val = a_tag["href"]
             if "/player/" in href_val:
@@ -262,22 +287,42 @@ def get_team_links_from_league(league_url):
 
     # General
     script = soup.find("script", id="__NEXT_DATA__")
-    data = json.loads(script.string)
-
-    def find_teams(obj, out):
-        if isinstance(obj, dict):
-            if "team" in obj:
-                t = obj["team"]
-                if all(k in t for k in ("name", "slug", "id")):
-                    out.append(t)
-            for v in obj.values():
-                find_teams(v, out)
-        elif isinstance(obj, list):
-            for item in obj:
-                find_teams(item, out)
-
     all_teams = []
-    find_teams(data, all_teams)
+    if script and script.string:
+        data = json.loads(script.string)
+
+        def find_teams(obj, out):
+            if isinstance(obj, dict):
+                if "team" in obj:
+                    t = obj["team"]
+                    if all(k in t for k in ("name", "slug", "id")):
+                        out.append(t)
+                for v in obj.values():
+                    find_teams(v, out)
+            elif isinstance(obj, list):
+                for item in obj:
+                    find_teams(item, out)
+
+        find_teams(data, all_teams)
+
+    if not all_teams:
+        # No __NEXT_DATA__ (e.g. served through Tor in GitHub Actions): read the
+        # team list from the JSON API. The unique-tournament id and season id are
+        # encoded in the league URL/slug, e.g. ".../bundesliga/35#id:77333".
+        ut_id = league_url.split("#")[0].rstrip("/").split("/")[-1]
+        season_match = re.search(r"#id:(\d+)", league_url)
+        season_id = season_match.group(1) if season_match else None
+        api_url = (
+            f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}"
+            f"/season/{season_id}/teams"
+        )
+        if tor_requests.is_endpoint_blocked(api_url):
+            api_response = tor_requests.get(api_url, headers=headers, verify=False)
+        else:
+            api_response = tls_requests.get(api_url, headers=headers, verify=False)
+            if api_response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+                api_response = tor_requests.get(api_url, headers=headers, verify=False)
+        all_teams = api_response.json().get("teams", [])
 
     team_data = {}
     base = "https://www.sofascore.com/team/football"
