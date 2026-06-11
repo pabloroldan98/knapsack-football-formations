@@ -624,7 +624,6 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Pedro Jair Ramírez Orta": "Pedro Ramírez",
         "Jang Si-young": "See-young Jang",
         "Mohamed Rayane Hamrouni": "M. Hamrouni",
-        # "José Manuel López": "José López",
         "Erling Braut Haland": "Haaland",
         "Kim Min-Jae": "Min-jae Kim",
         "Kim Min-jae": "Min-jae Kim",
@@ -908,8 +907,8 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Cho Wi-Je": "Wi-je Cho",
         "Waldemar Anton": "Anton",
         "Wilfried Stephane Singo": "Wilfried Singo",
-        "Juan José Cáceres": "J. Cáceres",
-        "Juan Jose Caceres": "J. Cáceres",
+        "Juan José Cáceres": "Juan Cáceres",
+        "Juan Jose Caceres": "Juan Cáceres",
         # "Ben Doak": "Ben Gannon-Doak", # en mundial y premier
         "Yaya Sithole": "Sphephelo Sithole",
         "Kerem Aktrkoglu": "Aktürkoğlu",
