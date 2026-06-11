@@ -607,7 +607,8 @@ def get_team_players_dict(players_list, full_players_data_dict, verbose=False, d
         team_data_names_list = list(players_data_dict.keys())
 
         for player_team_name, players_in_team in team_players_dict.items():
-            closest_player_data_team = find_similar_string(player_team_name, team_data_names_list, similarity_threshold=0)
+            # closest_player_data_team = find_similar_string(player_team_name, team_data_names_list, similarity_threshold=0)
+            closest_player_data_team = find_similar_string(player_team_name, team_data_names_list)
             if closest_player_data_team:
                 # if len(players_data_dict[closest_player_data_team]) >= 11:
                 team_players_dict[player_team_name]["num_probability_files"] = num_probability_files
