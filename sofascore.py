@@ -79,9 +79,7 @@ def _fetch_team_player_paths(team_name, team_url):
             pass
 
     if not player_paths_list:
-        # The HTML had no __NEXT_DATA__ (e.g. served through Tor in GitHub Actions),
-        # so fall back to the JSON players API. team_url looks like
-        # https://www.sofascore.com/team/football/{slug}/{id}; pull the id.
+        # Fallback: JSON players API when HTML has no __NEXT_DATA__.
         team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
         api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
         if tor_requests.is_endpoint_blocked(api_url):
@@ -306,9 +304,7 @@ def get_team_links_from_league(league_url):
         find_teams(data, all_teams)
 
     if not all_teams:
-        # No __NEXT_DATA__ (e.g. served through Tor in GitHub Actions): read the
-        # team list from the JSON API. The unique-tournament id and season id are
-        # encoded in the league URL/slug, e.g. ".../bundesliga/35#id:77333".
+        # Fallback: JSON teams API (ut/season ids from league URL slug).
         ut_id = league_url.split("#")[0].rstrip("/").split("/")[-1]
         season_match = re.search(r"#id:(\d+)", league_url)
         season_id = season_match.group(1) if season_match else None
@@ -322,8 +318,6 @@ def get_team_links_from_league(league_url):
             api_response = tls_requests.get(api_url, headers=headers, verify=False)
             if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
                 api_response = tor_requests.get(api_url, headers=headers, verify=False)
-        # Only trust a real 200; a blocked Tor exit returns 403 whose body has no
-        # "teams" key, which would silently look like an empty league otherwise.
         if api_response is None or api_response.status_code != 200:
             raise CustomConnectionException(
                 f"HTTP {getattr(api_response, 'status_code', None)} when fetching {api_url}"

@@ -1483,22 +1483,9 @@ def get_working_proxy(
     raise RuntimeError(f"No working proxy found (tried {tried})")
 
 
-# Some sites (e.g. SofaScore) block GitHub Actions / datacenter IPs at the
-# network level (HTTP 403), even with valid browser-like headers. When that
-# happens we route the request through the Tor SOCKS proxy, which gives us a
-# residential-looking exit IP. Tor must be installed and running for this to
-# connect (the CI workflows take care of that).
+# Tor fallback when datacenter IPs get 403 (CI); see _TorRequests.
 TOR_PROXY = os.getenv("TOR_PROXY", "socks5://127.0.0.1:9050")
-# SofaScore (Cloudflare) blocks many Tor exit-node IPs, so a given circuit may
-# return 403 for every endpoint/fingerprint while another exits cleanly. We
-# therefore retry through fresh Tor circuits until one isn't blocked. Tor builds
-# a separate circuit per distinct SOCKS username/password (IsolateSOCKSAuth is
-# on by default), so we just vary the SOCKS credentials to get a new exit IP.
 TOR_CIRCUIT_RETRIES = int(os.getenv("TOR_CIRCUIT_RETRIES", "12"))
-# Even through Tor, SofaScore rejects some TLS fingerprints (e.g. chrome_133
-# returns 403 for every endpoint), so we rotate over known-good identifiers and
-# keep the one that works. Add/remove entries here if SofaScore starts/stops
-# accepting a given fingerprint.
 TOR_CLIENT_IDENTIFIERS = [
     "safari_16_0",
     "safari_ios_17_0",
@@ -1548,10 +1535,11 @@ def _endpoint_key(url):
 
 class _TorRequests:
     """
-    Tor-backed counterpart to tls_requests. `tor_requests.get(...)` makes the
-    request through the Tor SOCKS proxy and remembers the endpoint as blocked,
-    so callers can use `tor_requests.is_endpoint_blocked(url)` to skip the
-    (doomed) direct attempt for the rest of the run:
+    Tor-backed tls_requests for blocked datacenter IPs (e.g. SofaScore in CI).
+
+    Strips caller headers so client_identifier gets matching TLS headers.
+    Retries fresh Tor circuits (random SOCKS creds) and every fingerprint per
+    circuit until a non-403; caches the working circuit/fingerprint.
 
         if tor_requests.is_endpoint_blocked(url):
             resp = tor_requests.get(url, headers=headers, verify=False)
@@ -1559,10 +1547,6 @@ class _TorRequests:
             resp = tls_requests.get(url, headers=headers, verify=False)
             if resp.status_code == 403:
                 resp = tor_requests.get(url, headers=headers, verify=False)
-
-    Each call retries through fresh Tor circuits (new exit IPs) until one is not
-    blocked, rotating TOR_CLIENT_IDENTIFIERS along the way and remembering the
-    fingerprint that worked for later calls.
     """
 
     def __init__(self):
@@ -1581,15 +1565,8 @@ class _TorRequests:
 
         kwargs.pop("proxy", None)
         kwargs.pop("client_identifier", None)
-        # Drop any caller-supplied headers: tls_requests already sends headers
-        # (User-Agent, sec-ch-ua, ...) that match the client_identifier's TLS
-        # fingerprint. Overriding them with our own pool creates a fingerprint vs.
-        # header mismatch that Cloudflare answers with a 403 challenge -- which is
-        # exactly why the scraper got 403 through Tor while the debug job (which
-        # passes no headers) got 200 on the same circuits.
         kwargs.pop("headers", None)
 
-        # Try the identifier/circuit that worked last first, then rotate.
         with self._lock:
             preferred_identifier = self._preferred_identifier
             preferred_proxy = self._preferred_proxy
@@ -1598,14 +1575,6 @@ class _TorRequests:
             identifiers.remove(preferred_identifier)
             identifiers.insert(0, preferred_identifier)
 
-        # Each attempt uses a fresh circuit (new exit IP); within a circuit we try
-        # the known-good fingerprints in turn before giving up on it. Whether
-        # SofaScore answers depends mostly on the exit IP (a clean circuit accepts
-        # every good fingerprint), so we must not throw away a clean circuit just
-        # because the first fingerprint we happened to try on it was rejected --
-        # that was why rotating one identifier per fresh circuit kept failing. The
-        # first attempt reuses the last working circuit so we don't rebuild one on
-        # every call once we found a clean exit node.
         last_response = None
         for attempt in range(TOR_CIRCUIT_RETRIES):
             proxy = preferred_proxy if attempt == 0 and preferred_proxy else _isolated_tor_proxy()
