@@ -51,12 +51,9 @@
     <p>Este sitio no es solo una aplicación web. Publicamos <a href="/guias/">guías en español</a> sobre estrategia, presupuesto, errores comunes, competiciones europeas y uso detallado de la calculadora. Ese contenido editorial es parte central del proyecto: la herramienta ejecuta el cálculo; las guías explican el porqué.</p>
 
     <h2>Metodología técnica (resumen)</h2>
-    <p>Los datos de rendimiento se combinan con señales de mercado fantasy (precio, rotaciones) y contexto del rival. La fórmula base de puntuación esperada es:</p>
-    <p style="text-align:center; padding:12px; background:#1a1f2e; border-radius:8px; border:1px solid rgba(255,76,76,.25);">
-      <strong>media Sofascore × factor forma × factor dificultad + boost penaltis</strong>
-    </p>
-    <p>Los factores de forma y dificultad están acotados a ±5 % para no distorsionar la nota principal. El optimizador de alineaciones usa un <strong>problema de la mochila agrupada (group knapsack)</strong>: prueba combinaciones válidas de jugadores por posición y formación táctica, respetando tu presupuesto y jugadores blindados o excluidos.</p>
-    <p>Desarrollamos y mantenemos los scrapers y el backend de forma activa cada temporada. Los datos se actualizan antes de las jornadas relevantes; si detectas un error de nombre o de club, escríbenos.</p>
+    <p>Los datos de rendimiento real se combinan con señales de mercado fantasy (precio, rotaciones) y contexto del rival para estimar una puntuación esperada por jugador. El optimizador de alineaciones usa un <strong>problema de la mochila agrupada (group knapsack)</strong>: prueba combinaciones válidas de jugadores por posición y formación táctica, respetando tu presupuesto y jugadores blindados o excluidos.</p>
+    <p>La fórmula completa, las fuentes de datos y las limitaciones del modelo están explicadas con detalle en nuestra página de <a href="/metodologia.html">metodología</a>.</p>
+    <p>Desarrollamos y mantenemos los scrapers y el backend de forma activa cada temporada. Los datos se actualizan antes de las jornadas relevantes; si detectas un error de nombre o de club, <a href="/contacto.html">escríbenos</a>.</p>
 
     <h2>Independencia y marcas</h2>
     <p><strong>Calculadora Fantasy no está afiliada, patrocinada ni respaldada por LaLiga, LaLiga Fantasy, Biwenger ni ningún club.</strong> Los nombres y marcas mencionados pertenecen a sus titulares y se usan solo con fines informativos.</p>
@@ -81,6 +78,7 @@
       <a href="/">Inicio</a> <span class="sep">|</span>
       <a href="/guias/">Guías</a> <span class="sep">|</span>
       <a href="/app/">Calculadora</a> <span class="sep">|</span>
+      <a href="/contacto.html">Contacto</a> <span class="sep">|</span>
       <a href="/privacy.html">Privacidad</a> <span class="sep">|</span>
       <a href="/terms.html">Términos</a>
     </div>

@@ -7,11 +7,15 @@ on:
       - "index.html"
       - "privacy.html"
       - "terms.html"
+      - "sobre-nosotros.html"
+      - "contacto.html"
+      - "metodologia.html"
       - "ads.txt"
       - "robots.txt"
       - "sitemap.xml"
       - "img/**"
       - "app/**"
+      - "guias/**"
       - "google*.html"
       - ".github/workflows/deploy-ionos-frontend.yml"
 
@@ -37,10 +41,16 @@ jobs:
           set sftp:auto-confirm yes
           cd /public
 
-          # Landing + legal pages
+          # Landing + legal pages + editorial
           put -O . index.html
           put -O . privacy.html
           put -O . terms.html
+          put -O . sobre-nosotros.html
+          put -O . contacto.html
+          put -O . metodologia.html
+
+          # Limpieza de páginas obsoletas en el servidor
+          rm -f index_OLD.html
 
           # Google verification, AdSense & SEO
           put -O . ads.txt
@@ -53,6 +63,9 @@ jobs:
 
           # Aplicación (HTML + CSS + JS)
           mirror -R --delete ./app ./app
+
+          # Guías editoriales
+          mirror -R --delete ./guias ./guias
 
           bye
           EOF

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Metodología: cómo calculamos la puntuación esperada - Calculadora Fantasy</title>
+  <meta name="description" content="Explicación completa y transparente de la metodología de Calculadora Fantasy: fuentes de datos, fórmula de puntuación esperada, factores de forma y dificultad, y el optimizador de alineaciones knapsack.">
+  <link rel="canonical" href="https://www.calculadorafantasy.com/metodologia.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e1117">
+  <link rel="icon" type="image/png" href="logo.png">
+  <meta name="google-adsense-account" content="ca-pub-7891666149137266">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied', 'ad_user_data': 'denied',
+      'ad_personalization': 'denied', 'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXF4YKPSMD"></script>
+  <script>gtag('js', new Date()); gtag('config', 'G-QXF4YKPSMD');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7891666149137266" crossorigin="anonymous"></script>
+
+  <!-- Structured Data: Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Metodología: cómo calculamos la puntuación esperada de cada jugador",
+    "description": "Fuentes de datos, fórmula de puntuación esperada y optimizador de alineaciones de Calculadora Fantasy, explicados con total transparencia.",
+    "author": { "@type": "Organization", "name": "Calculadora Fantasy" },
+    "publisher": { "@type": "Organization", "name": "Calculadora Fantasy", "url": "https://www.calculadorafantasy.com/" },
+    "mainEntityOfPage": "https://www.calculadorafantasy.com/metodologia.html",
+    "inLanguage": "es"
+  }
+  </script>
+
+  <link rel="stylesheet" href="guias/article.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-brand"><img src="logo.png" alt="Logo"> <span>Calculadora Fantasy</span></a>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/guias/">Guías</a>
+      <a href="/app/">Calculadora</a>
+    </div>
+  </nav>
+
+  <article class="article">
+    <header>
+      <h1>Metodología: cómo calculamos cada recomendación</h1>
+      <p class="lead">No nos gustan las cajas negras. Esta página explica, con total transparencia, de dónde salen los datos de Calculadora Fantasy, cómo se calcula la puntuación esperada de cada jugador y cómo funciona el optimizador que construye los onces. Es la referencia única de metodología que enlazamos desde el resto del sitio.</p>
+      <div class="meta">
+        <span>Referencia</span>
+        <span>Lectura ~7 min</span>
+        <span>Actualizado cada temporada</span>
+      </div>
+    </header>
+
+    <h2>1. Fuentes de datos</h2>
+    <p>Combinamos varias fuentes públicas, cada una con un papel concreto:</p>
+    <table>
+      <thead><tr><th>Dato</th><th>Para qué lo usamos</th></tr></thead>
+      <tbody>
+        <tr><td>Media de valoración Sofascore</td><td>Base objetiva del rendimiento real del jugador en los últimos partidos.</td></tr>
+        <tr><td>Precio y evolución de precio en el mercado fantasy</td><td>Señal de forma: el mercado agregado reacciona antes que cualquier estadística individual.</td></tr>
+        <tr><td>ELO del equipo rival</td><td>Medir la dificultad real del próximo partido, más fiable que la posición en la tabla.</td></tr>
+        <tr><td>Probabilidad de titularidad</td><td>Filtrar jugadores con riesgo de quedarse en el banquillo (un suplente puntúa cerca de cero).</td></tr>
+        <tr><td>Lanzadores de penalti habituales</td><td>Bonificar a quien tiene una vía extra y recurrente de puntos.</td></tr>
+      </tbody>
+    </table>
+    <p>Los datos se actualizan automáticamente antes de cada jornada mediante scrapers propios que mantenemos de forma activa. Si una fuente cambia su formato, la actualización puede retrasarse unas horas; los errores que nos reportan los usuarios suelen corregirse antes de la siguiente jornada.</p>
+
+    <h2>2. La fórmula de puntuación esperada</h2>
+    <p>Cada jugador recibe una única nota prevista para la jornada:</p>
+    <p style="text-align:center; padding:14px 16px; background:#1a1f2e; border-radius:8px; border:1px solid rgba(255,76,76,.25);">
+      <strong>puntuación esperada = media Sofascore × factor forma × factor dificultad + boost penaltis</strong>
+    </p>
+
+    <h3>Media Sofascore (la base)</h3>
+    <p>Partimos de la valoración media del jugador en Sofascore porque es un indicador continuo (no depende solo de goles), homogéneo entre posiciones y actualizado partido a partido. Un central que defiende bien puntúa aunque no marque; un delantero que desaparece del partido lo refleja aunque su equipo gane.</p>
+
+    <h3>Factor de forma ∈ [0,95 – 1,05]</h3>
+    <p>Se calcula a partir de la evolución del precio del jugador en el mercado fantasy. Si su precio sube de forma sostenida, miles de managers están comprando porque rinde: lo interpretamos como buena forma. Si baja, lo contrario. Usamos el precio como termómetro porque agrega la opinión de todo el mercado, no solo la última actuación.</p>
+
+    <h3>Factor de dificultad ∈ [0,95 – 1,05]</h3>
+    <p>Combina el ELO del equipo rival con el historial del propio jugador contra ese equipo. Jugar contra el líder no vale lo mismo que jugar contra un recién ascendido, y hay jugadores con rivales que se les dan especialmente bien o mal.</p>
+
+    <h3>Boost por penaltis</h3>
+    <p>Si el jugador es el lanzador habitual de su equipo recibe una bonificación fija, porque los penaltis son la vía de puntos más repetible que existe. Los porteros con historial de paradas de penalti reciben un ajuste equivalente.</p>
+
+    <h3>¿Por qué los factores están acotados a ±5 %?</h3>
+    <p>Es una decisión deliberada: los multiplicadores en banda estrecha evitan sobrerreaccionar a datos puntuales (una mala semana, un rival atípico) y mantienen la nota Sofascore como señal dominante. Preferimos un modelo estable y explicable a uno que persiga cada ruido estadístico.</p>
+
+    <h2>3. El optimizador de alineaciones (knapsack)</h2>
+    <p>Con una puntuación esperada por jugador, construir el mejor once es un problema clásico de optimización combinatoria: el <strong>problema de la mochila agrupada</strong> (<em>group knapsack</em>). El algoritmo:</p>
+    <ol>
+      <li>Agrupa los jugadores por posición (portero, defensa, centrocampista, delantero).</li>
+      <li>Prueba todas las formaciones tácticas válidas (4-3-3, 4-4-2, 3-4-3, 5-3-2…).</li>
+      <li>Para cada formación, busca la combinación de jugadores que maximiza la puntuación esperada total <strong>sin superar tu presupuesto</strong>.</li>
+      <li>Respeta tus restricciones manuales: jugadores blindados (entran sí o sí) y excluidos (nunca entran).</li>
+    </ol>
+    <p>El resultado no es «una sugerencia aproximada»: es el máximo matemático de puntuación esperada dadas tus restricciones. Lo que el modelo no puede garantizar es que la realidad se comporte como la esperanza estadística: por eso la herramienta complementa tu criterio, no lo sustituye.</p>
+
+    <h2>4. Limitaciones que debes conocer</h2>
+    <ul>
+      <li><strong>La titularidad es una probabilidad, no una certeza.</strong> Las alineaciones oficiales se confirman una hora antes del partido; revisa siempre antes de cerrar tu once.</li>
+      <li><strong>Las lesiones de última hora no son predecibles.</strong> El modelo usa la información disponible en el momento de la actualización.</li>
+      <li><strong>Cada plataforma puntúa distinto.</strong> La puntuación esperada es comparable entre jugadores dentro de la herramienta, pero no equivale punto a punto al sistema oficial de LaLiga Fantasy o Biwenger.</li>
+      <li><strong>Muestras pequeñas engañan.</strong> A principio de temporada, con pocos partidos jugados, las medias son menos fiables. El modelo gana precisión a medida que avanza el calendario.</li>
+    </ul>
+
+    <h2>5. Cómo aplicarla en la práctica</h2>
+    <p>Si quieres ver esta metodología en acción, estas guías la aplican paso a paso:</p>
+    <ul>
+      <li><a href="/guias/como-elegir-jugadores-fantasy.html">Cómo elegir jugadores</a>: los 7 factores de fichaje y cómo se traducen en la fórmula.</li>
+      <li><a href="/guias/probabilidad-titular-calendario-fantasy.html">Titularidad y calendario</a>: cómo interpretar el % titular y la dificultad del partido.</li>
+      <li><a href="/guias/como-usar-calculadora-fantasy.html">Tutorial de la calculadora</a>: dónde está cada filtro y qué hace exactamente.</li>
+    </ul>
+
+    <div class="cta-box">
+      <h3>Compruébalo con datos reales</h3>
+      <p>La calculadora aplica esta metodología a todos los jugadores de tu competición, gratis y sin registro.</p>
+      <a href="/app/" class="cta-btn">Abrir calculadora →</a>
+    </div>
+  </article>
+
+  <footer class="site-footer">
+    <div class="row">
+      <a href="/">Inicio</a> <span class="sep">|</span>
+      <a href="/guias/">Guías</a> <span class="sep">|</span>
+      <a href="/app/">Calculadora</a> <span class="sep">|</span>
+      <a href="/contacto.html">Contacto</a> <span class="sep">|</span>
+      <a href="/privacy.html">Privacidad</a> <span class="sep">|</span>
+      <a href="/terms.html">Términos</a>
+    </div>
+    <div class="row" style="margin-top:8px">&copy; <span id="y"></span> Calculadora Fantasy</div>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
