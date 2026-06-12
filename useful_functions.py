@@ -473,10 +473,11 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
     # Third, check for partial match after cleaning
     for list_string in string_list:
         list_string_clean = cleaned_string(list_string)
-        if my_string_clean in list_string_clean or list_string_clean in my_string_clean:
-            # if verbose:
-            #     print(f"Most similar string for \"{my_string}\": {list_string_clean} (~100 %)")
-            return list_string
+        if len(my_string_clean) > 3 and len(list_string_clean) > 3:
+            if my_string_clean in list_string_clean or list_string_clean in my_string_clean:
+                # if verbose:
+                #     print(f"Most similar string for \"{my_string}\": {list_string_clean} (~100 %)")
+                return list_string
     # Fourth, the initial checks, apply the special formatting (point rule) and check again, but only once
     if not is_formatted and ' ' in my_string:  # Check if my_string contains more than one word and hasn't been formatted
         formatted_string = format_string(my_string)
