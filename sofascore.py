@@ -43,75 +43,86 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
-def _fetch_team_player_paths(team_name, team_url):
+def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
     print('Extracting %s player links...' % team_name)
-    headers = pick_headers()
-    if tor_requests.is_endpoint_blocked(team_url):
-        response = tor_requests.get(team_url, headers=headers, verify=False)
-    else:
-        response = tls_requests.get(team_url, headers=headers, verify=False)
-        if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            response = tor_requests.get(team_url, headers=headers, verify=False)
-    soup = BeautifulSoup(response.text, "html.parser")
     player_paths_list = []
-
-    script = soup.find("script", id="__NEXT_DATA__")
-    if script and script.string:
-        try:
-            data = json.loads(script.string)
-            # players_list = (
-            #     # data["props"]["pageProps"]["initialProps"]["players"]["players"]
-            #     data["props"]["pageProps"]["players"]["players"]
-            # )
-            page_props = data["props"]["pageProps"]
-            players_list = page_props.get("players", {}).get("players")
-            if not players_list:
-                players_list = page_props.get("initialProps", {}).get("players", {}).get("players", [])
-            for item in players_list:
-                p = item.get("player", {})
-                slug = p.get("slug")
-                pid = p.get("id")
-                if slug and pid:
-                    player_paths_list.append(
-                        f"https://www.sofascore.com/football/player/{slug}/{pid}"
-                    )
-        except (json.JSONDecodeError, KeyError, TypeError):
-            pass
-
-    if not player_paths_list:
-        # Fallback: JSON players API when HTML has no __NEXT_DATA__.
-        team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
-        api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
-        if tor_requests.is_endpoint_blocked(api_url):
-            api_response = tor_requests.get(api_url, headers=headers, verify=False)
+    attempt_retries = 3
+    while attempt_retries > 0:
+        headers = pick_headers()
+        if tor_requests.is_endpoint_blocked(team_url):
+            response = tor_requests.get(team_url, headers=headers, verify=False)
         else:
-            api_response = tls_requests.get(api_url, headers=headers, verify=False)
-            if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
+            response = tls_requests.get(team_url, headers=headers, verify=False)
+            if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
+                response = tor_requests.get(team_url, headers=headers, verify=False)
+        soup = BeautifulSoup(response.text, "html.parser")
+        player_paths_list = []
+
+        script = soup.find("script", id="__NEXT_DATA__")
+        if script and script.string:
+            try:
+                data = json.loads(script.string)
+                # players_list = (
+                #     # data["props"]["pageProps"]["initialProps"]["players"]["players"]
+                #     data["props"]["pageProps"]["players"]["players"]
+                # )
+                page_props = data["props"]["pageProps"]
+                players_list = page_props.get("players", {}).get("players")
+                if not players_list:
+                    players_list = page_props.get("initialProps", {}).get("players", {}).get("players", [])
+                for item in players_list:
+                    p = item.get("player", {})
+                    slug = p.get("slug")
+                    pid = p.get("id")
+                    if slug and pid:
+                        player_paths_list.append(
+                            f"https://www.sofascore.com/football/player/{slug}/{pid}"
+                        )
+            except (json.JSONDecodeError, KeyError, TypeError):
+                pass
+
+        if not player_paths_list:
+            # Fallback: JSON players API when HTML has no __NEXT_DATA__.
+            team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
+            api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
+            if tor_requests.is_endpoint_blocked(api_url):
                 api_response = tor_requests.get(api_url, headers=headers, verify=False)
-        try:
-            data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
-            for item in data.get("players", []):
-                p = item.get("player", {})
-                slug = p.get("slug")
-                pid = p.get("id")
-                if slug and pid:
-                    player_paths_list.append(
-                        f"https://www.sofascore.com/football/player/{slug}/{pid}"
+            else:
+                api_response = tls_requests.get(api_url, headers=headers, verify=False)
+                if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
+                    api_response = tor_requests.get(api_url, headers=headers, verify=False)
+            try:
+                data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
+                for item in data.get("players", []):
+                    p = item.get("player", {})
+                    slug = p.get("slug")
+                    pid = p.get("id")
+                    if slug and pid:
+                        player_paths_list.append(
+                            f"https://www.sofascore.com/football/player/{slug}/{pid}"
+                        )
+            except (json.JSONDecodeError, KeyError, TypeError):
+                pass
+
+        if not player_paths_list:
+            for a_tag in soup.find_all("a", href=True):
+                href_val = a_tag["href"]
+                if "/player/" in href_val:
+                    full_url = (
+                        href_val if href_val.startswith("http")
+                        else "https://www.sofascore.com" + href_val
                     )
-        except (json.JSONDecodeError, KeyError, TypeError):
-            pass
+                    player_paths_list.append(full_url)
 
-    if not player_paths_list:
-        for a_tag in soup.find_all("a", href=True):
-            href_val = a_tag["href"]
-            if "/player/" in href_val:
-                full_url = (
-                    href_val if href_val.startswith("http")
-                    else "https://www.sofascore.com" + href_val
-                )
-                player_paths_list.append(full_url)
-
-    player_paths_list = sorted(list(set(player_paths_list)))
+        player_paths_list = sorted(list(set(player_paths_list)))
+        if player_paths_list:
+            break
+        attempt_retries -= 1
+        if attempt_retries <= 0:
+            break
+        print(f"No links for {team_name}, retrying ({attempt_retries} left)...")
+        if use_buffer
+            time.sleep(2)
     print(player_paths_list)
     return team_name, player_paths_list
 
