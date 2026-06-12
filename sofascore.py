@@ -121,7 +121,7 @@ def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
         if attempt_retries <= 0:
             break
         print(f"No links for {team_name}, retrying ({attempt_retries} left)...")
-        if use_buffer
+        if use_buffer:
             time.sleep(2)
     print(player_paths_list)
     return team_name, player_paths_list
