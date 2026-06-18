@@ -443,7 +443,7 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
     if my_string in [
         "Kevin Medina", "Kevin Villodres", "Thuram-Ulien", "Khéphren Thuram", "K. Thuram",
         "Manu Koné", "Kouadio Koné", "Moustapha Mbow", "Mamadou Mbow",
-        "Ben Doak", "Ben Gannon-Doak",
+        "Ben Doak", "Ben Gannon-Doak", "Gannon-Doak",
     ]:
         similarity_threshold = 0.45
     if my_string in [
@@ -911,6 +911,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Juan José Cáceres": "Juan Cáceres",
         "Juan Jose Caceres": "Juan Cáceres",
         # "Ben Doak": "Ben Gannon-Doak", # en mundial y premier
+        # "Gannon-Doak": "Ben Gannon-Doak", # en mundial y premier
         "Yaya Sithole": "Sphephelo Sithole",
         "Kerem Aktrkoglu": "Aktürkoğlu",
         "Mert Mldr": "Müldür",
@@ -955,6 +956,18 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Jonathan Tah": "Tah",
         "Nathan Aké": "Ake",
         "Dayne St. Clair": "St Clair",
+        "Mohammad Abualnadi": "Mo Abualnadi",
+        "Aiden O": "O'Neill",
+        "L. Zigi": "Lawrence Ati Zigi",
+        "Paul Okon": "Okon-Engstler",
+        # "Diney Borges": "Borges",
+        "Diney": "Borges",
+        "Ahmed El Fotouh": "Fatouh",
+        "Evan N'Dicka": "Ndicka",
+        # "Ahmed Fathi": "Fathi",
+        "Ahmed Fathy": "Fathi",
+        # "Homam Al-Amin": "Al-Amin",
+        "Homam Elamin": "Al-Amin",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
