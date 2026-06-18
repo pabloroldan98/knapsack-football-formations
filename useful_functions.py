@@ -954,6 +954,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Khojiakbar Alijonov": "K. Alizhonov",
         "Jonathan Tah": "Tah",
         "Nathan Aké": "Ake",
+        "Dayne St. Clair": "St Clair",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
