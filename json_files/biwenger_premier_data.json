@@ -5767,7 +5767,7 @@
         "id": 12500,
         "name": "Konaté",
         "slug": "i-konate",
-        "teamID": 105,
+        "teamID": null,
         "position": 2,
         "price": 5560000,
         "fantasyPrice": 24000000,
@@ -12547,13 +12547,7 @@
         "number": 28,
         "status": "ok",
         "priceIncrement": -70000,
-        "fitness": [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
+        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -13806,13 +13800,7 @@
         "number": 62,
         "status": "ok",
         "priceIncrement": 0,
-        "fitness": [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
+        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -13997,6 +13985,25 @@
         "pointsAway": 131,
         "pointsLastSeason": 241
       },
+      "41089": {
+        "id": 41089,
+        "name": "Víctor Muñoz",
+        "slug": "victor-munoz",
+        "teamID": 105,
+        "position": 4,
+        "price": 3180000,
+        "fantasyPrice": 15000000,
+        "number": 21,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "41398": {
         "id": 41398,
         "name": "Victor Torp",
@@ -14055,7 +14062,7 @@
         "fitness": [
           5,
           null,
-          null,
+          6,
           null,
           null
         ],
@@ -14829,8 +14836,8 @@
         "nextGames": []
       }
     },
-    "update": 1781841610,
-    "etag": 800063865,
+    "update": 1781827591,
+    "etag": 745405855,
     "scoreID": 3
   },
   "meta": {
@@ -17012,6 +17019,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         },
         "ios": {
@@ -17048,6 +17063,14 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         }
       },
