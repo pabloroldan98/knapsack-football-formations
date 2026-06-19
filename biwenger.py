@@ -361,7 +361,8 @@ def create_players_list(championship_players, championship_teams, use_comunio_pr
         championship_player_name = championship_player["name"]
         player_name = find_manual_similar_string(championship_player_name) # Para solucionar el caso del Dibu y Emiliano
         # if championship_player_name != player_name:
-        #     print(f"{championship_player_name} --> {championship_player_name}")
+        #     print("BIWENGER_CHANGE")
+        #     print(f"{championship_player_name} --> {player_name}")
         player_position_group = championship_player["position"]
         if use_comunio_price:
             player_price = int(round(championship_player["price"] / 100_000))
