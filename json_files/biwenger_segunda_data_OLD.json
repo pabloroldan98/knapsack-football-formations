@@ -351,7 +351,77 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [],
+    "activeEvents": [
+      {
+        "id": 4878,
+        "name": "Final (away)",
+        "short": "Final (away)",
+        "status": "pending",
+        "start": 1781982000,
+        "end": 1781982000,
+        "type": "round",
+        "games": [
+          {
+            "id": 50527,
+            "date": 1781982000,
+            "status": "preview",
+            "home": {
+              "id": 163,
+              "name": "Almería",
+              "slug": "almeria",
+              "score": null,
+              "difficulty": {
+                "rating": 74,
+                "standings": [
+                  73,
+                  35
+                ],
+                "homeAway": [
+                  94,
+                  20
+                ],
+                "form": [
+                  56,
+                  25
+                ],
+                "goalDiff": [
+                  78,
+                  20
+                ]
+              }
+            },
+            "away": {
+              "id": 422,
+              "name": "Málaga",
+              "slug": "malaga",
+              "score": null,
+              "difficulty": {
+                "rating": 65,
+                "standings": [
+                  78,
+                  35
+                ],
+                "homeAway": [
+                  58,
+                  20
+                ],
+                "form": [
+                  50,
+                  25
+                ],
+                "goalDiff": [
+                  66,
+                  20
+                ]
+              }
+            }
+          }
+        ],
+        "pool": {
+          "id": 621936
+        }
+      }
+    ],
     "players": {
       "9955": {
         "id": 9955,
@@ -3287,8 +3357,8 @@
         ]
       }
     },
-    "update": 1781838010,
-    "etag": 1999867262,
+    "update": 1781827135,
+    "etag": 75053155,
     "scoreID": 1
   },
   "meta": {
@@ -5470,6 +5540,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         },
         "ios": {
@@ -5506,6 +5584,14 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         }
       },
