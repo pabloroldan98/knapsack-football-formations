@@ -258,7 +258,7 @@ def get_competitions():
         # {"key": "seriea",       "name_es": "Serie A",            "name_en": "Serie A",                 "apps": ["biwenger"]},
         # {"key": "ligueone",     "name_es": "Ligue 1",            "name_en": "Ligue 1",                 "apps": ["biwenger"]},
         # {"key": "bundesliga",   "name_es": "Bundesliga",         "name_en": "Bundesliga",              "apps": ["biwenger"]},
-        {"key": "segunda",      "name_es": "Segunda División",   "name_en": "Spanish Second Division", "apps": ["biwenger"]},
+        # {"key": "segunda",      "name_es": "Segunda División",   "name_en": "Spanish Second Division", "apps": ["biwenger"]},
         # {"key": "champions",    "name_es": "Champions League",   "name_en": "Champions League",        "apps": ["biwenger"]},
         # {"key": "europaleague", "name_es": "Europa League",      "name_en": "Europa League",           "apps": ["biwenger"]},
         # {"key": "conference",   "name_es": "Conference League",  "name_en": "Conference League",       "apps": ["biwenger"]},
