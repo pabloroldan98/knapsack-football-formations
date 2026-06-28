@@ -153,13 +153,38 @@ class Player:
         else:
             return False
 
+    def calc_fitness_form_coef(self):
+        weights = [0.4, 0.3, 0.2, 0.1]
+        weighted_sum = 0
+        total_weight = 0
+        fitness = self.fitness or []
+        for i, weight in enumerate(weights):
+            if i >= len(fitness):
+                continue
+            fitness_value = fitness[i]
+            if isinstance(fitness_value, (int, float)) and not isinstance(fitness_value, bool):
+                weighted_sum += fitness_value * weight
+                total_weight += weight
+        if total_weight == 0:
+            return 1
+        weighted_average = weighted_sum / total_weight
+        # 0  -> 0.95
+        # 5  -> 1.00
+        # 10 -> 1.05
+        form_coef = 0.95 + weighted_average * 0.01
+        # Cap between 0.95 and 1.05
+        return max(0.95, min(1.05, form_coef))
+
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
         if alt_forms:
-            # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
-            # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
-            price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
-            prod_percent_trend = price_trend_percent * self.price_trend
-            form_coef = (np.log1p(np.log1p(np.abs(prod_percent_trend / 100000))) * np.sign(self.price_trend)) * 3 / 100 + 1
+            # # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
+            # # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
+            # price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
+            # prod_percent_trend = price_trend_percent * self.price_trend
+            # form_coef = (np.log1p(np.log1p(np.abs(prod_percent_trend / 100000))) * np.sign(self.price_trend)) * 3 / 100 + 1
+
+            # Form based on fitness
+            form_coef = self.calc_fitness_form_coef()
         else:
             # # form_coef = ((self.price_trend / np.log1p(self.standard_price)) / 300000) * 1.75 * 0.9 + 1
             # price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
