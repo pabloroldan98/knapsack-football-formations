@@ -156,6 +156,7 @@ class Player:
     def calc_fitness_form_coef(self):
         max_fitness_value = 10
         min_fitness_value = 0
+        curve_strength = 1
 
         weights = [0.4, 0.3, 0.2, 0.1]
         weighted_sum = 0
@@ -171,15 +172,18 @@ class Player:
         if total_weight == 0:
             return 1
         weighted_average = weighted_sum / total_weight
-        # min_fitness_value -> 0.95
-        # midpoint          -> 1.00
-        # max_fitness_value -> 1.05
         if max_fitness_value == min_fitness_value:
             return 1
-        form_coef = 0.95 + ((weighted_average - min_fitness_value) / (max_fitness_value - min_fitness_value)) * 0.10
-        # Cap between 0.95 and 1.05
-        return max(0.95, min(1.05, form_coef))
-        # return form_coef
+
+        # # Previous linear version:
+        # form_coef = 0.95 + ((weighted_average - min_fitness_value) / (max_fitness_value - min_fitness_value)) * 0.10
+        # return max(0.95, min(1.05, form_coef))
+
+        midpoint = (max_fitness_value + min_fitness_value) / 2
+        half_range = (max_fitness_value - min_fitness_value) / 2
+        normalized_value = (weighted_average - midpoint) / half_range
+        form_coef = 1 + 0.05 * np.tanh(curve_strength * normalized_value)
+        return form_coef
 
     def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
         if alt_forms:
