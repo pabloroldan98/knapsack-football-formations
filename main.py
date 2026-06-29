@@ -65,6 +65,7 @@ def get_current_players(
         alt_prices=False,
         alt_price_trends=False,
         alt_forms=False,
+        use_fitness_form=False,
         add_start_probability=False,
         no_team_status_nerf=False,
         use_old_players_data=False,
@@ -105,7 +106,7 @@ def get_current_players(
         ],
         debug=False
 ):
-    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, extra_teams=extra_teams, host_team=host_team, use_comunio_price=use_comunio_price, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
+    all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, extra_teams=extra_teams, host_team=host_team, use_comunio_price=use_comunio_price, use_fitness_form=use_fitness_form, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
     if debug:
         print("000000")
 
@@ -194,7 +195,20 @@ def get_current_players(
     arrows_data = None
     if not skip_arrows:
         arrows_data = get_arrows_data(file_name="arrows_data")
-    full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, use_laligafantasy_data, ignore_gk_fixture, nerf_form, skip_arrows, arrows_data)
+    full_players_data = set_players_value(
+        partial_players_data,
+        no_form=no_form,
+        no_fixtures=no_fixtures,
+        no_home_boost=no_home_boost,
+        alt_fixture_method=alt_fixture_method,
+        # alt_forms=alt_forms,
+        alt_forms=use_laligafantasy_data,
+        use_fitness_form=use_fitness_form,
+        ignore_gk_fixture=ignore_gk_fixture,
+        nerf_form=nerf_form,
+        skip_arrows=skip_arrows,
+        arrows_data=arrows_data,
+    )
     # end = time.time()
     # print(f"Execution time: {end - start:.2f} seconds")
     # full_players_data = set_players_value(partial_players_data, no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms)
@@ -204,7 +218,7 @@ def get_current_players(
     return full_players_data
 
 
-def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, nerf_penalty_boost=False, forced_matches=[]):
+def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[]):
 
     if forced_matches:
         jornada_selected = forced_matches.copy()
@@ -500,6 +514,7 @@ def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=
         alt_prices=False,
         alt_price_trends=False,
         alt_forms=False,
+        use_fitness_form=use_fitness_form,
         add_start_probability=True,
         no_penalty_takers_boost=False,
         nerf_penalty_boost=nerf_penalty_boost,
@@ -654,7 +669,7 @@ if __name__ == "__main__":
     #     # host_team="US",
     #     # debug=False,
     # # )
-    current_players = get_current_players_wrapper("mundial")#, no_form=True)#, forced_matches=jornada_selected)
+    current_players = get_current_players_wrapper("mundial")#, use_fitness_form=True)#, no_form=True)#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place

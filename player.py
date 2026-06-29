@@ -185,16 +185,13 @@ class Player:
         form_coef = 1 + 0.05 * np.tanh(curve_strength * normalized_value)
         return form_coef
 
-    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
+    def calc_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, use_fitness_form=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
         if alt_forms:
-            # # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
-            # # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
-            # price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
-            # prod_percent_trend = price_trend_percent * self.price_trend
-            # form_coef = (np.log1p(np.log1p(np.abs(prod_percent_trend / 100000))) * np.sign(self.price_trend)) * 3 / 100 + 1
-
-            # Form based on fitness
-            form_coef = self.calc_fitness_form_coef()
+            # form_coef = (np.log1p(np.abs(self.price_trend * (self.standard_price - self.price_trend) / 1000000000)) * np.sign(self.price_trend)) / 235 + 1
+            # form_coef = (np.log1p(np.log1p(np.abs(self.price_trend * (self.standard_price / (self.standard_price - self.price_trend)) / 100000))) * np.sign(self.price_trend)) * 3.5 / 100 + 1
+            price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
+            prod_percent_trend = price_trend_percent * self.price_trend
+            form_coef = (np.log1p(np.log1p(np.abs(prod_percent_trend / 100000))) * np.sign(self.price_trend)) * 3 / 100 + 1
         else:
             # # form_coef = ((self.price_trend / np.log1p(self.standard_price)) / 300000) * 1.75 * 0.9 + 1
             # price_trend_percent = 100 * self.price_trend / (self.standard_price - self.price_trend) if self.standard_price != self.price_trend else 0
@@ -207,6 +204,10 @@ class Player:
             form_coef = aux_coef_extra * np.sign(self.price_trend) * 13 / 100 + 1
             if nerf_form:
                 form_coef = aux_coef_extra * np.sign(self.price_trend) * 10 / 100 + 1
+
+        if use_fitness_form:
+            # Form based on fitness
+            form_coef = self.calc_fitness_form_coef()
 
         if no_form:
             form_coef = 1
@@ -339,8 +340,8 @@ class Player:
 
         return predicted_show_value
 
-    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
-        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, ignore_gk_fixture=ignore_gk_fixture, nerf_form=nerf_form, skip_arrows=skip_arrows, arrows_data=arrows_data)
+    def set_player_value(self, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, use_fitness_form=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
+        predicted_value = self.calc_value(no_form, no_fixtures, no_home_boost, alt_fixture_method=alt_fixture_method, alt_forms=alt_forms, use_fitness_form=use_fitness_form, ignore_gk_fixture=ignore_gk_fixture, nerf_form=nerf_form, skip_arrows=skip_arrows, arrows_data=arrows_data)
         self.value = predicted_value
         predicted_show_value = self.calc_show_value(predicted_value)
         self.show_value = predicted_show_value
@@ -1458,10 +1459,10 @@ def set_players_sofascore_rating(
     return result_players
 
 
-def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
+def set_players_value(players_list, no_form=False, no_fixtures=False, no_home_boost=False, alt_fixture_method=False, alt_forms=False, use_fitness_form=False, ignore_gk_fixture=None, nerf_form=False, skip_arrows=True, arrows_data=None):
     result_players = copy.deepcopy(players_list)
     for player in result_players:
-        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, ignore_gk_fixture, nerf_form, skip_arrows, arrows_data)
+        player.set_player_value(no_form, no_fixtures, no_home_boost, alt_fixture_method, alt_forms, use_fitness_form, ignore_gk_fixture, nerf_form, skip_arrows, arrows_data)
     return result_players
 
 

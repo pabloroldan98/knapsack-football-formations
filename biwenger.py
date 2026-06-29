@@ -49,7 +49,8 @@ def competition_from_filename(file_name: str) -> str:
 def get_biwenger_data_dict(
         write_file=False,
         file_name="biwenger_laliga_data",
-        force_scrape=True
+        use_fitness_form=False,
+        force_scrape=True,
 ):
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -57,7 +58,9 @@ def get_biwenger_data_dict(
     if force_scrape:
         try:
             slug = competition_from_filename(file_name)
-            params = {"lang": "en", "callback": "jsonp_xxx"}  # <-- no 'score' here
+            params = {"lang": "en", "callback": "jsonp_xxx"}
+            if use_fitness_form:
+                params["score"] = 3
             all_data_url = f"https://cf.biwenger.com/api/v2/competitions/{slug}/data?{urlencode(params)}"
             # # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
@@ -90,12 +93,13 @@ def get_championship_data(
         extra_teams=False,
         host_team=None,
         use_comunio_price=False,
+        use_fitness_form=False,
         biwenger_file_name="biwenger_laliga_data",
         elo_ratings_file_name="elo_ratings_laliga_data",
         verbose=True
 ):
     print()
-    data = get_biwenger_data_dict(file_name=biwenger_file_name)
+    data = get_biwenger_data_dict(file_name=biwenger_file_name, use_fitness_form=use_fitness_form)
 
     print()
     print()
