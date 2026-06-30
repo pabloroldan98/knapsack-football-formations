@@ -60,7 +60,7 @@ def get_biwenger_data_dict(
             slug = competition_from_filename(file_name)
             params = {"lang": "en", "callback": "jsonp_xxx"}
             if use_fitness_form:
-                params["score"] = 3
+                params["score"] = "3"
             all_data_url = f"https://cf.biwenger.com/api/v2/competitions/{slug}/data?{urlencode(params)}"
             # # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/club-world-cup/data?lang=en&score=1&callback=jsonp_xxx'
             # all_data_url = 'https://cf.biwenger.com/api/v2/competitions/la-liga/data?lang=en&score=1&callback=jsonp_xxx'
