@@ -11,7 +11,7 @@ class Team:
     def __init__(
             self,
             name: str,
-            next_opponent: str,
+            next_opponent: str | None,
             elo: float,
             is_home: bool = False,
             num_ok: int = 0,
