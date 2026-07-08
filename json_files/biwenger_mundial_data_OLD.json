@@ -106,39 +106,54 @@
         "type": "round",
         "games": [
           {
-            "id": 50699,
-            "date": 1783382400,
-            "status": "finished",
+            "id": 50702,
+            "date": 1783454400,
+            "status": "other",
             "home": {
-              "id": 650,
-              "name": "Estados Unidos",
-              "slug": "usa",
-              "score": 1
+              "id": 385,
+              "name": "Suiza",
+              "slug": "switzerland",
+              "score": 0
             },
             "away": {
-              "id": 392,
-              "name": "Bélgica",
-              "slug": "belgium",
-              "score": 4
+              "id": 408,
+              "name": "Colombia",
+              "slug": "colombia",
+              "score": 0
             }
           },
           {
             "id": 50701,
             "date": 1783440000,
-            "status": "preview",
+            "status": "finished",
             "home": {
               "id": 407,
               "name": "Argentina",
               "slug": "argentina",
-              "score": null,
-              "difficulty": null
+              "score": 3
             },
             "away": {
               "id": 400,
-              "name": "Egipto",
+              "name": "Egipte",
               "slug": "egypt",
-              "score": null,
-              "difficulty": null
+              "score": 2
+            }
+          },
+          {
+            "id": 50699,
+            "date": 1783382400,
+            "status": "finished",
+            "home": {
+              "id": 650,
+              "name": "EUA",
+              "slug": "usa",
+              "score": 1
+            },
+            "away": {
+              "id": 392,
+              "name": "Bèlgica",
+              "slug": "belgium",
+              "score": 4
             }
           },
           {
@@ -153,28 +168,9 @@
             },
             "away": {
               "id": 384,
-              "name": "España",
+              "name": "Espanya",
               "slug": "spain",
               "score": 1
-            }
-          },
-          {
-            "id": 50702,
-            "date": 1783454400,
-            "status": "preview",
-            "home": {
-              "id": 385,
-              "name": "Suiza",
-              "slug": "switzerland",
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 408,
-              "name": "Colombia",
-              "slug": "colombia",
-              "score": null,
-              "difficulty": null
             }
           },
           {
@@ -183,7 +179,7 @@
             "status": "finished",
             "home": {
               "id": 404,
-              "name": "México",
+              "name": "Mèxic",
               "slug": "mexico",
               "score": 2
             },
@@ -217,13 +213,13 @@
             "status": "finished",
             "home": {
               "id": 805,
-              "name": "Paraguay",
+              "name": "Paraguai",
               "slug": "paraguay",
               "score": 0
             },
             "away": {
               "id": 381,
-              "name": "Francia",
+              "name": "França",
               "slug": "france",
               "score": 1
             }
@@ -249,6 +245,78 @@
         "pool": {
           "id": 623131
         }
+      },
+      {
+        "id": 4897,
+        "name": "Quarter finals",
+        "short": "Quarter finals",
+        "status": "pending",
+        "start": 1783627200,
+        "end": 1783627200,
+        "type": "round",
+        "games": [
+          {
+            "id": 50703,
+            "date": 1783627200,
+            "status": "preview",
+            "home": {
+              "id": 381,
+              "name": "Francia",
+              "slug": "france",
+              "score": null,
+              "difficulty": null
+            },
+            "away": {
+              "id": 403,
+              "name": "Marruecos",
+              "slug": "morocco",
+              "score": null,
+              "difficulty": null
+            }
+          },
+          {
+            "id": 50705,
+            "date": 1783710000,
+            "status": "preview",
+            "home": {
+              "id": 384,
+              "name": "España",
+              "slug": "spain",
+              "score": null,
+              "difficulty": null
+            },
+            "away": {
+              "id": 392,
+              "name": "Bélgica",
+              "slug": "belgium",
+              "score": null,
+              "difficulty": null
+            }
+          },
+          {
+            "id": 50704,
+            "date": 1783803600,
+            "status": "preview",
+            "home": {
+              "id": 801,
+              "name": "Noruega",
+              "slug": "norway",
+              "score": null,
+              "difficulty": null
+            },
+            "away": {
+              "id": 390,
+              "name": "Inglaterra",
+              "slug": "england",
+              "score": null,
+              "difficulty": null
+            }
+          }
+        ],
+        "pool": {
+          "id": 623658
+        },
+        "probableLineups": false
       }
     ],
     "players": {
@@ -870,15 +938,16 @@
         "status": "ok",
         "priceIncrement": 70000,
         "fitness": [
+          2,
           6,
           2,
           6,
           6
         ],
-        "points": 20,
-        "playedHome": 3,
+        "points": 22,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 18,
+        "pointsHome": 20,
         "pointsAway": 2,
         "pointsLastSeason": 40
       },
@@ -1808,7 +1877,7 @@
         "id": 14827,
         "name": "El Shenawy",
         "slug": "ahmed-el-shenawy",
-        "teamID": 400,
+        "teamID": null,
         "position": 1,
         "price": 450000,
         "fantasyPrice": 15000000,
@@ -1816,6 +1885,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -1855,16 +1925,17 @@
         "id": 40594,
         "name": "Fatouh",
         "slug": "ahmed-fatouh",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 370000,
         "fantasyPrice": 15000000,
         "number": 13,
         "status": "doubt",
         "priceIncrement": 0,
-        "statusInfo": "Training on the sidelines.",
+        "statusInfo": null,
         "statusChange": 1782734430,
         "fitness": [
+          "doubt",
           "doubt",
           2,
           2,
@@ -3203,8 +3274,10 @@
         "price": 3940000,
         "fantasyPrice": 69000000,
         "number": 24,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -60000,
+        "statusInfo": "Anterior cruciate ligament tear. Estimated return: Undetermined.",
+        "statusChange": 1783411207,
         "fitness": [
           0,
           2,
@@ -7244,15 +7317,16 @@
         "status": "ok",
         "priceIncrement": 110000,
         "fitness": [
+          11,
           2,
           "doubt",
           2,
           6
         ],
-        "points": 10,
-        "playedHome": 3,
+        "points": 21,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 10,
+        "pointsHome": 21,
         "pointsAway": 0,
         "pointsLastSeason": 26
       },
@@ -9371,13 +9445,14 @@
         "fitness": [
           2,
           2,
+          2,
           6,
           2
         ],
-        "points": 12,
-        "playedHome": 3,
+        "points": 14,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 10,
+        "pointsHome": 12,
         "pointsAway": 2,
         "pointsLastSeason": 38
       },
@@ -9431,7 +9506,7 @@
         "id": 40588,
         "name": "Soliman",
         "slug": "e-soliman",
-        "teamID": 400,
+        "teamID": null,
         "position": 1,
         "price": 160000,
         "fantasyPrice": 15000000,
@@ -9439,6 +9514,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -10000,7 +10076,7 @@
         "id": 40601,
         "name": "Ashour",
         "slug": "emam-ashour",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 3070000,
         "fantasyPrice": 22000000,
@@ -10008,16 +10084,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
+          2,
           10,
           2,
           6,
           10
         ],
-        "points": 28,
+        "points": 30,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 26,
+        "pointsAway": 28,
         "pointsLastSeason": null
       },
       "40991": {
@@ -10126,15 +10203,16 @@
         "status": "ok",
         "priceIncrement": -60000,
         "fitness": [
+          14,
           2,
           null,
           6,
           6
         ],
-        "points": 14,
-        "playedHome": 3,
+        "points": 28,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 14,
+        "pointsHome": 28,
         "pointsAway": 0,
         "pointsLastSeason": 54
       },
@@ -10434,6 +10512,7 @@
         "status": "ok",
         "priceIncrement": -10000,
         "fitness": [
+          null,
           null,
           6,
           null,
@@ -10835,13 +10914,14 @@
         "status": "ok",
         "priceIncrement": 80000,
         "fitness": [
+          0,
           2,
           null,
           2,
           2
         ],
         "points": 6,
-        "playedHome": 3,
+        "playedHome": 4,
         "playedAway": 0,
         "pointsHome": 6,
         "pointsAway": 0,
@@ -11672,6 +11752,7 @@
         "priceIncrement": -100000,
         "fitness": [
           null,
+          null,
           2,
           null,
           null
@@ -11936,6 +12017,7 @@
           null,
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -12125,6 +12207,7 @@
         "priceIncrement": 50000,
         "fitness": [
           null,
+          null,
           14,
           null,
           null
@@ -12248,13 +12331,14 @@
         "status": "warned",
         "priceIncrement": 30000,
         "fitness": [
+          0,
           2,
           null,
           null,
           2
         ],
         "points": 4,
-        "playedHome": 2,
+        "playedHome": 3,
         "playedAway": 0,
         "pointsHome": 4,
         "pointsAway": 0,
@@ -12846,7 +12930,7 @@
         "id": 40605,
         "name": "Haissem Hassan",
         "slug": "haissem-hassan",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 930000,
         "fantasyPrice": 27000000,
@@ -12854,16 +12938,17 @@
         "status": "warned",
         "priceIncrement": -10000,
         "fitness": [
+          10,
           2,
           null,
           null,
           null
         ],
-        "points": 2,
+        "points": 12,
         "playedHome": 0,
-        "playedAway": 1,
+        "playedAway": 2,
         "pointsHome": 0,
-        "pointsAway": 2,
+        "pointsAway": 12,
         "pointsLastSeason": null
       },
       "29234": {
@@ -12895,7 +12980,7 @@
         "id": 40599,
         "name": "Fathy",
         "slug": "hamdy-fathy",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 920000,
         "fantasyPrice": 19000000,
@@ -12904,22 +12989,23 @@
         "priceIncrement": 10000,
         "fitness": [
           2,
+          2,
           "doubt",
           2,
           2
         ],
-        "points": 6,
+        "points": 8,
         "playedHome": 0,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 0,
-        "pointsAway": 6,
+        "pointsAway": 8,
         "pointsLastSeason": null
       },
       "41137": {
         "id": 41137,
         "name": "Abdelkarim",
         "slug": "hamza-abdelkarim",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 310000,
         "fantasyPrice": 15000000,
@@ -12927,6 +13013,7 @@
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
+          null,
           2,
           2,
           2,
@@ -13406,7 +13493,7 @@
         "id": 40590,
         "name": "Abdelmaguid",
         "slug": "hossam-abdelmaguid",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 250000,
         "fantasyPrice": 15000000,
@@ -13414,6 +13501,7 @@
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
+          null,
           2,
           "doubt",
           0,
@@ -13430,7 +13518,7 @@
         "id": 40986,
         "name": "Hossam Hassan",
         "slug": "hossam-hassan",
-        "teamID": 400,
+        "teamID": null,
         "position": 5,
         "price": 510000,
         "fantasyPrice": 19000000,
@@ -13438,6 +13526,7 @@
         "status": "ok",
         "priceIncrement": -10000,
         "fitness": [
+          0,
           1,
           1,
           3,
@@ -13445,7 +13534,7 @@
         ],
         "points": 6,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 1,
         "pointsAway": 5,
         "pointsLastSeason": null
@@ -13749,7 +13838,7 @@
         "id": 40603,
         "name": "Adel",
         "slug": "ibrahim-adel",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 200000,
         "fantasyPrice": 15000000,
@@ -13757,6 +13846,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -14636,15 +14726,16 @@
         "status": "ok",
         "priceIncrement": -180000,
         "fitness": [
+          6,
           2,
           2,
           2,
           2
         ],
-        "points": 8,
-        "playedHome": 3,
+        "points": 14,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 6,
+        "pointsHome": 12,
         "pointsAway": 2,
         "pointsLastSeason": 58
       },
@@ -14889,6 +14980,7 @@
         "status": "ok",
         "priceIncrement": -80000,
         "fitness": [
+          null,
           null,
           2,
           null,
@@ -16549,8 +16641,10 @@
         "price": 5490000,
         "fantasyPrice": 33000000,
         "number": 9,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 110000,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1783418420,
         "fitness": [
           10,
           14,
@@ -17501,6 +17595,7 @@
         "status": "ok",
         "priceIncrement": -10000,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -18497,26 +18592,25 @@
         "id": 15256,
         "name": "Hafez",
         "slug": "karim-hafez",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 220000,
         "fantasyPrice": 15000000,
         "number": 15,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Muscle discomfort.",
-        "statusChange": 1783162824,
         "fitness": [
+          2,
           2,
           null,
           null,
           0
         ],
-        "points": 2,
+        "points": 4,
         "playedHome": 0,
-        "playedAway": 2,
+        "playedAway": 3,
         "pointsHome": 0,
-        "pointsAway": 2,
+        "pointsAway": 4,
         "pointsLastSeason": null
       },
       "40626": {
@@ -18874,10 +18968,12 @@
         "price": 9940000,
         "fantasyPrice": 85000000,
         "number": 7,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -80000,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1783411206,
         "fitness": [
-          null,
+          "doubt",
           -2,
           10,
           6,
@@ -19580,15 +19676,16 @@
         "status": "ok",
         "priceIncrement": 150000,
         "fitness": [
+          2,
           7,
           null,
           6,
           6
         ],
-        "points": 19,
-        "playedHome": 3,
+        "points": 21,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 19,
+        "pointsHome": 21,
         "pointsAway": 0,
         "pointsLastSeason": 18
       },
@@ -19862,15 +19959,16 @@
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
+          6,
           2,
           9,
           6,
           6
         ],
-        "points": 23,
-        "playedHome": 3,
+        "points": 29,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 14,
+        "pointsHome": 20,
         "pointsAway": 9,
         "pointsLastSeason": 16
       },
@@ -19953,14 +20051,15 @@
         "priceIncrement": 120000,
         "fitness": [
           2,
+          2,
           6,
           2,
           "doubt"
         ],
-        "points": 10,
-        "playedHome": 2,
+        "points": 12,
+        "playedHome": 3,
         "playedAway": 1,
-        "pointsHome": 4,
+        "pointsHome": 6,
         "pointsAway": 6,
         "pointsLastSeason": 14
       },
@@ -20273,15 +20372,16 @@
         "status": "ok",
         "priceIncrement": 90000,
         "fitness": [
+          13,
           9,
           13,
           20,
           23
         ],
-        "points": 65,
-        "playedHome": 3,
+        "points": 78,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 52,
+        "pointsHome": 65,
         "pointsAway": 13,
         "pointsLastSeason": 75
       },
@@ -20906,16 +21006,17 @@
         "id": 40589,
         "name": "Abdelmonem",
         "slug": "m-abdelmonem",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 550000,
         "fantasyPrice": 20000000,
         "number": 6,
         "status": "doubt",
         "priceIncrement": 0,
-        "statusInfo": "Injury of unknown nature.",
+        "statusInfo": null,
         "statusChange": 1782550815,
         "fitness": [
+          "doubt",
           "doubt",
           2,
           0,
@@ -21048,10 +21149,10 @@
         "price": 1740000,
         "fantasyPrice": 21000000,
         "number": 20,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -30000,
-        "statusInfo": "Muscle discomfort.",
-        "statusChange": 1783256409,
+        "statusInfo": "Muscle soreness. Estimated return: Mid-July.",
+        "statusChange": 1783418418,
         "fitness": [
           0,
           2,
@@ -21915,7 +22016,7 @@
         "id": 40602,
         "name": "Saber",
         "slug": "mahmoud-saber",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 450000,
         "fantasyPrice": 15000000,
@@ -21923,6 +22024,7 @@
         "status": "ok",
         "priceIncrement": 20000,
         "fitness": [
+          null,
           6,
           6,
           null,
@@ -21939,7 +22041,7 @@
         "id": 14837,
         "name": "Trezeguet",
         "slug": "mahmoud-trezeguet",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 2170000,
         "fantasyPrice": 20000000,
@@ -21948,15 +22050,16 @@
         "priceIncrement": 10000,
         "fitness": [
           2,
+          2,
           6,
           10,
           null
         ],
-        "points": 18,
+        "points": 20,
         "playedHome": 1,
-        "playedAway": 2,
+        "playedAway": 3,
         "pointsHome": 6,
-        "pointsAway": 12,
+        "pointsAway": 14,
         "pointsLastSeason": null
       },
       "40631": {
@@ -22450,6 +22553,7 @@
         "priceIncrement": -20000,
         "fitness": [
           null,
+          null,
           6,
           null,
           null
@@ -22933,7 +23037,7 @@
         "id": 40597,
         "name": "Attia",
         "slug": "marwan-ateya",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 2110000,
         "fantasyPrice": 28000000,
@@ -22944,13 +23048,14 @@
           2,
           2,
           2,
+          2,
           6
         ],
-        "points": 12,
+        "points": 14,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 10,
+        "pointsAway": 12,
         "pointsLastSeason": null
       },
       "40615": {
@@ -24209,7 +24314,7 @@
         "id": 40587,
         "name": "Mohamed Alaa",
         "slug": "mohamed-alaa",
-        "teamID": 400,
+        "teamID": null,
         "position": 1,
         "price": 180000,
         "fantasyPrice": 15000000,
@@ -24217,6 +24322,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -24259,7 +24365,7 @@
         "id": 40595,
         "name": "Hany",
         "slug": "mohamed-hany",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 1290000,
         "fantasyPrice": 20000000,
@@ -24267,16 +24373,17 @@
         "status": "ok",
         "priceIncrement": -10000,
         "fitness": [
+          2,
           -2,
           2,
           2,
           6
         ],
-        "points": 8,
+        "points": 10,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 6,
+        "pointsAway": 8,
         "pointsLastSeason": null
       },
       "15149": {
@@ -24330,7 +24437,7 @@
         "id": 14828,
         "name": "Salah",
         "slug": "mohamed-salah",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 9240000,
         "fantasyPrice": 102000000,
@@ -24338,16 +24445,17 @@
         "status": "ok",
         "priceIncrement": -100000,
         "fitness": [
+          6,
           2,
           6,
           9,
           6
         ],
-        "points": 23,
+        "points": 29,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 6,
-        "pointsAway": 17,
+        "pointsAway": 23,
         "pointsLastSeason": null
       },
       "41197": {
@@ -24529,26 +24637,25 @@
         "id": 40598,
         "name": "Lasheen",
         "slug": "mohanad-lasheen",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 710000,
         "fantasyPrice": 15000000,
         "number": 17,
-        "status": "sanctioned",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Accumulation of yellow cards.",
-        "statusChange": 1782550817,
         "fitness": [
+          2,
           "sanctioned",
           2,
           2,
           6
         ],
-        "points": 10,
+        "points": 12,
         "playedHome": 1,
-        "playedAway": 2,
+        "playedAway": 3,
         "pointsHome": 2,
-        "pointsAway": 8,
+        "pointsAway": 10,
         "pointsLastSeason": null
       },
       "8589": {
@@ -24818,7 +24925,7 @@
         "id": 41136,
         "name": "Ziko",
         "slug": "mostafa-ziko",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 910000,
         "fantasyPrice": 15000000,
@@ -24826,16 +24933,17 @@
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
+          13,
           -2,
           2,
           9,
           2
         ],
-        "points": 11,
+        "points": 24,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 9,
+        "pointsAway": 22,
         "pointsLastSeason": null
       },
       "41239": {
@@ -25425,7 +25533,7 @@
         "id": 41135,
         "name": "Dunga",
         "slug": "nabil-dunga",
-        "teamID": 400,
+        "teamID": null,
         "position": 3,
         "price": 200000,
         "fantasyPrice": 15000000,
@@ -25433,6 +25541,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -25506,14 +25615,15 @@
         "priceIncrement": 50000,
         "fitness": [
           2,
+          2,
           null,
           2,
           2
         ],
-        "points": 6,
-        "playedHome": 3,
+        "points": 8,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 6,
+        "pointsHome": 8,
         "pointsAway": 0,
         "pointsLastSeason": 35
       },
@@ -25976,6 +26086,7 @@
         "priceIncrement": -90000,
         "fitness": [
           null,
+          null,
           6,
           null,
           2
@@ -26044,14 +26155,15 @@
         "priceIncrement": 20000,
         "fitness": [
           2,
+          2,
           null,
           2,
           2
         ],
-        "points": 6,
-        "playedHome": 3,
+        "points": 8,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 6,
+        "pointsHome": 8,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -26091,13 +26203,14 @@
         "status": "ok",
         "priceIncrement": 20000,
         "fitness": [
+          0,
           null,
           6,
           2,
           2
         ],
         "points": 10,
-        "playedHome": 2,
+        "playedHome": 3,
         "playedAway": 1,
         "pointsHome": 4,
         "pointsAway": 6,
@@ -26188,15 +26301,16 @@
         "status": "ok",
         "priceIncrement": 80000,
         "fitness": [
+          6,
           2,
           6,
           2,
           "doubt"
         ],
-        "points": 10,
-        "playedHome": 2,
+        "points": 16,
+        "playedHome": 3,
         "playedAway": 1,
-        "pointsHome": 4,
+        "pointsHome": 10,
         "pointsAway": 6,
         "pointsLastSeason": 32
       },
@@ -26868,7 +26982,7 @@
         "id": 40607,
         "name": "Marmoush",
         "slug": "omar-marmoush",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 7370000,
         "fantasyPrice": 121000000,
@@ -26876,6 +26990,7 @@
         "status": "ok",
         "priceIncrement": -130000,
         "fitness": [
+          0,
           2,
           2,
           2,
@@ -26883,7 +26998,7 @@
         ],
         "points": 12,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
         "pointsAway": 10,
         "pointsLastSeason": null
@@ -27176,7 +27291,7 @@
         "id": 40586,
         "name": "Shobeir",
         "slug": "oufa-shobeir",
-        "teamID": 400,
+        "teamID": null,
         "position": 1,
         "price": 1460000,
         "fantasyPrice": 15000000,
@@ -27184,16 +27299,17 @@
         "status": "ok",
         "priceIncrement": 40000,
         "fitness": [
+          10,
           6,
           2,
           2,
           6
         ],
-        "points": 16,
+        "points": 26,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 14,
+        "pointsAway": 24,
         "pointsLastSeason": null
       },
       "41121": {
@@ -28863,7 +28979,7 @@
         "id": 40591,
         "name": "Rabia",
         "slug": "ramy-rabia",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 1410000,
         "fantasyPrice": 20000000,
@@ -28871,16 +28987,17 @@
         "status": "ok",
         "priceIncrement": 30000,
         "fitness": [
+          2,
           10,
           6,
           2,
           2
         ],
-        "points": 20,
+        "points": 22,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 6,
-        "pointsAway": 14,
+        "pointsAway": 16,
         "pointsLastSeason": null
       },
       "40914": {
@@ -29724,14 +29841,15 @@
         "priceIncrement": 80000,
         "fitness": [
           2,
+          2,
           null,
           6,
           2
         ],
-        "points": 10,
-        "playedHome": 3,
+        "points": 12,
+        "playedHome": 4,
         "playedAway": 0,
-        "pointsHome": 10,
+        "pointsHome": 12,
         "pointsAway": 0,
         "pointsLastSeason": 22
       },
@@ -31111,12 +31229,13 @@
           3,
           3,
           3,
+          3,
           3
         ],
-        "points": 12,
-        "playedHome": 3,
+        "points": 15,
+        "playedHome": 4,
         "playedAway": 1,
-        "pointsHome": 9,
+        "pointsHome": 12,
         "pointsAway": 3,
         "pointsLastSeason": null
       },
@@ -32310,7 +32429,7 @@
         "id": 40596,
         "name": "Tarek Alaa",
         "slug": "tarek-alaa",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 160000,
         "fantasyPrice": 15000000,
@@ -32318,6 +32437,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -32607,6 +32727,7 @@
         "status": "ok",
         "priceIncrement": 50000,
         "fitness": [
+          null,
           2,
           2,
           2,
@@ -33444,6 +33565,7 @@
         "priceIncrement": -50000,
         "fitness": [
           null,
+          null,
           6,
           null,
           null
@@ -33829,7 +33951,7 @@
         "status": "injured",
         "priceIncrement": 0,
         "statusInfo": null,
-        "statusChange": 1780855221,
+        "statusChange": 1781172000,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -34387,7 +34509,7 @@
         "id": 40593,
         "name": "Ibrahim",
         "slug": "yasser-ibrahim",
-        "teamID": 400,
+        "teamID": null,
         "position": 2,
         "price": 1250000,
         "fantasyPrice": 20000000,
@@ -34395,16 +34517,17 @@
         "status": "warned",
         "priceIncrement": 0,
         "fitness": [
+          11,
           6,
           2,
           2,
           6
         ],
-        "points": 16,
+        "points": 27,
         "playedHome": 1,
-        "playedAway": 3,
+        "playedAway": 4,
         "pointsHome": 2,
-        "pointsAway": 14,
+        "pointsAway": 25,
         "pointsLastSeason": null
       },
       "40327": {
@@ -35122,7 +35245,7 @@
         "id": 40606,
         "name": "Zizo",
         "slug": "zizo",
-        "teamID": 400,
+        "teamID": null,
         "position": 4,
         "price": 2070000,
         "fantasyPrice": 44000000,
@@ -35130,6 +35253,7 @@
         "status": "ok",
         "priceIncrement": -40000,
         "fitness": [
+          0,
           null,
           2,
           0,
@@ -35137,7 +35261,7 @@
         ],
         "points": 4,
         "playedHome": 1,
-        "playedAway": 2,
+        "playedAway": 3,
         "pointsHome": 2,
         "pointsAway": 2,
         "pointsLastSeason": null
@@ -35242,36 +35366,7 @@
         "id": 385,
         "name": "Switzerland",
         "slug": "switzerland",
-        "nextGames": [
-          {
-            "id": 50702,
-            "date": 1783454400,
-            "status": "preview",
-            "home": {
-              "id": 385,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 408,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4896
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "390": {
         "id": 390,
@@ -35281,7 +35376,7 @@
           {
             "id": 50704,
             "date": 1783803600,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 801,
               "score": null,
@@ -35343,41 +35438,6 @@
           }
         ]
       },
-      "400": {
-        "id": 400,
-        "name": "Egypt",
-        "slug": "egypt",
-        "nextGames": [
-          {
-            "id": 50701,
-            "date": 1783440000,
-            "status": "preview",
-            "home": {
-              "id": 407,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 400,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4896
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
-      },
       "403": {
         "id": 403,
         "name": "Morocco",
@@ -35417,71 +35477,13 @@
         "id": 407,
         "name": "Argentina",
         "slug": "argentina",
-        "nextGames": [
-          {
-            "id": 50701,
-            "date": 1783440000,
-            "status": "preview",
-            "home": {
-              "id": 407,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 400,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4896
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "408": {
         "id": 408,
         "name": "Colombia",
         "slug": "colombia",
-        "nextGames": [
-          {
-            "id": 50702,
-            "date": 1783454400,
-            "status": "preview",
-            "home": {
-              "id": 385,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 408,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4896
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "801": {
         "id": 801,
@@ -35491,7 +35493,7 @@
           {
             "id": 50704,
             "date": 1783803600,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 801,
               "score": null,
@@ -35519,8 +35521,8 @@
         ]
       }
     },
-    "update": 1783479610,
-    "etag": 1490367179,
+    "update": 1783464779,
+    "etag": 2519016404,
     "scoreID": 1
   },
   "meta": {
