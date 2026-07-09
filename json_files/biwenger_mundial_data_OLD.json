@@ -81,7 +81,7 @@
           "id": 4896,
           "name": "Round of 16",
           "short": "Round of 16",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4897,
@@ -98,155 +98,6 @@
     },
     "activeEvents": [
       {
-        "id": 4896,
-        "name": "Round of 16",
-        "short": "Round of 16",
-        "status": "active",
-        "end": 1783522800,
-        "type": "round",
-        "games": [
-          {
-            "id": 50702,
-            "date": 1783454400,
-            "status": "finished",
-            "home": {
-              "id": 385,
-              "name": "Suiza",
-              "slug": "switzerland",
-              "score": 0
-            },
-            "away": {
-              "id": 408,
-              "name": "Colombia",
-              "slug": "colombia",
-              "score": 0
-            }
-          },
-          {
-            "id": 50701,
-            "date": 1783440000,
-            "status": "finished",
-            "home": {
-              "id": 407,
-              "name": "Argentina",
-              "slug": "argentina",
-              "score": 3
-            },
-            "away": {
-              "id": 400,
-              "name": "Egipte",
-              "slug": "egypt",
-              "score": 2
-            }
-          },
-          {
-            "id": 50699,
-            "date": 1783382400,
-            "status": "finished",
-            "home": {
-              "id": 650,
-              "name": "EUA",
-              "slug": "usa",
-              "score": 1
-            },
-            "away": {
-              "id": 392,
-              "name": "Bèlgica",
-              "slug": "belgium",
-              "score": 4
-            }
-          },
-          {
-            "id": 50700,
-            "date": 1783364400,
-            "status": "finished",
-            "home": {
-              "id": 387,
-              "name": "Portugal",
-              "slug": "portugal",
-              "score": 0
-            },
-            "away": {
-              "id": 384,
-              "name": "Espanya",
-              "slug": "spain",
-              "score": 1
-            }
-          },
-          {
-            "id": 50698,
-            "date": 1783299600,
-            "status": "finished",
-            "home": {
-              "id": 404,
-              "name": "Mèxic",
-              "slug": "mexico",
-              "score": 2
-            },
-            "away": {
-              "id": 390,
-              "name": "Inglaterra",
-              "slug": "england",
-              "score": 3
-            }
-          },
-          {
-            "id": 50696,
-            "date": 1783281600,
-            "status": "finished",
-            "home": {
-              "id": 398,
-              "name": "Brasil",
-              "slug": "brazil",
-              "score": 1
-            },
-            "away": {
-              "id": 801,
-              "name": "Noruega",
-              "slug": "norway",
-              "score": 2
-            }
-          },
-          {
-            "id": 50697,
-            "date": 1783198800,
-            "status": "finished",
-            "home": {
-              "id": 805,
-              "name": "Paraguai",
-              "slug": "paraguay",
-              "score": 0
-            },
-            "away": {
-              "id": 381,
-              "name": "França",
-              "slug": "france",
-              "score": 1
-            }
-          },
-          {
-            "id": 50695,
-            "date": 1783184400,
-            "status": "finished",
-            "home": {
-              "id": 656,
-              "name": "Canadá",
-              "slug": "canada",
-              "score": 0
-            },
-            "away": {
-              "id": 403,
-              "name": "Marruecos",
-              "slug": "morocco",
-              "score": 3
-            }
-          }
-        ],
-        "pool": {
-          "id": 623131
-        }
-      },
-      {
         "id": 4897,
         "name": "Quarter finals",
         "short": "Quarter finals",
@@ -261,14 +112,14 @@
             "status": "preview",
             "home": {
               "id": 381,
-              "name": "Francia",
+              "name": "França",
               "slug": "france",
               "score": null,
               "difficulty": null
             },
             "away": {
               "id": 403,
-              "name": "Marruecos",
+              "name": "Marroc",
               "slug": "morocco",
               "score": null,
               "difficulty": null
@@ -280,14 +131,14 @@
             "status": "preview",
             "home": {
               "id": 384,
-              "name": "España",
+              "name": "Espanya",
               "slug": "spain",
               "score": null,
               "difficulty": null
             },
             "away": {
               "id": 392,
-              "name": "Bélgica",
+              "name": "Bèlgica",
               "slug": "belgium",
               "score": null,
               "difficulty": null
@@ -325,7 +176,7 @@
             },
             "away": {
               "id": 385,
-              "name": "Suïssa",
+              "name": "Suiza",
               "slug": "switzerland",
               "score": null,
               "difficulty": null
@@ -335,7 +186,7 @@
         "pool": {
           "id": 623658
         },
-        "probableLineups": false
+        "probableLineups": true
       }
     ],
     "players": {
@@ -6899,8 +6750,10 @@
         "price": 4070000,
         "fantasyPrice": 19000000,
         "number": 18,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 90000,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1783497608,
         "fitness": [
           null,
           6,
@@ -8543,7 +8396,7 @@
         "price": 2630000,
         "fantasyPrice": 41000000,
         "number": 6,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": 140000,
         "fitness": [
           2,
@@ -12485,7 +12338,7 @@
         "price": 7600000,
         "fantasyPrice": 79000000,
         "number": 10,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": 30000,
         "fitness": [
           2,
@@ -17997,7 +17850,7 @@
         "status": "injured",
         "priceIncrement": 0,
         "statusInfo": null,
-        "statusChange": 1780948811,
+        "statusChange": 1781172000,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -20516,10 +20369,10 @@
         "price": 630000,
         "fantasyPrice": 19000000,
         "number": 25,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -20000,
-        "statusInfo": "Muscle discomfort. Estimated return: Early July.",
-        "statusChange": 1783256410,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1783490416,
         "fitness": [
           "injured",
           "doubt",
@@ -21203,10 +21056,10 @@
         "price": 1680000,
         "fantasyPrice": 21000000,
         "number": 20,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -60000,
-        "statusInfo": "Muscle soreness. Estimated return: Mid-July.",
-        "statusChange": 1783418418,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1783490415,
         "fitness": [
           "injured",
           0,
@@ -24352,7 +24205,7 @@
         "price": 310000,
         "fantasyPrice": 16000000,
         "number": 2,
-        "status": "ok",
+        "status": "warned",
         "priceIncrement": 10000,
         "fitness": [
           2,
@@ -35646,8 +35499,8 @@
         ]
       }
     },
-    "update": 1783566010,
-    "etag": 2007496342,
+    "update": 1783551823,
+    "etag": 855712291,
     "scoreID": 1
   },
   "meta": {
