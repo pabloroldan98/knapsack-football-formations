@@ -10745,8 +10745,8 @@
         "nextGames": []
       }
     },
-    "update": 1783652410,
-    "etag": 3647699399,
+    "update": 1783637957,
+    "etag": 2112942956,
     "scoreID": 1
   },
   "meta": {
@@ -12928,6 +12928,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         },
         "ios": {
@@ -12964,6 +12972,14 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         }
       },
@@ -12986,15 +13002,6 @@
         "grounds": {
           "world-cup": "world_cup"
         },
-        "world-cup-ground": "world_cup",
-        "prebidSandbox": true,
-        "prebidTouchGuardNetworks": [
-          "inmobi",
-          "pubmatic"
-        ],
-        "reviewApp": true,
-        "reviewAppAllUsers": "Math.random() < 0.20",
-        "reviewAppInternalFlow": true,
         "recentSeasons": [
           15,
           53
