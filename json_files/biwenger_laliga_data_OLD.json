@@ -3958,7 +3958,7 @@
         "id": 35283,
         "name": "Coba Gomes",
         "slug": "coba-gomes",
-        "teamID": 8,
+        "teamID": null,
         "position": 4,
         "altPositions": [
           3
@@ -5794,7 +5794,7 @@
         "position": 2,
         "price": 1720000,
         "fantasyPrice": 29000000,
-        "number": 20,
+        "number": 11,
         "status": "ok",
         "priceIncrement": 150000,
         "fitness": [
@@ -6035,7 +6035,7 @@
         "price": 540000,
         "fantasyPrice": 19000000,
         "number": 0,
-        "status": "unknown",
+        "status": "ok",
         "priceIncrement": 0,
         "fitness": [],
         "points": 0,
@@ -9117,6 +9117,25 @@
         "number": 5,
         "status": "ok",
         "priceIncrement": 20000,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "42425": {
+        "id": 42425,
+        "name": "Amatucci",
+        "slug": "l-amatucci",
+        "teamID": 6,
+        "position": 3,
+        "price": 590000,
+        "fantasyPrice": 20000000,
+        "number": 0,
+        "status": "ok",
+        "priceIncrement": 0,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -15949,8 +15968,8 @@
         "nextGames": []
       }
     },
-    "update": 1783659610,
-    "etag": 2089622802,
+    "update": 1783638834,
+    "etag": 1631007741,
     "scoreID": 1
   },
   "meta": {
@@ -18132,6 +18151,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         },
         "ios": {
@@ -18168,6 +18195,14 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         }
       },
@@ -18190,15 +18225,6 @@
         "grounds": {
           "world-cup": "world_cup"
         },
-        "world-cup-ground": "world_cup",
-        "prebidSandbox": true,
-        "prebidTouchGuardNetworks": [
-          "inmobi",
-          "pubmatic"
-        ],
-        "reviewApp": true,
-        "reviewAppAllUsers": "Math.random() < 0.20",
-        "reviewAppInternalFlow": true,
         "recentSeasons": [
           15,
           53
