@@ -112,39 +112,20 @@
         "type": "round",
         "games": [
           {
-            "id": 50705,
-            "date": 1783710000,
-            "status": "finished",
-            "home": {
-              "id": 384,
-              "name": "España",
-              "slug": "spain",
-              "score": 2
-            },
-            "away": {
-              "id": 392,
-              "name": "Bélgica",
-              "slug": "belgium",
-              "score": 1
-            }
-          },
-          {
             "id": 50704,
             "date": 1783803600,
-            "status": "preview",
+            "status": "extraTime",
             "home": {
               "id": 801,
               "name": "Noruega",
               "slug": "norway",
-              "score": null,
-              "difficulty": null
+              "score": 1
             },
             "away": {
               "id": 390,
               "name": "Inglaterra",
               "slug": "england",
-              "score": null,
-              "difficulty": null
+              "score": 1
             }
           },
           {
@@ -164,6 +145,23 @@
               "slug": "switzerland",
               "score": null,
               "difficulty": null
+            }
+          },
+          {
+            "id": 50705,
+            "date": 1783710000,
+            "status": "finished",
+            "home": {
+              "id": 384,
+              "name": "España",
+              "slug": "spain",
+              "score": 2
+            },
+            "away": {
+              "id": 392,
+              "name": "Bélgica",
+              "slug": "belgium",
+              "score": 1
             }
           },
           {
@@ -8604,10 +8602,8 @@
         "price": 3300000,
         "fantasyPrice": 36000000,
         "number": 25,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle discomfort.",
-        "statusChange": 1783324814,
         "fitness": [
           2,
           -2,
@@ -21838,11 +21834,8 @@
         "price": 6640000,
         "fantasyPrice": 56000000,
         "number": 6,
-        "status": "doubt",
+        "status": "warned",
         "priceIncrement": 20000,
-        "statusInfo": "Hamstring strain.",
-        "extraStatus": "warned",
-        "statusChange": 1783674015,
         "fitness": [
           2,
           6,
@@ -25338,7 +25331,7 @@
         "status": "injured",
         "priceIncrement": 0,
         "statusInfo": null,
-        "statusChange": 1781164820,
+        "statusChange": 1781172000,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -33369,7 +33362,7 @@
         "status": "injured",
         "priceIncrement": 0,
         "statusInfo": null,
-        "statusChange": 1781204417,
+        "statusChange": 1782727200,
         "fitness": [
           "injured",
           "injured",
@@ -34830,36 +34823,7 @@
         "id": 390,
         "name": "England",
         "slug": "england",
-        "nextGames": [
-          {
-            "id": 50704,
-            "date": 1783803600,
-            "status": "preview",
-            "home": {
-              "id": 801,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 390,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4897
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "407": {
         "id": 407,
@@ -34900,40 +34864,11 @@
         "id": 801,
         "name": "Norway",
         "slug": "norway",
-        "nextGames": [
-          {
-            "id": 50704,
-            "date": 1783803600,
-            "status": "preview",
-            "home": {
-              "id": 801,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 390,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 4897
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       }
     },
-    "update": 1783825210,
-    "etag": 622374497,
+    "update": 1783811449,
+    "etag": 1345720079,
     "scoreID": 1
   },
   "meta": {
