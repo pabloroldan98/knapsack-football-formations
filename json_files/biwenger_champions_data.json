@@ -500,8 +500,10 @@
         "price": 8450000,
         "fantasyPrice": 29000000,
         "number": 2,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 10000,
+        "statusInfo": "Back problems",
+        "statusChange": 1784059207,
         "fitness": [
           3,
           5,
@@ -1483,8 +1485,8 @@
         "nextGames": []
       }
     },
-    "update": 1784084410,
-    "etag": 3602982334,
+    "update": 1784071264,
+    "etag": 1083521270,
     "scoreID": 3
   },
   "meta": {
@@ -3666,6 +3668,14 @@
             "levelPlay": {
               "adUnit": "9bk0eziv3qm8n1m0"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/android/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         },
         "ios": {
@@ -3702,6 +3712,14 @@
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
             }
+          },
+          "gamInterstitial": {
+            "type": "AdManager",
+            "id": "/7811748/biwenger_app/iphone/minter",
+            "targeting": {
+              "pos": "interweb"
+            },
+            "frequencyCap": "2/h"
           }
         }
       },
@@ -3726,6 +3744,7 @@
         },
         "disableIAP": "apple:95%,google:95%",
         "recentSeasons": [
+          1,
           15,
           53
         ]
