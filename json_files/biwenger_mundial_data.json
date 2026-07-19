@@ -6,6 +6,7 @@
     "slug": "world-cup",
     "sport": "football",
     "currency": "$",
+    "enabled": false,
     "nationalTeams": true,
     "scores": [
       {
@@ -40,8 +41,8 @@
     "config": {
       "coaches": true,
       "multiPos": true,
-      "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
-      "optimizeImages": true,
+      "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/spain-header.jpg",
+      "optimizeImages": false,
       "leagueSponsor": {
         "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
         "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
@@ -99,7 +100,7 @@
           "id": 5018,
           "name": "Final",
           "short": "Final",
-          "status": "pending"
+          "status": "active"
         }
       ],
       "previous": {
@@ -113,28 +114,25 @@
         "id": 5018,
         "name": "Final",
         "short": "Final",
-        "status": "pending",
-        "start": 1784408400,
-        "end": 1784408400,
+        "status": "active",
+        "end": 1784559600,
         "type": "round",
         "games": [
           {
             "id": 51931,
             "date": 1784408400,
-            "status": "preview",
+            "status": "injuryTime",
             "home": {
               "id": 381,
               "name": "Francia",
               "slug": "france",
-              "score": null,
-              "difficulty": null
+              "score": 4
             },
             "away": {
               "id": 390,
               "name": "Inglaterra",
               "slug": "england",
-              "score": null,
-              "difficulty": null
+              "score": 5
             }
           },
           {
@@ -159,8 +157,7 @@
         ],
         "pool": {
           "id": 624828
-        },
-        "probableLineups": true
+        }
       }
     ],
     "players": {
@@ -277,25 +274,6 @@
         "playedAway": 1,
         "pointsHome": 0,
         "pointsAway": 2,
-        "pointsLastSeason": null
-      },
-      "40444": {
-        "id": 40444,
-        "name": "A. Al-Talalga",
-        "slug": "a-al-talalga",
-        "teamID": null,
-        "position": 1,
-        "price": 420000,
-        "fantasyPrice": 18000000,
-        "number": 22,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "41186": {
@@ -1475,25 +1453,6 @@
         "pointsAway": 6,
         "pointsLastSeason": 28
       },
-      "40460": {
-        "id": 40460,
-        "name": "Ahmad Assaf",
-        "slug": "ahmad-assaf",
-        "teamID": null,
-        "position": 3,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 17,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "41183": {
         "id": 41183,
         "name": "Al-Ganehi",
@@ -1702,25 +1661,6 @@
           null,
           null
         ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "40410": {
-        "id": 40410,
-        "name": "Ahmetcan Kaplan",
-        "slug": "ahmetcan-kaplan",
-        "teamID": null,
-        "position": 2,
-        "price": 450000,
-        "fantasyPrice": 16000000,
-        "number": 4,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -2678,25 +2618,6 @@
         "pointsAway": 4,
         "pointsLastSeason": 4
       },
-      "40398": {
-        "id": 40398,
-        "name": "Alisher Odilov",
-        "slug": "alisher-odilov",
-        "teamID": null,
-        "position": 4,
-        "price": 160000,
-        "fantasyPrice": 15000000,
-        "number": 18,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "14758": {
         "id": 14758,
         "name": "Alisson",
@@ -3490,25 +3411,6 @@
         "pointsAway": 4,
         "pointsLastSeason": 14
       },
-      "41064": {
-        "id": 41064,
-        "name": "Aral Şimşir",
-        "slug": "aral-simsir",
-        "teamID": null,
-        "position": 4,
-        "price": 190000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40423": {
         "id": 40423,
         "name": "Arda Güler",
@@ -3768,25 +3670,6 @@
         "pointsHome": 6,
         "pointsAway": -4,
         "pointsLastSeason": 4
-      },
-      "40419": {
-        "id": 40419,
-        "name": "Atakan Karazor",
-        "slug": "atakan-karazor",
-        "teamID": null,
-        "position": 3,
-        "price": 340000,
-        "fantasyPrice": 16000000,
-        "number": 19,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
       },
       "40535": {
         "id": 40535,
@@ -4409,25 +4292,6 @@
         "playedAway": 1,
         "pointsHome": 11,
         "pointsAway": -2,
-        "pointsLastSeason": null
-      },
-      "40467": {
-        "id": 40467,
-        "name": "Baha'a Faisal",
-        "slug": "bahaa-faisal",
-        "teamID": null,
-        "position": 4,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 9,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "28629": {
@@ -7206,7 +7070,7 @@
         "status": "injured",
         "priceIncrement": 0,
         "statusInfo": null,
-        "statusChange": 1781773226,
+        "statusChange": 1782640800,
         "fitness": [
           "injured",
           "injured",
@@ -7880,25 +7744,6 @@
         "pointsHome": 2,
         "pointsAway": 2,
         "pointsLastSeason": 14
-      },
-      "18674": {
-        "id": 18674,
-        "name": "Diyor Ortikboev",
-        "slug": "diyor-ortikboev",
-        "teamID": null,
-        "position": 2,
-        "price": 160000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
       },
       "40736": {
         "id": 40736,
@@ -12456,25 +12301,6 @@
         "pointsAway": 6,
         "pointsLastSeason": 26
       },
-      "18676": {
-        "id": 18676,
-        "name": "I. Yuldoshev",
-        "slug": "i-yuldoshev",
-        "teamID": null,
-        "position": 2,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40603": {
         "id": 40603,
         "name": "Adel",
@@ -13480,25 +13306,6 @@
         "points": 0,
         "playedHome": 0,
         "playedAway": 1,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "28583": {
-        "id": 28583,
-        "name": "J. Jaloliddinov",
-        "slug": "j-jaloliddinov",
-        "teamID": null,
-        "position": 3,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
         "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
@@ -16366,25 +16173,6 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
-      "41061": {
-        "id": 41061,
-        "name": "K. Norchaev",
-        "slug": "k-norchaev",
-        "teamID": null,
-        "position": 4,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40831": {
         "id": 40831,
         "name": "Oppong",
@@ -17507,25 +17295,6 @@
         "playedAway": 1,
         "pointsHome": 2,
         "pointsAway": -2,
-        "pointsLastSeason": null
-      },
-      "37601": {
-        "id": 37601,
-        "name": "Kuvondik Ruziev",
-        "slug": "kuvondik-ruziev",
-        "teamID": null,
-        "position": 3,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "40840": {
@@ -18973,25 +18742,6 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
-      "40385": {
-        "id": 40385,
-        "name": "M. Abdumazhidov",
-        "slug": "m-abdumazhidov",
-        "teamID": null,
-        "position": 2,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 23,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "41240": {
         "id": 41240,
         "name": "Al-Shamat",
@@ -19347,25 +19097,6 @@
         "pointsAway": 2,
         "pointsLastSeason": null
       },
-      "40414": {
-        "id": 40414,
-        "name": "M. Eskihellaç",
-        "slug": "m-eskihellac",
-        "teamID": null,
-        "position": 2,
-        "price": 200000,
-        "fantasyPrice": 15000000,
-        "number": 19,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40310": {
         "id": 40310,
         "name": "Expérience",
@@ -19459,25 +19190,6 @@
         "playedAway": 3,
         "pointsHome": 0,
         "pointsAway": 2,
-        "pointsLastSeason": null
-      },
-      "40382": {
-        "id": 40382,
-        "name": "M. Khamraliev",
-        "slug": "m-khamraliev",
-        "teamID": null,
-        "position": 2,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 25,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "40530": {
@@ -19591,25 +19303,6 @@
           null,
           null
         ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "40405": {
-        "id": 40405,
-        "name": "Şengezer",
-        "slug": "m-sengezer",
-        "teamID": null,
-        "position": 1,
-        "price": 190000,
-        "fantasyPrice": 15000000,
-        "number": 16,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -22683,25 +22376,6 @@
         "playedHome": 1,
         "playedAway": 2,
         "pointsHome": 3,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "41060": {
-        "id": 41060,
-        "name": "N. Abdurazzakov",
-        "slug": "n-abdurazzakov",
-        "teamID": null,
-        "position": 4,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -26423,10 +26097,8 @@
         "price": 4110000,
         "fantasyPrice": 53000000,
         "number": 24,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -230000,
-        "statusInfo": "Muscle discomfort.",
-        "statusChange": 1784196130,
         "fitness": [
           2,
           2,
@@ -27334,25 +27006,6 @@
         "playedAway": 1,
         "pointsHome": 4,
         "pointsAway": 2,
-        "pointsLastSeason": null
-      },
-      "41059": {
-        "id": 41059,
-        "name": "S. Bakhromov",
-        "slug": "s-bakhromov",
-        "teamID": null,
-        "position": 4,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "40922": {
@@ -28399,25 +28052,6 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
-      "41065": {
-        "id": 41065,
-        "name": "Kılıçsoy",
-        "slug": "semih-kilicsoy",
-        "teamID": null,
-        "position": 4,
-        "price": 320000,
-        "fantasyPrice": 17000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40885": {
         "id": 40885,
         "name": "Lammens",
@@ -28602,25 +28236,6 @@
         "points": 0,
         "playedHome": 0,
         "playedAway": 1,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "40402": {
-        "id": 40402,
-        "name": "Sherzod Temirov",
-        "slug": "sherzod-temirov",
-        "teamID": null,
-        "position": 4,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 26,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
         "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
@@ -30306,25 +29921,6 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
-      "40391": {
-        "id": 40391,
-        "name": "U. Rakhmonaliev",
-        "slug": "u-rakhmonaliev",
-        "teamID": null,
-        "position": 3,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 22,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "40403": {
         "id": 40403,
         "name": "Çakir",
@@ -30436,25 +30032,6 @@
           null,
           null
         ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
-      "18629": {
-        "id": 18629,
-        "name": "V. Nazarov",
-        "slug": "v-nazarov",
-        "teamID": null,
-        "position": 1,
-        "price": 160000,
-        "fantasyPrice": 15000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -31165,25 +30742,6 @@
         "pointsAway": 2,
         "pointsLastSeason": null
       },
-      "40448": {
-        "id": 40448,
-        "name": "Y. Abu Al-Jazar",
-        "slug": "y-abu-al-jazar",
-        "teamID": null,
-        "position": 2,
-        "price": 160000,
-        "fantasyPrice": 15000000,
-        "number": 6,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "41184": {
         "id": 41184,
         "name": "Belammari",
@@ -31664,25 +31222,6 @@
         "pointsAway": 8,
         "pointsLastSeason": 10
       },
-      "40459": {
-        "id": 40459,
-        "name": "Yousef Qashi",
-        "slug": "yousef-qashi",
-        "teamID": null,
-        "position": 3,
-        "price": 250000,
-        "fantasyPrice": 17000000,
-        "number": 26,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "19402": {
         "id": 19402,
         "name": "Amyn",
@@ -32116,36 +31655,7 @@
         "id": 381,
         "name": "France",
         "slug": "france",
-        "nextGames": [
-          {
-            "id": 51931,
-            "date": 1784408400,
-            "status": "preview",
-            "home": {
-              "id": 381,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 390,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 5018
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "384": {
         "id": 384,
@@ -32175,6 +31685,7 @@
               "slug": "world-cup",
               "sport": "football",
               "currency": "$",
+              "enabled": false,
               "nationalTeams": true
             },
             "preview": null,
@@ -32186,36 +31697,7 @@
         "id": 390,
         "name": "England",
         "slug": "england",
-        "nextGames": [
-          {
-            "id": 51931,
-            "date": 1784408400,
-            "status": "preview",
-            "home": {
-              "id": 381,
-              "score": null,
-              "difficulty": null
-            },
-            "away": {
-              "id": 390,
-              "score": null,
-              "difficulty": null
-            },
-            "round": {
-              "id": 5018
-            },
-            "competition": {
-              "id": 53,
-              "name": "World Cup",
-              "slug": "world-cup",
-              "sport": "football",
-              "currency": "$",
-              "nationalTeams": true
-            },
-            "preview": null,
-            "summary": null
-          }
-        ]
+        "nextGames": []
       },
       "407": {
         "id": 407,
@@ -32245,6 +31727,7 @@
               "slug": "world-cup",
               "sport": "football",
               "currency": "$",
+              "enabled": false,
               "nationalTeams": true
             },
             "preview": null,
@@ -32253,8 +31736,8 @@
         ]
       }
     },
-    "update": 1784430010,
-    "etag": 2273739961,
+    "update": 1784415652,
+    "etag": 1342873672,
     "scoreID": 1
   },
   "meta": {
@@ -34502,8 +33985,7 @@
           5,
           15,
           6,
-          11,
-          53
+          11
         ]
       },
       "apps": {
@@ -34657,6 +34139,7 @@
           "coaches": true,
           "multiPos": true,
           "optimizeImages": true,
+          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/spain-header.jpg",
           "standings": {
             "champion": 1,
             "playoffs": 5,
@@ -34914,6 +34397,7 @@
         "slug": "world-cup",
         "sport": "football",
         "currency": "$",
+        "enabled": false,
         "nationalTeams": true,
         "scores": [
           {
@@ -34940,8 +34424,8 @@
         "config": {
           "coaches": true,
           "multiPos": true,
-          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
-          "optimizeImages": true,
+          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/spain-header.jpg",
+          "optimizeImages": false,
           "leagueSponsor": {
             "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
