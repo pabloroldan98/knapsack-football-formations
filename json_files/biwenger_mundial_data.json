@@ -6,6 +6,7 @@
     "slug": "world-cup",
     "sport": "football",
     "currency": "$",
+    "enabled": false,
     "nationalTeams": true,
     "scores": [
       {
@@ -40,8 +41,8 @@
     "config": {
       "coaches": true,
       "multiPos": true,
-      "appHeader": null,
-      "optimizeImages": true,
+      "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
+      "optimizeImages": false,
       "leagueSponsor": {
         "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
         "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
@@ -99,7 +100,7 @@
           "id": 5018,
           "name": "Final",
           "short": "Final",
-          "status": "active"
+          "status": "finished"
         }
       ],
       "previous": {
@@ -108,55 +109,7 @@
         "slug": "2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 5018,
-        "name": "Final",
-        "short": "Final",
-        "status": "active",
-        "end": 1784559600,
-        "type": "round",
-        "games": [
-          {
-            "id": 51932,
-            "date": 1784487600,
-            "status": "finished",
-            "home": {
-              "id": 384,
-              "name": "Spain",
-              "slug": "spain",
-              "score": 1
-            },
-            "away": {
-              "id": 407,
-              "name": "Argentina",
-              "slug": "argentina",
-              "score": 0
-            }
-          },
-          {
-            "id": 51931,
-            "date": 1784408400,
-            "status": "finished",
-            "home": {
-              "id": 381,
-              "name": "Francia",
-              "slug": "france",
-              "score": 4
-            },
-            "away": {
-              "id": 390,
-              "name": "Inglaterra",
-              "slug": "england",
-              "score": 6
-            }
-          }
-        ],
-        "pool": {
-          "id": 624828
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "27306": {
         "id": 27306,
@@ -31652,8 +31605,8 @@
         "nextGames": []
       }
     },
-    "update": 1784602810,
-    "etag": 2881795956,
+    "update": 1784588970,
+    "etag": 4200246172,
     "scoreID": 1
   },
   "meta": {
@@ -33893,7 +33846,7 @@
         "grounds": {
           "world-cup": "world_cup"
         },
-        "disableIAP": "apple:95%,google:95%",
+        "disableIAP": "apple:90%,google:90%",
         "recentSeasons": [
           1,
           3,
@@ -33901,8 +33854,7 @@
           5,
           15,
           6,
-          11,
-          53
+          11
         ]
       },
       "apps": {
@@ -34056,7 +34008,6 @@
           "coaches": true,
           "multiPos": true,
           "optimizeImages": true,
-          "appHeader": null,
           "standings": {
             "champion": 1,
             "playoffs": 5,
@@ -34314,6 +34265,7 @@
         "slug": "world-cup",
         "sport": "football",
         "currency": "$",
+        "enabled": false,
         "nationalTeams": true,
         "scores": [
           {
@@ -34340,8 +34292,8 @@
         "config": {
           "coaches": true,
           "multiPos": true,
-          "appHeader": null,
-          "optimizeImages": true,
+          "appHeader": "https://cdn.biwenger.com/campaigns/2026/football/world-cup/header.png",
+          "optimizeImages": false,
           "leagueSponsor": {
             "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
