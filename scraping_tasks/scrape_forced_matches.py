@@ -99,13 +99,13 @@ europaleague_forced_matches = safe_get_forced_matches(
 # conference_forced_matches = safe_get_forced_matches(
 #     "Conference League", "forced_matches_conference"
 # )
-mundialito_forced_matches = safe_get_forced_matches(
-    "Mundialito", "forced_matches_mundialito", use_biwenger_names=False
-)
-
-mundial_forced_matches = safe_get_forced_matches(
-    "Mundial", "forced_matches_mundial", use_biwenger_names=False
-)
+# mundialito_forced_matches = safe_get_forced_matches(
+#     "Mundialito", "forced_matches_mundialito", use_biwenger_names=False
+# )
+#
+# mundial_forced_matches = safe_get_forced_matches(
+#     "Mundial", "forced_matches_mundial", use_biwenger_names=False
+# )
 # eurocopa_forced_matches = safe_get_forced_matches(
 #     "Eurocopa", "forced_matches_eurocopa"
 # )

@@ -94,12 +94,12 @@ print("##############################")
     # for team, players in laliga_start_probabilities.items():
     #     print(team, players)
 
-# laliga_start_probabilities = safe_get_start_probabilities(
-#     "LaLiga", "jornadaperfecta_laliga_players_start_probabilities"
-# )
-# premier_start_probabilities = safe_get_start_probabilities(
-#     "Premier League", "jornadaperfecta_premier_players_start_probabilities"
-# )
+laliga_start_probabilities = safe_get_start_probabilities(
+    "LaLiga", "jornadaperfecta_laliga_players_start_probabilities"
+)
+premier_start_probabilities = safe_get_start_probabilities(
+    "Premier League", "jornadaperfecta_premier_players_start_probabilities"
+)
 # seriea_start_probabilities = safe_get_start_probabilities(
 #     "Serie A", "jornadaperfecta_seriea_players_start_probabilities"
 # )
@@ -126,9 +126,9 @@ conference_start_probabilities = safe_get_start_probabilities(
 #     "Mundialito", "jornadaperfecta_mundialito_players_start_probabilities"
 # )
 #
-mundial_start_probabilities = safe_get_start_probabilities(
-    "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
-)
+# mundial_start_probabilities = safe_get_start_probabilities(
+#     "Mundial", "jornadaperfecta_mundial_players_start_probabilities"
+# )
 # eurocopa_start_probabilities = safe_get_start_probabilities(
 #     "Eurocopa", "jornadaperfecta_eurocopa_players_start_probabilities"
 # )
