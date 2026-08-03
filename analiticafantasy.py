@@ -24,7 +24,7 @@ class AnaliticaFantasyScraper:
         self.api_base_url = "https://app.analiticafantasy.com"
         # self.base_url = "https://www.analiticafantasy.com/la-liga/alineaciones-probables"
         # # self.base_url = "https://www.analiticafantasy.com/mundial-clubes/alineaciones-probables"
-        self.competition =  (
+        self.competition = (
             competition
             if competition is not None
             else "la-liga"
@@ -156,6 +156,201 @@ class AnaliticaFantasyScraper:
         match = re.search(r"/partido/(\d+)", url)
         return int(match.group(1)) if match else None
 
+    def _extract_flight_push_arguments(self, script_text):
+        """
+        Return the raw argument text of every self.__next_f.push(...) call, tracking
+        quotes and escapes so brackets inside strings do not close the argument early.
+        """
+        marker = "self.__next_f.push("
+        arguments = []
+        index = 0
+        while True:
+            start = script_text.find(marker, index)
+            if start == -1:
+                break
+
+            i = start + len(marker)
+            depth, in_string, quote, escaped = 1, False, "", False
+            while i < len(script_text) and depth > 0:
+                char = script_text[i]
+                if in_string:
+                    if escaped:
+                        escaped = False
+                    elif char == "\\":
+                        escaped = True
+                    elif char == quote:
+                        in_string = False
+                elif char in "\"'`":
+                    in_string, quote = True, char
+                elif char in "([{":
+                    depth += 1
+                elif char in ")]}":
+                    depth -= 1
+                i += 1
+
+            if depth == 0:
+                arguments.append(script_text[start + len(marker):i - 1])
+            index = max(i, start + 1)
+        return arguments
+
+    def _flight_payload_from_soup(self, soup):
+        """
+        Every push argument is a JS array like [1, "<chunk>"]; the concatenation of all
+        those string chunks is the Flight payload that replaced __NEXT_DATA__.
+        """
+        chunks = []
+        for script_tag in soup.find_all("script"):
+            script_text = script_tag.string or script_tag.get_text() or ""
+            if "self.__next_f.push(" not in script_text:
+                continue
+            for argument in self._extract_flight_push_arguments(script_text):
+                try:
+                    decoded = json.loads(argument)
+                except (json.JSONDecodeError, TypeError, ValueError):
+                    continue
+                if isinstance(decoded, list):
+                    chunks.extend(item for item in decoded if isinstance(item, str))
+        return "".join(chunks)
+
+    def _json_object_at(self, text, start):
+        """Return the balanced {...} substring that starts at text[start]."""
+        depth, in_string, escaped = 0, False, False
+        for i in range(start, len(text)):
+            char = text[i]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+
+            if char == '"':
+                in_string = True
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth == 0:
+                    return text[start:i + 1]
+        return None
+
+    def _is_expanded_lineup_block(self, lineup_block):
+        """
+        Flight data repeats keys as references ("$L63", "$6:2:props:lineupBlock") before
+        the real object, so only a block with both sides expanded is usable.
+        """
+        if not isinstance(lineup_block, dict):
+            return False
+
+        home = lineup_block.get("home")
+        away = lineup_block.get("away")
+        if not isinstance(home, dict) or not isinstance(away, dict):
+            return False
+
+        return isinstance(home.get("players"), list) or isinstance(away.get("players"), list)
+
+    def _find_expanded_lineup_block(self, payload):
+        # /partido/ pages expose it as "lineupBlock", /equipo/ pages as "lineup"
+        for match in re.finditer(r'"(?:lineupBlock|lineup)"\s*:\s*\{', payload):
+            raw_object = self._json_object_at(payload, match.end() - 1)
+            if not raw_object:
+                continue
+
+            try:
+                lineup_block = json.loads(raw_object)
+            except (json.JSONDecodeError, TypeError, ValueError):
+                continue
+
+            if self._is_expanded_lineup_block(lineup_block):
+                return lineup_block
+        return None
+
+    def _flight_team_names(self, payload, page_html):
+        """
+        The lineup block only carries teamId, so resolve the names from the neighbouring
+        Flight objects and fall back to the /equipo/{slug}-{teamId} links.
+        """
+        team_names = {}
+        for match in re.finditer(r'"teamId"\s*:\s*(\d+)\s*,\s*"teamName"\s*:\s*"([^"]+)"', payload):
+            team_names.setdefault(int(match.group(1)), match.group(2))
+
+        for side in ("home", "away"):
+            id_match = re.search(r'"%sTeamId"\s*:\s*(\d+)' % side, payload)
+            label_match = re.search(r'"%sTeamLabel"\s*:\s*"([^"]+)"' % side, payload)
+            if id_match and label_match:
+                team_names.setdefault(int(id_match.group(1)), label_match.group(1))
+
+        for text in (payload, page_html):
+            for match in re.finditer(r"/equipo/([a-z0-9\-]+?)-(\d+)", text):
+                team_names.setdefault(int(match.group(2)), match.group(1).replace("-", " ").title())
+
+        return team_names
+
+    def _fixture_id_from_flight(self, payload):
+        match = re.search(r'"fixtureId"\s*:\s*"?(\d+)"?', payload)
+        return int(match.group(1)) if match else None
+
+    def _lineups_from_flight(self, payload, page_html):
+        """
+        Convert the App Router lineup block into the legacy h/a structure expected by
+        _build_match_dict_from_lineups, mapping name -> n and chance -> c.
+        """
+        lineup_block = self._find_expanded_lineup_block(payload)
+        if not lineup_block:
+            return {}
+
+        team_names = self._flight_team_names(payload, page_html)
+        lineups_data = {}
+        for side_key, block_key in (("h", "home"), ("a", "away")):
+            side_data = lineup_block.get(block_key)
+            if not isinstance(side_data, dict):
+                continue
+
+            players = side_data.get("players")
+            if not isinstance(players, list):
+                continue
+
+            # Match pages no longer ship the fantasy market value nor the price
+            # variation, so fmv/fs stay None instead of being invented
+            lineups_data[side_key] = {
+                "n": team_names.get(side_data.get("teamId")),
+                "l": [
+                    {
+                        "n": player.get("name"),
+                        "c": player.get("chance"),
+                        "fmv": player.get("fmv"),
+                        "fs": player.get("fs"),
+                    }
+                    for player in players if isinstance(player, dict)
+                ],
+            }
+        return lineups_data
+
+    def _next_data_from_flight(self, soup, page_html):
+        """
+        Rebuild the legacy __NEXT_DATA__ shape out of the Flight payload so the rest of
+        the flow (fixture id lookup and lineupsResponse) keeps working unchanged.
+        """
+        payload = self._flight_payload_from_soup(soup)
+        if not payload:
+            return None
+
+        page_props = {}
+        fixture_id = self._fixture_id_from_flight(payload)
+        if fixture_id:
+            page_props["fixtureDataResponse"] = {"partido": {"fixtureId": fixture_id}}
+
+        lineups_data = self._lineups_from_flight(payload, page_html)
+        if lineups_data:
+            page_props["lineupsResponse"] = lineups_data
+
+        if not page_props:
+            return None
+
+        return {"props": {"pageProps": page_props}}
+
     def _get_next_data(self, url):
         if url in self._next_data_cache:
             return self._next_data_cache[url]
@@ -164,8 +359,11 @@ class AnaliticaFantasyScraper:
         soup = BeautifulSoup(page_html, "html.parser")
         script_tag = soup.find("script", id="__NEXT_DATA__")
         if not script_tag:
-            self._next_data_cache[url] = None
-            return None
+            # The App Router no longer emits __NEXT_DATA__, so rebuild an equivalent
+            # payload from the self.__next_f.push(...) Flight chunks instead.
+            data_obj = self._next_data_from_flight(soup, page_html)
+            self._next_data_cache[url] = data_obj
+            return data_obj
 
         try:
             data_obj = json.loads(script_tag.string)
@@ -227,7 +425,7 @@ class AnaliticaFantasyScraper:
     def _lineups_data_from_page(self, data_obj, page_url):
         page_props = data_obj.get("props", {}).get("pageProps", {})
 
-        # Legacy SSR payload (still supported if it reappears in __NEXT_DATA__)
+        # SSR payload: legacy __NEXT_DATA__ or the block rebuilt from the Flight chunks
         lineups_data = page_props.get("lineupsResponse")
         if lineups_data:
             return lineups_data
@@ -289,10 +487,20 @@ class AnaliticaFantasyScraper:
         Example logic: parse the match page’s JSON or HTML to extract the chance/team/player data.
         The actual parsing details depend on how the data appears in the HTML.
         """
+        fixture_id = self._fixture_id_from_url(match_url)
+
         # For illustration: suppose a <script id="__NEXT_DATA__"> tag contains a JSON
         # structure with the players’ data. We find and parse it:
         data_obj = self._get_next_data(match_url)
         if not data_obj:
+            # The lineup API now answers 404, so it is only kept as a legacy fallback
+            # for when the page itself yields no usable payload.
+            if fixture_id:
+                lineups_data = self._fetch_lineups_from_api(fixture_id)
+
+                if lineups_data:
+                    return self._build_match_dict_from_lineups(lineups_data)
+
             return self._empty_match_dict()
         # print(data_obj)
 
@@ -306,8 +514,8 @@ class AnaliticaFantasyScraper:
         # }
 
         # Go into data_obj["props"]["pageProps"]["lineupsData"]
-        # New pages expose fixtureDataResponse in __NEXT_DATA__ and load h/a via:
-        # https://app.analiticafantasy.com/api/alineaciones/partido/{fixtureId}
+        # New pages ship the h/a lineups inside the self.__next_f.push(...) Flight
+        # chunks, which _get_next_data already normalised into lineupsResponse.
         lineups_data = self._lineups_data_from_page(data_obj, match_url)
         if not lineups_data:
             return self._empty_match_dict()
@@ -343,21 +551,25 @@ class AnaliticaFantasyScraper:
                 prices_dict[team_name] = {}
             for player_name, data_val in players.items():
                 prices_dict[team_name][player_name] = data_val
+
         for team_name, players in match_data["positions"].items():
             if team_name not in positions_dict:
                 positions_dict[team_name] = {}
             for player_name, data_val in players.items():
                 positions_dict[team_name][player_name] = data_val
+
         for team_name, players in match_data["forms"].items():
             if team_name not in forms_dict:
                 forms_dict[team_name] = {}
             for player_name, data_val in players.items():
                 forms_dict[team_name][player_name] = data_val
+
         for team_name, players in match_data["start_probabilities"].items():
             if team_name not in probabilities_dict:
                 probabilities_dict[team_name] = {}
             for player_name, data_val in players.items():
                 probabilities_dict[team_name][player_name] = data_val
+
         for team_name, players in match_data["price_trends"].items():
             if team_name not in price_trends_dict:
                 price_trends_dict[team_name] = {}
@@ -367,7 +579,9 @@ class AnaliticaFantasyScraper:
     def _parse_urls_parallel(self, urls, max_workers=8):
         if not urls:
             return []
+
         workers = min(max_workers, len(urls))
+
         with ThreadPoolExecutor(max_workers=workers) as executor:
             return list(executor.map(self.parse_lineup_page, urls))
 
@@ -411,6 +625,7 @@ class AnaliticaFantasyScraper:
             all_urls = self._dedup_preserve_order(match_links + team_links)
             lineup_urls = self._dedupe_lineup_urls_by_fixture(all_urls)
             skipped = len(all_urls) - len(lineup_urls)
+
             if skipped:
                 print(f"Skipping {skipped} duplicate fixture URLs (team + match overlap)")
 
@@ -444,10 +659,12 @@ def competition_from_filename(file_name: str) -> str:
         ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "ligue-1",
         ("segunda", "segundadivision", "segunda-division", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "la-liga-2",
     }
+
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first
             if k in s:
                 return slug
+
     return "la-liga"
 
 
