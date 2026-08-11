@@ -1012,6 +1012,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Aissa Laïdoun": "Laïdouni",
         "Aissa Laïdouni": "Laïdouni",
         "Oussama Benbot": "Benbout",
+        "Juan Carlos Arana": "Juan Arana",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
