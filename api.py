@@ -124,7 +124,6 @@ class CalculateRequest(BaseModel):
     min_prob: float = 0.65
     max_prob: float = 1.0
     use_fixture_filter: bool = False
-    speed_up: bool = False
 
     # "My Best 11" mode: only these players are considered, budget = -1
     selected_player_names: Optional[List[str]] = None
@@ -384,15 +383,14 @@ def calculate(req: CalculateRequest):
         return {"error": "not_enough_players", "formations": []}
 
     working.sort(key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team))
-    needed = working[:200]
+    needed = working
 
     budget = req.budget
     if req.selected_player_names is not None:
         budget = -1
 
     results = best_full_teams(
-        needed, req.formations, budget,
-        speed_up=req.speed_up, verbose=0,
+        needed, req.formations, budget, verbose=0,
     )
 
     # Build response using original (un-boosted) player data
@@ -441,7 +439,7 @@ def _log_calc_bg(req, calc_type, formations_out, needed, duration_ms):
                 req.session_id, calc_type, req.competition, req.app, req.budget,
                 req.formations, len(formations_out), len(needed),
                 len(req.blinded_names), len(req.banned_names),
-                req.min_prob, req.max_prob, req.speed_up, duration_ms,
+                req.min_prob, req.max_prob, duration_ms,
             )
             for rank, fr in enumerate(formations_out, 1):
                 database.log_result_formation(calc_id, fr["formation"], fr["score"],
@@ -511,66 +509,29 @@ async def calculate_stream(req: CalculateRequest):
         return StreamingResponse(_empty(), media_type="text/event-stream")
 
     working.sort(key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team))
-    needed = working[:200]
+    needed = working
 
     budget = req.budget
     if req.selected_player_names is not None:
         budget = -1
-
-    if budget <= 0 or budget >= 100000:
-        budget = 1
-        for p in needed:
-            p.price = 0
 
     progress_q: queue.Queue = queue.Queue()
 
     def _run_knapsack():
         """Runs in a background thread; pushes progress to the queue."""
         try:
-            total_ops = [0]
-            completed = [0]
             last_pct = [-1]
 
-            def _on_progress(n):
-                completed[0] += n
-                if total_ops[0] > 0:
-                    pct = int((completed[0] / total_ops[0]) * 100)
-                    if pct > last_pct[0]:
-                        last_pct[0] = pct
-                        progress_q.put(("progress", min(pct, 99)))
+            def _on_progress(percent):
+                pct = min(int(percent), 99)
+                if pct > last_pct[0]:
+                    last_pct[0] = pct
+                    progress_q.put(("progress", pct))
 
-            from group_knapsack import filter_players_knapsack, players_preproc
-            precomputed = []
-            for formation in req.formations:
-                fl = filter_players_knapsack(needed, formation)
-                if req.speed_up:
-                    if any(x >= 6 for x in formation):
-                        fl = fl[:90]
-                    elif any(x >= 5 for x in formation):
-                        fl = fl[:100]
-                    elif any(x >= 4 for x in formation):
-                        fl = fl[:150]
-                pv, pw, pi = players_preproc(fl, formation)
-                ops = sum(len(g) for g in pw[1:]) if len(pw) > 1 else 0
-                total_ops[0] += ops
-                precomputed.append((formation, fl, pv, pw, pi))
-
-            from MCKP import knapsack_multichoice_onepick
-            results = []
-            for formation, fl, pv, pw, pi in precomputed:
-                if not pv or not pw or not pi:
-                    continue
-                score, comb_result = knapsack_multichoice_onepick(
-                    pw, pv, budget, verbose=True, update_master=_on_progress,
-                )
-                idxs = []
-                for ci in comb_result:
-                    for orig_idx in pi[ci[0]][ci[1]]:
-                        idxs.append(orig_idx)
-                result_players = [fl[i] for i in idxs]
-                results.append((formation, score, result_players))
-
-            results.sort(key=lambda x: x[1], reverse=True)
+            results = best_full_teams(
+                needed, req.formations, budget, verbose=0,
+                progress_callback=_on_progress,
+            )
             progress_q.put(("done", results))
         except Exception as exc:
             progress_q.put(("error", str(exc)))

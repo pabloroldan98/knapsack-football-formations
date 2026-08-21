@@ -1197,7 +1197,7 @@ async function calculateBudget() {
       jornada_key: jornadaKey, num_jornadas: numJornadas,
       budget, blinded_names: [...blindedNames], banned_names: [...bannedNames],
       formations, min_prob: minProb, max_prob: 1.0,
-      use_fixture_filter: fixtureFilter, speed_up: false,
+      use_fixture_filter: fixtureFilter,
       session_id: SESSION_ID,
     });
 
@@ -1368,7 +1368,7 @@ async function calculateMy11() {
       jornada_key: jornadaKey, num_jornadas: numJornadas,
       budget: -1, blinded_names: [...my11Locked], banned_names: [],
       formations, min_prob: minProb, max_prob: 1.0,
-      use_fixture_filter: fixtureFilter, speed_up: false,
+      use_fixture_filter: fixtureFilter,
       session_id: SESSION_ID,
       selected_player_names: [...my11Names],
     });

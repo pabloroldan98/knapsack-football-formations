@@ -133,11 +133,6 @@ I18N = {
         "en": "Exclude players with hard fixtures",
     },
     "sb.start_prob_range": {"es": "Probabilidad de ser titular (%)", "en": "Probability to start (%)"},
-    "sb.slow_calc": {"es": "Cálculo avanzado", "en": "Advanced calculation"},
-    "sb.slow_calc_hint": {
-        "es": "El cálculo será **mucho más lento** si se activa, pero usará casi todos los jugadores disponibles",
-        "en": "This is **much slower**, but uses almost all available players",
-    },
     "sb.premium_formations": {"es": "Formaciones Premium", "en": "Premium formations"},
     "btn.calc11": {"es": "Calcular 11s", "en": "Calculate lineups"},
     "h.best_combinations_budget": {
@@ -1039,10 +1034,6 @@ with tabs[0]:
         min_prob = min_prob_slider / 100
         max_prob = max_prob_slider / 100
 
-        use_slow_calc = True
-        # use_slow_calc = st.checkbox(t("sb.slow_calc"), value=False, key="is_slow_calc")
-        # st.caption(t("sb.slow_calc_hint"))
-
     use_premium = st.checkbox(t("sb.premium_formations"), value=False, key="premium_budget")
 
     my_filtered_players = purge_everything(
@@ -1092,12 +1083,10 @@ with tabs[0]:
             key=lambda x: (-x.value, -x.form, -x.fixture, x.price, x.team),
             reverse=False
         )
-        needed_purge = worthy_players[:200]
         formation_score_players_by_score = best_full_teams(
-            needed_purge,
+            worthy_players,
             possible_formations,
             budget,
-            speed_up=not use_slow_calc,
             translator=t,
             verbose=2,
         )

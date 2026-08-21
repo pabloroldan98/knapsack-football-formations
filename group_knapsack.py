@@ -8,8 +8,9 @@ from typing import Callable, Dict, List, Optional, Tuple
 import streamlit as st
 from tqdm import tqdm
 
-from MCKP import multipleChoiceKnapsack, knapsack_multichoice, \
-    knapsack_multichoice_onepick
+# One DP candidate: (weight, value, index into the candidate pool).
+_Item = Tuple[int, float, int]
+
 
 possible_formations = [
     [3, 4, 3],
@@ -43,108 +44,76 @@ def _formation_coarse_weights(formation) -> Tuple[List[str], List[int]]:
     return ["GK", "DEF", "MID", "ATT"], [max_gk, max_def, max_mid, max_att]
 
 
-# Max total candidates after formation filter; split inversely to slot count
-# (lines with large C(n,r) get fewer extras). Default tier is always "standard".
-_SPEED_TOTAL_PLAYER_CAP: Dict[str, int] = {
-    "local": 150,
-    "fast": 200,
-    "standard": 250,
-}
-_DEFAULT_SPEED_TIER = "standard"
+def _formation_requirements(formation) -> Dict[str, int]:
+    """Per-position exact counts, omitting lines with 0 slots."""
+    labels, weights = _formation_coarse_weights(formation)
+    return {pos: w for pos, w in zip(labels, weights) if w > 0}
 
 
-def _resolve_speed_tier(speed_up: bool, speed: Optional[str] = None) -> Optional[str]:
-    """Resolve speed tier for the global candidate cap.
-
-    When ``speed`` is omitted (default ``None``), uses ``speed_up``:
-    - ``speed_up=False`` → ``standard`` (250)
-    - ``speed_up=True`` → ``fast`` (200)
-
-    Explicit ``speed`` overrides ``speed_up``:
-    - ``"uncapped"`` / ``"none"`` / ``"off"`` → no global cap
-    - ``"local"`` / ``"fast"`` / ``"standard"`` → that tier
-    """
-    if isinstance(speed, str):
-        low = speed.lower()
-        if low in ("none", "off", "uncapped"):
-            return None
-        if speed in _SPEED_TOTAL_PLAYER_CAP:
-            return speed
-    return "fast" if speed_up else _DEFAULT_SPEED_TIER
+# Finest price step this product actually uses (Biwenger UI is 0.1M). Integer
+# prices stay on quantum 1 so a typical budget of 300 keeps W=300. Decimals
+# bump to 0.1 so ``price == budget == 10.2`` is feasible (plain ceil/int is not).
+_INTEGER_PRICE_QUANTUM = 1.0
+_DECIMAL_PRICE_QUANTUM = 0.1
+# IEEE-754 only: ``10.2 / 0.1`` is ``101.999...``, not 102. Nudge on-grid
+# values onto the integer lattice. Off-grid amounts (e.g. 10.25 at q=0.1)
+# stay off-grid; feasibility rescue covers those, not this epsilon.
+_IEEE_QUANTUM_EPS = 1e-9
 
 
-def _allocate_integer_shares_from_proportions(total: int, proportions: List[float]) -> List[int]:
-    """Largest-remainder split of *total* across non-negative *proportions*."""
-    if total <= 0 or not proportions:
-        return [0] * len(proportions)
-    s = sum(proportions)
-    if s <= 0:
-        return [0] * len(proportions)
-    raw = [total * p / s for p in proportions]
-    floors = [int(math.floor(r)) for r in raw]
-    rem = total - sum(floors)
-    order = sorted(
-        range(len(proportions)), key=lambda i: (raw[i] - floors[i]), reverse=True
-    )
-    for k in range(max(0, rem)):
-        floors[order[k % len(order)]] += 1
-    return floors
+def _is_integral(amount: float) -> bool:
+    return abs(float(amount) - round(float(amount))) <= _IEEE_QUANTUM_EPS
 
 
-def _speed_cap_proportions_inverse(slot_weights: List[int]) -> List[float]:
-    """Speed-cap shares: 0 slots → 0; w>0 → ∝ 1/w (heavy lines get a thinner pool)."""
-    return [0.0 if w <= 0 else 1.0 / float(w) for w in slot_weights]
+def _price_quantum(budget: float, players) -> float:
+    """1.0 when every price and the budget are whole numbers, else 0.1."""
+    if not _is_integral(budget):
+        return _DECIMAL_PRICE_QUANTUM
+    for p in players:
+        if not _is_integral(p.price or 0):
+            return _DECIMAL_PRICE_QUANTUM
+    return _INTEGER_PRICE_QUANTUM
 
 
-def _ensure_caps_at_least_formation(caps: List[int], weights: List[int]) -> None:
-    """Each position keeps at least as many candidates as formation slots (in-place)."""
-    for i, w in enumerate(weights):
-        if w > 0:
-            caps[i] = max(caps[i], w)
+def _to_weight(amount: float, quantum: float) -> int:
+    """Real price → DP units. Ceil so a selection cannot under-count cost."""
+    return max(0, int(math.ceil((float(amount or 0) / quantum) - _IEEE_QUANTUM_EPS)))
 
 
-def _apply_weighted_player_cap(
-    players_list,
-    position_caps: Dict[str, int],
-) -> list:
-    """Keep up to *position_caps[pos]* highest-value players per position."""
-    by_pos = defaultdict(list)
-    for pl in players_list:
-        pos = pl.position
-        cap = position_caps.get(pos, 0)
-        if cap <= 0:
-            continue
-        by_pos[pos].append(pl)
-
-    out = []
-    for pos, cap in position_caps.items():
-        if cap <= 0:
-            continue
-        lst = sorted(by_pos.get(pos, []), key=lambda pl: pl.value, reverse=True)
-        out.extend(lst[:cap])
-    out.sort(key=lambda pl: pl.value, reverse=True)
-    return out
+def _to_budget_int(budget: float, quantum: float) -> int:
+    """Real budget → DP capacity. Floor so a selection cannot overspend."""
+    return max(0, int(math.floor((float(budget) / quantum) + _IEEE_QUANTUM_EPS)))
 
 
-def _apply_speed_cap(players_list, formation, speed_tier: Optional[str]) -> list:
-    """Apply proportional per-position candidate cap for the given speed tier."""
-    if not speed_tier:
-        return players_list
-    total_cap = _SPEED_TOTAL_PLAYER_CAP.get(speed_tier)
-    if not total_cap or total_cap <= 0:
-        return players_list
+def _player_weight(player, unlimited_budget: bool, quantum: float = _INTEGER_PRICE_QUANTUM) -> int:
+    if unlimited_budget:
+        return 0
+    return _to_weight(player.price or 0, quantum)
 
-    pos_labels, weights = _formation_coarse_weights(formation)
-    props = _speed_cap_proportions_inverse(weights)
-    caps = _allocate_integer_shares_from_proportions(total_cap, props)
-    _ensure_caps_at_least_formation(caps, weights)
-    position_caps = dict(zip(pos_labels, caps))
-    return _apply_weighted_player_cap(players_list, position_caps)
+
+def _player_value(player) -> float:
+    return float(player.value or 0)
+
+
+def _real_price(player) -> float:
+    return float(player.price or 0)
+
+
+def _tqdm_disabled(verbose, streamlit_active: Optional[bool] = None) -> bool:
+    """CLI progress bar: on for verbose>=1, off when silent or inside Streamlit."""
+    if streamlit_active is None:
+        streamlit_active = STREAMLIT_ACTIVE
+    return (not verbose) or bool(streamlit_active)
 
 
 def filter_players_knapsack(players_list, formation):
     """
     Filters players based on a formation and per-position max counts, keeping highest-value players per price bucket.
+
+    This reduction is exact: at a given price, a cheaper-or-equal slot can always
+    replace a lower-valued player, so only the top ``r`` by value can appear in an
+    optimum. The count-DP solver also applies this (plus dominance reduction) per
+    ``(position, r)``; the helper remains for callers that want the filtered pool.
 
     Args:
         players_list: list of player objects with attributes .position, .price, .value
@@ -174,105 +143,298 @@ def filter_players_knapsack(players_list, formation):
             top_n = heapq.nlargest(limit, group, key=lambda pl: pl.value)
             filtered_players.extend(top_n)
 
-    # Sort all by descending value
     filtered_players.sort(key=lambda pl: pl.value, reverse=True)
-
-    # print(len(players_list))
-    # print(len(filtered_players))
-
     return filtered_players
+
+
+def _r_dominance_reduce(items: List[_Item], r: int) -> List[_Item]:
+    """Drop every item that at least ``r`` other items dominate — i.e. cost no
+    more AND score at least as much. Exact: never changes the optimum.
+
+    Why ``r`` and not one dominator: with ``r`` slots to fill, a single better
+    candidate isn't enough (it may already be in the solution and can't be picked
+    twice). With ``r`` dominators, at most ``r - 1`` of them can be in a solution
+    that also contains the dominated item, so one is always free to swap in —
+    same count, no more weight, no less value.
+
+    Exact for the *discretized* problem (same knapsack weight). Two real prices
+    that collapse to one bucket (e.g. 10.1 and 10.9 at quantum 1) are treated as
+    equal cost; the ``r`` cheapest *real* prices of that bucket still survive
+    because they share the bucket's weight.
+
+    The ``r`` cheapest discretized items always survive, so a request that is
+    feasible after quantization cannot become infeasible through this reduction.
+    """
+    if r <= 0 or len(items) <= r:
+        return list(items)
+    ordered = sorted(items, key=lambda it: (it[0], -it[1]))
+    kept: List[_Item] = []
+    top: List[float] = []  # min-heap of the r best values seen so far
+    for item in ordered:
+        value = item[1]
+        if len(top) >= r and top[0] >= value:
+            continue
+        kept.append(item)
+        heapq.heappush(top, value)
+        if len(top) > r:
+            heapq.heappop(top)
+    return kept
+
+
+class _CandidatePool:
+    """Position/price buckets built once per solver call, plus a memo of the
+    per-``(position, count)`` DP groups.
+
+    What a position contributes depends only on that position's own requirement:
+    the top ``r`` candidates of each distinct *discretized* price, then
+    ``_r_dominance_reduce``. Exact for the quantized knapsack, not automatically
+    for raw floats that share a bucket. Memoising on ``(position, count)``
+    avoids rebuilding the same group for every formation that shares a line count.
+    """
+
+    def __init__(
+        self,
+        players,
+        unlimited_budget: bool = False,
+        quantum: float = _INTEGER_PRICE_QUANTUM,
+    ) -> None:
+        self.players = players
+        self._by_price: Dict[str, Dict[int, List[int]]] = defaultdict(
+            lambda: defaultdict(list)
+        )
+        self._memo: Dict[Tuple[str, int], List[_Item]] = {}
+        for idx, pl in enumerate(players):
+            pos = pl.position
+            if not pos:
+                continue
+            self._by_price[pos][_player_weight(pl, unlimited_budget, quantum)].append(idx)
+
+    def group(self, pos: str, r: int) -> List[_Item]:
+        if r <= 0:
+            return []
+        cached = self._memo.get((pos, r))
+        if cached is not None:
+            return cached
+        players = self.players
+        items: List[_Item] = []
+        for price, idxs in self._by_price.get(pos, {}).items():
+            if len(idxs) > r:
+                idxs = sorted(idxs, key=lambda i: _player_value(players[i]), reverse=True)[:r]
+            items.extend((price, _player_value(players[i]), i) for i in idxs)
+        items = _r_dominance_reduce(items, r)
+        self._memo[(pos, r)] = items
+        return items
+
+    def build_groups(self, req_by_pos: Dict[str, int]) -> List[Tuple[List[_Item], int]]:
+        groups = []
+        for pos, r in req_by_pos.items():
+            if r > 0:
+                groups.append((self.group(pos, r), r))
+        return groups
+
+    def cheapest_real_selection(
+        self,
+        req_by_pos: Dict[str, int],
+        budget: float,
+    ) -> Optional[List[int]]:
+        """Cheapest XI in *real* prices meeting the exact counts. ``None`` if
+        even that exceeds ``budget``. Bypasses top-r / dominance: this is the
+        feasibility guarantee, so it must see every candidate the budget filter
+        allowed.
+        """
+        chosen: List[int] = []
+        total = 0.0
+        for pos, r in req_by_pos.items():
+            if r <= 0:
+                continue
+            idxs = [
+                i
+                for bucket in self._by_price.get(pos, {}).values()
+                for i in bucket
+            ]
+            if len(idxs) < r:
+                return None
+            idxs.sort(
+                key=lambda i: (
+                    _real_price(self.players[i]),
+                    -_player_value(self.players[i]),
+                )
+            )
+            for i in idxs[:r]:
+                total += _real_price(self.players[i])
+                chosen.append(i)
+        if total > budget + _IEEE_QUANTUM_EPS:
+            return None
+        return chosen
+
+
+def _group_count_profile(
+    items: List[Tuple[int, float, object]],
+    r: int,
+    max_weight: int,
+) -> Tuple[List[float], List]:
+    """Best value (and chosen refs) picking exactly ``r`` of ``items`` for every
+    total weight ``w`` in ``0..max_weight``.
+
+    A ``(count, weight)`` 0/1 knapsack: iterate items outer, count and weight
+    descending, so each item is used at most once. ``O(len(items) · r · W)``.
+    """
+    neg = float("-inf")
+    values = [[neg] * (max_weight + 1) for _ in range(r + 1)]
+    picks: List[List] = [[None] * (max_weight + 1) for _ in range(r + 1)]
+    values[0][0] = 0.0
+    picks[0][0] = ()
+    for w_j, v_j, ref in items:
+        if w_j > max_weight:
+            continue
+        for k in range(r, 0, -1):
+            prev_vals = values[k - 1]
+            prev_picks = picks[k - 1]
+            cur_vals = values[k]
+            cur_picks = picks[k]
+            for w in range(max_weight, w_j - 1, -1):
+                prev = prev_vals[w - w_j]
+                if prev > neg:
+                    cand = prev + v_j
+                    if cand > cur_vals[w]:
+                        cur_vals[w] = cand
+                        cur_picks[w] = prev_picks[w - w_j] + (ref,)
+    return values[r], picks[r]
+
+
+def _knapsack_exact_counts(
+    groups: List[Tuple],
+    max_weight: int,
+) -> Tuple[Optional[float], Optional[List]]:
+    """Pick exactly ``r`` items from each group so total weight ≤ ``max_weight``,
+    maximising total value. Exact optimum, polynomial — no ``C(n, r)`` blow-up.
+
+    ``groups`` is a list of ``(items, r)`` where ``items`` are
+    ``(weight:int, value:float, ref)``. Returns ``(best_value, picks)`` with
+    ``picks`` aligned to the non-empty groups, or ``(None, None)`` when no
+    selection meets every count within budget.
+
+    Each group is reduced to a per-weight value profile and folded into a
+    running sparse (max, +) convolution over total weight.
+    """
+    neg = float("-inf")
+    state: List[Tuple[int, float, List]] = [(0, 0.0, [])]
+    for group in groups:
+        items, r = group[0], group[1]
+        if r <= 0:
+            continue
+        prof_val, prof_pick = _group_count_profile(items, r, max_weight)
+        profile = [
+            (w, prof_val[w], prof_pick[w])
+            for w in range(max_weight + 1)
+            if prof_val[w] > neg
+        ]
+        if not profile:
+            return None, None
+        best_at: Dict[int, Tuple[float, List]] = {}
+        for w1, base, base_pick in state:
+            room = max_weight - w1
+            for w2, pv, pick in profile:
+                if w2 > room:
+                    break
+                w = w1 + w2
+                cand = base + pv
+                prev = best_at.get(w)
+                if prev is None or cand > prev[0]:
+                    best_at[w] = (cand, base_pick + [pick])
+        if not best_at:
+            return None, None
+        state = [(w, v, p) for w, (v, p) in sorted(best_at.items())]
+
+    best_v, best_pick = neg, None
+    for _w, v, p in state:
+        if v > best_v:
+            best_v, best_pick = v, p
+    if best_v <= neg or best_pick is None:
+        return None, None
+    return best_v, best_pick
 
 
 def best_full_teams(
     players_list,
     formations=possible_formations,
     budget=300,
-    speed_up=False,
-    speed: Optional[str] = None,
     translator=None,
     verbose=1,
     progress_callback: Optional[Callable[[float], None]] = None,
 ):
-    super_verbose = bool(verbose - 1)
+    """Find the best 11 for each formation within ``budget``.
+
+    Count-constrained DP (exact on the quantized knapsack), always uncapped
+    after safe reductions (top-r per discretized price, r-dominance). Formations
+    impose exact positive counts, so there is no empty-team / range-solve path.
+    """
+    disable_tqdm = _tqdm_disabled(verbose)
     verbose = bool(verbose)
-    speed_tier = _resolve_speed_tier(speed_up, speed)
 
     unlimited_budget = budget <= 0 or budget >= 100000
     if unlimited_budget:
-        budget = 1
-        for player in players_list:
-            player.price = 0
+        quantum = _INTEGER_PRICE_QUANTUM
+        budget_int = 1
+        candidates = list(players_list)
     else:
-        # Players more expensive than the budget can never fit the knapsack
-        players_list = [p for p in players_list if (p.price or 0) <= budget]
+        candidates = [p for p in players_list if (p.price or 0) <= budget]
+        quantum = _price_quantum(budget, candidates)
+        budget_int = _to_budget_int(budget, quantum)
 
-    # Precompute everything in a single pass (avoid filtering twice per formation)
-    total_global_operations = 0
-    precomputed = []
-    for formation in formations:
-        filtered_players_list = filter_players_knapsack(players_list, formation)
-        filtered_players_list = _apply_speed_cap(filtered_players_list, formation, speed_tier)
-        players_values, players_prices, players_comb_indexes = players_preproc(
-            filtered_players_list, formation
-        )
-        ops = sum(len(group) for group in players_comb_indexes[1:]) if len(players_comb_indexes) > 1 else 0
-        total_global_operations += ops
-        precomputed.append(
-            (formation, filtered_players_list, players_values, players_prices, players_comb_indexes)
-        )
+    pool = _CandidatePool(
+        candidates, unlimited_budget=unlimited_budget, quantum=quantum,
+    )
+    n_formations = len(formations) or 1
 
-    update_master = None
-    if total_global_operations:
-        progress_text = None
-        progress_bar = None
+    update_ui = None
+    if STREAMLIT_ACTIVE:
         _label = (
             translator("loader.knapsack_progress")
             if callable(translator)
             else "Calculando mejores combinaciones"
         )
-        if STREAMLIT_ACTIVE:
-            progress_text = st.empty()
-            progress_bar = st.progress(0.0)
+        progress_text = st.empty()
+        progress_bar = st.progress(0.0)
 
-        completed_ops = 0
-        last_percent = -1
-
-        def update_master(n):
-            nonlocal completed_ops, last_percent
-            completed_ops += n
-            percent = (completed_ops / total_global_operations) * 100
-            pct_int = int(percent)
-            if pct_int <= last_percent:
-                return
-            last_percent = pct_int
-            if progress_callback:
-                progress_callback(percent)
-            if STREAMLIT_ACTIVE and progress_bar is not None and progress_text is not None:
-                progress_bar.progress(completed_ops / total_global_operations)
-                progress_text.text(f"{_label}: {pct_int} %")
+        def update_ui(fraction: float):
+            progress_bar.progress(fraction)
+            progress_text.text(f"{_label}: {int(fraction * 100)} %")
 
     formation_score_players = []
-    for formation, filtered_players_list, players_values, players_prices, players_comb_indexes in precomputed:
-        if not players_values or not players_prices or not players_comb_indexes:
+    for i, formation in enumerate(
+        tqdm(formations, disable=disable_tqdm, desc="Knapsack Progress")
+    ):
+        req_by_pos = _formation_requirements(formation)
+        groups = pool.build_groups(req_by_pos)
+        score, picks = _knapsack_exact_counts(groups, budget_int)
+
+        fraction = (i + 1) / n_formations
+        if progress_callback:
+            progress_callback(fraction * 100)
+        if update_ui:
+            update_ui(fraction)
+
+        if score is None or not picks:
+            if not unlimited_budget:
+                rescued = pool.cheapest_real_selection(req_by_pos, budget)
+                if rescued:
+                    result_players = [candidates[idx] for idx in rescued]
+                    score = sum(_player_value(p) for p in result_players)
+                    formation_score_players.append((formation, score, result_players))
             continue
-
-        score, comb_result_indexes = knapsack_multichoice_onepick(
-            players_prices,
-            players_values,
-            budget,
-            verbose=super_verbose,
-            update_master=update_master,
-        )
-
-        result_indexes = []
-        for comb_index in comb_result_indexes:
-            for winning_i in players_comb_indexes[comb_index[0]][comb_index[1]]:
-                result_indexes.append(winning_i)
-
-        result_players = [filtered_players_list[i] for i in result_indexes]
+        result_players = [candidates[idx] for group_pick in picks for idx in group_pick]
+        if not result_players:
+            continue
+        if not unlimited_budget:
+            real_cost = sum(_real_price(p) for p in result_players)
+            if real_cost > budget + _IEEE_QUANTUM_EPS:
+                continue
         formation_score_players.append((formation, score, result_players))
 
-    formation_score_players_by_score = sorted(formation_score_players, key=lambda tup: tup[1], reverse=True)
+    formation_score_players_by_score = sorted(
+        formation_score_players, key=lambda tup: tup[1], reverse=True
+    )
 
     if verbose:
         print_best_full_teams(formation_score_players_by_score)
@@ -294,58 +456,6 @@ def print_best_full_teams(best_results_teams):
         print((best_result[0], best_result[1]))
 
 
-def players_preproc(players_list, formation):
-    max_gk, max_def, max_mid, max_att = _parse_formation(formation)
-    positions = ["GK", "DEF", "MID", "ATT"]
-    requirements = [max_gk, max_def, max_mid, max_att]
-
-    all_values = []
-    all_weights = []
-    all_indexes = []
-
-    for pos, req in zip(positions, requirements):
-        if req <= 0:
-            continue
-        g_v, g_w, g_i = generate_group(players_list, pos)
-        cv, cw, ci = group_preproc(g_v, g_w, g_i, req)
-        if not cv or not cw or not ci:
-            return [], [], []
-        all_values.append(cv)
-        all_weights.append(cw)
-        all_indexes.append(ci)
-
-    if not all_values:
-        return [], [], []
-
-    return all_values, all_weights, all_indexes
-
-
-def generate_group(full_list, group):
-    group_values = []
-    group_weights = []
-    group_indexes = []
-    for i, item in enumerate(full_list):
-        if item.position == group:
-            group_values.append(item.value)
-            group_weights.append(item.price)
-            group_indexes.append(i)
-    return group_values, group_weights, group_indexes
-
-
-def group_preproc(group_values, group_weights, initial_indexes, r):
-    if r <= 0 or not initial_indexes:
-        return [], [], []
-    comb_values = list(itertools.combinations(group_values, r))
-    comb_weights = list(itertools.combinations(group_weights, r))
-    comb_indexes = list(itertools.combinations(initial_indexes, r))
-
-    return (
-        [sum(c) for c in comb_values],
-        [sum(c) for c in comb_weights],
-        comb_indexes,
-    )
-
-
 def best_transfers(past_team, players_list, n_transfers, formations=possible_formations, budget=300, n_results=5, verbose=True, by_n_transfers=False):
     players_not_in_list, past_team_indexes = check_team(past_team, players_list)
     if players_not_in_list:
@@ -362,7 +472,11 @@ def best_transfers(past_team, players_list, n_transfers, formations=possible_for
     threshold = 0
     for boosted_players in multiple_players_list:
         players_list_with_boosts = boosted_players[0]
-        formation_boostedscore_players_list = best_full_teams(players_list_with_boosts, formations, budget, False)
+        formation_boostedscore_players_list = best_full_teams(
+            players_list_with_boosts, formations, budget,
+        )
+        if not formation_boostedscore_players_list:
+            continue
 
         best_formation_boostedscore_players = formation_boostedscore_players_list[0]
         best_formation = best_formation_boostedscore_players[0]

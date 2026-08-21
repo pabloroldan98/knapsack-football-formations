@@ -163,8 +163,13 @@ def log_calculation(session_id: str, calc_type: str, competition: str,
                     formations_out: int, num_players: int,
                     blinded_count: int, banned_count: int,
                     min_prob: float, max_prob: float,
-                    speed_up: bool, duration_ms: int) -> int | None:
-    """Log a calculation and return the inserted row id (or None on failure)."""
+                    duration_ms: int) -> int | None:
+    """Log a calculation and return the inserted row id (or None on failure).
+
+    The physical ``calculations.speed_up`` column is leftover schema; the
+    solver is always uncapped. We persist FALSE and do not expose the field
+    to callers. A later migration can drop the column.
+    """
     if not DB_ENABLED:
         return None
     try:
@@ -177,7 +182,7 @@ def log_calculation(session_id: str, calc_type: str, competition: str,
                     "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (session_id, calc_type, competition, app_source, budget,
                      json.dumps(formations_in), formations_out, num_players,
-                     blinded_count, banned_count, min_prob, max_prob, speed_up, duration_ms),
+                     blinded_count, banned_count, min_prob, max_prob, False, duration_ms),
                 )
                 return cur.lastrowid
     except Exception as e:
