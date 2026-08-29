@@ -1196,6 +1196,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Leganes": "Leganés",
         "Burgos": "Burgos CF",
         "Valladolid": "Real Valladolid",
+        "PSV": "PSV Eindhoven",
+        "AEK": "AEK Athen",
+        "Shakhtar": "Shakhtar Donetsk",
 
         "Kouadio Koné": "Manu Koné",  # seriea y mundial
         "Dibu Martínez": "Emiliano Martínez",  # en mundial, premier y mundialito
