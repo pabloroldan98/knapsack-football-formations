@@ -107,6 +107,8 @@ def get_current_players(
         debug=False
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, extra_teams=extra_teams, host_team=host_team, use_comunio_price=use_comunio_price, use_fitness_form=use_fitness_form, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
+    for t in all_teams:
+        print(t)
     if debug:
         print("000000")
 
@@ -669,7 +671,7 @@ if __name__ == "__main__":
     #     # host_team="US",
     #     # debug=False,
     # # )
-    current_players = get_current_players_wrapper("laliga")#, use_fitness_form=True)#, no_form=True)#, forced_matches=jornada_selected)
+    current_players = get_current_players_wrapper("segunda")#, use_fitness_form=True)#, no_form=True)#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place

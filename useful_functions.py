@@ -1179,6 +1179,23 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Olympiakos": "Olympiacos",
         "Slavia Praha": "Slavia Prag",
         "Sporting CP": "Sporting Portugal",
+        "Bournemouth": "AFC Bournemouth",
+        "Brighton": "Brighton & Hove Albion",
+        "Brentford": "Brentford FC",
+        "Forest": "Nottingham Forest",
+        "Leeds": "Leeds United",
+        "Coventry": "Coventry City",
+        "Ipswich": "Ipswich Town",
+        "Hull": "Hull City",
+        "CA Ceuta": "Ceuta",
+        "RC Celta B": "Celta Fortuna",
+        "Almeria": "Almería",
+        "Castellon": "CD Castellon",
+        "Cadiz": "Cádiz",
+        "Cordoba": "Córdoba",
+        "Leganes": "Leganés",
+        "Burgos": "Burgos CF",
+        "Valladolid": "Real Valladolid",
 
         "Kouadio Koné": "Manu Koné",  # seriea y mundial
         "Dibu Martínez": "Emiliano Martínez",  # en mundial, premier y mundialito
