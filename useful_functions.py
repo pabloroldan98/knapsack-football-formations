@@ -1148,7 +1148,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Los Angeles": "Los Ángeles FC",
         "Inter Miami CF": "Inter Miami",
         "Urawa Red Diamonds": "Urawa Reds",
-        "FC Porto": "Porto",
+        # "FC Porto": "Porto",
         "Botafogo FR": "Botafogo",
         "Al-Ain FC": "Al-Ain",
         "Al Ain": "Al-Ain",

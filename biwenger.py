@@ -17,6 +17,19 @@ from useful_functions import find_similar_string, find_manual_similar_string, re
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
+def _parse_biwenger_response(text: str):
+    """Parse Biwenger /data payloads as raw JSON or JSONP (jsonp_xxx({...}))."""
+    if not text:
+        raise ValueError("Empty Biwenger response")
+    payload = text.strip()
+    if payload.startswith("/**/"):
+        payload = payload[4:].lstrip()
+    jsonp = re.fullmatch(r"[A-Za-z_][\w]*\((.*)\)\s*;?", payload, flags=re.DOTALL)
+    if jsonp:
+        payload = jsonp.group(1)
+    return json.loads(payload)
+
+
 def competition_from_filename(file_name: str) -> str:
     """
     Infer Biwenger competition slug from the filename.
@@ -72,15 +85,16 @@ def get_biwenger_data_dict(
             }
             # response = requests.get(all_data_url, headers=headers, verify=False)
             response = tls_requests.get(all_data_url, headers=headers, verify=False)
-            data = json.loads(re.findall(r'jsonp_xxx\((.*)\)', response.text)[0])
-        except:
-            pass
+            data = _parse_biwenger_response(response.text)
+        except Exception as e:
+            print(f"Error scraping Biwenger ({file_name}): {type(e).__name__}: {e}")
+            data = None
     if not data: # if force_scrape failed or not force_scrape
         data = read_dict_data(file_name)
         if data:
             return data
 
-    if write_file:
+    if write_file and data:
         # write_dict_data(data, file_name)
         overwrite_dict_data(data, file_name, ignore_old_data=True)
 

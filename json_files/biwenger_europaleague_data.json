@@ -1002,8 +1002,8 @@
         "nextGames": []
       }
     },
-    "update": 1785294010,
-    "etag": 2762412764,
+    "update": 1788058810,
+    "etag": 3753579441,
     "scoreID": 1
   },
   "meta": {
@@ -3210,7 +3210,8 @@
             "amazon": {
               "app": "6aec85413ec94f2f96a222ff8ebf4995",
               "slot": "68389126-56f8-45c1-90fd-44287d847e57"
-            }
+            },
+            "minAppVersion": "10.35"
           },
           "interstitial": {
             "type": "AdMob",
@@ -3220,14 +3221,18 @@
               "app": "6aec85413ec94f2f96a222ff8ebf4995",
               "id": "0510e100-2397-4261-9025-5f086660e2d9",
               "slot": "0510e100-2397-4261-9025-5f086660e2d9"
-            }
+            },
+            "minAppVersion": "10.35"
           }
         }
       },
       "features": {
         "safeFrame": false,
+        "orangeGameEventAd": true,
         "randomInterstitial": false,
         "stickyBannerMaxHeight": 33,
+        "superPica": true,
+        "dailyStreak": true,
         "appReview": {
           "enabled": true,
           "allUsers": true,
@@ -3243,10 +3248,10 @@
         "grounds": {
           "world-cup": "world_cup"
         },
-        "disableIAP": "apple:90%,google:90%",
         "recentSeasons": [
           1,
           3,
+          51,
           2,
           5,
           15,
@@ -3257,11 +3262,11 @@
       "apps": {
         "ios": {
           "url": "https://itunes.apple.com/app/biwenger/id1083570913",
-          "version": "10.23.5"
+          "version": "10.35"
         },
         "android": {
           "url": "https://play.google.com/store/apps/details?id=com.biwenger.app",
-          "version": "3.8.10"
+          "version": "3.9.2"
         },
         "huawei": {
           "url": "https://appgallery.cloud.huawei.com/ag/n/app/C100861603",
@@ -3383,6 +3388,16 @@
             "kind": "as"
           },
           {
+            "id": 7,
+            "name": "Feeberse Score",
+            "kind": "feeberse"
+          },
+          {
+            "id": 8,
+            "name": "AS.com and Feeberse average",
+            "kind": "Average"
+          },
+          {
             "id": 2,
             "name": "SofaScore",
             "kind": "SofaScore"
@@ -3401,22 +3416,17 @@
             "id": 6,
             "name": "Biwenger Social",
             "kind": "Social"
-          },
-          {
-            "id": 7,
-            "name": "Feeberse Score",
-            "kind": "Feeberse"
-          },
-          {
-            "id": 8,
-            "name": "AS and Feeberse average",
-            "kind": "Average"
           }
         ],
         "config": {
           "coaches": true,
           "multiPos": true,
           "optimizeImages": true,
+          "superPicaScores": [
+            1,
+            5,
+            8
+          ],
           "standings": {
             "champion": 1,
             "playoffs": 5,
@@ -3424,7 +3434,7 @@
             "descends": 3
           },
           "leagueSponsor": {
-            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "image": "https://cdn.biwenger.com/cdn-cgi/image/f=avif/campaigns/2026/football/sportium-26-27/league2x.jpg",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
             "title": "Sportium"
           }
@@ -3443,6 +3453,11 @@
             "kind": "SofaScore"
           },
           {
+            "id": 2,
+            "name": "Feeberse Score",
+            "kind": "feeberse"
+          },
+          {
             "id": 1,
             "name": "Statistics",
             "kind": "Stats"
@@ -3457,7 +3472,7 @@
             "descends": 3
           },
           "leagueSponsor": {
-            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "image": "https://cdn.biwenger.com/cdn-cgi/image/f=avif/campaigns/2026/football/sportium-26-27/league2x.jpg",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
             "title": "Sportium"
           }
@@ -3465,7 +3480,7 @@
       },
       {
         "id": 40,
-        "name": "American basket",
+        "name": "American basketball",
         "slug": "nba",
         "sport": "basketball",
         "currency": "$",
@@ -3491,6 +3506,16 @@
         "currency": "€",
         "scores": [
           {
+            "id": 5,
+            "name": "Feeberse Score",
+            "kind": "feeberse"
+          },
+          {
+            "id": 6,
+            "name": "AS.com and Feeberse average",
+            "kind": "Average"
+          },
+          {
             "id": 3,
             "name": "SofaScore",
             "kind": "SofaScore"
@@ -3515,7 +3540,7 @@
           "coaches": true,
           "specialMainContainerStyles": "background-size: cover;background-image: url(https://cdn.biwenger.com/cdn-cgi/image/f=avif/img/sports/football/champions/app-bg.png);color: white;background-repeat: no-repeat;background-position: bottom center;background-attachment: fixed",
           "leagueSponsor": {
-            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "image": "https://cdn.biwenger.com/cdn-cgi/image/f=avif/campaigns/2026/football/sportium-26-27/league2x.jpg",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
             "title": "Sportium"
           }
@@ -3551,7 +3576,7 @@
             "descends": 4
           },
           "leagueSponsor": {
-            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "image": "https://cdn.biwenger.com/cdn-cgi/image/f=avif/campaigns/2026/football/sportium-26-27/league2x.jpg",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
             "title": "Sportium"
           }
@@ -3583,7 +3608,7 @@
             "descends": 3
           },
           "leagueSponsor": {
-            "image": "https://cdn.biwenger.com/campaigns/2026/football/sportium/league.gif",
+            "image": "https://cdn.biwenger.com/cdn-cgi/image/f=avif/campaigns/2026/football/sportium-26-27/league2x.jpg",
             "url": "https://online.sportium.es/promoRedirect?member=DISPLAY&campaign=DEFAULT&channel=DEFAULT&zone=19560249&lp=19561165&var1=fantasy&var2=biwenger&var3=bonodoble200",
             "title": "Sportium"
           }
