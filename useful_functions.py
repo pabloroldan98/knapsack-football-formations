@@ -1240,6 +1240,7 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "PSV": "PSV Eindhoven",
         "AEK": "AEK Athen",
         "Shakhtar": "Shakhtar Donetsk",
+        "Havre AC": "Le Havre",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",

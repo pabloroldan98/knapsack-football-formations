@@ -219,7 +219,8 @@ def get_current_players(
     return full_players_data
 
 
-def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[], alt_elo=False):
+# alt_elo=True hasta que clubelo vuelva
+def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[], alt_elo=True):
 
     if forced_matches:
         jornada_selected = forced_matches.copy()
