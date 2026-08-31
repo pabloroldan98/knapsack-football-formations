@@ -507,6 +507,15 @@ def find_similar_string(my_string, string_list, similarity_threshold=0.8, verbos
         # print("ENTRA")
         # print(string_list)
         return most_similar_string
+    # Korean names: if about to return none, try moving the first word to the end
+    korean_names = ("kim", "lee", "park")
+    words = my_string.split()
+    if not is_formatted and len(words) > 1:
+        if any(word.lower() in korean_names for word in words):
+            korean_reordered = " ".join(words[1:] + [words[0]])
+            result = find_similar_string(korean_reordered, string_list, similarity_threshold=similarity_threshold, verbose=verbose, is_formatted=True, fallback_none=fallback_none)
+            if result:
+                return result
     return None
 
 
@@ -1030,6 +1039,21 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Abdulakh Khaybulaev": "A. Khaybulayev",
         "Sani Suleiman": "Suleman Sani",
         "Mert Hakan Yandaş": "M. Yandaş",
+        "Sergio Martinez": "Sergio Martínez",
+        "Mateo Joseph": "Mateo Fernandez",
+        "Raphael Rodrigues": "Borges Rodrigues",
+        "Kim Ji-Soo": "Ji-soo Kim",
+        "Keita Baldé": "Balde Diao",
+        "Patrick Zabi": "Zabi Gueu",
+        "Hermann Diandaga": "Hermann Malonga",
+        "Justin Bengui": "Bengui Joao",
+        "Elijah Olaniyi Odede": "Elijah Odede",
+        "Isak Steiner Jensen": "Isak Jensen",
+        "Noah Ukwuije": "Noah Obioma",
+        "Fabricio Assis": "Fabricio Barbosa",
+        "Pablo Meixús": "Pablo Meixús",
+        "Guilherme Borges Guedes": "Gui Guedes",
+        "Daniel Mas Soria": "Dani Mas",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
