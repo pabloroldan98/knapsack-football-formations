@@ -1013,6 +1013,23 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Aissa Laïdouni": "Laïdouni",
         "Oussama Benbot": "Benbout",
         "Juan Carlos Arana": "Juan Arana",
+        "Mykola Matvienko": "Matviyenko",
+        "Mezian Mesloub": "Mezian Soares",
+        "Tanguy Nianzou": "Nianzou Kouassi",
+        "Enzo Duarte": "Enzo dos Santos",
+        "Martin Ove Roseth": "M. Roseth",
+        "Niklas Kemp Fuglestad": "N. Fuglestad",
+        "Can Armando Güner": "C. Güner",
+        "Lesley Ugochukwu": "Chimuanya Ugochukwu",
+        "Bruno Braga Ramos": "Bruninho",
+        "Júnior Almeida": "Erivaldo Almeida",
+        "Joy Lance Mickels": "J. Mickels",
+        "Patrick Orphe M'Bina": "Orphé Mbina",
+        "Dro Fernández": "Dro",
+        "Jakob Segadal Hansen": "J. Hansen",
+        "Abdulakh Khaybulaev": "A. Khaybulayev",
+        "Sani Suleiman": "Suleman Sani",
+        "Mert Hakan Yandaş": "M. Yandaş",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
         # "AAAAAAAA": "BBBBBBB",
@@ -1223,6 +1240,17 @@ def find_string_positions(string_list, target_string):
     return positions
 
 
+def _is_numeric_elo_value(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _is_elo_ratings_dict(league):
+    """Flat {team_or_country: elo_number} used by elo_ratings JSONs."""
+    if not isinstance(league, dict) or not league or "data" in league:
+        return False
+    return all(_is_numeric_elo_value(value) for value in league.values())
+
+
 def is_valid_league_dict(league, min_teams=10):
     if not isinstance(league, dict):
         return False
@@ -1248,6 +1276,10 @@ def is_valid_league_dict(league, min_teams=10):
         if len(players) < 100:
             return False
         return True
+
+    elif _is_elo_ratings_dict(league): # Elo Ratings data
+        if len(league) < min_teams:
+            return False
 
     else:
         if len(league) < min_teams:
