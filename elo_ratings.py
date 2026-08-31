@@ -13,6 +13,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from itertools import combinations
+from urllib.parse import urljoin, urlparse, parse_qs
 
 from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data, create_driver
 
@@ -21,27 +23,40 @@ def get_teams_elos_dict(
         is_country=False,
         country="ESP",
         extra_teams=False,
+        alt_elo=False,
         write_file=False,
         file_name="elo_ratings_laliga_data",
         force_scrape=False
 ):
     data = None
+    storage_file_name = file_name
+    if alt_elo and not is_country:
+        storage_file_name = f"{file_name}_elofootball"
+
     if force_scrape:
         try:
-            data = get_teams_elos(is_country=is_country, country=country, extra_teams=extra_teams, file_name=file_name)
+            data = get_teams_elos(
+                is_country=is_country,
+                country=country,
+                extra_teams=extra_teams,
+                alt_elo=alt_elo,
+                file_name=file_name
+            )
         except:
             pass
-    if not data: # if force_scrape failed or not force_scrape
+
+    # Save raw scraped values only. Empty/None is never written.
+    if write_file and data:
+        overwrite_dict_data(data, storage_file_name)
+
+    if not data:
         if is_country:
-            file_name = "elo_ratings_countries_data"
-        data = read_dict_data(file_name)
-        if data:
-            return data
+            storage_file_name = "elo_ratings_countries_data"
+        data = read_dict_data(storage_file_name)
 
-    if write_file:
-        # write_dict_data(data, file_name)
-        overwrite_dict_data(data, file_name)
-
+    # Scale EloFootball only when returning it, never when scraping/saving.
+    if alt_elo and not is_country and data:
+        data = _apply_alt_elo_scale(data)
     return data
 
 
@@ -260,24 +275,237 @@ def get_opta_teams_elos():
     return full_opta_teams_elos
 
 
+# ClubElo / FIFA-style codes that differ from EloFootball ISO-3166 alpha-3.
+CLUBELO_TO_ELOFOOTBALL_ISO = {
+    "GER": "DEU",
+    "NED": "NLD",
+    "POR": "PRT",
+    "SUI": "CHE",
+    "GRE": "GRC",
+    "DEN": "DNK",
+    "CRO": "HRV",
+    "BUL": "BGR",
+    "SLO": "SVN",
+    "WAL": "WLS",
+}
+
+_elofootball_cache = {}
+
+
+def _elofootball_country_iso(country):
+    if country is None:
+        return None
+    code = str(country).strip().upper()
+    return CLUBELO_TO_ELOFOOTBALL_ISO.get(code, code)
+
+
+def _discover_elofootball_countries(soup, season, base_url):
+    countries = []
+    seen_country_codes = set()
+    for a in soup.find_all("a", href=True):
+        parsed = urlparse(urljoin(base_url, a["href"]))
+        query = parse_qs(parsed.query)
+        country_iso = query.get("countryiso", [None])[0]
+        if not country_iso:
+            continue
+        season_q = query.get("season", [None])[0]
+        if season_q and season and season_q != season:
+            continue
+        if country_iso in seen_country_codes:
+            continue
+        name = a.get_text(" ", strip=True)
+        if re.search(r"20\d{2}", name):
+            continue
+        seen_country_codes.add(country_iso)
+        countries.append({
+            "iso": country_iso,
+            "name": name or country_iso,
+        })
+    int_countries = [c for c in countries if c["iso"] == "INT"]
+    other_countries = [c for c in countries if c["iso"] != "INT"]
+    return other_countries + int_countries
+
+
+def _parse_elofootball_country_elo(soup):
+    for tag in soup.find_all(["h2", "h3", "h4"]):
+        text = tag.get_text(" ", strip=True)
+        if "Elo:" not in text:
+            continue
+        match = re.search(r"Elo:\s*(\d+(?:\.\d+)?)", text)
+        if not match:
+            continue
+        elo = float(match.group(1))
+        if elo.is_integer():
+            elo = int(elo)
+        name = text.split("|")[0].strip()
+        return name, elo
+    return None, None
+
+
+ALT_ELO_SCALE = 0.85
+
+
+def _apply_alt_elo_scale(data, factor=ALT_ELO_SCALE):
+    if not data:
+        return data
+    scaled = {}
+    for key, value in data.items():
+        if isinstance(value, (int, float)) and value == value:
+            scaled[key] = value * factor
+        else:
+            scaled[key] = value
+    return scaled
+
+
+def get_elofootball_teams_elos(season=None, country=None, request_delay=0.15, as_countries=False):
+    """
+    Scrapes EloFootball.
+
+    country:
+        "ESP" / "GER" / ... -> one country (ClubElo codes are mapped, e.g. GER->DEU)
+        None  -> all available countries from the country selector
+
+    as_countries:
+        False -> club Elos
+        True  -> country Elos (top-10 clubs average on each country page)
+    """
+    base_url = "https://www.elofootball.com/"
+
+    if season is None:
+        season, _ = extract_season_tokens()
+
+    country_iso = _elofootball_country_iso(country)
+    cache_key = (season, country_iso, bool(as_countries))
+    if cache_key in _elofootball_cache:
+        return dict(_elofootball_cache[cache_key])
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/126.0.0.0 Safari/537.36"
+        )
+    }
+    session = requests.Session()
+    session.headers.update(headers)
+    request_timeout = 300  # 5 minutes
+
+    if country_iso is not None:
+        countries = [{"iso": country_iso, "name": country_iso}]
+    else:
+        initial_url = f"{base_url}country.php?countryiso=ENG&season={season}"
+        response = session.get(initial_url, timeout=request_timeout)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+        countries = _discover_elofootball_countries(soup, season, base_url)
+
+    print(
+        f"EloFootball: scraping {len(countries)} countries "
+        f"for season {season}"
+        f"{' (country ratings)' if as_countries else ''}"
+    )
+
+    elofootball_teams = {}
+    for i, country_data in enumerate(countries, start=1):
+        this_iso = country_data["iso"]
+        country_name = country_data["name"]
+        url = f"{base_url}country.php?countryiso={this_iso}&season={season}"
+        try:
+            response = session.get(url, timeout=request_timeout)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+
+            if as_countries:
+                heading_name, elo = _parse_elofootball_country_elo(soup)
+                if elo is None:
+                    print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): country elo not found")
+                else:
+                    label = heading_name or country_name
+                    elofootball_teams[find_manual_similar_string(label)] = elo
+                    print(f"[{i}/{len(countries)}] {label} ({this_iso}): {elo}")
+            else:
+                ranking_heading = soup.find(
+                    lambda tag: tag.name in ["h2", "h3", "h4"]
+                    and "Elo ranking for" in tag.get_text(" ", strip=True)
+                )
+                if ranking_heading is None:
+                    print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): ranking not found")
+                    continue
+
+                ranking_table = ranking_heading.find_next("table")
+                if ranking_table is None:
+                    print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): ranking table not found")
+                    continue
+
+                country_team_count = 0
+                for tr in ranking_table.find_all("tr"):
+                    cells = tr.find_all("td")
+                    # 0 global rank, 1 club, 2-7 recent results, 8 Elo rating
+                    if len(cells) < 9:
+                        continue
+                    club_cell = cells[1]
+                    club_link = club_cell.find("a")
+                    team_name = club_link.get_text(" ", strip=True) if club_link else club_cell.get_text(" ", strip=True)
+                    elo_text = cells[8].get_text(" ", strip=True)
+                    try:
+                        elo = float(elo_text)
+                        if elo.is_integer():
+                            elo = int(elo)
+                    except ValueError:
+                        continue
+                    if not team_name:
+                        continue
+                    elofootball_teams[find_manual_similar_string(team_name)] = elo
+                    country_team_count += 1
+
+                print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): {country_team_count} teams")
+        except requests.RequestException as exc:
+            print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): ERROR - {exc}")
+        except Exception as exc:
+            print(f"[{i}/{len(countries)}] {country_name} ({this_iso}): ERROR - {type(exc).__name__}: {exc}")
+
+        if request_delay and len(countries) > 1:
+            time.sleep(request_delay)
+
+    result = dict(sorted(elofootball_teams.items(), key=lambda kv: kv[1], reverse=True))
+    _elofootball_cache[cache_key] = result
+    return dict(result)
+
+
 def get_model_prediction(
         teams_elos_dict,
         besoccer_teams_elos_dict,
         footballdatabase_teams_elos_dict,
-        opta_teams_elos_dict
+        opta_teams_elos_dict,
+        elofootball_teams_elos_dict=None
 ):
-    # Create Series for each source
-    teams_elo = pd.Series(teams_elos_dict, name="teams_elo")
-    besoccer_elo = pd.Series(besoccer_teams_elos_dict, name="besoccer_elo")
-    footballdb_elo = pd.Series(footballdatabase_teams_elos_dict, name="footballdb_elo")
-    opta_elo = pd.Series(opta_teams_elos_dict, name="opta_elo")
+    """
+    Predicts missing values in the PRIMARY Elo scale.
 
-    # Combine into a single DataFrame
-    df_elo = pd.concat([teams_elo, besoccer_elo, footballdb_elo, opta_elo], axis=1)
+    teams_elos_dict:
+        Target source:
+        - ClubElo when alt_elo=False
+        - EloFootball when alt_elo=True
+    """
+    elofootball_teams_elos_dict = elofootball_teams_elos_dict or {}
 
-    # Helper functions for OLS
+    teams_elo = pd.Series(teams_elos_dict, name="teams_elo", dtype=float)
+    sources = {
+        "besoccer_elo": pd.Series(besoccer_teams_elos_dict, dtype=float),
+        "footballdb_elo": pd.Series(footballdatabase_teams_elos_dict, dtype=float),
+        "opta_elo": pd.Series(opta_teams_elos_dict, dtype=float),
+    }
+    if elofootball_teams_elos_dict:
+        sources["elofootball_elo"] = pd.Series(elofootball_teams_elos_dict, dtype=float)
+
+    df_elo = pd.concat(
+        [teams_elo, *[series.rename(name) for name, series in sources.items()]],
+        axis=1
+    )
+    predictor_columns = list(sources.keys())
+
     def fit_linear_regression(X, y):
-        X_b = np.c_[np.ones((X.shape[0], 1)), X]  # add intercept
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]
         theta = np.linalg.pinv(X_b.T @ X_b) @ X_b.T @ y
         return theta
 
@@ -285,105 +513,26 @@ def get_model_prediction(
         X_b = np.c_[np.ones((X.shape[0], 1)), X]
         return X_b @ theta
 
-    # Initialize models
-    reg_full = reg_bf = reg_bo = reg_fo = reg_b = reg_f = reg_o = None
+    models = {}
+    for n_features in range(len(predictor_columns), 0, -1):
+        for columns in combinations(predictor_columns, n_features):
+            columns = list(columns)
+            mask_train = df_elo[["teams_elo"] + columns].notna().all(axis=1)
+            if mask_train.sum() <= len(columns) + 1:
+                continue
+            X = df_elo.loc[mask_train, columns].values
+            y = df_elo.loc[mask_train, "teams_elo"].values
+            models[tuple(columns)] = fit_linear_regression(X, y)
 
-    # 1) Fit regressions if enough data
-    # a) Full 3-predictor model (besoccer + footballdb + opta)
-    mask_full_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
-    if mask_full_train.sum() > 0:
-        X_full = df_elo.loc[mask_full_train, ["besoccer_elo", "footballdb_elo", "opta_elo"]].values
-        y_full = df_elo.loc[mask_full_train, "teams_elo"].values
-        reg_full = fit_linear_regression(X_full, y_full)
+    sorted_models = sorted(models.items(), key=lambda item: len(item[0]), reverse=True)
+    for columns_tuple, model in sorted_models:
+        columns = list(columns_tuple)
+        mask_pred = df_elo["teams_elo"].isna() & df_elo[columns].notna().all(axis=1)
+        if not mask_pred.any():
+            continue
+        Xp = df_elo.loc[mask_pred, columns].values
+        df_elo.loc[mask_pred, "teams_elo"] = predict(Xp, model)
 
-    # b) Pairwise models
-    # besoccer + footballdb
-    mask_bf_train = df_elo[["teams_elo", "besoccer_elo", "footballdb_elo"]].notna().all(axis=1)
-    if mask_bf_train.sum() > 0:
-        X_bf = df_elo.loc[mask_bf_train, ["besoccer_elo", "footballdb_elo"]].values
-        y_bf = df_elo.loc[mask_bf_train, "teams_elo"].values
-        reg_bf = fit_linear_regression(X_bf, y_bf)
-
-    # besoccer + opta
-    mask_bo_train = df_elo[["teams_elo", "besoccer_elo", "opta_elo"]].notna().all(axis=1)
-    if mask_bo_train.sum() > 0:
-        X_bo = df_elo.loc[mask_bo_train, ["besoccer_elo", "opta_elo"]].values
-        y_bo = df_elo.loc[mask_bo_train, "teams_elo"].values
-        reg_bo = fit_linear_regression(X_bo, y_bo)
-
-    # footballdb + opta
-    mask_fo_train = df_elo[["teams_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
-    if mask_fo_train.sum() > 0:
-        X_fo = df_elo.loc[mask_fo_train, ["footballdb_elo", "opta_elo"]].values
-        y_fo = df_elo.loc[mask_fo_train, "teams_elo"].values
-        reg_fo = fit_linear_regression(X_fo, y_fo)
-
-    # c) Single-predictor models
-    # besoccer-only
-    mask_b_train = df_elo[["teams_elo", "besoccer_elo"]].notna().all(axis=1)
-    if mask_b_train.sum() > 0:
-        X_b = df_elo.loc[mask_b_train, ["besoccer_elo"]].values
-        y_b = df_elo.loc[mask_b_train, "teams_elo"].values
-        reg_b = fit_linear_regression(X_b, y_b)
-
-    # footballdb-only
-    mask_f_train = df_elo[["teams_elo", "footballdb_elo"]].notna().all(axis=1)
-    if mask_f_train.sum() > 0:
-        X_f = df_elo.loc[mask_f_train, ["footballdb_elo"]].values
-        y_f = df_elo.loc[mask_f_train, "teams_elo"].values
-        reg_f = fit_linear_regression(X_f, y_f)
-
-    # opta-only
-    mask_o_train = df_elo[["teams_elo", "opta_elo"]].notna().all(axis=1)
-    if mask_o_train.sum() > 0:
-        X_o = df_elo.loc[mask_o_train, ["opta_elo"]].values
-        y_o = df_elo.loc[mask_o_train, "teams_elo"].values
-        reg_o = fit_linear_regression(X_o, y_o)
-
-    # 2) Predict missing target values
-    # a) Full model
-    if reg_full is not None:
-        mask_full_pred = df_elo["teams_elo"].isna() & df_elo[["besoccer_elo", "footballdb_elo", "opta_elo"]].notna().all(axis=1)
-        if mask_full_pred.any():
-            Xp = df_elo.loc[mask_full_pred, ["besoccer_elo", "footballdb_elo", "opta_elo"]].values
-            df_elo.loc[mask_full_pred, "teams_elo"] = predict(Xp, reg_full)
-
-    # b) Pairwise predictions
-    pairs = [
-        ("besoccer_elo", "footballdb_elo", reg_bf),
-        ("besoccer_elo", "opta_elo", reg_bo),
-        ("footballdb_elo", "opta_elo", reg_fo)
-    ]
-    for col1, col2, model in pairs:
-        if model is not None:
-            mask_pair = (
-                df_elo["teams_elo"].isna() &
-                df_elo[col1].notna() &
-                df_elo[col2].notna() &
-                df_elo[[c for c in ["besoccer_elo","footballdb_elo","opta_elo"] if c not in [col1,col2]]].isna().all(axis=1)
-            )
-            if mask_pair.any():
-                Xp = df_elo.loc[mask_pair, [col1, col2]].values
-                df_elo.loc[mask_pair, "teams_elo"] = predict(Xp, model)
-
-    # c) Single predictor predictions
-    singles = [
-        ("besoccer_elo", reg_b),
-        ("footballdb_elo", reg_f),
-        ("opta_elo", reg_o)
-    ]
-    for col, model in singles:
-        if model is not None:
-            mask_single = (
-                df_elo["teams_elo"].isna() &
-                df_elo[col].notna() &
-                df_elo[[c for c in ["besoccer_elo","footballdb_elo","opta_elo"] if c != col]].isna().all(axis=1)
-            )
-            if mask_single.any():
-                Xp = df_elo.loc[mask_single, [col]].values
-                df_elo.loc[mask_single, "teams_elo"] = predict(Xp, model)
-
-    # Return predictions as dict
     return df_elo["teams_elo"].to_dict()
 
 
@@ -524,7 +673,7 @@ def elos_urls_from_filename(file_name=None, today=None):
     return besoccer, fdb
 
 
-def get_teams_elos(is_country=False, country="ESP", extra_teams=False, file_name=None):
+def get_teams_elos(is_country=False, country="ESP", extra_teams=False, alt_elo=False, file_name=None):
     if is_country:
         teams_elos_url = "https://www.eloratings.net/World.tsv"
         teams_elos_df = pd.read_table(teams_elos_url, sep="\t", header=None, na_filter=False)[[2, 3]]
@@ -540,62 +689,65 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False, file_name
             full_teams_elos[str(team_name)] = team_elo
         full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
     else:
-        # Get today's date in the format 'YYYY-MM-DD'
         today = datetime.date.today()
-        today_string = today.strftime('%Y-%m-%d')
-        url = f"http://api.clubelo.com/{today_string}"
-        teams_elos_df = pd.read_csv(url)
+        league_span, _ = extract_season_tokens(file_name, today)
 
-        if country is not None:
-            filtered_teams_elos_df = teams_elos_df[
-                (teams_elos_df['Country'] == country) &
-                (teams_elos_df['Level'].isin([0, 1, 2, ]))
-            ]
+        if alt_elo:
+            full_teams_elos_dict = get_elofootball_teams_elos(
+                season=league_span,
+                country=country
+            )
         else:
-            filtered_teams_elos_df = teams_elos_df[
-                teams_elos_df['Level'].isin([0, 1, ])
-            ]
-        full_teams_elos = dict(zip(filtered_teams_elos_df['Club'], filtered_teams_elos_df['Elo']))
-        full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
+            today_string = today.strftime('%Y-%m-%d')
+            url = f"http://api.clubelo.com/{today_string}"
+            teams_elos_df = pd.read_csv(url)
+
+            if country is not None:
+                elo_levels = [0, 1, 2]
+                norm = re.sub(r'[^a-z0-9]+', '-', (file_name or '').lower())
+                is_segunda = any(k in norm for k in [
+                    'laliga2', 'la-liga2', 'la-liga-2', 'segunda', 'segunda-division',
+                    'segundadivision', 'hypermotion', 'la-liga-hypermotion', 'laligahypermotion',
+                ])
+                if is_segunda:
+                    elo_levels.append(3)
+                filtered_teams_elos_df = teams_elos_df[
+                    (teams_elos_df['Country'] == country) &
+                    (teams_elos_df['Level'].isin(elo_levels))
+                ]
+            else:
+                filtered_teams_elos_df = teams_elos_df[
+                    teams_elos_df['Level'].isin([0, 1])
+                ]
+            full_teams_elos = dict(zip(filtered_teams_elos_df['Club'], filtered_teams_elos_df['Elo']))
+            full_teams_elos_dict = {find_manual_similar_string(key): value for key, value in full_teams_elos.items()}
 
         if extra_teams:
-            # full_besoccer_teams_elos_dict = get_besoccer_teams_elos()
-            # full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos()
             # file_name can be None or a string like "laliga" or "mundial_clubes_2025"
             besoccer_url, fdb_url = elos_urls_from_filename(file_name, today)
 
             full_besoccer_teams_elos_dict = get_besoccer_teams_elos(besoccer_url)
             full_footballdatabase_teams_elos_dict = get_footballdatabase_teams_elos(fdb_url)
             full_opta_teams_elos_dict = get_opta_teams_elos()
-            # pprint(full_opta_teams_elos_dict)
-            empty_teams_elos_dict = {key: None for key in full_footballdatabase_teams_elos_dict}
+            # EloFootball is an extra source ONLY when ClubElo is the primary source.
+            if not alt_elo:
+                full_elofootball_teams_elos_dict = get_elofootball_teams_elos(
+                    season=league_span,
+                    country=None
+                )
+            else:
+                full_elofootball_teams_elos_dict = {}
 
             # Model
-            partial_teams_elos_dict_complete = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, full_footballdatabase_teams_elos_dict, full_opta_teams_elos_dict)
-            # partial_teams_elos_dict_no_footballdatabase = get_model_prediction(full_teams_elos_dict, full_besoccer_teams_elos_dict, empty_teams_elos_dict, full_opta_teams_elos_dict)
-            #
-            # full_teams_elos_dict = {
-            #     team: (partial_teams_elos_dict_complete[team] + partial_teams_elos_dict_no_footballdatabase[team]) / 2
-            #     for team in partial_teams_elos_dict_complete
-            # }
+            partial_teams_elos_dict_complete = get_model_prediction(
+                full_teams_elos_dict,
+                full_besoccer_teams_elos_dict,
+                full_footballdatabase_teams_elos_dict,
+                full_opta_teams_elos_dict,
+                full_elofootball_teams_elos_dict
+            )
             full_teams_elos_dict = partial_teams_elos_dict_complete.copy()
 
-            # ─── Fit polynomials y = f(x) of degree 1 ───────────────────────────────
-            # x = np.array([full_besoccer_teams_elos_dict[t] for t in common])
-            # y = np.array([full_teams_elos_dict[t] for t in common])
-            # coeffs1 = np.polyfit(x, y, 1)  # [m,     b]
-            # poly1 = np.poly1d(coeffs1)
-            # def y_from_x_deg1(x_val):
-            #     """Linear: y = m*x + b"""
-            #     return poly1(x_val)
-            # full_teams_elos_dict = {
-            #     team: (
-            #         full_teams_elos_dict[team]  # if it was in common, keep the original
-            #         if team in common
-            #         else y_from_x_deg1(x_bes)  # otherwise predict via your linear fit
-            #     )
-            #     for team, x_bes in full_besoccer_teams_elos_dict.items()
-            # }
             # Compute the keys present in both source dicts
             common_keys = set(full_besoccer_teams_elos_dict) & set(full_footballdatabase_teams_elos_dict)
             # Filter full_teams_elos_dict in-place (or assign to a new variable)

@@ -15,7 +15,7 @@ from biwenger import get_biwenger_data_dict
 from elo_ratings import get_teams_elos_dict
 
 
-def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False):
+def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False, alt_elo=False):
     try:
         print("----------------------------------------")
         print(f"- Scraping {label}:")
@@ -23,10 +23,14 @@ def safe_get_elos(label, is_country, file_name, country=None, extra_teams=False)
             is_country=is_country,
             country=country,
             extra_teams=extra_teams,
+            alt_elo=alt_elo,
             write_file=True,
             file_name=file_name,
             force_scrape=True
         )
+        if not elo_dict:
+            print(f"No Elo data returned for {label}")
+            return None
         print(f"\n{label} Elo Ratings:")
         for team, elo in elo_dict.items():
             print(f"{team}: {elo}")
@@ -65,65 +69,79 @@ print("##############################")
 # try:
 
 
-# Leagues
-elo_ratings_laliga_data = safe_get_elos(
-    "LaLiga",
-    is_country=False, country="ESP", extra_teams=False,
-    file_name="elo_ratings_laliga_data"
-)
+for alt_elo in (
+    False, 
+    True,
+    ):
+    # Leagues
+    elo_ratings_laliga_data = safe_get_elos(
+        "LaLiga",
+        is_country=False, country="ESP", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_laliga_data"
+    )
 
-elo_ratings_premier_data = safe_get_elos(
-    "Premier League",
-    is_country=False, country="ENG", extra_teams=False,
-    file_name="elo_ratings_premier_data"
-)
+    elo_ratings_premier_data = safe_get_elos(
+        "Premier League",
+        is_country=False, country="ENG", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_premier_data"
+    )
 
-elo_ratings_seriea_data = safe_get_elos(
-    "Serie A",
-    is_country=False, country="ITA", extra_teams=False,
-    file_name="elo_ratings_seriea_data"
-)
+    elo_ratings_seriea_data = safe_get_elos(
+        "Serie A",
+        is_country=False, country="ITA", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_seriea_data"
+    )
 
-elo_ratings_bundesliga_data = safe_get_elos(
-    "Bundesliga",
-    is_country=False, country="GER", extra_teams=False,
-    file_name="elo_ratings_bundesliga_data"
-)
+    elo_ratings_bundesliga_data = safe_get_elos(
+        "Bundesliga",
+        is_country=False, country="GER", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_bundesliga_data"
+    )
 
-elo_ratings_ligueone_data = safe_get_elos(
-    "Ligue 1",
-    is_country=False, country="FRA", extra_teams=False,
-    file_name="elo_ratings_ligueone_data"
-)
+    elo_ratings_ligueone_data = safe_get_elos(
+        "Ligue 1",
+        is_country=False, country="FRA", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_ligueone_data"
+    )
 
-elo_ratings_segunda_data = safe_get_elos(
-    "Segunda División",
-    is_country=False, country="ESP", extra_teams=False,
-    file_name="elo_ratings_segunda_data"
-)
+    elo_ratings_segunda_data = safe_get_elos(
+        "Segunda División",
+        is_country=False, country="ESP", extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_segunda_data"
+    )
 
-# Tournaments
-elo_ratings_champions_data = safe_get_elos(
-    "Champions League",
-    is_country=False, country=None, extra_teams=False,
-    file_name="elo_ratings_champions_data"
-)
-elo_ratings_europaleague_data = safe_get_elos(
-    "Europa League",
-    is_country=False, country=None, extra_teams=False,
-    file_name="elo_ratings_europaleague_data"
-)
-elo_ratings_conference_data = safe_get_elos(
-    "Conference League",
-    is_country=False, country=None, extra_teams=False,
-    file_name="elo_ratings_conference_data"
-)
+    # Tournaments
+    elo_ratings_champions_data = safe_get_elos(
+        "Champions League",
+        is_country=False, country=None, extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_champions_data"
+    )
+    elo_ratings_europaleague_data = safe_get_elos(
+        "Europa League",
+        is_country=False, country=None, extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_europaleague_data"
+    )
+    elo_ratings_conference_data = safe_get_elos(
+        "Conference League",
+        is_country=False, country=None, extra_teams=False,
+        alt_elo=alt_elo,
+        file_name="elo_ratings_conference_data"
+    )
 
-# elo_ratings_mundialito_data = safe_get_elos(
-#     "Mundialito",
-#     is_country=False, country=None, extra_teams=True,
-#     file_name="elo_ratings_mundialito_data"
-# )
+    # elo_ratings_mundialito_data = safe_get_elos(
+    #     "Mundialito",
+    #     is_country=False, country=None, extra_teams=True,
+    #     alt_elo=alt_elo,
+    #     file_name="elo_ratings_mundialito_data"
+    # )
 
 # Countries
 elo_ratings_countries_data = safe_get_elos(

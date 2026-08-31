@@ -106,6 +106,7 @@ def get_championship_data(
         is_country=False,
         extra_teams=False,
         host_team=None,
+        alt_elo=False,
         use_comunio_price=False,
         use_fitness_form=False,
         biwenger_file_name="biwenger_laliga_data",
@@ -120,7 +121,7 @@ def get_championship_data(
     if verbose:
         print("Loading teams data...")
         print()
-    championship_teams = get_teams_championship_data(data, is_country=is_country, extra_teams=extra_teams, host_team=host_team, forced_matches=forced_matches, file_name=elo_ratings_file_name)
+    championship_teams = get_teams_championship_data(data, is_country=is_country, extra_teams=extra_teams, host_team=host_team, forced_matches=forced_matches, file_name=elo_ratings_file_name, alt_elo=alt_elo)
     if verbose:
         print("Loading players data...")
         print()
@@ -157,12 +158,12 @@ def country_from_filename(file_name: str):
     return None
 
 
-def get_teams_championship_data(data, is_country=False, extra_teams=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data"):
+def get_teams_championship_data(data, is_country=False, extra_teams=False, host_team=None, forced_matches=[], file_name="elo_ratings_laliga_data", alt_elo=False):
     championship_teams = data['data']['teams']
     championship_players = data['data']['players']
 
     country = country_from_filename(file_name)
-    teams_elos_dict = get_teams_elos_dict(is_country=is_country, country=country, extra_teams=extra_teams, file_name=file_name)
+    teams_elos_dict = get_teams_elos_dict(is_country=is_country, country=country, extra_teams=extra_teams, alt_elo=alt_elo, file_name=file_name)
     championship_teams_db = create_teams_list(
         championship_teams,
         championship_players,
