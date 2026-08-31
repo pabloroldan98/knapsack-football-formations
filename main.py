@@ -671,7 +671,7 @@ if __name__ == "__main__":
     #     # host_team="US",
     #     # debug=False,
     # # )
-    current_players = get_current_players_wrapper("laliga")#, use_fitness_form=True)#, no_form=True)#, forced_matches=jornada_selected)
+    current_players = get_current_players_wrapper("champions")#, use_fitness_form=True)#, no_form=True)#, forced_matches=jornada_selected)
 
     # # FOR MULTIPLE JORNADAS
     # # Update current_players in-place
@@ -735,6 +735,11 @@ if __name__ == "__main__":
         print(player)
         # print((player.standard_price/player.price)/300000)
     print()
+
+    # Para ver qué equipos me faltan de Sofascore
+    # for team in set(player.team for player in worthy_players):
+    #     if all(player.value < 1 for player in worthy_players if player.team == team):
+    #         print(team)
 
     # print(len(worthy_players))
     print("------------------------- PURGED PLAYERS -------------------------")

@@ -1199,6 +1199,9 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "PSV": "PSV Eindhoven",
         "AEK": "AEK Athen",
         "Shakhtar": "Shakhtar Donetsk",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
+        # "AAAAAAAA": "BBBBBBB",
 
         "Kouadio Koné": "Manu Koné",  # seriea y mundial
         "Dibu Martínez": "Emiliano Martínez",  # en mundial, premier y mundialito
