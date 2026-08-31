@@ -736,7 +736,7 @@ if __name__ == "__main__":
         # print((player.standard_price/player.price)/300000)
     print()
 
-    # Para ver qué equipos me faltan de Sofascore
+    # # Para ver qué equipos me faltan de Sofascore
     # for team in set(player.team for player in worthy_players):
     #     if all(player.value < 1 for player in worthy_players if player.team == team):
     #         print(team)
