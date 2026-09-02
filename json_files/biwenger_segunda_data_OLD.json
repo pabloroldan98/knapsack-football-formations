@@ -63,7 +63,7 @@
           "id": 4978,
           "name": "Round 3",
           "short": "R3",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4979,
@@ -306,208 +306,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4978,
-        "name": "Round 3",
-        "short": "R3",
-        "status": "active",
-        "end": 1788274800,
-        "type": "round",
-        "games": [
-          {
-            "id": 51501,
-            "date": 1788204600,
-            "status": "finished",
-            "home": {
-              "id": 817,
-              "name": "Celta Fortuna",
-              "slug": "celta-fortuna",
-              "score": 1
-            },
-            "away": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 2
-            }
-          },
-          {
-            "id": 51500,
-            "date": 1788195600,
-            "status": "finished",
-            "home": {
-              "id": 588,
-              "name": "Burgos CF",
-              "slug": "burgos-cf",
-              "score": 2
-            },
-            "away": {
-              "id": 587,
-              "name": "Real Sociedad B",
-              "slug": "real-sociedad-b",
-              "score": 2
-            }
-          },
-          {
-            "id": 51499,
-            "date": 1788118200,
-            "status": "finished",
-            "home": {
-              "id": 160,
-              "name": "Córdoba",
-              "slug": "cordoba",
-              "score": 1
-            },
-            "away": {
-              "id": 290,
-              "name": "Granada",
-              "slug": "granada",
-              "score": 3
-            }
-          },
-          {
-            "id": 51497,
-            "date": 1788109200,
-            "status": "finished",
-            "home": {
-              "id": 159,
-              "name": "Cádiz",
-              "slug": "cadiz",
-              "score": 1
-            },
-            "away": {
-              "id": 156,
-              "name": "Real Valladolid",
-              "slug": "real-valladolid",
-              "score": 1
-            }
-          },
-          {
-            "id": 51498,
-            "date": 1788109200,
-            "status": "finished",
-            "home": {
-              "id": 165,
-              "name": "Mallorca",
-              "slug": "mallorca",
-              "score": 3
-            },
-            "away": {
-              "id": 780,
-              "name": "Ceuta",
-              "slug": "ceuta",
-              "score": 0
-            }
-          },
-          {
-            "id": 51496,
-            "date": 1788102000,
-            "status": "finished",
-            "home": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 0
-            },
-            "away": {
-              "id": 584,
-              "name": "Eibar",
-              "slug": "eibar",
-              "score": 1
-            }
-          },
-          {
-            "id": 51495,
-            "date": 1788031800,
-            "status": "finished",
-            "home": {
-              "id": 172,
-              "name": "Girona",
-              "slug": "girona",
-              "score": 5
-            },
-            "away": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 2
-            }
-          },
-          {
-            "id": 51493,
-            "date": 1788022800,
-            "status": "finished",
-            "home": {
-              "id": 295,
-              "name": "Albacete",
-              "slug": "albacete",
-              "score": 0
-            },
-            "away": {
-              "id": 164,
-              "name": "Real Oviedo",
-              "slug": "real-oviedo",
-              "score": 1
-            }
-          },
-          {
-            "id": 51494,
-            "date": 1788022800,
-            "status": "finished",
-            "home": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 1
-            },
-            "away": {
-              "id": 687,
-              "name": "Eldense",
-              "slug": "eldense",
-              "score": 0
-            }
-          },
-          {
-            "id": 51492,
-            "date": 1788015600,
-            "status": "finished",
-            "home": {
-              "id": 545,
-              "name": "CE Sabadell",
-              "slug": "ce-sabadell",
-              "score": 1
-            },
-            "away": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 0
-            }
-          },
-          {
-            "id": 51491,
-            "date": 1787943600,
-            "status": "finished",
-            "home": {
-              "id": 152,
-              "name": "Tenerife",
-              "slug": "tenerife",
-              "score": 0
-            },
-            "away": {
-              "id": 291,
-              "name": "Sporting",
-              "slug": "sporting",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 629704
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "42805": {
         "id": 42805,
@@ -930,7 +729,7 @@
         "statusChange": 1787598006,
         "fitness": [
           "doubt",
-          "doubt",
+          null,
           null
         ],
         "points": 0,
@@ -952,6 +751,7 @@
         "status": "ok",
         "priceIncrement": -100000,
         "fitness": [
+          null,
           null,
           null
         ],
@@ -1206,7 +1006,8 @@
         "priceIncrement": -50000,
         "fitness": [
           2,
-          2
+          2,
+          null
         ],
         "points": 4,
         "playedHome": 1,
@@ -1394,27 +1195,6 @@
         "pointsHome": 6,
         "pointsAway": 8,
         "pointsLastSeason": 126
-      },
-      "38201": {
-        "id": 38201,
-        "name": "Aitor Uzkudun",
-        "slug": "aitor-uzkudun",
-        "teamID": null,
-        "position": 4,
-        "price": 480000,
-        "fantasyPrice": 24000000,
-        "number": 22,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": 14
       },
       "42281": {
         "id": 42281,
@@ -2677,6 +2457,25 @@
         "pointsAway": 6,
         "pointsLastSeason": null
       },
+      "27094": {
+        "id": 27094,
+        "name": "Ángel Baena",
+        "slug": "angel-baena",
+        "teamID": 545,
+        "position": 4,
+        "price": 2440000,
+        "fantasyPrice": 43000000,
+        "number": 11,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "42402": {
         "id": 42402,
         "name": "Ángel Dávila",
@@ -2891,8 +2690,10 @@
         "price": 1210000,
         "fantasyPrice": 41000000,
         "number": 23,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -40000,
+        "statusInfo": "Muscle injury.",
+        "statusChange": 1788249619,
         "fitness": [
           0,
           2,
@@ -3247,7 +3048,7 @@
         "id": 41583,
         "name": "Bilal Achhiba",
         "slug": "bilal-achhiba",
-        "teamID": 636,
+        "teamID": null,
         "position": 4,
         "price": 330000,
         "fantasyPrice": 18000000,
@@ -3688,8 +3489,10 @@
         "price": 5990000,
         "fantasyPrice": 79000000,
         "number": 14,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -220000,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1788256818,
         "fitness": [
           null,
           2,
@@ -3916,8 +3719,10 @@
         "price": 4740000,
         "fantasyPrice": 71000000,
         "number": 9,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -220000,
+        "statusInfo": "Muscle discomfort.",
+        "statusChange": 1788256818,
         "fitness": [
           null,
           2,
@@ -3927,6 +3732,25 @@
         "playedHome": 2,
         "playedAway": 0,
         "pointsHome": 4,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "43247": {
+        "id": 43247,
+        "name": "Christian Gomis",
+        "slug": "christian-gomis",
+        "teamID": 152,
+        "position": 4,
+        "price": 2430000,
+        "fantasyPrice": 43000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
       },
@@ -4318,6 +4142,25 @@
         "pointsAway": 6,
         "pointsLastSeason": null
       },
+      "34563": {
+        "id": 34563,
+        "name": "Dani Martín",
+        "slug": "dani-martin-3",
+        "teamID": 156,
+        "position": 1,
+        "price": 1280000,
+        "fantasyPrice": 28000000,
+        "number": 30,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": 16
+      },
       "26452": {
         "id": 26452,
         "name": "Dani Mas",
@@ -4547,6 +4390,25 @@
         "pointsAway": 6,
         "pointsLastSeason": 209
       },
+      "30523": {
+        "id": 30523,
+        "name": "David Jiménez",
+        "slug": "david-jimenez",
+        "teamID": 164,
+        "position": 2,
+        "price": 3660000,
+        "fantasyPrice": 57000000,
+        "number": 0,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "22230": {
         "id": 22230,
         "name": "David López",
@@ -4666,7 +4528,7 @@
         "id": 25131,
         "name": "Dawda Camara",
         "slug": "dawda-camara",
-        "teamID": 172,
+        "teamID": null,
         "position": 4,
         "price": 950000,
         "fantasyPrice": 28000000,
@@ -4753,6 +4615,25 @@
         "pointsHome": 17,
         "pointsAway": 0,
         "pointsLastSeason": 101
+      },
+      "35305": {
+        "id": 35305,
+        "name": "Diego Diaz",
+        "slug": "diego-diaz",
+        "teamID": 636,
+        "position": 3,
+        "price": 620000,
+        "fantasyPrice": 20000000,
+        "number": 24,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": 2
       },
       "22305": {
         "id": 22305,
@@ -5027,6 +4908,25 @@
         "pointsHome": 0,
         "pointsAway": 12,
         "pointsLastSeason": 10
+      },
+      "43293": {
+        "id": 43293,
+        "name": "Sevikyan",
+        "slug": "edgar-sevikyan",
+        "teamID": 780,
+        "position": 4,
+        "price": 1980000,
+        "fantasyPrice": 36000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "38173": {
         "id": 38173,
@@ -5477,6 +5377,8 @@
         "status": "ok",
         "priceIncrement": 30000,
         "fitness": [
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -5850,6 +5752,25 @@
         "pointsAway": 0,
         "pointsLastSeason": 134
       },
+      "43296": {
+        "id": 43296,
+        "name": "Guille Fernández",
+        "slug": "g-fernandez",
+        "teamID": 165,
+        "position": 3,
+        "price": 4050000,
+        "fantasyPrice": 62000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "42750": {
         "id": 42750,
         "name": "Gocholeishvili",
@@ -6102,6 +6023,25 @@
         "pointsAway": 8,
         "pointsLastSeason": null
       },
+      "3939": {
+        "id": 3939,
+        "name": "Gerard Valentín",
+        "slug": "gerard-valentin",
+        "teamID": 152,
+        "position": 3,
+        "price": 2860000,
+        "fantasyPrice": 48000000,
+        "number": 7,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "41438": {
         "id": 41438,
         "name": "Germain Milla",
@@ -6170,6 +6110,25 @@
         "pointsHome": 6,
         "pointsAway": 8,
         "pointsLastSeason": 118
+      },
+      "38374": {
+        "id": 38374,
+        "name": "Gonzalo Petit",
+        "slug": "gonzalo-petit",
+        "teamID": 159,
+        "position": 4,
+        "price": 1500000,
+        "fantasyPrice": 31000000,
+        "number": 9,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": 103
       },
       "38426": {
         "id": 38426,
@@ -6784,7 +6743,7 @@
         "position": 2,
         "price": 1330000,
         "fantasyPrice": 38000000,
-        "number": 6,
+        "number": 2,
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
@@ -7286,7 +7245,7 @@
         "id": 37953,
         "name": "Joaquín González",
         "slug": "j-gonzalez-2",
-        "teamID": 159,
+        "teamID": 780,
         "position": 3,
         "price": 650000,
         "fantasyPrice": 23000000,
@@ -7979,6 +7938,8 @@
         "status": "ok",
         "priceIncrement": -120000,
         "fitness": [
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -8099,6 +8060,25 @@
         "playedAway": 2,
         "pointsHome": 6,
         "pointsAway": 4,
+        "pointsLastSeason": null
+      },
+      "30620": {
+        "id": 30620,
+        "name": "John Donald",
+        "slug": "john-donald",
+        "teamID": 165,
+        "position": 2,
+        "price": 710000,
+        "fantasyPrice": 21000000,
+        "number": 15,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
         "pointsLastSeason": null
       },
       "37864": {
@@ -8353,27 +8333,6 @@
         "pointsHome": 6,
         "pointsAway": 4,
         "pointsLastSeason": 42
-      },
-      "28287": {
-        "id": 28287,
-        "name": "Jorge Delgado",
-        "slug": "jorge-delgado",
-        "teamID": null,
-        "position": 4,
-        "price": 520000,
-        "fantasyPrice": 24000000,
-        "number": 12,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          2
-        ],
-        "points": 2,
-        "playedHome": 0,
-        "playedAway": 1,
-        "pointsHome": 0,
-        "pointsAway": 2,
-        "pointsLastSeason": 21
       },
       "34206": {
         "id": 34206,
@@ -8708,6 +8667,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null
         ],
@@ -9502,6 +9462,25 @@
         "pointsAway": 2,
         "pointsLastSeason": 166
       },
+      "42225": {
+        "id": 42225,
+        "name": "Leonardo Lelo",
+        "slug": "leonardo-lelo",
+        "teamID": 163,
+        "position": 2,
+        "price": 5150000,
+        "fantasyPrice": 77000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "41587": {
         "id": 41587,
         "name": "Lluis Estebe",
@@ -9804,7 +9783,7 @@
         "id": 2238,
         "name": "Marc-Olivier Doué",
         "slug": "m-doue",
-        "teamID": 547,
+        "teamID": 159,
         "position": 3,
         "price": 1370000,
         "fantasyPrice": 35000000,
@@ -10132,6 +10111,25 @@
           null,
           null
         ],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "27256": {
+        "id": 27256,
+        "name": "Marc Vidal",
+        "slug": "marc-vidal",
+        "teamID": 545,
+        "position": 1,
+        "price": 1130000,
+        "fantasyPrice": 26000000,
+        "number": 30,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -10578,6 +10576,25 @@
         "pointsAway": 2,
         "pointsLastSeason": 52
       },
+      "43294": {
+        "id": 43294,
+        "name": "Matías Orozco",
+        "slug": "matias-orozco",
+        "teamID": 547,
+        "position": 3,
+        "price": 1640000,
+        "fantasyPrice": 32000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "3968": {
         "id": 3968,
         "name": "Matos",
@@ -10657,6 +10674,8 @@
         "status": "ok",
         "priceIncrement": -10000,
         "fitness": [
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -10779,6 +10798,25 @@
         "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": null
+      },
+      "37860": {
+        "id": 37860,
+        "name": "Mikel Goti",
+        "slug": "mikel-goti",
+        "teamID": 164,
+        "position": 3,
+        "price": 1920000,
+        "fantasyPrice": 35000000,
+        "number": 25,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": 38
       },
       "37822": {
         "id": 37822,
@@ -11085,8 +11123,10 @@
         "price": 4780000,
         "fantasyPrice": 58000000,
         "number": 10,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 110000,
+        "statusInfo": "Muscle overload.",
+        "statusChange": 1788253292,
         "fitness": [
           2,
           2,
@@ -11638,7 +11678,11 @@
         "number": 0,
         "status": "ok",
         "priceIncrement": -10000,
-        "fitness": [],
+        "fitness": [
+          null,
+          null,
+          null
+        ],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -11863,7 +11907,7 @@
         "position": 2,
         "price": 1320000,
         "fantasyPrice": 18000000,
-        "number": 27,
+        "number": 25,
         "status": "ok",
         "priceIncrement": -30000,
         "fitness": [
@@ -12339,7 +12383,7 @@
         "id": 20034,
         "name": "Roberto López",
         "slug": "roberto-lopez",
-        "teamID": 543,
+        "teamID": 687,
         "position": 3,
         "price": 980000,
         "fantasyPrice": 42000000,
@@ -12362,7 +12406,7 @@
         "id": 42348,
         "name": "Rodri Val",
         "slug": "rodri-val",
-        "teamID": 687,
+        "teamID": null,
         "position": 4,
         "price": 410000,
         "fantasyPrice": 24000000,
@@ -12783,10 +12827,8 @@
         "price": 5180000,
         "fantasyPrice": 90000000,
         "number": 10,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Muscle discomfort.",
-        "statusChange": 1787598006,
         "fitness": [
           "doubt",
           "doubt",
@@ -13102,6 +13144,25 @@
         "pointsAway": 0,
         "pointsLastSeason": 136
       },
+      "30855": {
+        "id": 30855,
+        "name": "Bajcetic",
+        "slug": "stefan-bajcetic",
+        "teamID": 817,
+        "position": 3,
+        "price": 5550000,
+        "fantasyPrice": 83000000,
+        "number": 0,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "38202": {
         "id": 38202,
         "name": "Stefan Dzodic",
@@ -13192,6 +13253,25 @@
         "pointsHome": 6,
         "pointsAway": 18,
         "pointsLastSeason": 70
+      },
+      "43295": {
+        "id": 43295,
+        "name": "Abed",
+        "slug": "tay-abed",
+        "teamID": 156,
+        "position": 4,
+        "price": 1980000,
+        "fantasyPrice": 36000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "38988": {
         "id": 38988,
@@ -13424,6 +13504,25 @@
         "pointsAway": 12,
         "pointsLastSeason": null
       },
+      "30751": {
+        "id": 30751,
+        "name": "Toni Abad",
+        "slug": "toni-abad",
+        "teamID": 780,
+        "position": 2,
+        "price": 2240000,
+        "fantasyPrice": 40000000,
+        "number": 2,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": 78
+      },
       "41554": {
         "id": 41554,
         "name": "Toni Lato",
@@ -13492,6 +13591,25 @@
         "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": 59
+      },
+      "43292": {
+        "id": 43292,
+        "name": "Umaru Konaré",
+        "slug": "umaru-konare",
+        "teamID": 780,
+        "position": 4,
+        "price": 500000,
+        "fantasyPrice": 19000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "5676": {
         "id": 5676,
@@ -13748,7 +13866,7 @@
         "id": 39413,
         "name": "Vegard Erlien",
         "slug": "vegard-erlien",
-        "teamID": 156,
+        "teamID": null,
         "position": 4,
         "price": 1230000,
         "fantasyPrice": 50000000,
@@ -14035,7 +14153,11 @@
         "number": 12,
         "status": "ok",
         "priceIncrement": 0,
-        "fitness": [],
+        "fitness": [
+          null,
+          null,
+          null
+        ],
         "points": 0,
         "playedHome": 0,
         "playedAway": 0,
@@ -14226,6 +14348,25 @@
         "pointsHome": 8,
         "pointsAway": 10,
         "pointsLastSeason": 40
+      },
+      "43246": {
+        "id": 43246,
+        "name": "Yussif Owusu",
+        "slug": "yussif-owusu",
+        "teamID": 545,
+        "position": 3,
+        "price": 330000,
+        "fantasyPrice": 17000000,
+        "number": 0,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "42371": {
         "id": 42371,
@@ -14783,8 +14924,8 @@
         ]
       }
     },
-    "update": 1788318010,
-    "etag": 2658261456,
+    "update": 1788307529,
+    "etag": 156394750,
     "scoreID": 1
   },
   "meta": {
