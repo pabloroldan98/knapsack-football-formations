@@ -715,7 +715,7 @@
           {
             "id": 52957,
             "date": 1789058700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 30,
               "name": "PSV Eindhoven",
@@ -764,7 +764,7 @@
           {
             "id": 52961,
             "date": 1789058700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 824,
               "name": "Fenerbahçe",
@@ -813,7 +813,7 @@
           {
             "id": 52969,
             "date": 1789066800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 497,
               "name": "Slavia Praga",
@@ -862,7 +862,7 @@
           {
             "id": 52981,
             "date": 1789066800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 275,
               "name": "Manchester United",
@@ -911,7 +911,7 @@
           {
             "id": 52995,
             "date": 1789066800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 821,
               "name": "Como",
@@ -960,7 +960,7 @@
           {
             "id": 53013,
             "date": 1789066800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 31,
               "name": "Bayern Munich",
@@ -1007,7 +1007,7 @@
             }
           }
         ],
-        "probableLineups": false
+        "probableLineups": true
       }
     ],
     "players": {
@@ -4619,10 +4619,8 @@
         "price": 8340000,
         "fantasyPrice": 85000000,
         "number": 39,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -90000,
-        "statusInfo": "Undisclosed problems",
-        "statusChange": 1788526823,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -8771,10 +8769,8 @@
         "price": 4160000,
         "fantasyPrice": 48000000,
         "number": 7,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 120000,
-        "statusInfo": "Undisclosed problems",
-        "statusChange": 1788631221,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -9978,9 +9974,11 @@
         "price": 4310000,
         "fantasyPrice": 41000000,
         "number": 24,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 80000,
+        "statusInfo": "Head problems",
         "iconHero": "i/p/hero/15532.png",
+        "statusChange": 1788706814,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -10077,11 +10075,9 @@
         "price": 3240000,
         "fantasyPrice": 45000000,
         "number": 6,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Knee problems",
         "iconHero": "i/p/hero/24961.png",
-        "statusChange": 1787518826,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -10178,11 +10174,9 @@
         "price": 21040000,
         "fantasyPrice": 181000000,
         "number": 10,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -170000,
-        "statusInfo": "Undisclosed problems",
         "iconHero": "i/p/hero/31456.png",
-        "statusChange": 1788598821,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -12140,10 +12134,8 @@
         "price": 1420000,
         "fantasyPrice": 30000000,
         "number": 7,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -30000,
-        "statusInfo": "Foot problems",
-        "statusChange": 1786255219,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -13566,7 +13558,7 @@
       },
       "42866": {
         "id": 42866,
-        "name": "T. Kraaijeveld",
+        "name": "Thijs Kraaijeveld",
         "slug": "t-kraaijeveld",
         "teamID": 280,
         "position": 2,
@@ -13805,6 +13797,25 @@
         "number": 33,
         "status": "unknown",
         "priceIncrement": -10000,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "43383": {
+        "id": 43383,
+        "name": "Jerayno Schaken",
+        "slug": "jerayno-schaken",
+        "teamID": 280,
+        "position": 4,
+        "price": 360000,
+        "fantasyPrice": 17000000,
+        "number": 57,
+        "status": "unknown",
+        "priceIncrement": 0,
         "fitness": [],
         "points": 0,
         "playedHome": 0,
@@ -23801,6 +23812,25 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
+      "43381": {
+        "id": 43381,
+        "name": "Nael Kane",
+        "slug": "nael-kane",
+        "teamID": 826,
+        "position": 4,
+        "price": 190000,
+        "fantasyPrice": 15000000,
+        "number": 45,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "9859": {
         "id": 9859,
         "name": "Veljko Simic",
@@ -25109,8 +25139,8 @@
         ]
       }
     },
-    "update": 1788750010,
-    "etag": 3540703400,
+    "update": 1788739960,
+    "etag": 3776919197,
     "scoreID": 5
   },
   "meta": {
