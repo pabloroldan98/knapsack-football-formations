@@ -93,9 +93,9 @@ segunda_forced_matches = safe_get_forced_matches(
 champions_forced_matches = safe_get_forced_matches(
     "Champions League", "forced_matches_champions", use_biwenger_names=False
 )
-europaleague_forced_matches = safe_get_forced_matches(
-    "Europa League", "forced_matches_europaleague", use_biwenger_names=False
-)
+# europaleague_forced_matches = safe_get_forced_matches(
+#     "Europa League", "forced_matches_europaleague", use_biwenger_names=False
+# )
 # conference_forced_matches = safe_get_forced_matches(
 #     "Conference League", "forced_matches_conference"
 # )
