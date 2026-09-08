@@ -62,7 +62,7 @@
           "id": 4940,
           "name": "Round 3",
           "short": "R3",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4941,
@@ -281,191 +281,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4940,
-        "name": "Round 3",
-        "short": "R3",
-        "status": "active",
-        "end": 1788796800,
-        "type": "round",
-        "games": [
-          {
-            "id": 51118,
-            "date": 1788708600,
-            "status": "finished",
-            "home": {
-              "id": 112,
-              "name": "Arsenal",
-              "slug": "arsenal-fc",
-              "score": 2
-            },
-            "away": {
-              "id": 95,
-              "name": "Chelsea",
-              "slug": "chelsea-fc",
-              "score": 1
-            }
-          },
-          {
-            "id": 51117,
-            "date": 1788699600,
-            "status": "finished",
-            "home": {
-              "id": 109,
-              "name": "Everton",
-              "slug": "everton-fc",
-              "score": 2
-            },
-            "away": {
-              "id": 111,
-              "name": "Manchester United",
-              "slug": "manchester-united",
-              "score": 2
-            }
-          },
-          {
-            "id": 51116,
-            "date": 1788625800,
-            "status": "finished",
-            "home": {
-              "id": 113,
-              "name": "Hull City",
-              "slug": "hull-city-2",
-              "score": 0
-            },
-            "away": {
-              "id": 468,
-              "name": "Aston Villa",
-              "slug": "aston-villa",
-              "score": 0
-            }
-          },
-          {
-            "id": 51111,
-            "date": 1788616800,
-            "status": "finished",
-            "home": {
-              "id": 591,
-              "name": "Brentford FC",
-              "slug": "brentford-fc",
-              "score": 1
-            },
-            "away": {
-              "id": 104,
-              "name": "Sunderland",
-              "slug": "sunderland",
-              "score": 1
-            }
-          },
-          {
-            "id": 51112,
-            "date": 1788616800,
-            "status": "finished",
-            "home": {
-              "id": 270,
-              "name": "Brighton & Hove Albion",
-              "slug": "brighton-hove-albion",
-              "score": 1
-            },
-            "away": {
-              "id": 477,
-              "name": "Leeds United",
-              "slug": "leeds-united",
-              "score": 1
-            }
-          },
-          {
-            "id": 51113,
-            "date": 1788616800,
-            "status": "finished",
-            "home": {
-              "id": 414,
-              "name": "Fulham",
-              "slug": "fulham",
-              "score": 2
-            },
-            "away": {
-              "id": 99,
-              "name": "Crystal Palace",
-              "slug": "crystal-palace",
-              "score": 3
-            }
-          },
-          {
-            "id": 51114,
-            "date": 1788616800,
-            "status": "finished",
-            "home": {
-              "id": 108,
-              "name": "Manchester City",
-              "slug": "manchester-city",
-              "score": 1
-            },
-            "away": {
-              "id": 814,
-              "name": "Coventry City",
-              "slug": "coventry-city",
-              "score": 0
-            }
-          },
-          {
-            "id": 51115,
-            "date": 1788616800,
-            "status": "finished",
-            "home": {
-              "id": 633,
-              "name": "Nottingham Forest",
-              "slug": "nottingham-forest",
-              "score": 0
-            },
-            "away": {
-              "id": 94,
-              "name": "Tottenham",
-              "slug": "tottenham",
-              "score": 0
-            }
-          },
-          {
-            "id": 51110,
-            "date": 1788607800,
-            "status": "finished",
-            "home": {
-              "id": 269,
-              "name": "Newcastle",
-              "slug": "newcastle",
-              "score": 2
-            },
-            "away": {
-              "id": 102,
-              "name": "AFC Bournemouth",
-              "slug": "afc-bournemouth",
-              "score": 2
-            }
-          },
-          {
-            "id": 51109,
-            "date": 1788548400,
-            "status": "finished",
-            "home": {
-              "id": 704,
-              "name": "Ipswich Town",
-              "slug": "ipswich-town",
-              "score": 0
-            },
-            "away": {
-              "id": 105,
-              "name": "Liverpool",
-              "slug": "liverpool-fc",
-              "score": 2
-            }
-          }
-        ],
-        "pool": {
-          "id": 632035
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35320": {
         "id": 35320,
@@ -2609,10 +2425,8 @@
         "price": 2800000,
         "fantasyPrice": 33000000,
         "number": 3,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Muscle injury.",
-        "statusChange": 1788519610,
         "fitness": [
           "doubt",
           4,
@@ -6998,8 +6812,10 @@
         "price": 5970000,
         "fantasyPrice": 90000000,
         "number": 37,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -40000,
+        "statusInfo": "Muscle injury.",
+        "statusChange": 1788771605,
         "fitness": [
           4,
           3,
@@ -7126,6 +6942,25 @@
         "pointsHome": 4,
         "pointsAway": 10,
         "pointsLastSeason": 21
+      },
+      "43228": {
+        "id": 43228,
+        "name": "James Wright",
+        "slug": "james-wright",
+        "teamID": 468,
+        "position": 1,
+        "price": 190000,
+        "fantasyPrice": 15000000,
+        "number": 42,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
       },
       "38120": {
         "id": 38120,
@@ -12305,8 +12140,10 @@
         "price": 4690000,
         "fantasyPrice": 58000000,
         "number": 9,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 10000,
+        "statusInfo": "Muscle fatigue.",
+        "statusChange": 1788771602,
         "fitness": [
           5,
           4,
@@ -13200,8 +13037,10 @@
         "price": 2120000,
         "fantasyPrice": 32000000,
         "number": 23,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -70000,
+        "statusInfo": "Hamstring injury.",
+        "statusChange": 1788771603,
         "fitness": [
           7,
           5,
@@ -15586,8 +15425,8 @@
         ]
       }
     },
-    "update": 1788840010,
-    "etag": 2002723247,
+    "update": 1788825948,
+    "etag": 3247434418,
     "scoreID": 3
   },
   "meta": {
@@ -17838,7 +17677,6 @@
           51,
           2,
           5,
-          15,
           6,
           11
         ]
