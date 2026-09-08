@@ -590,7 +590,7 @@ if __name__ == "__main__":
     # current_players = get_current_players()
 
 
-    competition = "laliga"
+    competition = "champions"
     # competition = "mundial"
     jornadas_dict = read_dict_data(f"forced_matches_{competition}")
     if jornadas_dict:
