@@ -789,7 +789,7 @@
           {
             "id": 51128,
             "date": 1789412400,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 477,
               "name": "Leeds United",
@@ -842,7 +842,10 @@
             }
           }
         ],
-        "probableLineups": false
+        "pool": {
+          "id": 633584
+        },
+        "probableLineups": true
       }
     ],
     "players": {
@@ -2556,10 +2559,10 @@
         "price": 8890000,
         "fantasyPrice": 79000000,
         "number": 29,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": 200000,
-        "statusInfo": "Muscle injury.",
-        "statusChange": 1788987604,
+        "statusInfo": "Muscle fatigue.",
+        "statusChange": 1789035059,
         "fitness": [
           3
         ],
@@ -3500,8 +3503,10 @@
         "price": 9710000,
         "fantasyPrice": 100000000,
         "number": 18,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 40000,
+        "statusInfo": "Muscle injury.",
+        "statusChange": 1789035057,
         "fitness": [
           11,
           7,
@@ -5317,10 +5322,8 @@
         "price": 1600000,
         "fantasyPrice": 31000000,
         "number": 39,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -50000,
-        "statusInfo": "Poor form.",
-        "statusChange": 1788519613,
         "fitness": [
           "doubt"
         ],
@@ -6525,27 +6528,6 @@
         "pointsAway": 5,
         "pointsLastSeason": 39
       },
-      "27106": {
-        "id": 27106,
-        "name": "Kaboré",
-        "slug": "issa-kabore",
-        "teamID": null,
-        "position": 2,
-        "price": 440000,
-        "fantasyPrice": 18000000,
-        "number": 78,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "33548": {
         "id": 33548,
         "name": "Fatawu",
@@ -7628,27 +7610,6 @@
         "pointsHome": 0,
         "pointsAway": 0,
         "pointsLastSeason": 104
-      },
-      "37662": {
-        "id": 37662,
-        "name": "Jenson Seelt",
-        "slug": "jenson-seelt",
-        "teamID": null,
-        "position": 2,
-        "price": 390000,
-        "fantasyPrice": 17000000,
-        "number": 23,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": 9
       },
       "31534": {
         "id": 31534,
@@ -11291,8 +11252,10 @@
         "price": 2710000,
         "fantasyPrice": 45000000,
         "number": 6,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -30000,
+        "statusInfo": "Muscle fatigue.",
+        "statusChange": 1789035058,
         "fitness": [
           4,
           2,
@@ -12709,27 +12672,6 @@
         "pointsHome": 11,
         "pointsAway": 3,
         "pointsLastSeason": null
-      },
-      "15612": {
-        "id": 15612,
-        "name": "Reiss Nelson",
-        "slug": "reiss-nelson",
-        "teamID": null,
-        "position": 4,
-        "price": 360000,
-        "fantasyPrice": 23000000,
-        "number": 24,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": 27
       },
       "20860": {
         "id": 20860,
@@ -15319,8 +15261,10 @@
         "price": 310000,
         "fantasyPrice": 20000000,
         "number": 36,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -10000,
+        "statusInfo": "Muscle injury. Estimated return: Late September.",
+        "statusChange": 1789035064,
         "fitness": [
           null,
           null,
@@ -15843,8 +15787,8 @@
         ]
       }
     },
-    "update": 1789099210,
-    "etag": 1066035950,
+    "update": 1789085988,
+    "etag": 3250504465,
     "scoreID": 3
   },
   "meta": {
