@@ -61,7 +61,7 @@
           "id": 5060,
           "name": "Round 4",
           "short": "R4",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 5061,
@@ -250,174 +250,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 5060,
-        "name": "Round 4",
-        "short": "R4",
-        "status": "active",
-        "end": 1789398000,
-        "type": "round",
-        "games": [
-          {
-            "id": 52347,
-            "date": 1789325100,
-            "status": "finished",
-            "home": {
-              "id": 474,
-              "name": "Stade Brest",
-              "slug": "stade-brest",
-              "score": 0
-            },
-            "away": {
-              "id": 49,
-              "name": "Paris Saint-Germain",
-              "slug": "paris-saint-germain",
-              "score": 1
-            }
-          },
-          {
-            "id": 52343,
-            "date": 1789312500,
-            "status": "finished",
-            "home": {
-              "id": 815,
-              "name": "Le Mans",
-              "slug": "le-mans",
-              "score": 2
-            },
-            "away": {
-              "id": 478,
-              "name": "Lens",
-              "slug": "lens",
-              "score": 2
-            }
-          },
-          {
-            "id": 52344,
-            "date": 1789304400,
-            "status": "finished",
-            "home": {
-              "id": 52,
-              "name": "Lille",
-              "slug": "lille",
-              "score": 2
-            },
-            "away": {
-              "id": 285,
-              "name": "Troyes",
-              "slug": "troyes",
-              "score": 0
-            }
-          },
-          {
-            "id": 52340,
-            "date": 1789238700,
-            "status": "finished",
-            "home": {
-              "id": 638,
-              "name": "Auxerre",
-              "slug": "auxerre",
-              "score": 1
-            },
-            "away": {
-              "id": 46,
-              "name": "Nice",
-              "slug": "nice",
-              "score": 0
-            }
-          },
-          {
-            "id": 52341,
-            "date": 1789238700,
-            "status": "finished",
-            "home": {
-              "id": 56,
-              "name": "Lorient",
-              "slug": "lorient",
-              "score": 2
-            },
-            "away": {
-              "id": 43,
-              "name": "Toulouse",
-              "slug": "toulouse",
-              "score": 2
-            }
-          },
-          {
-            "id": 52342,
-            "date": 1789238700,
-            "status": "finished",
-            "home": {
-              "id": 684,
-              "name": "Le Havre",
-              "slug": "le-havre",
-              "score": 0
-            },
-            "away": {
-              "id": 61,
-              "name": "Angers",
-              "slug": "angers",
-              "score": 0
-            }
-          },
-          {
-            "id": 52345,
-            "date": 1789238700,
-            "status": "finished",
-            "home": {
-              "id": 776,
-              "name": "Paris FC",
-              "slug": "paris-fc",
-              "score": 0
-            },
-            "away": {
-              "id": 48,
-              "name": "Lyon",
-              "slug": "lyon",
-              "score": 0
-            }
-          },
-          {
-            "id": 52346,
-            "date": 1789226100,
-            "status": "finished",
-            "home": {
-              "id": 286,
-              "name": "Strasbourg",
-              "slug": "strasbourg",
-              "score": 1
-            },
-            "away": {
-              "id": 45,
-              "name": "Monaco",
-              "slug": "monaco",
-              "score": 1
-            }
-          },
-          {
-            "id": 52348,
-            "date": 1789152300,
-            "status": "finished",
-            "home": {
-              "id": 51,
-              "name": "Rennais",
-              "slug": "rennais",
-              "score": 1
-            },
-            "away": {
-              "id": 54,
-              "name": "Marseille",
-              "slug": "marseille",
-              "score": 0
-            }
-          }
-        ],
-        "pool": {
-          "id": 632851
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35120": {
         "id": 35120,
@@ -1788,6 +1621,7 @@
         "fitness": [
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -2168,7 +2002,9 @@
         "priceIncrement": -250000,
         "fitness": [
           2,
-          0
+          0,
+          null,
+          null
         ],
         "points": 2,
         "playedHome": 1,
@@ -2176,28 +2012,6 @@
         "pointsHome": 2,
         "pointsAway": 0,
         "pointsLastSeason": null
-      },
-      "1420": {
-        "id": 1420,
-        "name": "Bradley Barcola",
-        "slug": "bradley-barcola",
-        "teamID": null,
-        "position": 4,
-        "price": 10560000,
-        "fantasyPrice": 170000000,
-        "number": 29,
-        "status": "unknown",
-        "priceIncrement": 0,
-        "fitness": [
-          null,
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": 197
       },
       "23222": {
         "id": 23222,
@@ -2470,9 +2284,6 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -4984,9 +4795,6 @@
         "status": "unknown",
         "priceIncrement": -30000,
         "fitness": [
-          null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -6216,6 +6024,9 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -6309,6 +6120,8 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "fitness": [
+          null,
+          null,
           null,
           null
         ],
@@ -7547,8 +7360,6 @@
         "priceIncrement": -100000,
         "fitness": [
           7,
-          null,
-          null,
           null
         ],
         "points": 7,
@@ -7566,7 +7377,7 @@
         "position": 3,
         "price": 3020000,
         "fantasyPrice": 46000000,
-        "number": 20,
+        "number": 21,
         "status": "unknown",
         "priceIncrement": -60000,
         "fitness": [
@@ -8849,6 +8660,7 @@
         "fitness": [
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -9134,8 +8946,6 @@
         "priceIncrement": 0,
         "fitness": [
           2,
-          null,
-          null,
           null
         ],
         "points": 2,
@@ -9324,8 +9134,6 @@
         "priceIncrement": -10000,
         "fitness": [
           3,
-          null,
-          null,
           null
         ],
         "points": 3,
@@ -9729,7 +9537,6 @@
         "status": "unknown",
         "priceIncrement": -30000,
         "fitness": [
-          null,
           null,
           null,
           null
@@ -12278,7 +12085,7 @@
         "position": 1,
         "price": 3080000,
         "fantasyPrice": 28000000,
-        "number": 1,
+        "number": 35,
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
@@ -13384,8 +13191,8 @@
         ]
       }
     },
-    "update": 1789441210,
-    "etag": 4201072483,
+    "update": 1789431508,
+    "etag": 505513281,
     "scoreID": 3
   },
   "meta": {
