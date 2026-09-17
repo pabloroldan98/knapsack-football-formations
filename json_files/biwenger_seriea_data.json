@@ -566,7 +566,7 @@
           {
             "id": 51978,
             "date": 1789900200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 132,
               "name": "Fiorentina",
@@ -621,7 +621,7 @@
           {
             "id": 51979,
             "date": 1789909200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 425,
               "name": "Frosinone",
@@ -676,7 +676,7 @@
           {
             "id": 51980,
             "date": 1789909200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 415,
               "name": "Parma Calcio",
@@ -731,7 +731,7 @@
           {
             "id": 51981,
             "date": 1789920000,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 151,
               "name": "Juventus",
@@ -786,7 +786,7 @@
           {
             "id": 51982,
             "date": 1789929900,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 149,
               "name": "Milan",
@@ -839,7 +839,10 @@
             }
           }
         ],
-        "probableLineups": false
+        "pool": {
+          "id": 634893
+        },
+        "probableLineups": true
       }
     ],
     "players": {
@@ -3262,8 +3265,6 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
-          null,
-          null,
           null,
           null
         ],
@@ -6901,7 +6902,6 @@
         "status": "unknown",
         "priceIncrement": -20000,
         "fitness": [
-          null,
           null,
           null,
           null
@@ -10694,9 +10694,7 @@
         "priceIncrement": -80000,
         "fitness": [
           null,
-          5,
-          null,
-          null
+          5
         ],
         "points": 5,
         "playedHome": 0,
@@ -12744,8 +12742,6 @@
         "priceIncrement": 0,
         "fitness": [
           null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -14313,8 +14309,6 @@
         "priceIncrement": 0,
         "fitness": [
           null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -14844,28 +14838,6 @@
         "pointsHome": 3,
         "pointsAway": 7,
         "pointsLastSeason": 65
-      },
-      "34069": {
-        "id": 34069,
-        "name": "Youssouf Fofana",
-        "slug": "youssouf-fofana",
-        "teamID": null,
-        "position": 3,
-        "price": 3300000,
-        "fantasyPrice": 73000000,
-        "number": 19,
-        "status": "unknown",
-        "priceIncrement": 0,
-        "fitness": [
-          null,
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": 105
       },
       "31275": {
         "id": 31275,
@@ -15525,8 +15497,8 @@
         ]
       }
     },
-    "update": 1789614010,
-    "etag": 3906529479,
+    "update": 1789605136,
+    "etag": 3954929464,
     "scoreID": 3
   },
   "meta": {
