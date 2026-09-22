@@ -81,7 +81,7 @@
           "id": 4981,
           "name": "Round 6",
           "short": "R6",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 4982,
@@ -306,208 +306,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 4981,
-        "name": "Round 6",
-        "short": "R6",
-        "status": "active",
-        "end": 1790002800,
-        "type": "round",
-        "games": [
-          {
-            "id": 51530,
-            "date": 1789930800,
-            "status": "finished",
-            "home": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 3
-            },
-            "away": {
-              "id": 290,
-              "name": "Granada",
-              "slug": "granada",
-              "score": 2
-            }
-          },
-          {
-            "id": 51525,
-            "date": 1789921800,
-            "status": "finished",
-            "home": {
-              "id": 163,
-              "name": "Almería",
-              "slug": "almeria",
-              "score": 2
-            },
-            "away": {
-              "id": 817,
-              "name": "Celta Fortuna",
-              "slug": "celta-fortuna",
-              "score": 0
-            }
-          },
-          {
-            "id": 51531,
-            "date": 1789921800,
-            "status": "finished",
-            "home": {
-              "id": 420,
-              "name": "Las Palmas",
-              "slug": "las-palmas",
-              "score": 1
-            },
-            "away": {
-              "id": 588,
-              "name": "Burgos CF",
-              "slug": "burgos-cf",
-              "score": 2
-            }
-          },
-          {
-            "id": 51528,
-            "date": 1789913700,
-            "status": "finished",
-            "home": {
-              "id": 780,
-              "name": "Ceuta",
-              "slug": "ceuta",
-              "score": 1
-            },
-            "away": {
-              "id": 156,
-              "name": "Real Valladolid",
-              "slug": "real-valladolid",
-              "score": 1
-            }
-          },
-          {
-            "id": 51533,
-            "date": 1789905600,
-            "status": "finished",
-            "home": {
-              "id": 545,
-              "name": "CE Sabadell",
-              "slug": "ce-sabadell",
-              "score": 3
-            },
-            "away": {
-              "id": 164,
-              "name": "Real Oviedo",
-              "slug": "real-oviedo",
-              "score": 1
-            }
-          },
-          {
-            "id": 51526,
-            "date": 1789844400,
-            "status": "finished",
-            "home": {
-              "id": 159,
-              "name": "Cádiz",
-              "slug": "cadiz",
-              "score": 1
-            },
-            "away": {
-              "id": 172,
-              "name": "Girona",
-              "slug": "girona",
-              "score": 2
-            }
-          },
-          {
-            "id": 51527,
-            "date": 1789835400,
-            "status": "finished",
-            "home": {
-              "id": 547,
-              "name": "CD Castellon",
-              "slug": "cd-castellon",
-              "score": 5
-            },
-            "away": {
-              "id": 152,
-              "name": "Tenerife",
-              "slug": "tenerife",
-              "score": 0
-            }
-          },
-          {
-            "id": 51529,
-            "date": 1789835400,
-            "status": "finished",
-            "home": {
-              "id": 687,
-              "name": "Eldense",
-              "slug": "eldense",
-              "score": 1
-            },
-            "away": {
-              "id": 584,
-              "name": "Eibar",
-              "slug": "eibar",
-              "score": 2
-            }
-          },
-          {
-            "id": 51534,
-            "date": 1789827300,
-            "status": "finished",
-            "home": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 1
-            },
-            "away": {
-              "id": 291,
-              "name": "Sporting",
-              "slug": "sporting",
-              "score": 3
-            }
-          },
-          {
-            "id": 51532,
-            "date": 1789819200,
-            "status": "finished",
-            "home": {
-              "id": 587,
-              "name": "Real Sociedad B",
-              "slug": "real-sociedad-b",
-              "score": 0
-            },
-            "away": {
-              "id": 165,
-              "name": "Mallorca",
-              "slug": "mallorca",
-              "score": 1
-            }
-          },
-          {
-            "id": 51524,
-            "date": 1789756200,
-            "status": "finished",
-            "home": {
-              "id": 295,
-              "name": "Albacete",
-              "slug": "albacete",
-              "score": 1
-            },
-            "away": {
-              "id": 160,
-              "name": "Córdoba",
-              "slug": "cordoba",
-              "score": 2
-            }
-          }
-        ],
-        "pool": {
-          "id": 634812
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "42805": {
         "id": 42805,
@@ -1374,8 +1173,6 @@
         "fitness": [
           null,
           null,
-          null,
-          null,
           null
         ],
         "points": 0,
@@ -1693,8 +1490,10 @@
         "price": 910000,
         "fantasyPrice": 15000000,
         "number": 15,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -20000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017250,
         "fitness": [
           6,
           null,
@@ -2248,10 +2047,8 @@
         "price": 1230000,
         "fantasyPrice": 40000000,
         "number": 4,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
-        "statusChange": 1789120814,
         "fitness": [
           "injured",
           "injured",
@@ -2475,8 +2272,10 @@
         "price": 1640000,
         "fantasyPrice": 69000000,
         "number": 1,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017243,
         "fitness": [
           null,
           null,
@@ -3302,8 +3101,10 @@
         "price": 1200000,
         "fantasyPrice": 40000000,
         "number": 14,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -40000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017237,
         "fitness": [
           null,
           2,
@@ -3427,8 +3228,10 @@
         "price": 10040000,
         "fantasyPrice": 90000000,
         "number": 17,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 50000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017236,
         "fitness": [
           2,
           9,
@@ -3452,8 +3255,10 @@
         "price": 230000,
         "fantasyPrice": 20000000,
         "number": 1,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 0,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017247,
         "fitness": [
           null,
           null,
@@ -4384,6 +4189,8 @@
         "fitness": [
           null,
           null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -4529,8 +4336,10 @@
         "price": 340000,
         "fantasyPrice": 21000000,
         "number": 29,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017239,
         "fitness": [
           null,
           6,
@@ -5196,8 +5005,10 @@
         "price": 1340000,
         "fantasyPrice": 36000000,
         "number": 19,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -80000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017249,
         "fitness": [
           2,
           2,
@@ -5574,7 +5385,7 @@
         "statusInfo": "Knee injury.",
         "statusChange": 1789934419,
         "fitness": [
-          null,
+          "injured",
           11,
           2,
           2,
@@ -6120,8 +5931,10 @@
         "price": 2680000,
         "fantasyPrice": 62000000,
         "number": 2,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -30000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017234,
         "fitness": [
           null,
           null,
@@ -6443,8 +6256,10 @@
         "price": 4070000,
         "fantasyPrice": 27000000,
         "number": 16,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 20000,
+        "statusInfo": "Tear of the anterior cruciate ligament in the right knee.",
+        "statusChange": 1790013636,
         "fitness": [
           null,
           2,
@@ -6745,8 +6560,10 @@
         "price": 150000,
         "fantasyPrice": 13000000,
         "number": 3,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 0,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017245,
         "fitness": [
           null,
           null,
@@ -6819,8 +6636,10 @@
         "price": 1070000,
         "fantasyPrice": 16000000,
         "number": 17,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 0,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017250,
         "fitness": [
           2,
           6,
@@ -7121,8 +6940,10 @@
         "price": 1710000,
         "fantasyPrice": 44000000,
         "number": 1,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -40000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017237,
         "fitness": [
           null,
           null,
@@ -7348,8 +7169,10 @@
         "price": 5380000,
         "fantasyPrice": 100000000,
         "number": 17,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017245,
         "fitness": [
           13,
           -2,
@@ -7531,8 +7354,7 @@
           6,
           6,
           2,
-          10,
-          null
+          10
         ],
         "points": 24,
         "playedHome": 2,
@@ -8352,8 +8174,10 @@
         "price": 1350000,
         "fantasyPrice": 40000000,
         "number": 25,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017248,
         "fitness": [
           2,
           null,
@@ -8632,8 +8456,7 @@
           2,
           9,
           -2,
-          2,
-          null
+          2
         ],
         "points": 11,
         "playedHome": 2,
@@ -9349,8 +9172,10 @@
         "price": 2350000,
         "fantasyPrice": 36000000,
         "number": 15,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -30000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017229,
         "fitness": [
           -2,
           2,
@@ -9674,8 +9499,10 @@
         "price": 650000,
         "fantasyPrice": 37000000,
         "number": 15,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 0,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017238,
         "fitness": [
           null,
           null,
@@ -9726,8 +9553,10 @@
         "price": 1210000,
         "fantasyPrice": 49000000,
         "number": 10,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017247,
         "fitness": [
           null,
           2,
@@ -9901,8 +9730,10 @@
         "price": 280000,
         "fantasyPrice": 21000000,
         "number": 29,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017240,
         "fitness": [
           2,
           null,
@@ -10101,8 +9932,10 @@
         "price": 470000,
         "fantasyPrice": 26000000,
         "number": 13,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017233,
         "fitness": [
           null,
           null,
@@ -10884,11 +10717,11 @@
           null,
           null
         ],
-        "points": 10,
+        "points": 12,
         "playedHome": 2,
         "playedAway": 2,
         "pointsHome": 4,
-        "pointsAway": 6,
+        "pointsAway": 8,
         "pointsLastSeason": null
       },
       "26241": {
@@ -10952,8 +10785,10 @@
         "price": 5280000,
         "fantasyPrice": 48000000,
         "number": 24,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -60000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017232,
         "fitness": [
           6,
           2,
@@ -11045,6 +10880,29 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
+      "43378": {
+        "id": 43378,
+        "name": "Mateo Sobral",
+        "slug": "mateo-sobral",
+        "teamID": 817,
+        "position": 2,
+        "price": 320000,
+        "fantasyPrice": 16000000,
+        "number": 29,
+        "status": "unknown",
+        "priceIncrement": 0,
+        "fitness": [
+          2,
+          -2,
+          6
+        ],
+        "points": 6,
+        "playedHome": 1,
+        "playedAway": 2,
+        "pointsHome": -2,
+        "pointsAway": 8,
+        "pointsLastSeason": null
+      },
       "41553": {
         "id": 41553,
         "name": "Mateu Morey",
@@ -11104,8 +10962,10 @@
         "price": 3100000,
         "fantasyPrice": 32000000,
         "number": 6,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 80000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017244,
         "fitness": [
           14,
           2,
@@ -11599,10 +11459,10 @@
         "price": 1060000,
         "fantasyPrice": 53000000,
         "number": 3,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -10000,
         "statusInfo": "Knee pain.",
-        "statusChange": 1789120815,
+        "statusChange": 1790007548,
         "fitness": [
           "injured",
           "injured",
@@ -11778,8 +11638,10 @@
         "price": 400000,
         "fantasyPrice": 23000000,
         "number": 15,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -20000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017242,
         "fitness": [
           -2,
           2,
@@ -11980,8 +11842,10 @@
         "price": 480000,
         "fantasyPrice": 19000000,
         "number": 36,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 0,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017231,
         "fitness": [
           6,
           9,
@@ -12856,8 +12720,10 @@
         "price": 1360000,
         "fantasyPrice": 50000000,
         "number": 16,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -20000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017248,
         "fitness": [
           -2,
           null,
@@ -13006,8 +12872,10 @@
         "price": 930000,
         "fantasyPrice": 24000000,
         "number": 26,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -20000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017243,
         "fitness": [
           null,
           2,
@@ -13786,8 +13654,10 @@
         "price": 4150000,
         "fantasyPrice": 45000000,
         "number": 29,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -50000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017236,
         "fitness": [
           2,
           2,
@@ -13861,8 +13731,10 @@
         "price": 1320000,
         "fantasyPrice": 36000000,
         "number": 23,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -50000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017246,
         "fitness": [
           null,
           2,
@@ -14312,9 +14184,7 @@
         "fitness": [
           2,
           2,
-          2,
-          null,
-          null
+          2
         ],
         "points": 6,
         "playedHome": 1,
@@ -14457,8 +14327,10 @@
         "price": 240000,
         "fantasyPrice": 23000000,
         "number": 25,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017241,
         "fitness": [
           null,
           null,
@@ -14709,8 +14581,10 @@
         "price": 280000,
         "fantasyPrice": 21000000,
         "number": 28,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017251,
         "fitness": [
           2,
           6,
@@ -14734,8 +14608,10 @@
         "price": 3970000,
         "fantasyPrice": 105000000,
         "number": 19,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 50000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017240,
         "fitness": [
           9,
           2,
@@ -14857,8 +14733,10 @@
         "price": 9900000,
         "fantasyPrice": 88000000,
         "number": 22,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 10000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017241,
         "fitness": [
           6,
           2,
@@ -14987,6 +14865,8 @@
         "fitness": [
           null,
           null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -15030,8 +14910,10 @@
         "price": 2810000,
         "fantasyPrice": 17000000,
         "number": 38,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 110000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017242,
         "fitness": [
           6,
           15,
@@ -15055,8 +14937,10 @@
         "price": 3380000,
         "fantasyPrice": 77000000,
         "number": 11,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": -250000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1790017233,
         "fitness": [
           null,
           6,
@@ -15558,8 +15442,8 @@
         ]
       }
     },
-    "update": 1790046010,
-    "etag": 732479677,
+    "update": 1790037124,
+    "etag": 1172844691,
     "scoreID": 1
   },
   "meta": {

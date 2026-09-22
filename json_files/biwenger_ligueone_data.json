@@ -67,7 +67,7 @@
           "id": 5061,
           "name": "Round 5",
           "short": "R5",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 5062,
@@ -250,174 +250,7 @@
         "slug": "2025-2026"
       }
     },
-    "activeEvents": [
-      {
-        "id": 5061,
-        "name": "Round 5",
-        "short": "R5",
-        "status": "active",
-        "end": 1790002800,
-        "type": "round",
-        "games": [
-          {
-            "id": 52357,
-            "date": 1789929900,
-            "status": "finished",
-            "home": {
-              "id": 54,
-              "name": "Marseille",
-              "slug": "marseille",
-              "score": 1
-            },
-            "away": {
-              "id": 49,
-              "name": "Paris Saint-Germain",
-              "slug": "paris-saint-germain",
-              "score": 2
-            }
-          },
-          {
-            "id": 52354,
-            "date": 1789917300,
-            "status": "finished",
-            "home": {
-              "id": 46,
-              "name": "Nice",
-              "slug": "nice",
-              "score": 2
-            },
-            "away": {
-              "id": 52,
-              "name": "Lille",
-              "slug": "lille",
-              "score": 1
-            }
-          },
-          {
-            "id": 52351,
-            "date": 1789909200,
-            "status": "finished",
-            "home": {
-              "id": 638,
-              "name": "Auxerre",
-              "slug": "auxerre",
-              "score": 2
-            },
-            "away": {
-              "id": 474,
-              "name": "Stade Brest",
-              "slug": "stade-brest",
-              "score": 1
-            }
-          },
-          {
-            "id": 52349,
-            "date": 1789843500,
-            "status": "finished",
-            "home": {
-              "id": 61,
-              "name": "Angers",
-              "slug": "angers",
-              "score": 2
-            },
-            "away": {
-              "id": 285,
-              "name": "Troyes",
-              "slug": "troyes",
-              "score": 0
-            }
-          },
-          {
-            "id": 52352,
-            "date": 1789843500,
-            "status": "finished",
-            "home": {
-              "id": 815,
-              "name": "Le Mans",
-              "slug": "le-mans",
-              "score": 2
-            },
-            "away": {
-              "id": 56,
-              "name": "Lorient",
-              "slug": "lorient",
-              "score": 1
-            }
-          },
-          {
-            "id": 52353,
-            "date": 1789843500,
-            "status": "finished",
-            "home": {
-              "id": 48,
-              "name": "Lyon",
-              "slug": "lyon",
-              "score": 4
-            },
-            "away": {
-              "id": 51,
-              "name": "Rennais",
-              "slug": "rennais",
-              "score": 0
-            }
-          },
-          {
-            "id": 52356,
-            "date": 1789843500,
-            "status": "finished",
-            "home": {
-              "id": 43,
-              "name": "Toulouse",
-              "slug": "toulouse",
-              "score": 3
-            },
-            "away": {
-              "id": 684,
-              "name": "Le Havre",
-              "slug": "le-havre",
-              "score": 2
-            }
-          },
-          {
-            "id": 52355,
-            "date": 1789830900,
-            "status": "finished",
-            "home": {
-              "id": 776,
-              "name": "Paris FC",
-              "slug": "paris-fc",
-              "score": 2
-            },
-            "away": {
-              "id": 286,
-              "name": "Strasbourg",
-              "slug": "strasbourg",
-              "score": 1
-            }
-          },
-          {
-            "id": 52350,
-            "date": 1789757100,
-            "status": "finished",
-            "home": {
-              "id": 45,
-              "name": "Monaco",
-              "slug": "monaco",
-              "score": 2
-            },
-            "away": {
-              "id": 478,
-              "name": "Lens",
-              "slug": "lens",
-              "score": 1
-            }
-          }
-        ],
-        "pool": {
-          "id": 635120
-        }
-      }
-    ],
+    "activeEvents": [],
     "players": {
       "35120": {
         "id": 35120,
@@ -1756,6 +1589,7 @@
           null,
           null,
           null,
+          null,
           null
         ],
         "points": 0,
@@ -2129,7 +1963,9 @@
         "fitness": [
           1,
           2,
-          0
+          0,
+          null,
+          null
         ],
         "points": 3,
         "playedHome": 1,
@@ -2420,6 +2256,9 @@
         "priceIncrement": 0,
         "fitness": [
           null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -2516,16 +2355,16 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
-          2,
+          3,
           6,
           7,
           4,
           6
         ],
-        "points": 25,
+        "points": 26,
         "playedHome": 3,
         "playedAway": 2,
-        "pointsHome": 15,
+        "pointsHome": 16,
         "pointsAway": 10,
         "pointsLastSeason": 31
       },
@@ -3005,7 +2844,7 @@
         "position": 4,
         "price": 5500000,
         "fantasyPrice": 77000000,
-        "number": 7,
+        "number": 18,
         "status": "unknown",
         "priceIncrement": -10000,
         "fitness": [
@@ -3129,7 +2968,7 @@
         "position": 4,
         "price": 1020000,
         "fantasyPrice": 23000000,
-        "number": 11,
+        "number": 31,
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
@@ -4851,6 +4690,9 @@
         "priceIncrement": 0,
         "fitness": [
           null,
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -5594,6 +5436,8 @@
         "fitness": [
           2,
           3,
+          null,
+          null,
           null
         ],
         "points": 5,
@@ -6061,6 +5905,9 @@
         "status": "unknown",
         "priceIncrement": -10000,
         "fitness": [
+          null,
+          null,
+          null,
           null,
           null
         ],
@@ -7397,7 +7244,7 @@
         "position": 3,
         "price": 3090000,
         "fantasyPrice": 46000000,
-        "number": 20,
+        "number": 21,
         "status": "unknown",
         "priceIncrement": 50000,
         "fitness": [
@@ -7551,17 +7398,17 @@
         "status": "unknown",
         "priceIncrement": -140000,
         "fitness": [
-          0,
+          1,
           6,
           3,
           1,
           2
         ],
-        "points": 12,
+        "points": 13,
         "playedHome": 1,
         "playedAway": 4,
         "pointsHome": 3,
-        "pointsAway": 9,
+        "pointsAway": 10,
         "pointsLastSeason": 181
       },
       "32059": {
@@ -8126,6 +7973,9 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
+          null,
+          null,
           null,
           null
         ],
@@ -8871,8 +8721,6 @@
         "fitness": [
           2,
           2,
-          null,
-          null,
           null
         ],
         "points": 4,
@@ -9069,6 +8917,8 @@
         "fitness": [
           4,
           3,
+          null,
+          null,
           null
         ],
         "points": 7,
@@ -10063,7 +9913,6 @@
           0,
           3,
           3,
-          null,
           null
         ],
         "points": 6,
@@ -10081,7 +9930,7 @@
         "position": 4,
         "price": 980000,
         "fantasyPrice": 35000000,
-        "number": 9,
+        "number": 35,
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
@@ -11355,12 +11204,10 @@
         "position": 2,
         "price": 1030000,
         "fantasyPrice": 24000000,
-        "number": 0,
+        "number": 30,
         "status": "unknown",
         "priceIncrement": -60000,
         "fitness": [
-          null,
-          null,
           null,
           null,
           null
@@ -11911,7 +11758,9 @@
         "fitness": [
           1,
           3,
-          2
+          2,
+          null,
+          null
         ],
         "points": 6,
         "playedHome": 1,
@@ -12051,7 +11900,7 @@
         "position": 1,
         "price": 3160000,
         "fantasyPrice": 28000000,
-        "number": 1,
+        "number": 35,
         "status": "unknown",
         "priceIncrement": -30000,
         "fitness": [
@@ -12151,7 +12000,7 @@
         "position": 4,
         "price": 540000,
         "fantasyPrice": 25000000,
-        "number": 7,
+        "number": 17,
         "status": "unknown",
         "priceIncrement": 10000,
         "fitness": [
@@ -12526,7 +12375,7 @@
         "position": 4,
         "price": 340000,
         "fantasyPrice": 21000000,
-        "number": 35,
+        "number": 34,
         "status": "ok",
         "priceIncrement": 10000,
         "fitness": [
@@ -13117,8 +12966,8 @@
         ]
       }
     },
-    "update": 1790046010,
-    "etag": 2353064163,
+    "update": 1790036100,
+    "etag": 2428097287,
     "scoreID": 3
   },
   "meta": {
