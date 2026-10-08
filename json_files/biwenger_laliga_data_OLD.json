@@ -621,7 +621,7 @@
           {
             "id": 50781,
             "date": 1791720000,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 75,
               "name": "Elche",
@@ -676,7 +676,7 @@
           {
             "id": 50788,
             "date": 1791728100,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 13,
               "name": "Real Sociedad",
@@ -731,7 +731,7 @@
           {
             "id": 50780,
             "date": 1791736200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 87,
               "name": "Betis",
@@ -786,7 +786,7 @@
           {
             "id": 50785,
             "date": 1791745200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 812,
               "name": "Racing",
@@ -894,6 +894,9 @@
             }
           }
         ],
+        "pool": {
+          "id": 636370
+        },
         "probableLineups": true
       }
     ],
@@ -1583,11 +1586,9 @@
         "price": 460000,
         "fantasyPrice": 26000000,
         "number": 24,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 30000,
-        "statusInfo": "Surgery on the lateral meniscus of his right knee.",
         "iconHero": "i/p/hero/19141.png",
-        "statusChange": 1790766008,
         "fitness": [
           "injured",
           "injured",
@@ -6549,10 +6550,8 @@
         "price": 6040000,
         "fantasyPrice": 52000000,
         "number": 22,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 10000,
-        "statusInfo": "Discomfort in the left thigh.",
-        "statusChange": 1790758812,
         "fitness": [
           9,
           6,
@@ -7762,10 +7761,8 @@
         "price": 2800000,
         "fantasyPrice": 17000000,
         "number": 28,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -40000,
-        "statusInfo": "Muscle injury in the obturator muscle of the left leg.",
-        "statusChange": 1790442009,
         "fitness": [
           2,
           6,
@@ -8284,8 +8281,10 @@
         "price": 3040000,
         "fantasyPrice": 34000000,
         "number": 2,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -30000,
+        "statusInfo": "Discomfort in the soleus muscle.",
+        "statusChange": 1791396013,
         "fitness": [
           2,
           6,
@@ -10740,7 +10739,7 @@
         "price": 290000,
         "fantasyPrice": 16000000,
         "number": 26,
-        "status": "unknown",
+        "status": "ok",
         "priceIncrement": 0,
         "fitness": [],
         "points": 0,
@@ -11586,28 +11585,6 @@
         "pointsHome": 4,
         "pointsAway": 6,
         "pointsLastSeason": 28
-      },
-      "43436": {
-        "id": 43436,
-        "name": "Óscar Sánchez",
-        "slug": "oscar-sanchez",
-        "teamID": null,
-        "position": 5,
-        "price": 330000,
-        "fantasyPrice": 17000000,
-        "number": 0,
-        "status": "unknown",
-        "priceIncrement": 0,
-        "fitness": [
-          0,
-          3
-        ],
-        "points": 3,
-        "playedHome": 1,
-        "playedAway": 1,
-        "pointsHome": 0,
-        "pointsAway": 3,
-        "pointsLastSeason": null
       },
       "35055": {
         "id": 35055,
@@ -15620,8 +15597,8 @@
         ]
       }
     },
-    "update": 1791435610,
-    "etag": 331235977,
+    "update": 1791424964,
+    "etag": 3288877111,
     "scoreID": 1
   },
   "meta": {
