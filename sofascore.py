@@ -79,11 +79,11 @@ class _SofaScoreResponse:
 
 class _SofaScoreBrowser:
     """
-    Chrome started on its own, then attached to.
+    Chrome started on a hidden desktop, then attached to.
 
-    Sofascore serves a Turnstile wall to tls_requests and to Chrome launched by
-    ChromeDriver. A normal Chrome process gets the real pages, and fetch() from
-    that page can call the same API the site uses.
+    Sofascore serves a Turnstile wall to tls_requests, to ChromeDriver and to
+    Chrome's own headless mode. A normal Chrome process, kept off the user's
+    screen, gets the real pages, and fetch() from that page calls the API.
     """
 
     def __init__(self):
@@ -136,8 +136,11 @@ class _SofaScoreBrowser:
                 )
             self._profile = _chrome_user_data_dir()
             port = _free_local_port()
-            command = [
-                chrome,
+            desktop = _hidden_desktop_name()
+            command = [chrome]
+            if not desktop:
+                command += ["--headless=new", "--disable-gpu", "--window-size=1920,1080"]
+            command += [
                 f"--user-data-dir={self._profile}",
                 f"--remote-debugging-port={port}",
                 "--remote-allow-origins=*",
@@ -145,8 +148,8 @@ class _SofaScoreBrowser:
                 "--no-default-browser-check",
                 _SOFASCORE_READY_URL,
             ]
-            print("Sofascore blocked the direct request. Opening Chrome...")
-            _start_chrome(command)
+            print("Sofascore blocked the direct request. Starting headless Chrome...")
+            _start_chrome(command, desktop)
             _wait_for_debug_port(port)
             _wait_for_sofascore_page(port)
         options = webdriver.ChromeOptions()
@@ -163,12 +166,10 @@ class _SofaScoreBrowser:
             if self._page_is_ready():
                 return
             if "captcha" in (self._driver.current_url or "") and not announced:
-                print("Sofascore is asking to verify the browser. Finish the check in the Chrome window.")
                 announced = True
-                deadline = max(deadline, time.time() + 90)
             time.sleep(0.5)
         raise CustomConnectionException(
-            "Sofascore is showing a verification page. Complete it in the Chrome window and run the scraper again."
+            "Sofascore is showing a verification page and the headless browser cannot continue."
         )
 
     def _page_is_ready(self):
@@ -200,7 +201,8 @@ _held_process_handles = []
 
 
 def sofascore_get(url, headers=None, proxy=None):
-    """Fetch a Sofascore URL, falling back to a real Chrome window when blocked."""
+    """Fetch a Sofascore URL. The direct client is tried first; if Sofascore
+    blocks it, the same URL is requested from a headless Chrome via the API."""
     global _prefer_browser
     with _prefer_browser_lock:
         use_browser = _prefer_browser
@@ -217,6 +219,29 @@ def sofascore_get(url, headers=None, proxy=None):
         with _prefer_browser_lock:
             _prefer_browser = True
     return _sofa_browser.get(url)
+
+
+def _hidden_desktop_name():
+    """A desktop with no taskbar window, so Chrome stays off the user's screen."""
+    if os.name != "nt":
+        return None
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    user32.CreateDesktopW.argtypes = [
+        wintypes.LPCWSTR, wintypes.LPCWSTR, ctypes.c_void_p,
+        wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+    ]
+    user32.CreateDesktopW.restype = wintypes.HANDLE
+    user32.OpenDesktopW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    user32.OpenDesktopW.restype = wintypes.HANDLE
+    name = "SofaScoreHidden"
+    access = 0x10000000
+    desk = user32.CreateDesktopW(name, None, None, 0, access, None)
+    if not desk:
+        desk = user32.OpenDesktopW(name, 0, False, access)
+    if not desk:
+        return None
+    _held_process_handles.append(desk)
+    return f"WinSta0\\{name}"
 
 
 def _chrome_executable():
@@ -255,15 +280,16 @@ def _chrome_user_data_dir():
     return profile
 
 
-def _start_chrome(command):
+def _start_chrome(command, desktop=None):
     """Start Chrome without inheriting Cursor's crashpad pipe or stdio handles.
 
     From an elevated terminal Chrome relaunches itself and that child never
     opens the debugging port. Starting it on Explorer's unelevated token keeps
-    the browser alive and lets Sofascore serve the real pages.
+    the browser alive and lets Sofascore serve the real pages. On Windows the
+    browser is placed on a hidden desktop so no window appears.
     """
     if os.name == "nt" and _process_is_elevated():
-        _spawn_medium_process(command, wait=False)
+        _spawn_medium_process(command, wait=False, desktop=desktop)
         return
     env = os.environ.copy()
     env.pop("CHROME_CRASHPAD_PIPE_NAME", None)
@@ -275,6 +301,10 @@ def _start_chrome(command):
     }
     if os.name == "nt":
         kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+        if desktop:
+            startup = subprocess.STARTUPINFO()
+            startup.lpDesktop = desktop
+            kwargs["startupinfo"] = startup
     subprocess.Popen(command, **kwargs)
 
 
@@ -309,7 +339,7 @@ def _process_is_elevated():
     return bool(ok and elevation.TokenIsElevated)
 
 
-def _spawn_medium_process(args, wait):
+def _spawn_medium_process(args, wait, desktop=None):
     """Run a process with Explorer's medium-integrity token."""
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
@@ -375,6 +405,8 @@ def _spawn_medium_process(args, wait):
         raise CustomConnectionException("Chrome could not be opened from the normal user session")
     startup = STARTUPINFOW()
     startup.cb = ctypes.sizeof(STARTUPINFOW)
+    if desktop:
+        startup.lpDesktop = desktop
     info = PROCESS_INFORMATION()
     created = advapi32.CreateProcessWithTokenW(
         primary,
@@ -487,23 +519,15 @@ def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
     attempt_retries = 3
     while attempt_retries > 0:
         headers = pick_headers()
-        response = sofascore_get(team_url, headers=headers)
-        soup = BeautifulSoup(response.text, "html.parser")
         player_paths_list = []
-
-        script = soup.find("script", id="__NEXT_DATA__")
-        if script and script.string:
+        team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
+        response = None
+        if team_id.isdigit():
+            api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
+            api_response = sofascore_get(api_url, headers=headers)
             try:
-                data = json.loads(script.string)
-                # players_list = (
-                #     # data["props"]["pageProps"]["initialProps"]["players"]["players"]
-                #     data["props"]["pageProps"]["players"]["players"]
-                # )
-                page_props = data["props"]["pageProps"]
-                players_list = page_props.get("players", {}).get("players")
-                if not players_list:
-                    players_list = page_props.get("initialProps", {}).get("players", {}).get("players", [])
-                for item in players_list:
+                data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
+                for item in data.get("players", []):
                     p = item.get("player", {})
                     slug = p.get("slug")
                     pid = p.get("id")
@@ -511,17 +535,22 @@ def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
                         player_paths_list.append(
                             f"https://www.sofascore.com/football/player/{slug}/{pid}"
                         )
-            except (json.JSONDecodeError, KeyError, TypeError):
+            except (json.JSONDecodeError, KeyError, TypeError, AttributeError):
                 pass
 
         if not player_paths_list:
-            # Fallback: JSON players API when HTML has no __NEXT_DATA__.
-            team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
-            api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
-            api_response = sofascore_get(api_url, headers=headers)
+            response = sofascore_get(team_url, headers=headers)
+        soup = BeautifulSoup(response.text, "html.parser") if response is not None else BeautifulSoup("", "html.parser")
+
+        script = soup.find("script", id="__NEXT_DATA__")
+        if script and script.string:
             try:
-                data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
-                for item in data.get("players", []):
+                data = json.loads(script.string)
+                page_props = data["props"]["pageProps"]
+                players_list = page_props.get("players", {}).get("players")
+                if not players_list:
+                    players_list = page_props.get("initialProps", {}).get("players", {}).get("players", [])
+                for item in players_list:
                     p = item.get("player", {})
                     slug = p.get("slug")
                     pid = p.get("id")
