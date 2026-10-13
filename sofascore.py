@@ -1,9 +1,18 @@
 # Source: https://github.com/Urbistondo/sofa-score-scraper/blob/master/player_scraper.py
 
+import atexit
+import ctypes
 import os
 import re
+import socket
+import subprocess
+import tempfile
+import threading
+import uuid
+from ctypes import wintypes
 from collections import defaultdict
 from urllib.parse import urljoin
+from urllib.request import urlopen
 import tls_requests
 import requests
 from bs4 import BeautifulSoup
@@ -28,7 +37,7 @@ from concurrent.futures import ThreadPoolExecutor
 from player import Player
 from useful_functions import write_dict_data, read_dict_data, overwrite_dict_data, delete_file, create_driver, \
     run_with_timeout, CustomTimeoutException, CustomConnectionException, CustomMissingException, \
-    find_manual_similar_string, get_working_proxy, HEADER_POOL, tor_requests
+    find_manual_similar_string, get_working_proxy, HEADER_POOL
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
@@ -43,18 +52,442 @@ def pick_headers():
     return random.choice(HEADER_POOL).copy()
 
 
+def _sofascore_blocked(response) -> bool:
+    """True when SofaScore answered with its bot wall instead of the page or API."""
+    if response is None:
+        return True
+    status = getattr(response, "status_code", 0) or 0
+    if status in (0, 401, 403, 429):
+        return True
+    text = getattr(response, "text", "") or ""
+    return (
+        "cf-turnstile-response" in text
+        or "sofa.captcha.token" in text
+        or '"reason": "challenge"' in text
+        or '"reason":"challenge"' in text
+    )
+
+
+class _SofaScoreResponse:
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text or ""
+
+    def json(self):
+        return json.loads(self.text)
+
+
+class _SofaScoreBrowser:
+    """
+    Chrome started on its own, then attached to.
+
+    Sofascore serves a Turnstile wall to tls_requests and to Chrome launched by
+    ChromeDriver. A normal Chrome process gets the real pages, and fetch() from
+    that page can call the same API the site uses.
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._driver = None
+        self._profile = None
+
+    def get(self, url):
+        with self._lock:
+            self._ensure_open()
+            result = self._fetch(url)
+            if not isinstance(result, dict):
+                result = {"error": "empty browser response"}
+            if result.get("status") in (0, 401, 403, 429):
+                self._driver.get(_SOFASCORE_READY_URL)
+                self._wait_until_ready()
+                result = self._fetch(url)
+                if not isinstance(result, dict):
+                    result = {"error": "empty browser response"}
+            if result.get("error"):
+                raise CustomConnectionException(
+                    f"Chrome could not fetch {url}: {result['error']}"
+                )
+            return _SofaScoreResponse(result.get("status") or 0, result.get("body") or "")
+
+    def _fetch(self, url):
+        self._driver.set_script_timeout(60)
+        return self._driver.execute_async_script(
+            """
+            const done = arguments[arguments.length - 1];
+            const target = arguments[0];
+            fetch(target, {credentials: 'include', headers: {Accept: '*/*'}})
+              .then(async (response) => done({status: response.status, body: await response.text()}))
+              .catch((error) => done({error: String(error)}));
+            """,
+            url,
+        )
+
+    def _ensure_open(self):
+        if self._driver is not None:
+            return
+        existing_port = os.environ.get("SOFASCORE_CHROME_PORT")
+        if existing_port:
+            port = int(existing_port)
+        else:
+            chrome = _chrome_executable()
+            if not chrome:
+                raise CustomConnectionException(
+                    "Sofascore blocked the HTTP client and Chrome is not installed"
+                )
+            self._profile = _chrome_user_data_dir()
+            port = _free_local_port()
+            command = [
+                chrome,
+                f"--user-data-dir={self._profile}",
+                f"--remote-debugging-port={port}",
+                "--remote-allow-origins=*",
+                "--no-first-run",
+                "--no-default-browser-check",
+                _SOFASCORE_READY_URL,
+            ]
+            print("Sofascore blocked the direct request. Opening Chrome...")
+            _start_chrome(command)
+            _wait_for_debug_port(port)
+            _wait_for_sofascore_page(port)
+        options = webdriver.ChromeOptions()
+        options.debugger_address = f"127.0.0.1:{port}"
+        self._driver = webdriver.Chrome(options=options)
+        self._driver.set_page_load_timeout(45)
+        self._wait_until_ready()
+        atexit.register(self.close)
+
+    def _wait_until_ready(self):
+        deadline = time.time() + 45
+        announced = False
+        while time.time() < deadline:
+            if self._page_is_ready():
+                return
+            if "captcha" in (self._driver.current_url or "") and not announced:
+                print("Sofascore is asking to verify the browser. Finish the check in the Chrome window.")
+                announced = True
+                deadline = max(deadline, time.time() + 90)
+            time.sleep(0.5)
+        raise CustomConnectionException(
+            "Sofascore is showing a verification page. Complete it in the Chrome window and run the scraper again."
+        )
+
+    def _page_is_ready(self):
+        try:
+            current = self._driver.current_url or ""
+            html = self._driver.page_source or ""
+        except WebDriverException:
+            raise CustomConnectionException("Chrome closed before Sofascore finished loading")
+        return "captcha" not in current and "__NEXT_DATA__" in html
+
+    def close(self):
+        driver = self._driver
+        profile = self._profile
+        self._driver = None
+        if driver is not None:
+            try:
+                driver.quit()
+            except Exception:
+                pass
+        if profile:
+            _stop_chrome_profile(profile)
+
+
+_SOFASCORE_READY_URL = "https://www.sofascore.com/"
+_sofa_browser = _SofaScoreBrowser()
+_prefer_browser = False
+_prefer_browser_lock = threading.Lock()
+_held_process_handles = []
+
+
+def sofascore_get(url, headers=None, proxy=None):
+    """Fetch a Sofascore URL, falling back to a real Chrome window when blocked."""
+    global _prefer_browser
+    with _prefer_browser_lock:
+        use_browser = _prefer_browser
+    if not use_browser:
+        try:
+            kwargs = {"headers": headers, "verify": False, "timeout": 25}
+            if proxy:
+                kwargs["proxy"] = proxy
+            response = tls_requests.get(url, **kwargs)
+        except Exception:
+            response = None
+        if not _sofascore_blocked(response):
+            return response
+        with _prefer_browser_lock:
+            _prefer_browser = True
+    return _sofa_browser.get(url)
+
+
+def _chrome_executable():
+    candidates = [
+        os.environ.get("CHROME_PATH"),
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+    ]
+    for candidate in candidates:
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+def _chrome_user_data_dir():
+    """Directory Chrome can write.
+
+    An elevated process creates a folder the normal user cannot write. Chrome
+    then exits before it opens the debugging port, so the folder is created
+    with the user's unelevated token.
+    """
+    if os.name != "nt" or not _process_is_elevated():
+        return tempfile.mkdtemp(prefix="sofascore-chrome-")
+    profile = os.path.join(tempfile.gettempdir(), "sofascore-chrome-" + uuid.uuid4().hex[:12])
+    _spawn_medium_process(
+        [r"C:\Windows\System32\cmd.exe", "/c", "mkdir", profile],
+        wait=True,
+    )
+    if not os.path.isdir(profile):
+        raise CustomConnectionException("Chrome could not prepare its profile directory")
+    return profile
+
+
+def _start_chrome(command):
+    """Start Chrome without inheriting Cursor's crashpad pipe or stdio handles.
+
+    From an elevated terminal Chrome relaunches itself and that child never
+    opens the debugging port. Starting it on Explorer's unelevated token keeps
+    the browser alive and lets Sofascore serve the real pages.
+    """
+    if os.name == "nt" and _process_is_elevated():
+        _spawn_medium_process(command, wait=False)
+        return
+    env = os.environ.copy()
+    env.pop("CHROME_CRASHPAD_PIPE_NAME", None)
+    kwargs = {
+        "env": env,
+        "stdin": subprocess.DEVNULL,
+        "stdout": subprocess.DEVNULL,
+        "stderr": subprocess.DEVNULL,
+    }
+    if os.name == "nt":
+        kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+    subprocess.Popen(command, **kwargs)
+
+
+def _process_is_elevated():
+    if os.name != "nt":
+        return False
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    kernel32.GetCurrentProcess.restype = wintypes.HANDLE
+    advapi32.OpenProcessToken.argtypes = [
+        wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)
+    ]
+    advapi32.OpenProcessToken.restype = wintypes.BOOL
+    advapi32.GetTokenInformation.argtypes = [
+        wintypes.HANDLE, wintypes.DWORD, wintypes.LPVOID, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)
+    ]
+    advapi32.GetTokenInformation.restype = wintypes.BOOL
+
+    token = wintypes.HANDLE()
+    if not advapi32.OpenProcessToken(kernel32.GetCurrentProcess(), 0x0008, ctypes.byref(token)):
+        return False
+
+    class TOKEN_ELEVATION(ctypes.Structure):
+        _fields_ = [("TokenIsElevated", wintypes.DWORD)]
+
+    elevation = TOKEN_ELEVATION()
+    returned = wintypes.DWORD()
+    ok = advapi32.GetTokenInformation(
+        token, 20, ctypes.byref(elevation), ctypes.sizeof(elevation), ctypes.byref(returned)
+    )
+    kernel32.CloseHandle(token)
+    return bool(ok and elevation.TokenIsElevated)
+
+
+def _spawn_medium_process(args, wait):
+    """Run a process with Explorer's medium-integrity token."""
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    advapi32 = ctypes.WinDLL("advapi32", use_last_error=True)
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+
+    class STARTUPINFOW(ctypes.Structure):
+        _fields_ = [
+            ("cb", wintypes.DWORD),
+            ("lpReserved", wintypes.LPWSTR),
+            ("lpDesktop", wintypes.LPWSTR),
+            ("lpTitle", wintypes.LPWSTR),
+            ("dwX", wintypes.DWORD),
+            ("dwY", wintypes.DWORD),
+            ("dwXSize", wintypes.DWORD),
+            ("dwYSize", wintypes.DWORD),
+            ("dwXCountChars", wintypes.DWORD),
+            ("dwYCountChars", wintypes.DWORD),
+            ("dwFillAttribute", wintypes.DWORD),
+            ("dwFlags", wintypes.DWORD),
+            ("wShowWindow", wintypes.WORD),
+            ("cbReserved2", wintypes.WORD),
+            ("lpReserved2", ctypes.POINTER(wintypes.BYTE)),
+            ("hStdInput", wintypes.HANDLE),
+            ("hStdOutput", wintypes.HANDLE),
+            ("hStdError", wintypes.HANDLE),
+        ]
+
+    class PROCESS_INFORMATION(ctypes.Structure):
+        _fields_ = [
+            ("hProcess", wintypes.HANDLE),
+            ("hThread", wintypes.HANDLE),
+            ("dwProcessId", wintypes.DWORD),
+            ("dwThreadId", wintypes.DWORD),
+        ]
+
+    advapi32.CreateProcessWithTokenW.argtypes = [
+        wintypes.HANDLE,
+        wintypes.DWORD,
+        wintypes.LPCWSTR,
+        wintypes.LPWSTR,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+        wintypes.LPCWSTR,
+        ctypes.POINTER(STARTUPINFOW),
+        ctypes.POINTER(PROCESS_INFORMATION),
+    ]
+    advapi32.CreateProcessWithTokenW.restype = wintypes.BOOL
+
+    hwnd = user32.GetShellWindow()
+    explorer_pid = wintypes.DWORD()
+    user32.GetWindowThreadProcessId(hwnd, ctypes.byref(explorer_pid))
+    explorer = kernel32.OpenProcess(0x1000, False, explorer_pid.value)
+    if not explorer:
+        raise CustomConnectionException("Chrome could not be opened from the normal user session")
+    shell_token = wintypes.HANDLE()
+    primary = wintypes.HANDLE()
+    if not advapi32.OpenProcessToken(explorer, 0x000A, ctypes.byref(shell_token)):
+        kernel32.CloseHandle(explorer)
+        raise CustomConnectionException("Chrome could not be opened from the normal user session")
+    if not advapi32.DuplicateTokenEx(shell_token, 0x018B, None, 2, 1, ctypes.byref(primary)):
+        kernel32.CloseHandle(shell_token)
+        kernel32.CloseHandle(explorer)
+        raise CustomConnectionException("Chrome could not be opened from the normal user session")
+    startup = STARTUPINFOW()
+    startup.cb = ctypes.sizeof(STARTUPINFOW)
+    info = PROCESS_INFORMATION()
+    created = advapi32.CreateProcessWithTokenW(
+        primary,
+        0,
+        args[0],
+        ctypes.create_unicode_buffer(_windows_command_line(args)),
+        0,
+        None,
+        None,
+        ctypes.byref(startup),
+        ctypes.byref(info),
+    )
+    if not created:
+        kernel32.CloseHandle(primary)
+        kernel32.CloseHandle(shell_token)
+        kernel32.CloseHandle(explorer)
+        raise CustomConnectionException(
+            f"Chrome could not be opened ({ctypes.get_last_error()})"
+        )
+    if wait:
+        kernel32.WaitForSingleObject(info.hProcess, 15000)
+        kernel32.CloseHandle(info.hThread)
+        kernel32.CloseHandle(info.hProcess)
+        kernel32.CloseHandle(primary)
+        kernel32.CloseHandle(shell_token)
+        kernel32.CloseHandle(explorer)
+        return
+    # Chrome is still starting. Closing the token now stops the debugging
+    # port from opening, so these handles stay open for the rest of this process.
+    _held_process_handles.extend((info.hThread, info.hProcess, primary, shell_token, explorer))
+
+
+def _windows_command_line(args):
+    def quote(arg):
+        if any(ch in arg for ch in ' \t"'):
+            return '"' + arg.replace('"', '\\"') + '"'
+        return arg
+
+    return " ".join(quote(arg) for arg in args)
+
+
+def _free_local_port():
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+
+
+def _wait_for_debug_port(port, timeout=25):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            with urlopen(f"http://127.0.0.1:{port}/json/version", timeout=1) as resp:
+                if resp.status == 200:
+                    return
+        except Exception:
+            time.sleep(0.25)
+    raise CustomConnectionException("Chrome did not open its debugging port")
+
+
+def _wait_for_sofascore_page(port, timeout=30):
+    """Attach only after the real homepage is up.
+
+    A fresh window briefly reports sofascore.com and then, if Selenium connects
+    during that moment, Sofascore replaces it with the verification page.
+    """
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            with urlopen(f"http://127.0.0.1:{port}/json/list", timeout=2) as resp:
+                pages = json.loads(resp.read().decode("utf-8", "replace"))
+            for page in pages:
+                url = page.get("url") or ""
+                title = page.get("title") or ""
+                if (
+                    page.get("type") == "page"
+                    and "sofascore.com" in url
+                    and "captcha" not in url
+                    and " | Sofascore" in title
+                ):
+                    return
+        except Exception:
+            pass
+        time.sleep(0.5)
+
+
+def _stop_chrome_profile(profile):
+    marker = os.path.basename(profile)
+    if os.name != "nt" or not marker:
+        return
+    subprocess.run(
+        [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            (
+                "Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" | "
+                f"Where-Object {{ $_.CommandLine -like '*{marker}*' }} | "
+                "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
+            ),
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+
+
 def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
     print('Extracting %s player links...' % team_name)
     player_paths_list = []
     attempt_retries = 3
     while attempt_retries > 0:
         headers = pick_headers()
-        if tor_requests.is_endpoint_blocked(team_url):
-            response = tor_requests.get(team_url, headers=headers, verify=False)
-        else:
-            response = tls_requests.get(team_url, headers=headers, verify=False)
-            if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-                response = tor_requests.get(team_url, headers=headers, verify=False)
+        response = sofascore_get(team_url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
         player_paths_list = []
 
@@ -85,12 +518,7 @@ def _fetch_team_player_paths(team_name, team_url, use_buffer=False):
             # Fallback: JSON players API when HTML has no __NEXT_DATA__.
             team_id = team_url.split("#")[0].rstrip("/").split("/")[-1]
             api_url = f"https://www.sofascore.com/api/v1/team/{team_id}/players"
-            if tor_requests.is_endpoint_blocked(api_url):
-                api_response = tor_requests.get(api_url, headers=headers, verify=False)
-            else:
-                api_response = tls_requests.get(api_url, headers=headers, verify=False)
-                if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
-                    api_response = tor_requests.get(api_url, headers=headers, verify=False)
+            api_response = sofascore_get(api_url, headers=headers)
             try:
                 data = api_response.json() if api_response is not None and api_response.status_code == 200 else {}
                 for item in data.get("players", []):
@@ -283,20 +711,30 @@ def fix_team_data(team_data):
 def get_team_links_from_league(league_url):
     # We do a direct HTTP GET
     headers = pick_headers()
-    # response = requests.get(league_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(league_url):
-        response = tor_requests.get(league_url, headers=headers, verify=False)
-    else:
-        response = tls_requests.get(league_url, headers=headers, verify=False)
-        if response.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            response = tor_requests.get(league_url, headers=headers, verify=False)
-    html = response.text
+    all_teams = []
+    # The #id: fragment is the season the caller asked for. The HTML document
+    # ignores it and embeds whichever season the site considers current.
+    season_match = re.search(r"#id:(\d+)", league_url)
+    season_id = season_match.group(1) if season_match else None
+    ut_id = league_url.split("#")[0].rstrip("/").split("/")[-1]
+    if season_id and ut_id.isdigit():
+        api_url = (
+            f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}"
+            f"/season/{season_id}/teams"
+        )
+        api_response = sofascore_get(api_url, headers=headers)
+        if api_response is not None and api_response.status_code == 200:
+            all_teams = api_response.json().get("teams", [])
+
+    response = None
+    if not all_teams:
+        response = sofascore_get(league_url, headers=headers)
+    html = response.text if response is not None else ""
 
     soup = BeautifulSoup(html, "html.parser")
 
     # General
     script = soup.find("script", id="__NEXT_DATA__")
-    all_teams = []
     if script and script.string:
         data = json.loads(script.string)
 
@@ -315,25 +753,7 @@ def get_team_links_from_league(league_url):
         find_teams(data, all_teams)
 
     if not all_teams:
-        # Fallback: JSON teams API (ut/season ids from league URL slug).
-        ut_id = league_url.split("#")[0].rstrip("/").split("/")[-1]
-        season_match = re.search(r"#id:(\d+)", league_url)
-        season_id = season_match.group(1) if season_match else None
-        api_url = (
-            f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}"
-            f"/season/{season_id}/teams"
-        )
-        if tor_requests.is_endpoint_blocked(api_url):
-            api_response = tor_requests.get(api_url, headers=headers, verify=False)
-        else:
-            api_response = tls_requests.get(api_url, headers=headers, verify=False)
-            if api_response.status_code != 200:  # Datacenter IP blocked -> fall back to Tor
-                api_response = tor_requests.get(api_url, headers=headers, verify=False)
-        if api_response is None or api_response.status_code != 200:
-            raise CustomConnectionException(
-                f"HTTP {getattr(api_response, 'status_code', None)} when fetching {api_url}"
-            )
-        all_teams = api_response.json().get("teams", [])
+        raise CustomConnectionException(f"No teams found for {league_url}")
 
     team_data = {}
     base = "https://www.sofascore.com/team/football"
@@ -402,17 +822,8 @@ def get_player_last_year_rating(player_url, headers=None, use_proxies=False):
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/match-type/overall"
     if not headers:
         headers = pick_headers()
-    # resp = requests.get(seasons_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(seasons_url):
-        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
-    else:
-        if use_proxies:
-            working_proxy = get_working_proxy(player_url)
-            resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
-        else:
-            resp = tls_requests.get(seasons_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
+    proxy = get_working_proxy(player_url) if use_proxies else None
+    resp = sofascore_get(seasons_url, headers=headers, proxy=proxy)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -484,13 +895,7 @@ def get_player_last_tournament_rating_selenium(player_url):
     # 2) Fetch seasons info: /api/v1/player/{player_id}/statistics/seasons
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/statistics/seasons"
     headers = pick_headers()
-    # resp = requests.get(seasons_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(seasons_url):
-        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
-    else:
-        resp = tls_requests.get(seasons_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
+    resp = sofascore_get(seasons_url, headers=headers)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {seasons_url}")
@@ -521,13 +926,7 @@ def get_player_last_tournament_rating_selenium(player_url):
     stats_url = (f"https://www.sofascore.com/api/v1/player/{player_id}"
                  f"/unique-tournament/{unique_tournament_id}"
                  f"/season/{first_season_id}/statistics/overall")
-    # resp_stats = requests.get(stats_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(stats_url):
-        resp_stats = tor_requests.get(stats_url, headers=headers, verify=False)
-    else:
-        resp_stats = tls_requests.get(stats_url, headers=headers, verify=False)
-        if resp_stats.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp_stats = tor_requests.get(stats_url, headers=headers, verify=False)
+    resp_stats = sofascore_get(stats_url, headers=headers)
     if resp_stats.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {stats_url}")
@@ -562,17 +961,8 @@ def get_player_average_rating(player_url, headers=None, use_proxies=False):
     seasons_url = f"https://www.sofascore.com/api/v1/player/{player_id}/last-year-summary"
     if not headers:
         headers = pick_headers()
-    # resp = requests.get(seasons_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(seasons_url):
-        resp = tor_requests.get(seasons_url, headers=headers, verify=False)
-    else:
-        if use_proxies:
-            working_proxy = get_working_proxy(player_url)
-            resp = tls_requests.get(seasons_url, headers=headers, verify=False, proxy=working_proxy)
-        else:
-            resp = tls_requests.get(seasons_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(seasons_url, headers=headers, verify=False)
+    proxy = get_working_proxy(player_url) if use_proxies else None
+    resp = sofascore_get(seasons_url, headers=headers, proxy=proxy)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -608,13 +998,7 @@ def get_player_average_rating_selenium(player_url):
       1) Try to find the <span role="meter" aria-valuenow="..."> (Summary last 12 months).
     """
     headers = pick_headers()
-    # resp = requests.get(p, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(player_url):
-        resp = tor_requests.get(player_url, headers=headers, verify=False)
-    else:
-        resp = tls_requests.get(player_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(player_url, headers=headers, verify=False)
+    resp = sofascore_get(player_url, headers=headers)
     if resp.status_code != 200:
         # Raise your custom exception if HTTP status is not 200
         raise CustomConnectionException(f"HTTP {resp.status_code} when fetching {player_url}")
@@ -650,17 +1034,8 @@ def get_player_name(player_url, headers=None, use_proxies=False):
     player_api_url = f"https://www.sofascore.com/api/v1/player/{player_id}"
     if not headers:
         headers = pick_headers()
-    # resp = requests.get(player_api_url, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(player_api_url):
-        resp = tor_requests.get(player_api_url, headers=headers, verify=False)
-    else:
-        if use_proxies:
-            working_proxy = get_working_proxy(player_url)
-            resp = tls_requests.get(player_api_url, headers=headers, verify=False, proxy=working_proxy)
-        else:
-            resp = tls_requests.get(player_api_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(player_api_url, headers=headers, verify=False)
+    proxy = get_working_proxy(player_url) if use_proxies else None
+    resp = sofascore_get(player_api_url, headers=headers, proxy=proxy)
     # if resp.status_code == 403: # If blocked by too many calls
     #     print(f"Status: {resp.status_code} , trying with no headers")
     #     time.sleep(30)
@@ -688,13 +1063,7 @@ def get_player_name_selenium(player_url, headers=None):
     print("Fallback name")
     if not headers:
         headers = pick_headers()
-    # resp = requests.get(p, headers=headers, verify=False)
-    if tor_requests.is_endpoint_blocked(player_url):
-        resp = tor_requests.get(player_url, headers=headers, verify=False)
-    else:
-        resp = tls_requests.get(player_url, headers=headers, verify=False)
-        if resp.status_code == 403:  # Datacenter IP blocked -> fall back to Tor
-            resp = tor_requests.get(player_url, headers=headers, verify=False)
+    resp = sofascore_get(player_url, headers=headers)
     if resp.status_code != 200:
         # print(resp.text)
         # Raise your custom exception if HTTP status is not 200

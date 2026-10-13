@@ -1735,6 +1735,10 @@ class _TorRequests:
                     )
                 except Exception:
                     continue
+                # Status 0 is a dead proxy/TLS failure, not a SofaScore answer.
+                # Returning it made callers report "HTTP 0" and skip the other circuits.
+                if not response.status_code:
+                    continue
                 last_response = response
                 if response.status_code != 403:
                     with self._lock:
