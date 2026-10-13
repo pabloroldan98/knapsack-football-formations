@@ -221,7 +221,7 @@ def get_current_players(
     return full_players_data
 
 
-# alt_elo=True hasta que clubelo vuelva
+# alt_elo=True hasta que clubelo vuelva (ahora lo obtenemos por request si la API no funciona)
 def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[], alt_elo=False):
 
     if forced_matches:
