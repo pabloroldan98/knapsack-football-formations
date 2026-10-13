@@ -737,15 +737,32 @@ def fix_team_data(team_data):
     return team_data
 
 
+def _current_sofascore_season(ut_id):
+    """Season Sofascore lists first. That is the edition currently in progress."""
+    response = sofascore_get(
+        f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}/seasons"
+    )
+    if response is None or response.status_code != 200:
+        return None
+    seasons = response.json().get("seasons") or []
+    return seasons[0] if seasons else None
+
+
 def get_team_links_from_league(league_url):
     # We do a direct HTTP GET
     headers = pick_headers()
     all_teams = []
-    # The #id: fragment is the season the caller asked for. The HTML document
-    # ignores it and embeds whichever season the site considers current.
+    # An explicit #id: selects that season. Without it, use the current one.
     season_match = re.search(r"#id:(\d+)", league_url)
     season_id = season_match.group(1) if season_match else None
     ut_id = league_url.split("#")[0].rstrip("/").split("/")[-1]
+    if not season_id and ut_id.isdigit():
+        season = _current_sofascore_season(ut_id)
+        if season and season.get("id"):
+            season_id = str(season["id"])
+            label = season.get("name") or season.get("year")
+            if label:
+                print(f"Season: {label}")
     if season_id and ut_id.isdigit():
         api_url = (
             f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}"
@@ -1115,25 +1132,25 @@ def competition_from_filename(file_name: str) -> str:
     s = re.sub(r'[^a-z0-9]+', '-', file_name.lower())  # normalize to dashed tokens
 
     mapping = {
-        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "world/club-world-championship/357#id:69619",
-        ("champions", "championsleague", "champions-league"): "europe/uefa-champions-league/7#id:76953",
-        ('europaleague', 'europa-league', ): "europe/uefa-europa-league/679#id:76984",
-        ('conference', 'conferenceleague', 'conference-league', ): "europe/uefa-europa-conference-league/17015#id:76960",
-        ("eurocopa", "euro", "europa", "europeo", ): "europe/european-championship/1#id:56953",
-        ("copaamerica", "copa-america", ): "south-america/copa-america/133#id:57114",
-        ("mundial", "worldcup", "world-cup", ): "world/world-championship/16#id:58210",
-        ("laliga", "la-liga", ): "spain/laliga/8#id:77559",
-        ('premier', 'premier-league', 'premierleague', ): "england/premier-league/17#id:76986",
-        ('seriea', 'serie-a', ): "italy/serie-a/23#id:76457",
-        ('bundesliga', 'bundes-liga', 'bundes', ): "germany/bundesliga/35#id:77333",
-        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "france/ligue-1/34#id:77356",
-        ("segunda", "segundadivision", "segunda-division", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "spain/laliga-2/54#id:77558",
+        ("mundialito", "club-world-cup", "clubworldcup", "mundial-clubes", "mundialclubes", ): "world/club-world-championship/357",
+        ("champions", "championsleague", "champions-league"): "europe/uefa-champions-league/7",
+        ('europaleague', 'europa-league', ): "europe/uefa-europa-league/679",
+        ('conference', 'conferenceleague', 'conference-league', ): "europe/uefa-europa-conference-league/17015",
+        ("eurocopa", "euro", "europa", "europeo", ): "europe/european-championship/1",
+        ("copaamerica", "copa-america", ): "south-america/copa-america/133",
+        ("mundial", "worldcup", "world-cup", ): "world/world-championship/16",
+        ("laliga", "la-liga", ): "spain/laliga/8",
+        ('premier', 'premier-league', 'premierleague', ): "england/premier-league/17",
+        ('seriea', 'serie-a', ): "italy/serie-a/23",
+        ('bundesliga', 'bundes-liga', 'bundes', ): "germany/bundesliga/35",
+        ('ligueone', 'ligue-one', 'ligue1', 'ligue-1', 'ligue', ): "france/ligue-1/34",
+        ("segunda", "segundadivision", "segunda-division", "laliga2", "la-liga-2", "la-liga-hypermotion", "hypermotion", "laligahypermotion", ): "spain/laliga-2/54",
     }
     for keys, slug in mapping.items():
         for k in sorted(keys, key=len, reverse=True):  # longest first
             if k in s:
                 return slug
-    return "spain/laliga/8#id:77559"
+    return "spain/laliga/8"
 
 
 def get_players_data(
