@@ -3,8 +3,10 @@ import pandas as pd
 import datetime
 from pprint import pprint
 
+import random
 import re
 import requests
+from io import StringIO
 import tls_requests
 import urllib3
 from bs4 import BeautifulSoup
@@ -16,7 +18,7 @@ import time
 from itertools import combinations
 from urllib.parse import urljoin, urlparse, parse_qs
 
-from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data, create_driver
+from useful_functions import find_manual_similar_string, read_dict_data, overwrite_dict_data, create_driver, HEADER_POOL
 
 
 def get_teams_elos_dict(
@@ -673,6 +675,265 @@ def elos_urls_from_filename(file_name=None, today=None):
     return besoccer, fdb
 
 
+def _clubelo_headers():
+    return random.choice(HEADER_POOL).copy()
+
+
+_CLUBELO_PAGE_URLS = (
+    "https://clubelo.com/",
+    "https://clubelo.com/Ranking",
+)
+_CLUBELO_TOP_N = 50
+_CLUBELO_ELO_TOLERANCE = 2
+_CLUBELO_MIN_TOP_MATCHES = 40
+
+
+def _clubelo_keys(name):
+    raw = str(name or "").strip()
+    if not raw:
+        return set()
+    folded = raw.translate(str.maketrans({
+        "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss",
+        "Ä": "Ae", "Ö": "Oe", "Ü": "Ue",
+        "ø": "o", "Ø": "o", "å": "a", "Å": "a",
+        "æ": "ae", "Æ": "ae",
+        "ç": "c", "Ç": "c", "ş": "s", "Ş": "s",
+        "ğ": "g", "Ğ": "g", "ı": "i", "İ": "i",
+        "ñ": "n", "Ñ": "n",
+    }))
+    keys = {
+        raw.casefold(),
+        find_manual_similar_string(raw).casefold(),
+        re.sub(r"[^a-z0-9]", "", raw.casefold()),
+        re.sub(r"[^a-z0-9]", "", folded.casefold()),
+    }
+    return {key for key in keys if key}
+
+
+def _fetch_clubelo_api(date_string):
+    url = f"http://api.clubelo.com/{date_string}"
+    try:
+        response = requests.get(url, headers=_clubelo_headers(), timeout=25)
+    except requests.RequestException:
+        return None
+    if response.status_code != 200 or not response.content:
+        return None
+    try:
+        teams = pd.read_csv(StringIO(response.text))
+    except Exception:
+        return None
+    required = {"Club", "Country", "Level", "Elo"}
+    if teams.empty or not required.issubset(teams.columns):
+        return None
+    return teams
+
+
+def _section_level(text):
+    match = re.match(r"Level\s+(\d+)\b", text)
+    if match:
+        return int(match.group(1))
+    if re.match(r"Lower\b", text):
+        return "lower"
+    return None
+
+
+def _club_from_row(row):
+    country = None
+    image = row.find("img", alt=True)
+    if image:
+        alt = image["alt"].strip().upper()
+        if re.fullmatch(r"[A-Z]{2,4}", alt):
+            country = alt
+
+    club_link = None
+    for anchor in row.find_all("a", href=True):
+        if anchor.find("img"):
+            continue
+        href = anchor["href"].strip()
+        if href.startswith("/") and href.count("/") == 1:
+            club_link = anchor
+            break
+
+    slug = ""
+    display = ""
+    if club_link is not None:
+        slug = club_link["href"].strip("/").split("/")[-1]
+    visible = club_link.find("span", class_="Ast") if club_link is not None else None
+    if visible is None:
+        visible = row.find("span", class_="Ast")
+    if visible and visible.get_text(strip=True):
+        display = visible.get_text(strip=True)
+    elif club_link is not None:
+        display = club_link.get_text(" ", strip=True)
+        code = club_link.find("span", class_="NonAst")
+        if code:
+            code_text = code.get_text(strip=True)
+            if display.startswith(code_text):
+                display = display[len(code_text):].strip()
+    if not display:
+        cell = row.find(["td", "th"])
+        if cell is not None:
+            display = re.sub(r"^\d+\s+", "", cell.get_text(" ", strip=True)).strip()
+    return display, slug, country
+
+
+def _parse_elo_cell(text):
+    match = re.search(r"-?\d+(?:\.\d+)?", str(text).replace(",", ""))
+    if not match:
+        return None
+    return float(match.group(0))
+
+
+def _compact_club(value):
+    return re.sub(r"[^a-z0-9]", "", str(value).casefold())
+
+
+def _assign_unique_club_names(rows):
+    groups = {}
+    for row in rows:
+        groups.setdefault(row["display"].casefold(), []).append(row)
+    for group in groups.values():
+        if len(group) == 1:
+            group[0]["Club"] = group[0]["display"]
+            continue
+        primary = next(
+            (
+                row for row in group
+                if row["slug"] and _compact_club(row["display"]) == _compact_club(row["slug"])
+            ),
+            group[0],
+        )
+        for row in group:
+            if row is primary:
+                row["Club"] = row["display"]
+            else:
+                row["Club"] = row["slug"] or row["display"]
+
+
+def _parse_clubelo_ranking(html):
+    soup = BeautifulSoup(html, "html.parser")
+    rows = []
+    seen = set()
+    for table in soup.find_all("table"):
+        level = None
+        country = None
+        for table_row in table.find_all("tr"):
+            cells = table_row.find_all(["td", "th"], recursive=False)
+            if not cells:
+                cells = table_row.find_all(["td", "th"])
+            text = table_row.get_text(" ", strip=True)
+            section = _section_level(text)
+            if section is not None or len(cells) != 2:
+                if section == "lower":
+                    # Below the numbered divisions. The API does not file these as level 0-3.
+                    level = None
+                elif isinstance(section, int):
+                    level = section
+                continue
+            if level is None:
+                continue
+            display, slug, row_country = _club_from_row(table_row)
+            if row_country:
+                country = row_country
+            elo = _parse_elo_cell(cells[-1].get_text(" ", strip=True))
+            if not display or elo is None or len(display) > 60:
+                continue
+            identity = (country, (slug or display).casefold())
+            if identity in seen:
+                continue
+            seen.add(identity)
+            rows.append({
+                "display": display,
+                "slug": slug,
+                "Country": country or "",
+                "Level": level,
+                "Elo": elo,
+            })
+    if not rows:
+        return None
+    _assign_unique_club_names(rows)
+    teams = pd.DataFrame(rows)
+    teams = teams.dropna(subset=["Club", "Elo", "Level"])
+    if teams.empty:
+        return None
+    teams["Level"] = teams["Level"].astype(int)
+    teams["Elo"] = teams["Elo"].astype(float)
+    teams["Country"] = teams["Country"].fillna("").astype(str)
+    teams["_slug"] = teams["slug"].fillna("")
+    return teams[["Club", "Country", "Level", "Elo", "_slug"]]
+
+
+def _fetch_clubelo_ranking():
+    best = None
+    last_error = None
+    for url in _CLUBELO_PAGE_URLS:
+        try:
+            response = requests.get(url, headers=_clubelo_headers(), timeout=40)
+            response.raise_for_status()
+            parsed = _parse_clubelo_ranking(response.text)
+        except Exception as exc:
+            last_error = exc
+            continue
+        if parsed is None:
+            continue
+        if best is None or len(parsed) > len(best):
+            best = parsed
+    if best is None:
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("ClubElo ranking page did not include club rows")
+    return best
+
+
+def _clubelo_top50_matches(api_teams, web_teams):
+    if api_teams is None or web_teams is None or api_teams.empty or web_teams.empty:
+        return False
+    web_index = {}
+    for _, row in web_teams.iterrows():
+        names = [row["Club"]]
+        if "_slug" in web_teams.columns and pd.notna(row["_slug"]) and str(row["_slug"]).strip():
+            names.append(row["_slug"])
+        elo = float(row["Elo"])
+        for name in names:
+            for key in _clubelo_keys(name):
+                web_index.setdefault(key, []).append(elo)
+    top = api_teams.dropna(subset=["Club", "Elo"]).sort_values("Elo", ascending=False).head(_CLUBELO_TOP_N)
+    if len(top) < _CLUBELO_TOP_N:
+        return False
+    close = 0
+    for club, elo in zip(top["Club"], top["Elo"]):
+        api_elo = float(elo)
+        candidates = []
+        for key in _clubelo_keys(club):
+            candidates.extend(web_index.get(key, []))
+        if any(abs(api_elo - candidate) <= _CLUBELO_ELO_TOLERANCE for candidate in candidates):
+            close += 1
+    return close >= _CLUBELO_MIN_TOP_MATCHES
+
+
+def _get_clubelo_teams_df(date_string):
+    api_teams = _fetch_clubelo_api(date_string)
+    web_teams = None
+    web_error = None
+    try:
+        web_teams = _fetch_clubelo_ranking()
+    except Exception as exc:
+        web_error = exc
+
+    if api_teams is not None and (web_teams is None or _clubelo_top50_matches(api_teams, web_teams)):
+        return api_teams
+    if web_teams is None:
+        if api_teams is not None:
+            return api_teams
+        raise RuntimeError("ClubElo API and website ranking are both unavailable") from web_error
+
+    if api_teams is None:
+        print("ClubElo API is unavailable. Using https://clubelo.com/.")
+    else:
+        print("ClubElo API top 50 does not match https://clubelo.com/. Using the website ranking.")
+    return web_teams.drop(columns=["_slug"])
+
+
 def get_teams_elos(is_country=False, country="ESP", extra_teams=False, alt_elo=False, file_name=None):
     if is_country:
         teams_elos_url = "https://www.eloratings.net/World.tsv"
@@ -699,8 +960,7 @@ def get_teams_elos(is_country=False, country="ESP", extra_teams=False, alt_elo=F
             )
         else:
             today_string = today.strftime('%Y-%m-%d')
-            url = f"http://api.clubelo.com/{today_string}"
-            teams_elos_df = pd.read_csv(url)
+            teams_elos_df = _get_clubelo_teams_df(today_string)
 
             if country is not None:
                 elo_levels = [0, 1, 2]

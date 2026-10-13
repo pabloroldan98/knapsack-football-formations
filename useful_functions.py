@@ -376,6 +376,13 @@ HEADER_POOL = [
     # Slightly older but still believable Chrome variants
     {
         "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/126.0.0.0 Safari/537.36"
+        )
+    },
+    {
+        "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; WOW64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/143.0.7499.40 Safari/537.36"
@@ -1156,11 +1163,15 @@ def find_manual_similar_string(my_string, fallback_none=False):
         "Chelsea FC": "Chelsea",
         "Man City": "Manchester City",
         "Inter Milan": "Inter",
+        "Internazionale": "Inter",
         "Dortmund": "Borussia Dortmund",
         "B. Dortmund": "Borussia Dortmund",
         "Bayern": "Bayern Munich",
         "Bayern München": "Bayern Munich",
         "FC Bayern München": "Bayern Munich",
+        "Bayern FC": "Bayern Munich",
+        "Bremen": "Werder",
+        "Werder Bremen": "Werder",
         "Atl. Madrid": "Atlético",
         "Atletico": "Atlético",
         "Atlético Madrid": "Atlético",

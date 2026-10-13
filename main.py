@@ -108,6 +108,8 @@ def get_current_players(
         debug=False
 ):
     all_teams, all_players = get_championship_data(forced_matches=forced_matches, is_country=is_country, extra_teams=extra_teams, host_team=host_team, alt_elo=alt_elo, use_comunio_price=use_comunio_price, use_fitness_form=use_fitness_form, biwenger_file_name=biwenger_file_name, elo_ratings_file_name=elo_ratings_file_name)
+    for t in all_teams:
+        print(t)
     if debug:
         print("000000")
 
@@ -220,7 +222,7 @@ def get_current_players(
 
 
 # alt_elo=True hasta que clubelo vuelva
-def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[], alt_elo=True):
+def get_current_players_wrapper(competition="laliga", is_biwenger=True, no_form=False, no_fixtures=False, use_fitness_form=False, nerf_penalty_boost=False, forced_matches=[], alt_elo=False):
 
     if forced_matches:
         jornada_selected = forced_matches.copy()
