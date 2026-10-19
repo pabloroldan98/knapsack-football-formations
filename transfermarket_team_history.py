@@ -228,6 +228,9 @@ class TransfermarktScraper:
 
         by_club = {}
         for game in performances:
+            game_info = game.get('gameInformation') or {}
+            if game_info.get('isNationalGame') is not False:
+                continue
             stats = game.get('statistics') or {}
             general = stats.get('generalStatistics') or {}
             if general.get('participationState') != 'played':
