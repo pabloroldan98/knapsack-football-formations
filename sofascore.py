@@ -748,6 +748,32 @@ def _current_sofascore_season(ut_id):
     return seasons[0] if seasons else None
 
 
+def _standings_team_ids(ut_id, season_id, headers):
+    """Team ids that appear in the season's total standings."""
+    standings_url = (
+        f"https://www.sofascore.com/api/v1/unique-tournament/{ut_id}"
+        f"/season/{season_id}/standings/total"
+    )
+    response = sofascore_get(standings_url, headers=headers)
+    if response is None or response.status_code != 200:
+        return set()
+    team_ids = set()
+    for table in response.json().get("standings") or []:
+        for row in table.get("rows") or []:
+            team = row.get("team") or {}
+            team_id = team.get("id")
+            if team_id is not None:
+                team_ids.add(team_id)
+    return team_ids
+
+
+def _filter_teams_by_standings(teams, ut_id, season_id, headers):
+    team_ids = _standings_team_ids(ut_id, season_id, headers)
+    if not team_ids:
+        return teams
+    return [team for team in teams if team.get("id") in team_ids]
+
+
 def get_team_links_from_league(league_url):
     # We do a direct HTTP GET
     headers = pick_headers()
@@ -771,6 +797,7 @@ def get_team_links_from_league(league_url):
         api_response = sofascore_get(api_url, headers=headers)
         if api_response is not None and api_response.status_code == 200:
             all_teams = api_response.json().get("teams", [])
+            all_teams = _filter_teams_by_standings(all_teams, ut_id, season_id, headers)
 
     response = None
     if not all_teams:
