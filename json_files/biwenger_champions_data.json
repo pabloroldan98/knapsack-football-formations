@@ -571,7 +571,7 @@
             "status": "pending",
             "home": {
               "id": 438,
-              "name": "AEK Atenas",
+              "name": "AEK Athen",
               "slug": "aek-athen",
               "score": null,
               "difficulty": {
@@ -1128,6 +1128,29 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
+          null
+        ],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "42980": {
+        "id": 42980,
+        "name": "Godfred Boakye",
+        "slug": "godfred-boakye",
+        "teamID": null,
+        "position": 2,
+        "price": 270000,
+        "fantasyPrice": 19000000,
+        "number": 0,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -5285,9 +5308,11 @@
         "price": 10950000,
         "fantasyPrice": 96000000,
         "number": 8,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": 190000,
+        "statusInfo": "Hamstring injury.. Estimated return: Nov 5, 2026",
         "iconHero": "i/p/hero/15288.png",
+        "statusChange": 1793026843,
         "fitness": [
           8,
           4,
@@ -7859,11 +7884,12 @@
         "price": 4060000,
         "fantasyPrice": 81000000,
         "number": 23,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -70000,
-        "statusInfo": "Ankle sprain.. Estimated return: Nov 5, 2026",
+        "statusInfo": "Ankle sprain.",
         "iconHero": "i/p/hero/22474.png",
-        "statusChange": 1792476084,
+        "extraStatus": "injured",
+        "statusChange": 1793048421,
         "fitness": [
           "injured",
           2,
@@ -8170,7 +8196,7 @@
         "number": 12,
         "status": "injured",
         "priceIncrement": 120000,
-        "statusInfo": "Muscle injury.. Estimated return: Nov 5, 2026",
+        "statusInfo": "Ankle injury.. Estimated return: Dec 15, 2026",
         "statusChange": 1792998062,
         "fitness": [
           13,
@@ -8425,11 +8451,10 @@
         "price": 1320000,
         "fantasyPrice": 36000000,
         "number": 5,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
-        "extraStatus": "injured",
-        "statusChange": 1792940427,
+        "statusInfo": "Muscle injury.. Estimated return: Dec 5, 2026",
+        "statusChange": 1793044824,
         "fitness": [
           null,
           3,
@@ -8543,11 +8568,8 @@
         "price": 3400000,
         "fantasyPrice": 36000000,
         "number": 13,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -100000,
-        "statusInfo": "Physical discomfort.",
-        "extraStatus": "injured",
-        "statusChange": 1792911624,
         "fitness": [
           4,
           15,
@@ -9611,10 +9633,8 @@
         "price": 3750000,
         "fantasyPrice": 32000000,
         "number": 21,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -60000,
-        "statusInfo": "Injury to the calf.. Estimated return: Nov 5, 2026",
-        "statusChange": 1792476052,
         "fitness": [
           "injured",
           3,
@@ -12467,6 +12487,25 @@
         "pointsAway": 0,
         "pointsLastSeason": null
       },
+      "43451": {
+        "id": 43451,
+        "name": "Theodoros Delianidis",
+        "slug": "theodoros-delianidis",
+        "teamID": 280,
+        "position": 4,
+        "price": 610000,
+        "fantasyPrice": 20000000,
+        "number": 50,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "4151": {
         "id": 4151,
         "name": "Nkunku",
@@ -12476,11 +12515,10 @@
         "price": 1970000,
         "fantasyPrice": 24000000,
         "number": 28,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -80000,
         "statusInfo": "Groin injury.",
-        "extraStatus": "injured",
-        "statusChange": 1792940422,
+        "statusChange": 1793019640,
         "fitness": [
           2,
           2,
@@ -21821,11 +21859,10 @@
         "price": 260000,
         "fantasyPrice": 17000000,
         "number": 30,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
-        "extraStatus": "injured",
-        "statusChange": 1792756840,
+        "statusInfo": "Injury to the calf.. Estimated return: Nov 5, 2026",
+        "statusChange": 1793048431,
         "fitness": [
           null,
           2,
@@ -23154,10 +23191,8 @@
         "price": 260000,
         "fantasyPrice": 17000000,
         "number": 18,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Meniscus injury.. Estimated return: Dec 15, 2026",
-        "statusChange": 1792476088,
         "fitness": [
           "injured",
           null,
@@ -24901,29 +24936,6 @@
         "pointsAway": 2,
         "pointsLastSeason": null
       },
-      "42980": {
-        "id": 42980,
-        "name": "Godfred Boakye",
-        "slug": "godfred-boakye",
-        "teamID": 827,
-        "position": 2,
-        "price": 270000,
-        "fantasyPrice": 19000000,
-        "number": 0,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null,
-          null,
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "42981": {
         "id": 42981,
         "name": "Puchacz",
@@ -26110,8 +26122,8 @@
         ]
       }
     },
-    "update": 1793073610,
-    "etag": 2781533356,
+    "update": 1793063425,
+    "etag": 2935575977,
     "scoreID": 5
   },
   "meta": {
