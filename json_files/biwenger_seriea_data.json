@@ -95,7 +95,7 @@
           "id": 5027,
           "name": "Round 9",
           "short": "R9",
-          "status": "active"
+          "status": "finished"
         },
         {
           "id": 5028,
@@ -279,189 +279,6 @@
       }
     },
     "activeEvents": [
-      {
-        "id": 5027,
-        "name": "Round 9",
-        "short": "R9",
-        "status": "active",
-        "end": 1793376000,
-        "type": "round",
-        "games": [
-          {
-            "id": 52022,
-            "date": 1793303100,
-            "status": "finished",
-            "home": {
-              "id": 132,
-              "name": "Fiorentina",
-              "slug": "fiorentina",
-              "score": 2
-            },
-            "away": {
-              "id": 148,
-              "name": "Atalanta",
-              "slug": "atalanta",
-              "score": 2
-            }
-          },
-          {
-            "id": 52013,
-            "date": 1793295000,
-            "status": "finished",
-            "home": {
-              "id": 425,
-              "name": "Frosinone",
-              "slug": "frosinone",
-              "score": 5
-            },
-            "away": {
-              "id": 470,
-              "name": "Lecce",
-              "slug": "lecce",
-              "score": 1
-            }
-          },
-          {
-            "id": 52014,
-            "date": 1793216700,
-            "status": "finished",
-            "home": {
-              "id": 639,
-              "name": "Monza",
-              "slug": "monza",
-              "score": 1
-            },
-            "away": {
-              "id": 138,
-              "name": "Napoli",
-              "slug": "napoli",
-              "score": 4
-            }
-          },
-          {
-            "id": 52015,
-            "date": 1793216700,
-            "status": "finished",
-            "home": {
-              "id": 142,
-              "name": "Genoa",
-              "slug": "genoa",
-              "score": 2
-            },
-            "away": {
-              "id": 151,
-              "name": "Juventus",
-              "slug": "juventus",
-              "score": 0
-            }
-          },
-          {
-            "id": 52016,
-            "date": 1793208600,
-            "status": "finished",
-            "home": {
-              "id": 415,
-              "name": "Parma Calcio",
-              "slug": "parma-calcio",
-              "score": 0
-            },
-            "away": {
-              "id": 141,
-              "name": "Udinese",
-              "slug": "udinese",
-              "score": 0
-            }
-          },
-          {
-            "id": 52017,
-            "date": 1793208600,
-            "status": "finished",
-            "home": {
-              "id": 149,
-              "name": "Milan",
-              "slug": "milan",
-              "score": 2
-            },
-            "away": {
-              "id": 137,
-              "name": "Bologna",
-              "slug": "bologna",
-              "score": 4
-            }
-          },
-          {
-            "id": 52018,
-            "date": 1793208600,
-            "status": "finished",
-            "home": {
-              "id": 594,
-              "name": "Venezia",
-              "slug": "venezia",
-              "score": 0
-            },
-            "away": {
-              "id": 145,
-              "name": "Inter",
-              "slug": "inter",
-              "score": 2
-            }
-          },
-          {
-            "id": 52020,
-            "date": 1793130300,
-            "status": "finished",
-            "home": {
-              "id": 150,
-              "name": "Roma",
-              "slug": "roma",
-              "score": 4
-            },
-            "away": {
-              "id": 134,
-              "name": "Cagliari",
-              "slug": "cagliari",
-              "score": 2
-            }
-          },
-          {
-            "id": 52021,
-            "date": 1793130300,
-            "status": "finished",
-            "home": {
-              "id": 143,
-              "name": "Torino",
-              "slug": "torino",
-              "score": 1
-            },
-            "away": {
-              "id": 703,
-              "name": "Como",
-              "slug": "como",
-              "score": 3
-            }
-          },
-          {
-            "id": 52019,
-            "date": 1793122200,
-            "status": "finished",
-            "home": {
-              "id": 146,
-              "name": "Sassuolo",
-              "slug": "sassuolo",
-              "score": 2
-            },
-            "away": {
-              "id": 140,
-              "name": "Lazio",
-              "slug": "lazio",
-              "score": 6
-            }
-          }
-        ],
-        "pool": {
-          "id": 640628
-        }
-      },
       {
         "id": 5028,
         "name": "Round 10",
@@ -2491,6 +2308,7 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
+          null,
           null,
           null,
           null,
@@ -16042,8 +15860,8 @@
         ]
       }
     },
-    "update": 1793419210,
-    "etag": 1321177544,
+    "update": 1793408660,
+    "etag": 572052205,
     "scoreID": 3
   },
   "meta": {
@@ -18279,13 +18097,15 @@
           ]
         },
         "grounds": {
-          "world-cup": "world_cup"
+          "world-cup": "world_cup",
+          "football": "halloween"
         },
         "recentSeasons": [
           40,
           51,
           41
-        ]
+        ],
+        "seasonalEvent": "halloween"
       },
       "apps": {
         "ios": {
