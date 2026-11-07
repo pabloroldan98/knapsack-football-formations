@@ -306,7 +306,7 @@
             },
             "away": {
               "id": 85,
-              "name": "Napoli",
+              "name": "Nápoles",
               "slug": "napoli",
               "score": null,
               "difficulty": {
@@ -459,7 +459,7 @@
             },
             "away": {
               "id": 175,
-              "name": "FC Porto",
+              "name": "Oporto",
               "slug": "fc-porto",
               "score": null,
               "difficulty": {
@@ -640,7 +640,7 @@
             "status": "pending",
             "home": {
               "id": 497,
-              "name": "Slavia Prag",
+              "name": "Slavia Praga",
               "slug": "slavia-prag",
               "score": null,
               "difficulty": {
@@ -844,7 +844,7 @@
             "status": "pending",
             "home": {
               "id": 81,
-              "name": "Club Brugge",
+              "name": "Brujas",
               "slug": "club-brugge",
               "score": null,
               "difficulty": {
@@ -1103,6 +1103,30 @@
         "status": "unknown",
         "priceIncrement": 0,
         "fitness": [
+          null
+        ],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
+      "43387": {
+        "id": 43387,
+        "name": "Khadim Ngom",
+        "slug": "khadim-ngom",
+        "teamID": null,
+        "position": 1,
+        "price": 150000,
+        "fantasyPrice": 15000000,
+        "number": 41,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [
+          null,
+          null,
+          null,
           null
         ],
         "points": 0,
@@ -1557,11 +1581,8 @@
         "price": 4750000,
         "fantasyPrice": 53000000,
         "number": 15,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -60000,
-        "statusInfo": "Knee injury.",
-        "extraStatus": "injured",
-        "statusChange": 1793948421,
         "fitness": [
           5,
           3,
@@ -3126,30 +3147,6 @@
         "pointsAway": 3,
         "pointsLastSeason": null
       },
-      "43387": {
-        "id": 43387,
-        "name": "Khadim Ngom",
-        "slug": "khadim-ngom",
-        "teamID": 30,
-        "position": 1,
-        "price": 150000,
-        "fantasyPrice": 15000000,
-        "number": 41,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [
-          null,
-          null,
-          null,
-          null
-        ],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "4088": {
         "id": 4088,
         "name": "Kane",
@@ -3783,10 +3780,8 @@
         "price": 2310000,
         "fantasyPrice": 38000000,
         "number": 20,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Illness.",
-        "statusChange": 1793862018,
         "fitness": [
           null,
           3,
@@ -3859,11 +3854,10 @@
         "price": 8690000,
         "fantasyPrice": 48000000,
         "number": 9,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": -90000,
-        "statusInfo": "Thigh injury.",
-        "extraStatus": "injured",
-        "statusChange": 1793862019,
+        "statusInfo": "Muscle strain.",
+        "statusChange": 1793984676,
         "fitness": [
           3,
           19,
@@ -6938,6 +6932,27 @@
         "pointsAway": 20,
         "pointsLastSeason": null
       },
+      "30463": {
+        "id": 30463,
+        "name": "David Boly",
+        "slug": "david-boly",
+        "teamID": 80,
+        "position": 2,
+        "price": 240000,
+        "fantasyPrice": 16000000,
+        "number": 42,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [
+          5
+        ],
+        "points": 5,
+        "playedHome": 0,
+        "playedAway": 1,
+        "pointsHome": 0,
+        "pointsAway": 5,
+        "pointsLastSeason": null
+      },
       "32615": {
         "id": 32615,
         "name": "Lucas Beraldo",
@@ -8881,10 +8896,8 @@
         "price": 1350000,
         "fantasyPrice": 36000000,
         "number": 17,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.",
-        "statusChange": 1793653230,
         "fitness": [
           "injured",
           1,
@@ -10199,11 +10212,8 @@
         "price": 190000,
         "fantasyPrice": 15000000,
         "number": 95,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Back injury.",
-        "extraStatus": "injured",
-        "statusChange": 1793887225,
         "fitness": [
           "injured",
           5,
@@ -11202,7 +11212,7 @@
         "number": 20,
         "status": "injured",
         "priceIncrement": -10000,
-        "statusInfo": "Muscle injury.. Estimated return: Nov 25, 2026",
+        "statusInfo": "Hamstring injury.. Estimated return: Nov 25, 2026",
         "statusChange": 1793775647,
         "fitness": [
           5,
@@ -11250,10 +11260,11 @@
         "price": 1960000,
         "fantasyPrice": 47000000,
         "number": 13,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -60000,
         "statusInfo": "Hamstring injury.",
-        "statusChange": 1792476136,
+        "extraStatus": "injured",
+        "statusChange": 1793995224,
         "fitness": [
           "injured",
           "injured",
@@ -13720,10 +13731,11 @@
         "price": 4570000,
         "fantasyPrice": 83000000,
         "number": 38,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -170000,
         "statusInfo": "Heel injury.",
-        "statusChange": 1793775639,
+        "extraStatus": "injured",
+        "statusChange": 1793995221,
         "fitness": [
           "injured",
           4,
@@ -19530,10 +19542,11 @@
         "price": 1100000,
         "fantasyPrice": 24000000,
         "number": 29,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -10000,
-        "statusInfo": "Hamstring injury.. Estimated return: Nov 15, 2026",
-        "statusChange": 1792476100,
+        "statusInfo": "Hamstring injury.",
+        "extraStatus": "injured",
+        "statusChange": 1793998821,
         "fitness": [
           "injured",
           "injured",
@@ -22289,10 +22302,11 @@
         "price": 1730000,
         "fantasyPrice": 48000000,
         "number": 99,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -60000,
-        "statusInfo": "Muscle injury.. Estimated return: Nov 15, 2026",
-        "statusChange": 1792562418,
+        "statusInfo": "Muscle injury.",
+        "extraStatus": "injured",
+        "statusChange": 1793998819,
         "fitness": [
           "injured",
           "injured",
@@ -23386,10 +23400,8 @@
         "price": 270000,
         "fantasyPrice": 17000000,
         "number": 15,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Virus.",
-        "statusChange": 1793797250,
         "fitness": [
           "injured",
           null,
@@ -27141,8 +27153,8 @@
         ]
       }
     },
-    "update": 1794024010,
-    "etag": 1386227621,
+    "update": 1794017909,
+    "etag": 2096546988,
     "scoreID": 5
   },
   "meta": {
@@ -29393,7 +29405,7 @@
         },
         "android": {
           "url": "https://play.google.com/store/apps/details?id=com.biwenger.app",
-          "version": "4.0.2"
+          "version": "4.0.4"
         },
         "huawei": {
           "url": "https://appgallery.cloud.huawei.com/ag/n/app/C100861603",
