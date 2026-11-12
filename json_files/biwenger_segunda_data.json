@@ -716,7 +716,7 @@
           {
             "id": 51620,
             "date": 1794747600,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 152,
               "name": "Tenerife",
@@ -781,7 +781,7 @@
           {
             "id": 51615,
             "date": 1794755700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 290,
               "name": "Granada",
@@ -846,7 +846,7 @@
           {
             "id": 51613,
             "date": 1794763800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 584,
               "name": "Eibar",
@@ -911,7 +911,7 @@
           {
             "id": 51614,
             "date": 1794763800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 687,
               "name": "Eldense",
@@ -1039,6 +1039,9 @@
             }
           }
         ],
+        "pool": {
+          "id": 643101
+        },
         "probableLineups": false
       }
     ],
@@ -1452,10 +1455,8 @@
         "price": 300000,
         "fantasyPrice": 32000000,
         "number": 31,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Called up to his national team.",
-        "statusChange": 1794348021,
         "fitness": [
           null,
           null,
@@ -3121,11 +3122,11 @@
         "status": "ok",
         "priceIncrement": 0,
         "fitness": [
-          null,
           "doubt",
           "doubt",
           null,
-          null
+          null,
+          -2
         ],
         "points": -4,
         "playedHome": 2,
@@ -6258,8 +6259,10 @@
         "price": 3770000,
         "fantasyPrice": 17000000,
         "number": 32,
-        "status": "ok",
+        "status": "discarded",
         "priceIncrement": 50000,
+        "statusInfo": "Called up to his national team.",
+        "statusChange": 1794387620,
         "fitness": [
           6,
           6,
@@ -7072,10 +7075,8 @@
         "price": 940000,
         "fantasyPrice": 17000000,
         "number": 23,
-        "status": "discarded",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Called up to his national team.",
-        "statusChange": 1794348046,
         "fitness": [
           6,
           -2,
@@ -16422,8 +16423,8 @@
         ]
       }
     },
-    "update": 1794456010,
-    "etag": 1354875032,
+    "update": 1794455177,
+    "etag": 3297565529,
     "scoreID": 1
   },
   "meta": {
