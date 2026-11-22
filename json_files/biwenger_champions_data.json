@@ -587,7 +587,7 @@
           {
             "id": 52999,
             "date": 1795628700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 827,
               "name": "Sabah FK",
@@ -638,10 +638,10 @@
           {
             "id": 53000,
             "date": 1795628700,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 497,
-              "name": "Slavia Prag",
+              "name": "Slavia Praga",
               "slug": "slavia-prag",
               "score": null,
               "difficulty": {
@@ -689,7 +689,7 @@
           {
             "id": 53002,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 80,
               "name": "PSG",
@@ -740,7 +740,7 @@
           {
             "id": 53003,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 493,
               "name": "Lille",
@@ -791,7 +791,7 @@
           {
             "id": 53004,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 29,
               "name": "Atlético de Madrid",
@@ -842,10 +842,10 @@
           {
             "id": 53005,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 81,
-              "name": "Club Brugge",
+              "name": "Brujas",
               "slug": "club-brugge",
               "score": null,
               "difficulty": {
@@ -893,7 +893,7 @@
           {
             "id": 53006,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 430,
               "name": "Inter",
@@ -944,7 +944,7 @@
           {
             "id": 53007,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 36,
               "name": "Sporting Portugal",
@@ -995,7 +995,7 @@
           {
             "id": 53008,
             "date": 1795636800,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 277,
               "name": "Shakhtar Donetsk",
@@ -1048,6 +1048,25 @@
       }
     ],
     "players": {
+      "34430": {
+        "id": 34430,
+        "name": "Tim Binder",
+        "slug": "tim-binder",
+        "teamID": null,
+        "position": 4,
+        "price": 190000,
+        "fantasyPrice": 15000000,
+        "number": 46,
+        "status": "ok",
+        "priceIncrement": 0,
+        "fitness": [],
+        "points": 0,
+        "playedHome": 0,
+        "playedAway": 0,
+        "pointsHome": 0,
+        "pointsAway": 0,
+        "pointsLastSeason": null
+      },
       "42980": {
         "id": 42980,
         "name": "Godfred Boakye",
@@ -2417,9 +2436,8 @@
         "price": 2870000,
         "fantasyPrice": 36000000,
         "number": 8,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -80000,
-        "statusInfo": "A minor blow.",
         "fitness": [
           5,
           8,
@@ -2431,8 +2449,7 @@
         "playedAway": 2,
         "pointsHome": 16,
         "pointsAway": 10,
-        "pointsLastSeason": null,
-        "statusChange": 1795006831
+        "pointsLastSeason": null
       },
       "23168": {
         "id": 23168,
@@ -2493,9 +2510,8 @@
         "price": 780000,
         "fantasyPrice": 30000000,
         "number": 10,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Foot injury.",
         "fitness": [
           "doubt",
           "injured",
@@ -2507,8 +2523,7 @@
         "playedAway": 0,
         "pointsHome": 3,
         "pointsAway": 0,
-        "pointsLastSeason": null,
-        "statusChange": 1795006836
+        "pointsLastSeason": null
       },
       "30363": {
         "id": 30363,
@@ -3367,9 +3382,9 @@
         "price": 8970000,
         "fantasyPrice": 98000000,
         "number": 14,
-        "status": "injured",
+        "status": "doubt",
         "priceIncrement": -200000,
-        "statusInfo": "Hamstring injury.. Estimated return: Nov 25, 2026",
+        "statusInfo": "Hamstring injury.",
         "fitness": [
           "injured",
           2,
@@ -3382,7 +3397,8 @@
         "pointsHome": 6,
         "pointsAway": 10,
         "pointsLastSeason": null,
-        "statusChange": 1792663234
+        "extraStatus": "injured",
+        "statusChange": 1795294818
       },
       "23200": {
         "id": 23200,
@@ -3602,25 +3618,6 @@
         "pointsAway": 12,
         "pointsLastSeason": null
       },
-      "34430": {
-        "id": 34430,
-        "name": "Tim Binder",
-        "slug": "tim-binder",
-        "teamID": 31,
-        "position": 4,
-        "price": 190000,
-        "fantasyPrice": 15000000,
-        "number": 46,
-        "status": "ok",
-        "priceIncrement": 0,
-        "fitness": [],
-        "points": 0,
-        "playedHome": 0,
-        "playedAway": 0,
-        "pointsHome": 0,
-        "pointsAway": 0,
-        "pointsLastSeason": null
-      },
       "35782": {
         "id": 35782,
         "name": "Urbig",
@@ -3821,7 +3818,7 @@
         "number": 23,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Cruciate ligament injury.",
+        "statusInfo": "Cruciate ligament injury.. Estimated return: Jan 5, 2027",
         "fitness": [
           "injured",
           "injured",
@@ -6691,9 +6688,8 @@
         "price": 8200000,
         "fantasyPrice": 87000000,
         "number": 25,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -120000,
-        "statusInfo": "Muscle injury.",
         "fitness": [
           "doubt",
           "doubt",
@@ -6705,9 +6701,7 @@
         "playedAway": 1,
         "pointsHome": 7,
         "pointsAway": 7,
-        "pointsLastSeason": null,
-        "extraStatus": "injured",
-        "statusChange": 1792476130
+        "pointsLastSeason": null
       },
       "15951": {
         "id": 15951,
@@ -10629,8 +10623,9 @@
         "price": 680000,
         "fantasyPrice": 19000000,
         "number": 23,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Stroke.",
         "fitness": [
           "injured",
           "injured",
@@ -10642,7 +10637,9 @@
         "playedAway": 0,
         "pointsHome": 0,
         "pointsAway": 0,
-        "pointsLastSeason": null
+        "pointsLastSeason": null,
+        "extraStatus": "injured",
+        "statusChange": 1795266011
       },
       "8963": {
         "id": 8963,
@@ -10653,8 +10650,9 @@
         "price": 1740000,
         "fantasyPrice": 56000000,
         "number": 9,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": -10000,
+        "statusInfo": "Hip injury.",
         "fitness": [
           "injured",
           null,
@@ -10666,7 +10664,9 @@
         "playedAway": 1,
         "pointsHome": 0,
         "pointsAway": -1,
-        "pointsLastSeason": null
+        "pointsLastSeason": null,
+        "extraStatus": "injured",
+        "statusChange": 1795266012
       },
       "10699": {
         "id": 10699,
@@ -12381,9 +12381,8 @@
         "price": 180000,
         "fantasyPrice": 16000000,
         "number": 5,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Ankle injury.",
         "fitness": [
           null,
           null,
@@ -12395,8 +12394,7 @@
         "playedAway": 0,
         "pointsHome": 0,
         "pointsAway": 0,
-        "pointsLastSeason": null,
-        "statusChange": 1795014028
+        "pointsLastSeason": null
       },
       "34433": {
         "id": 34433,
@@ -13547,9 +13545,8 @@
         "price": 190000,
         "fantasyPrice": 16000000,
         "number": 35,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Thigh injury.. Estimated return: Nov 25, 2026",
         "fitness": [
           "injured",
           2,
@@ -13561,8 +13558,7 @@
         "playedAway": 1,
         "pointsHome": 0,
         "pointsAway": 2,
-        "pointsLastSeason": null,
-        "statusChange": 1793775645
+        "pointsLastSeason": null
       },
       "43003": {
         "id": 43003,
@@ -15939,9 +15935,8 @@
         "price": 150000,
         "fantasyPrice": 15000000,
         "number": 23,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Illness.",
         "fitness": [
           "injured",
           2,
@@ -15953,9 +15948,7 @@
         "playedAway": 2,
         "pointsHome": 0,
         "pointsAway": 4,
-        "pointsLastSeason": null,
-        "extraStatus": "injured",
-        "statusChange": 1794985220
+        "pointsLastSeason": null
       },
       "9995": {
         "id": 9995,
@@ -20447,9 +20440,8 @@
         "price": 700000,
         "fantasyPrice": 20000000,
         "number": 4,
-        "status": "injured",
+        "status": "ok",
         "priceIncrement": -10000,
-        "statusInfo": "Hamstring injury.",
         "fitness": [
           "injured",
           4,
@@ -20461,8 +20453,7 @@
         "playedAway": 1,
         "pointsHome": 6,
         "pointsAway": 3,
-        "pointsLastSeason": null,
-        "statusChange": 1792663236
+        "pointsLastSeason": null
       },
       "34311": {
         "id": 34311,
@@ -20499,7 +20490,7 @@
         "number": 31,
         "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Thigh injury.",
+        "statusInfo": "Thigh injury.. Estimated return: Dec 5, 2026",
         "fitness": [
           "injured",
           "injured",
@@ -27054,8 +27045,8 @@
         ]
       }
     },
-    "update": 1795320010,
-    "etag": 2003915281
+    "update": 1795314083,
+    "etag": 3987881000
   },
   "meta": {
     "config": {

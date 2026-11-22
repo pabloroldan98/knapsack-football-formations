@@ -324,23 +324,6 @@
         "type": "round",
         "games": [
           {
-            "id": 51633,
-            "date": 1795203000,
-            "status": "finished",
-            "home": {
-              "id": 636,
-              "name": "FC Andorra",
-              "slug": "fc-andorra",
-              "score": 1
-            },
-            "away": {
-              "id": 543,
-              "name": "Leganés",
-              "slug": "leganes",
-              "score": 3
-            }
-          },
-          {
             "id": 51630,
             "date": 1795266000,
             "status": "preview",
@@ -415,13 +398,13 @@
               "slug": "real-sociedad-b",
               "score": null,
               "difficulty": {
-                "rating": 36,
+                "rating": 35,
                 "standings": [
                   25,
                   35
                 ],
                 "homeAway": [
-                  35,
+                  34,
                   20
                 ],
                 "form": [
@@ -480,9 +463,9 @@
               "slug": "cd-castellon",
               "score": null,
               "difficulty": {
-                "rating": 43,
+                "rating": 42,
                 "standings": [
-                  28,
+                  24,
                   35
                 ],
                 "homeAway": [
@@ -598,6 +581,23 @@
                 "lost": 2,
                 "tied": 5
               }
+            }
+          },
+          {
+            "id": 51633,
+            "date": 1795203000,
+            "status": "finished",
+            "home": {
+              "id": 636,
+              "name": "FC Andorra",
+              "slug": "fc-andorra",
+              "score": 1
+            },
+            "away": {
+              "id": 543,
+              "name": "Leganés",
+              "slug": "leganes",
+              "score": 3
             }
           },
           {
@@ -870,13 +870,13 @@
               "slug": "burgos-cf",
               "score": null,
               "difficulty": {
-                "rating": 34,
+                "rating": 33,
                 "standings": [
                   20,
                   35
                 ],
                 "homeAway": [
-                  24,
+                  23,
                   20
                 ],
                 "form": [
@@ -5342,9 +5342,9 @@
         "fitness": [
           "sanctioned",
           -1,
-          null,
           2,
-          "sanctioned"
+          "sanctioned",
+          2
         ],
         "points": 15,
         "playedHome": 4,
@@ -6810,7 +6810,7 @@
           "doubt",
           "doubt",
           "doubt",
-          "doubt"
+          null
         ],
         "points": 0,
         "playedHome": 0,
@@ -16289,7 +16289,7 @@
       }
     },
     "update": 1795320010,
-    "etag": 2540137750
+    "etag": 1751212066
   },
   "meta": {
     "config": {
