@@ -432,6 +432,11 @@ def best_full_teams(
                 continue
         formation_score_players.append((formation, score, result_players))
 
+    position_priority = {"GK": 0, "DEF": 1, "MID": 2, "ATT": 3}
+    for _, _, team in formation_score_players:
+        # team.sort(key=lambda x: (position_priority.get(x.position, 99), x.price, x.value, x.name))
+        team.sort(key=lambda x: (position_priority.get(x.position, 99), x.value, x.price, x.name))
+
     formation_score_players_by_score = sorted(
         formation_score_players, key=lambda tup: tup[1], reverse=True
     )
