@@ -686,7 +686,7 @@
           {
             "id": 50848,
             "date": 1795957200,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 18,
               "name": "Valencia",
@@ -751,7 +751,7 @@
           {
             "id": 50841,
             "date": 1795965300,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 6,
               "name": "Deportivo",
@@ -816,7 +816,7 @@
           {
             "id": 50840,
             "date": 1795973400,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 5,
               "name": "Celta",
@@ -881,7 +881,7 @@
           {
             "id": 50847,
             "date": 1795982400,
-            "status": "pending",
+            "status": "preview",
             "home": {
               "id": 13,
               "name": "Real Sociedad",
@@ -1009,6 +1009,9 @@
             }
           }
         ],
+        "pool": {
+          "id": 644367
+        },
         "probableLineups": true
       }
     ],
@@ -1258,8 +1261,9 @@
         "price": 320000,
         "fantasyPrice": 20000000,
         "number": 5,
-        "status": "ok",
+        "status": "doubt",
         "priceIncrement": 0,
+        "statusInfo": "Discomfort in his left knee.",
         "fitness": [
           null,
           null,
@@ -1272,7 +1276,8 @@
         "playedAway": 2,
         "pointsHome": 2,
         "pointsAway": 4,
-        "pointsLastSeason": 40
+        "pointsLastSeason": 40,
+        "statusChange": 1795622416
       },
       "42747": {
         "id": 42747,
@@ -1818,8 +1823,9 @@
         "price": 860000,
         "fantasyPrice": 44000000,
         "number": 3,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -20000,
+        "statusInfo": "Ankle injury. Estimated return: Indefinite return.",
         "iconHero": "i/p/hero/10040.png",
         "fitness": [
           null,
@@ -1833,7 +1839,8 @@
         "playedAway": 0,
         "pointsHome": 14,
         "pointsAway": 0,
-        "pointsLastSeason": 98
+        "pointsLastSeason": 98,
+        "statusChange": 1795636802
       },
       "8517": {
         "id": 8517,
@@ -2589,9 +2596,8 @@
         "price": 1610000,
         "fantasyPrice": 17000000,
         "number": 21,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -40000,
-        "statusInfo": "Undetermined discomfort.",
         "fitness": [
           2,
           2,
@@ -2604,8 +2610,7 @@
         "playedAway": 6,
         "pointsHome": 32,
         "pointsAway": 12,
-        "pointsLastSeason": null,
-        "statusChange": 1795417208
+        "pointsLastSeason": null
       },
       "4753": {
         "id": 4753,
@@ -5382,9 +5387,7 @@
         "fitness": [
           3,
           1,
-          3,
-          null,
-          null
+          3
         ],
         "points": 7,
         "playedHome": 1,
@@ -5402,9 +5405,8 @@
         "price": 4800000,
         "fantasyPrice": 41000000,
         "number": 8,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": -70000,
-        "statusInfo": "Muscle discomfort.",
         "iconHero": "i/p/hero/19862.png",
         "fitness": [
           "injured",
@@ -5418,8 +5420,7 @@
         "playedAway": 6,
         "pointsHome": 20,
         "pointsAway": 28,
-        "pointsLastSeason": 160,
-        "statusChange": 1795244405
+        "pointsLastSeason": 160
       },
       "4070": {
         "id": 4070,
@@ -6913,7 +6914,7 @@
           "injured",
           "injured",
           "injured",
-          0
+          "injured"
         ],
         "points": 8,
         "playedHome": 2,
@@ -7195,8 +7196,9 @@
         "price": 990000,
         "fantasyPrice": 16000000,
         "number": 16,
-        "status": "ok",
+        "status": "injured",
         "priceIncrement": -20000,
+        "statusInfo": "Strain in the right rectus abdominis. Estimated return: Mid-December.",
         "fitness": [
           null,
           2,
@@ -7209,7 +7211,8 @@
         "playedAway": 2,
         "pointsHome": 17,
         "pointsAway": 4,
-        "pointsLastSeason": 0
+        "pointsLastSeason": 0,
+        "statusChange": 1795622409
       },
       "34196": {
         "id": 34196,
@@ -8265,7 +8268,7 @@
         "number": 22,
         "status": "injured",
         "priceIncrement": -30000,
-        "statusInfo": "Muscle injury. Estimated return: Mid-December.",
+        "statusInfo": "Moderate injury to the hamstring muscles in the right leg. Estimated return: Mid-December.",
         "fitness": [
           2,
           2,
@@ -10449,8 +10452,8 @@
         "priceIncrement": 0,
         "fitness": [
           "doubt",
-          "injured",
-          null,
+          "doubt",
+          "doubt",
           null,
           null
         ],
@@ -11141,9 +11144,9 @@
         "price": 1620000,
         "fantasyPrice": 20000000,
         "number": 8,
-        "status": "doubt",
+        "status": "injured",
         "priceIncrement": 0,
-        "statusInfo": "Loose body in his right knee.",
+        "statusInfo": "He has limited mobility in his right knee. Estimated return: Early December.",
         "fitness": [
           "injured",
           "doubt",
@@ -11157,7 +11160,7 @@
         "pointsHome": 24,
         "pointsAway": 10,
         "pointsLastSeason": 90,
-        "statusChange": 1795330804
+        "statusChange": 1795615207
       },
       "39350": {
         "id": 39350,
@@ -11205,7 +11208,7 @@
           null,
           null,
           null,
-          2
+          -2
         ],
         "points": 10,
         "playedHome": 3,
@@ -11600,7 +11603,7 @@
         "priceIncrement": 0,
         "fitness": [
           null,
-          "doubt",
+          "injured",
           null,
           null,
           null
@@ -12751,7 +12754,7 @@
           "injured",
           "injured",
           "injured",
-          "injured"
+          "doubt"
         ],
         "points": 4,
         "playedHome": 1,
@@ -14517,7 +14520,7 @@
           1,
           3,
           3,
-          1
+          0
         ],
         "points": 16,
         "playedHome": 7,
@@ -15324,7 +15327,7 @@
         "priceIncrement": 0,
         "statusInfo": "Sprain of the medial collateral ligament in the right knee. Estimated return: Undetermined.",
         "fitness": [
-          null,
+          "doubt",
           null,
           null,
           null,
@@ -15453,9 +15456,8 @@
         "price": 300000,
         "fantasyPrice": 18000000,
         "number": 9,
-        "status": "doubt",
+        "status": "ok",
         "priceIncrement": 0,
-        "statusInfo": "Hand injury.",
         "fitness": [
           "doubt",
           "injured",
@@ -15468,8 +15470,7 @@
         "playedAway": 2,
         "pointsHome": 4,
         "pointsAway": 11,
-        "pointsLastSeason": null,
-        "statusChange": 1795276805
+        "pointsLastSeason": null
       },
       "39804": {
         "id": 39804,
@@ -15924,8 +15925,8 @@
         ]
       }
     },
-    "update": 1795672810,
-    "etag": 1794767932
+    "update": 1795669692,
+    "etag": 2406614376
   },
   "meta": {
     "config": {
